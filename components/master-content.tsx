@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { ChevronDown, Search, ExternalLink, Facebook, Instagram, Linkedin } from "lucide-react";
+import { ChevronDown, Search, ExternalLink } from "lucide-react";
+import { FacebookIcon, InstagramIcon, LinkedinIcon } from "./social-icons";
 import { Eyebrow, Arrow, Breadcrumbs, PageCTA } from "./master-shared";
 import { privacyPolicy } from "./legal-privacy";
 import { termsAndConditions } from "./legal-terms";
@@ -15,7 +16,7 @@ export function SawPointPage(){
     <section className="m-saw-hero m-animate-in"><div className="m-saw-hero-copy"><Eyebrow>FPX PRESENTS</Eyebrow><h1>Saw Point<span>.</span></h1><h2>Straight talk on NZ timber. No sawdust.</h2><p>A straight read on what matters: selected news and developments worth paying attention to in the New Zealand timber industry.</p><div className="m-saw-byline"><span>WRITTEN BY</span><b>George Harman</b><small>Director, FPX</small></div></div><div className="m-saw-mark" aria-hidden="true">SP.</div></section>
     <section className="m-saw-archive m-animate-in"><div className="m-saw-archive-head"><Eyebrow>THE ARCHIVE</Eyebrow><h2>Read every issue.</h2><p>Saw Point is published by FPX and written by George Harman.</p></div><div className="m-saw-issue-grid">{issues.map((item,index)=><a key={item.issue} className="m-saw-issue-card" href={item.href} target="_blank" rel="noreferrer"><div className="m-saw-issue-cover"><span>SAW<br/>POINT.</span><small>ISSUE {item.issue}</small></div><div className="m-saw-issue-copy"><span>{item.date}</span><h3>{item.title}</h3><p>{item.copy}</p><b>Read on LinkedIn <ExternalLink size={16}/></b></div><i>0{index+1}</i></a>)}</div></section>
     <section className="m-saw-subscribe m-animate-in"><div><Eyebrow>GET THE NEXT ISSUE</Eyebrow><h2>Saw Point in your inbox.</h2><p>Join the FPX mailing list for future issues. The subscription connection will be reconnected to the existing FPX Make workflow at launch.</p></div><form aria-label="Saw Point subscription"><label>Name<input name="name" autoComplete="name" placeholder="Your name"/></label><label>Email<input name="email" type="email" autoComplete="email" placeholder="you@company.co.nz"/></label><button type="button" disabled aria-disabled="true" aria-describedby="sawpoint-form-note">Subscribe <Arrow/></button><small id="sawpoint-form-note">Subscription automation connection pending launch.</small></form></section>
-    <section className="m-social-band m-animate-in"><div><Eyebrow>FOLLOW FPX</Eyebrow><h2>Timber updates between issues.</h2></div><nav aria-label="FPX social profiles"><a href="https://www.linkedin.com/company/forest-products-exchange" target="_blank" rel="noreferrer"><Linkedin/>LinkedIn</a><a href="https://www.instagram.com/fpx.nz/" target="_blank" rel="noreferrer"><Instagram/>Instagram</a><a href="https://www.facebook.com/people/Forest-Products-Exchange/61583101360304/" target="_blank" rel="noreferrer"><Facebook/>Facebook</a></nav></section>
+    <section className="m-social-band m-animate-in"><div><Eyebrow>FOLLOW FPX</Eyebrow><h2>Timber updates between issues.</h2></div><nav aria-label="FPX social profiles"><a href="https://www.linkedin.com/company/forest-products-exchange" target="_blank" rel="noreferrer"><LinkedinIcon/>LinkedIn</a><a href="https://www.instagram.com/fpx.nz/" target="_blank" rel="noreferrer"><InstagramIcon/>Instagram</a><a href="https://www.facebook.com/people/Forest-Products-Exchange/61583101360304/" target="_blank" rel="noreferrer"><FacebookIcon/>Facebook</a></nav></section>
     <PageCTA/>
   </>
 }
