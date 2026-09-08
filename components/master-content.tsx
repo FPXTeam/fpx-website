@@ -1,0 +1,85 @@
+"use client";
+import Link from "next/link";
+import { useState } from "react";
+import { ChevronDown, Search, ExternalLink, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Eyebrow, Arrow, Breadcrumbs, PageCTA } from "./master-shared";
+import { privacyPolicy } from "./legal-privacy";
+import { termsAndConditions } from "./legal-terms";
+export function SawPointPage(){
+  const issues=[
+    {issue:"002",date:"SEPTEMBER 2026",title:"Saw Point | Issue 002",copy:"New Zealand timber market developments and industry news selected by George Harman.",href:"https://www.linkedin.com/pulse/saw-point-issue-002-september-2026-forest-products-exchange-j04nc"},
+    {issue:"001",date:"AUGUST 2026",title:"Saw Point | Issue 001",copy:"The first edition of Saw Point, covering selected developments worth paying attention to across the New Zealand timber industry.",href:"https://www.linkedin.com/pulse/saw-point-issue-001-august-2026-forest-products-exchange-rctec"},
+  ];
+  return <>
+    <Breadcrumbs items={[["Home","/"],["Saw Point","/saw-point"]]}/>
+    <section className="m-saw-hero m-animate-in"><div className="m-saw-hero-copy"><Eyebrow>FPX PRESENTS</Eyebrow><h1>Saw Point<span>.</span></h1><h2>Straight talk on NZ timber. No sawdust.</h2><p>A straight read on what matters: selected news and developments worth paying attention to in the New Zealand timber industry.</p><div className="m-saw-byline"><span>WRITTEN BY</span><b>George Harman</b><small>Director, FPX</small></div></div><div className="m-saw-mark" aria-hidden="true">SP.</div></section>
+    <section className="m-saw-archive m-animate-in"><div className="m-saw-archive-head"><Eyebrow>THE ARCHIVE</Eyebrow><h2>Read every issue.</h2><p>Saw Point is published by FPX and written by George Harman.</p></div><div className="m-saw-issue-grid">{issues.map((item,index)=><a key={item.issue} className="m-saw-issue-card" href={item.href} target="_blank" rel="noreferrer"><div className="m-saw-issue-cover"><span>SAW<br/>POINT.</span><small>ISSUE {item.issue}</small></div><div className="m-saw-issue-copy"><span>{item.date}</span><h3>{item.title}</h3><p>{item.copy}</p><b>Read on LinkedIn <ExternalLink size={16}/></b></div><i>0{index+1}</i></a>)}</div></section>
+    <section className="m-saw-subscribe m-animate-in"><div><Eyebrow>GET THE NEXT ISSUE</Eyebrow><h2>Saw Point in your inbox.</h2><p>Join the FPX mailing list for future issues. The subscription connection will be reconnected to the existing FPX Make workflow at launch.</p></div><form aria-label="Saw Point subscription"><label>Name<input name="name" autoComplete="name" placeholder="Your name"/></label><label>Email<input name="email" type="email" autoComplete="email" placeholder="you@company.co.nz"/></label><button type="button" disabled aria-disabled="true" aria-describedby="sawpoint-form-note">Subscribe <Arrow/></button><small id="sawpoint-form-note">Subscription automation connection pending launch.</small></form></section>
+    <section className="m-social-band m-animate-in"><div><Eyebrow>FOLLOW FPX</Eyebrow><h2>Timber updates between issues.</h2></div><nav aria-label="FPX social profiles"><a href="https://www.linkedin.com/company/forest-products-exchange" target="_blank" rel="noreferrer"><Linkedin/>LinkedIn</a><a href="https://www.instagram.com/fpx.nz/" target="_blank" rel="noreferrer"><Instagram/>Instagram</a><a href="https://www.facebook.com/people/Forest-Products-Exchange/61583101360304/" target="_blank" rel="noreferrer"><Facebook/>Facebook</a></nav></section>
+    <PageCTA/>
+  </>
+}
+
+export function ResourcesPage(){
+  const [query,setQuery]=useState("");
+  const items=[
+    {title:"Radiata Pine Characteristics",subtitle:"How Growth and Environment Shape Timber in New Zealand",copy:"A practical FPX guide to the relationship between Radiata pine growth, environment and timber characteristics.",image:"category-appearance-grades.webp",href:"/timber-growth-rings",type:"TIMBER CHARACTERISTICS"},
+    {title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",copy:"An FPX guide to kiln-drying methods, moisture content and why drying matters when specifying Radiata pine.",image:"category-untreated-timber.webp",href:"/the-science-of-kiln-drying",type:"TIMBER PROCESSING"},
+  ];
+  const shown=items.filter(item=>(item.title+" "+item.subtitle+" "+item.copy).toLowerCase().includes(query.toLowerCase()));
+  return <>
+    <Breadcrumbs items={[["Home","/"],["FPX Insights","/industry-resources"]]}/>
+    <section className="m-resource-hero m-animate-in"><div><Eyebrow>FPX INSIGHTS</Eyebrow><h1>Practical timber<br/><em>knowledge.</em></h1><p>FPX Insights gives New Zealand timber buyers clear, useful explanations of timber characteristics, processing and specification topics.</p></div><div className="m-resource-search"><Search aria-hidden="true"/><label className="sr-only" htmlFor="insight-search">Search FPX Insights</label><input id="insight-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search FPX Insights"/></div></section>
+    <section className="m-resource-grid m-animate-in" aria-live="polite">{shown.map((item,i)=><Link href={item.href} className="m-resource-card" key={item.title}><div><img src={`/images/${item.image}`} alt={`${item.title} FPX Insight`}/><span>0{i+1}</span></div><small>{item.type}</small><h2>{item.title}</h2><h3>{item.subtitle}</h3><p>{item.copy}</p><b>Read FPX Insight <Arrow/></b></Link>)}{shown.length===0&&<div className="m-no-results"><h2>No matching FPX Insights.</h2><p>Try a broader timber topic.</p></div>}</section>
+    <PageCTA/>
+  </>
+}
+
+const faqGroups=[
+  {title:"Getting started",items:[
+    ["What is FPX Sourcing?","FPX Sourcing is a digital timber sourcing service for commercial timber buyers in New Zealand. Buyers can browse available stock, review current offers or send FPX a specific timber requirement."],
+    ["Who is FPX for?","FPX is built for commercial timber buyers including contractors, builders, procurement teams, timber merchants and wood processors across New Zealand."],
+    ["How do I start sourcing timber through FPX?","Start by browsing available timber, reviewing current offers or creating a request. Choose the route that best matches how specific your requirement already is."],
+  ]},
+  {title:"Products and requests",items:[
+    ["What if I cannot find the timber I need?","Create a request with the dimensions, grade, treatment, quantity and other requirements you know. FPX will review the requirement and source suitable options."],
+    ["What information should I include in a timber request?","Include the product or application, dimensions, grade, treatment, quantity and required timing where known. Clear specifications help FPX identify suitable options."],
+    ["What are FPX Offers?","Offers are current timber opportunities that buyers can review and enquire about. Pricing can then be provided based on the buyer’s volumes and requirements."],
+  ]},
+  {title:"Orders and account",items:[
+    ["Can I manage orders through FPX?","Yes. FPX brings order information, deliveries and previously ordered products together in the buyer account."],
+    ["Can I reorder timber I have bought before?","Previously ordered products can be used as a starting point for repeat requirements, reducing the need to rebuild the same request from scratch."],
+    ["How much does FPX cost for buyers?","FPX is free for buyers to use."],
+  ]},
+  {title:"Support",items:[
+    ["Who can I contact if I need help?","Contact FPX at support@fpx.nz or use the Contact page for timber sourcing questions, platform support or general enquiries."],
+  ]},
+];
+export function FAQPage(){
+  const total=faqGroups.reduce((count,group)=>count+group.items.length,0);
+  let n=0;
+  return <>
+    <Breadcrumbs items={[["Home","/"],["FAQ","/frequently-asked-questions"]]}/>
+    <section className="m-faq-hero m-animate-in"><div><Eyebrow>FPX SOURCING FAQ</Eyebrow><h1>Clear answers for<br/><em>timber buyers.</em></h1><p>Everything you need to know about browsing timber, sending a request, reviewing offers and managing orders through FPX.</p></div><div className="m-faq-stat"><strong>{String(total).padStart(2,"0")}</strong><span>SOURCING QUESTIONS</span></div></section>
+    <section className="m-faq m-faq-revamp"><aside><Eyebrow>NEED A HUMAN?</Eyebrow><h2>Talk to the FPX team.</h2><p>If your requirement is specific or you are unsure where to start, send us the details and we can point you in the right direction.</p><Link href="/contact-us">Contact FPX <Arrow/></Link></aside><div className="m-faq-groups">{faqGroups.map(group=><section key={group.title} className="m-faq-group m-animate-in"><h2>{group.title}</h2>{group.items.map(([question,answer])=>{n+=1;return <details key={question}><summary><span>{String(n).padStart(2,"0")}</span><b>{question}</b><ChevronDown/></summary><p>{answer}</p></details>})}</section>)}</div></section>
+    <PageCTA/>
+  </>
+}
+
+export function LegalPage({slug}:{slug:string}){
+  const doc=slug==="privacy-policy"?privacyPolicy:termsAndConditions;
+  return <>
+    <Breadcrumbs items={[["Home","/"],[doc.title,`/${slug}`]]}/>
+    <section className="m-legal-hero m-animate-in"><Eyebrow>FPX LEGAL</Eyebrow><h1>{doc.title}</h1><p>Forest Products Exchange Limited</p></section>
+    <section className="m-legal m-legal-full"><aside><span>FOREST PRODUCTS EXCHANGE LIMITED</span><p>Official FPX legal document.</p><nav aria-label={`${doc.title} sections`}>{doc.toc.map(([num,title])=><a key={num} href={`#legal-${num}`}><b>{String(num).padStart(2,"0")}</b>{title}</a>)}</nav></aside><article className="m-legal-document" dangerouslySetInnerHTML={{__html:doc.html}}/></section>
+  </>
+}
+
+export function InsightArticlePage({slug}:{slug:string}){
+  const article=slug==="timber-growth-rings"?{title:"Radiata Pine Characteristics",subtitle:"How Growth and Environment Shape Timber in New Zealand",type:"TIMBER CHARACTERISTICS",image:"category-appearance-grades.webp",sections:[["What this FPX Insight covers","This guide focuses on how growth and environment relate to the characteristics visible in Radiata pine timber, and why those characteristics matter when buyers are considering timber for different applications."],["Growth rings and timber characteristics","Growth rings provide a visible record of how a tree developed over time. Reading those characteristics alongside the intended application helps buyers ask better questions about product suitability and specification."],["Why it matters when sourcing timber","Timber sourcing decisions are stronger when the product, application and specification are considered together. FPX uses product information and timber knowledge to help buyers move from a requirement to suitable options."]]}:{title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",type:"TIMBER PROCESSING",image:"category-untreated-timber.webp",sections:[["What this FPX Insight covers","This guide introduces conventional and continuous kiln drying, moisture content and why controlled drying is an important part of preparing Radiata pine for many commercial applications."],["Why moisture content matters","Moisture content is one of the practical product details buyers may need to consider alongside grade, treatment, dimensions and intended use."],["How this connects to sourcing","When moisture condition matters to a requirement, include it in the timber specification or request so FPX can review suitable product options."]]};
+  return <>
+    <Breadcrumbs items={[["Home","/"],["FPX Insights","/industry-resources"],[article.title,`/${slug}`]]}/>
+    <article className="m-insight-article"><header className="m-insight-hero m-animate-in"><div><Eyebrow>{article.type}</Eyebrow><h1>{article.title}</h1><p>{article.subtitle}</p><div className="m-article-meta"><span>FPX INSIGHTS</span><span>FOREST PRODUCTS EXCHANGE</span></div></div><div><img src={`/images/${article.image}`} alt={`${article.title} by FPX`}/></div></header><div className="m-insight-body m-animate-in">{article.sections.map(([heading,copy])=><section key={heading}><h2>{heading}</h2><p>{copy}</p></section>)}<section className="m-related-links"><h2>Related FPX pages</h2><div><Link href="/products">Explore the FPX timber range <Arrow/></Link><Link href="/source-timber">See how FPX sourcing works <Arrow/></Link><Link href="/contact-us">Ask FPX a timber question <Arrow/></Link></div></section></div></article>
+    <PageCTA/>
+  </>
+}

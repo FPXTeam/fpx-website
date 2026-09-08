@@ -1,21 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "../components/revised-pages.css";
 
 const siteUrl = "https://fpx.nz";
 const socialImage = "/images/social/fpx-social-share.jpg";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: {
-    default: "FPX | New Zealand Timber Sourcing",
-    template: "%s | FPX",
-  },
-  description:
-    "Browse available timber, discover current offers, or tell FPX what you need. A clear, supported way to source New Zealand timber.",
+  title: { default: "FPX | New Zealand Timber Sourcing", template: "%s | FPX" },
+  description: "FPX helps commercial timber buyers across New Zealand browse available stock, review current offers and source specific timber requirements.",
   applicationName: "FPX",
-  alternates: {
-    canonical: "/",
-  },
+  alternates: { canonical: "/" },
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -27,39 +22,18 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   openGraph: {
-    type: "website",
-    locale: "en_NZ",
-    url: siteUrl,
-    siteName: "FPX | Forest Products Exchange",
+    type: "website", locale: "en_NZ", url: siteUrl, siteName: "FPX | Forest Products Exchange",
     title: "FPX | New Zealand Timber Sourcing",
-    description:
-      "Browse available timber, discover current offers, or tell FPX what you need. A clear, supported way to source New Zealand timber.",
-    images: [
-      {
-        url: socialImage,
-        width: 1200,
-        height: 630,
-        alt: "FPX Forest Products Exchange, New Zealand timber sourcing",
-      },
-    ],
+    description: "FPX helps commercial timber buyers across New Zealand browse available stock, review current offers and source specific timber requirements.",
+    images: [{ url: socialImage, width: 1200, height: 630, alt: "FPX Forest Products Exchange, New Zealand timber sourcing" }],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "FPX | New Zealand Timber Sourcing",
-    description:
-      "Browse available timber, discover current offers, or tell FPX what you need. A clear, supported way to source New Zealand timber.",
+    card: "summary_large_image", title: "FPX | New Zealand Timber Sourcing",
+    description: "FPX helps commercial timber buyers across New Zealand browse available stock, review current offers and source specific timber requirements.",
     images: [socialImage],
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en-NZ">
-      <body className="antialiased">{children}</body>
-    </html>
-  );
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <html lang="en-NZ"><body className="antialiased">{children}</body></html>;
 }
