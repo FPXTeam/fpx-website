@@ -13,10 +13,10 @@ import {
 import { Shell } from "./site-shell";
 
 const productGroups = [
-  ["Manufacturing","Timber feedstock for wood processors and timber manufacturers to remanufacture into finished products.","category-manufacturing-grades.webp","manufacturing"],
-  ["Building & Construction","Timber products for structural, building, finishing and specialist construction applications.","category-structural-timber.webp","building-construction"],
-  ["Outdoor & Landscaping","Treated and purpose-made timber for landscaping, fencing, retaining and outdoor construction.","category-outdoor-timber.webp","outdoor-landscaping"],
-  ["Dunnage","Timber dunnage for freight, shipping, load support and industrial transport applications.","category-untreated-timber.webp","dunnage"],
+  ["Manufacturing","Timber feedstock for wood processors and timber manufacturers to remanufacture into finished products.","product-groups/manufacturing/manufacturing-warehouse-bundles.png","manufacturing"],
+  ["Building & Construction","Timber products for structural, building, finishing and specialist construction applications.","product-groups/building-construction/building-roof-framing.png","building-construction"],
+  ["Outdoor & Landscaping","Treated and purpose-made timber for landscaping, fencing, retaining and outdoor construction.","product-groups/outdoor-landscaping/outdoor-slat-fence.png","outdoor-landscaping"],
+  ["Dunnage","Timber dunnage for freight, shipping, load support and industrial transport applications.","product-groups/dunnage/dunnage-stamped-stack.png","dunnage"],
 ];
 
 
@@ -28,9 +28,9 @@ const pageData: Record<string,{eyebrow:string;title:string;intro:string}> = {
   "dunnage": {eyebrow:"PRODUCT GROUP",title:"Dunnage",intro:"Timber dunnage for freight, shipping, load support and industrial transport applications."},
   "source-timber": {eyebrow:"SOURCE TIMBER THROUGH FPX",title:"Find the timber your project needs.",intro:"Browse available stock and current offers, or send FPX your exact requirements. We keep the sourcing process clear from product selection through to delivery."},
   "how-fpx-works": {eyebrow:"HOW FPX WORKS",title:"Three ways to start. One supported process.",intro:"Shop available timber, review current offers or create a detailed request. FPX keeps the next steps connected."},
-  "our-customers": {eyebrow:"OUR CUSTOMERS",title:"Built for businesses that buy timber.",intro:"FPX serves commercial timber buyers across New Zealand—from project teams to merchants and processors."},
-  "saw-point": {eyebrow:"FPX PRESENTS",title:"Saw Point.",intro:"Straight talk on New Zealand timber—no sawdust. Industry news, market updates and a direct read on what is happening."},
-  "industry-resources": {eyebrow:"INDUSTRY RESOURCES",title:"Timber knowledge, without the runaround.",intro:"Practical guides on products, specifications and the New Zealand timber market."},
+  "our-customers": {eyebrow:"OUR CUSTOMERS",title:"Built for businesses that buy timber.",intro:"FPX serves commercial timber buyers across New Zealand, from project teams to merchants and processors."},
+  "saw-point": {eyebrow:"FPX PRESENTS",title:"Saw Point.",intro:"Straight talk on New Zealand timber. No sawdust. Selected industry news, market updates and developments worth paying attention to."},
+  "industry-resources": {eyebrow:"INDUSTRY RESOURCES",title:"Practical timber knowledge.",intro:"Clear guides on products, specifications and the New Zealand timber market."},
   "faq": {eyebrow:"FPX SOURCING FAQ",title:"Questions, answered.",intro:"Clear answers about finding, requesting and buying timber through FPX."},
   "about-us": {eyebrow:"ABOUT FPX",title:"A better sourcing experience, built around timber.",intro:"FPX is a New Zealand timber sourcing platform supported by people who understand the trade."},
   "contact-us": {eyebrow:"CONTACT FPX",title:"What timber are you looking for?",intro:"Tell us what you need, ask a sourcing question or get help choosing the right way to start."},
@@ -188,7 +188,7 @@ function CustomersCinematic(){
 function LightCTA(){
   return <section className="m-cta">
     <div className="m-cta-panel"><div className="m-cta-lines"/><div className="m-cta-content"><Eyebrow>START SOURCING</Eyebrow><h2>Ready to source <em>smarter?</em></h2><p>Browse available timber or tell FPX exactly what you need.</p><AppButtons/></div>
-    <img className="m-cta-x" src="/images/fpx-mark-circle.png" alt="FPX"/></div>
+    <img className="m-cta-x" src="/images/fpx-logo-x-original.png" alt="FPX"/></div>
   </section>;
 }
 
@@ -204,11 +204,11 @@ function InnerHero({slug}:{slug:string}){
 }
 
 function PageCTA(){return <LightCTA/>}
-function SourcePageCTA(){return <section className="m-cta m-source-cta"><div className="m-cta-panel"><div className="m-cta-lines"/><div className="m-cta-content"><Eyebrow>START SOURCING</Eyebrow><h2>Ready to source <em>smarter?</em></h2><p>Browse available timber or tell FPX exactly what you need.</p><div className="m-source-cta-proof"><span>Searchable catalogue</span><span>Current offers</span><span>Trading-desk expertise</span></div><AppButtons/></div><img className="m-cta-x" src="/images/fpx-mark-circle.png" alt="FPX"/></div></section>}
+function SourcePageCTA(){return <section className="m-cta m-source-cta"><div className="m-cta-panel"><div className="m-cta-lines"/><div className="m-cta-content"><Eyebrow>START SOURCING</Eyebrow><h2>Ready to source <em>smarter?</em></h2><p>Browse available timber or tell FPX exactly what you need.</p><div className="m-source-cta-proof"><span>Searchable catalogue</span><span>Current offers</span><span>Trading-desk expertise</span></div><AppButtons/></div><img className="m-cta-x" src="/images/fpx-logo-x-original.png" alt="FPX"/></div></section>}
 
 function SourceJourney(){
   const stages=[
-    {label:"START",title:"Start where the job starts.",copy:"Shop available stock, review current offers or send a specific request. There is no wrong place to begin.",image:"category-structural-timber.webp",links:[["Browse available stock","https://app.fpx.nz/shop"],["Review current offers","https://app.fpx.nz/offers"],["Request specific timber","https://app.fpx.nz/request-cart"]]},
+    {label:"START",title:"Start where the job starts.",copy:"Shop available stock, review current offers or send a specific request. Start with the route that best matches what you know.",image:"category-structural-timber.webp",links:[["Browse available stock","https://app.fpx.nz/shop"],["Review current offers","https://app.fpx.nz/offers"],["Request specific timber","https://app.fpx.nz/request-cart"]]},
     {label:"SPECIFY",title:"Shape the requirement.",copy:"Add the dimensions, grade, treatment and quantity that matter to the job. Clear inputs make the next step easier.",image:"category-appearance-grades.webp"},
     {label:"CHOOSE",title:"Choose what fits.",copy:"Review the timber options and the information around them, then choose the route that works for your team.",image:"category-treated-timber.webp"},
     {label:"MANAGE",title:"Keep the order moving.",copy:"Keep orders, deliveries and repeat purchases connected after the initial request.",image:"category-manufacturing-grades.webp",features:[["My Orders","Track progress from pending approval through to complete."],["My Deliveries","Keep dispatch dockets, dispatched items and destinations together."],["Previously Ordered","Request the same product again without starting from scratch."]]}
@@ -264,8 +264,8 @@ const productGroupDetails: Record<string,{
   "manufacturing": {
     title:"Manufacturing",
     description:"Timber feedstock for wood processors and timber manufacturers to remanufacture into finished products.",
-    hero:"category-manufacturing-grades.webp",
-    gallery:["category-manufacturing-grades.webp","category-appearance-grades.webp","category-untreated-timber.webp"],
+    hero:"product-groups/manufacturing/manufacturing-warehouse-bundles.png",
+    gallery:["product-groups/manufacturing/manufacturing-warehouse-bundles.png","product-groups/manufacturing/manufacturing-rollers.png","product-groups/manufacturing/manufacturing-hero-pine-stack.png"],
     categories:["Manufacturing Timber"],
     examples:["Clear 1","Clear 2","Mixed Clears","Dressing","Premium","Cuttings 1","Cuttings 2","Cuttings 3","COL","Merch","Industrial"],
     note:"The manufacturing range spans multiple grades and feedstock options. Individual grades, sizes and live specifications remain in FPX."
@@ -273,24 +273,24 @@ const productGroupDetails: Record<string,{
   "building-construction": {
     title:"Building & Construction",
     description:"Timber products for structural, building, finishing and specialist construction applications.",
-    hero:"category-structural-timber.webp",
-    gallery:["category-structural-timber.webp","category-appearance-grades.webp","category-treated-timber.webp"],
+    hero:"product-groups/building-construction/building-roof-framing.png",
+    gallery:["product-groups/building-construction/building-roof-framing.png","product-groups/building-construction/building-symmetrical-framing.png","product-groups/building-construction/building-house-piles.png"],
     categories:["Structural Timber","Weatherboards","House Piles","Ceiling Battens","Tile Battens","Mouldings","Fascia","Scaffold Planks","Soleboards","Kickboards","Stair Treads"],
     note:"A broad construction range covering structural requirements, finishing timber and specialist site applications."
   },
   "outdoor-landscaping": {
     title:"Outdoor & Landscaping",
     description:"Treated and purpose-made timber for landscaping, fencing, retaining and outdoor construction.",
-    hero:"category-outdoor-timber.webp",
-    gallery:["category-outdoor-timber.webp","category-treated-timber.webp","category-structural-timber.webp"],
+    hero:"product-groups/outdoor-landscaping/outdoor-slat-fence.png",
+    gallery:["product-groups/outdoor-landscaping/outdoor-slat-fence.png","product-groups/outdoor-landscaping/outdoor-boardwalk.png","product-groups/outdoor-landscaping/outdoor-cedar-fence.png"],
     categories:["Outdoor","Posts","Rails","Palings","Decking","Retaining Boards","Sleepers, Squares & Beams","Screening","Pickets","Capping","Fence Battens","Trellis Battens","Roundwood","Pegs"],
     note:"The range supports everything from fences and decks to retaining structures and larger outdoor works."
   },
   "dunnage": {
     title:"Dunnage",
     description:"Timber dunnage for freight, shipping, load support and industrial transport applications.",
-    hero:"category-untreated-timber.webp",
-    gallery:["category-untreated-timber.webp","category-manufacturing-grades.webp","fpx-hero-timber-yard.webp"],
+    hero:"product-groups/dunnage/dunnage-stamped-stack.png",
+    gallery:["product-groups/dunnage/dunnage-stamped-stack.png","product-groups/dunnage/dunnage-flatbed-support.png","product-groups/dunnage/dunnage-industrial-crate.png"],
     categories:["Dunnage"],
     examples:["Freight support","Shipping and container loading","Industrial transport","Load separation","Storage and handling"],
     note:"Dunnage timber is supplied for practical load support and protection across freight, shipping and industrial transport environments."
@@ -298,10 +298,10 @@ const productGroupDetails: Record<string,{
 };
 
 const endUses = [
-  ["Fencing","Palings · Posts · Rails · Fence Capping · Pegs","category-outdoor-timber.webp"],
-  ["Retaining","Posts · Retaining Boards · Sleepers · Squares & Beams","category-treated-timber.webp"],
-  ["Decking","Decking Boards · Balustrade Timber · Posts · Rails","category-appearance-grades.webp"],
-  ["Commercial projects","Bridges · Boardwalks · Specialist outdoor structures","category-structural-timber.webp"],
+  ["Fencing","Palings · Posts · Rails · Fence Capping · Pegs","product-groups/outdoor-landscaping/outdoor-townhouse-fence.png"],
+  ["Retaining","Posts · Retaining Boards · Sleepers · Squares & Beams","product-groups/outdoor-landscaping/outdoor-steps.png"],
+  ["Decking","Decking Boards · Balustrade Timber · Posts · Rails","product-groups/building-construction/building-deck-construction.png"],
+  ["Commercial projects","Bridges · Boardwalks · Specialist outdoor structures","product-groups/outdoor-landscaping/outdoor-boardwalk.png"],
 ];
 
 function ProductsPage(){
@@ -311,7 +311,7 @@ function ProductsPage(){
       <div className="m-products-hero-image"><img src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber products in a commercial yard"/></div>
     </section>
     <section className="m-product-groups">
-      <div className="m-product-groups-head"><Eyebrow>PRODUCT GROUPS</Eyebrow><h2>Four clear ways to understand the range.</h2><p>Each group reflects what the timber is supplied for—not every individual grade or specification.</p></div>
+      <div className="m-product-groups-head"><Eyebrow>PRODUCT GROUPS</Eyebrow><h2>Four clear ways to understand the range.</h2><p>Each group reflects what the timber is supplied for, rather than every individual grade or specification.</p></div>
       <div className="m-product-groups-grid">
         {productGroups.map((group,i)=><Link href={`/${group[3]}`} key={group[0]} className="m-product-group-card">
           <div className="m-product-group-image"><img src={`/images/${group[2]}`} alt=""/><span>0{i+1}</span></div>
@@ -348,12 +348,12 @@ function ProductGroupPage({slug}:{slug:string}){
 
 function HowPage(){
   const steps=[
-    ["Start where you are","Shop available stock, review current offers or send a specific request. There is no wrong place to begin."],
+    ["Start where you are","Shop available stock, review current offers or send a specific request. Start with the route that best matches what you know."],
     ["Share the detail","Add the dimensions, grade, treatment and quantity that matter to the job. Clear inputs make the next step easier."],
     ["Choose what fits","Review the timber options and the information around them, then choose the route that works for your team."],
     ["Keep it moving","FPX keeps the order and delivery path connected so your team can follow the handover through to site."],
   ];
-  return <><InnerHero slug="how-fpx-works"/><section className="m-how-page-flow"><div className="m-how-page-intro"><Eyebrow>WHAT HAPPENS NEXT</Eyebrow><h2>From requirement<br/><em>to delivery.</em></h2><p>Once you start, FPX keeps the practical details moving—from the first specification through to the final handover.</p></div><div className="m-how-page-cards">{steps.map((s,i)=><article key={s[0]}><div className="m-how-page-marker" aria-hidden="true"/><div><small>{["BEGIN","DETAIL","DECIDE","DELIVER"][i]}</small><h3>{s[0]}</h3><p>{s[1]}</p></div></article>)}</div></section><PageCTA/></>;
+  return <><InnerHero slug="how-fpx-works"/><section className="m-how-page-flow"><div className="m-how-page-intro"><Eyebrow>WHAT HAPPENS NEXT</Eyebrow><h2>From requirement<br/><em>to delivery.</em></h2><p>Once you start, FPX keeps the practical details moving, from the first specification through to the final handover.</p></div><div className="m-how-page-cards">{steps.map((s,i)=><article key={s[0]}><div className="m-how-page-marker" aria-hidden="true"/><div><small>{["BEGIN","DETAIL","DECIDE","DELIVER"][i]}</small><h3>{s[0]}</h3><p>{s[1]}</p></div></article>)}</div></section><PageCTA/></>;
 }
 
 function CustomersPage(){
@@ -361,14 +361,14 @@ function CustomersPage(){
   return <><InnerHero slug="our-customers"/><section className="m-customer-stories"><div className="m-section-heading"><Eyebrow>WHO USES FPX</Eyebrow><h2>Different requirements.<br/><em>One clearer route to supply.</em></h2></div>{groups.map((g,i)=><article key={g[0]}><div><img src={`/images/${g[2]}`} alt=""/></div><span>0{i+1}</span><h3>{g[0]}</h3><p>{g[1]}</p><a href="https://app.fpx.nz/shop">Start sourcing <Arrow/></a></article>)}</section><section className="m-manifesto"><Eyebrow>BUILT AROUND BUYERS</Eyebrow><p>Clear product information. Flexible starting points. Timber knowledge when it matters.</p></section><PageCTA/></>;
 }
 
-function SawPointPage(){return <><section className="m-saw-hero"><Eyebrow>FPX PRESENTS</Eyebrow><h1>Saw Point<span>.</span></h1><h2>Straight talk on NZ timber—no sawdust.</h2><p>Monthly industry news, market updates and a direct read on what is happening.</p><small>WRITTEN BY GEORGE HARMAN · FPX</small></section><section className="m-subscribe"><div><span>THE NEXT ISSUE</span><h2>Get Saw Point in your inbox.</h2><p>One useful read. No clutter.</p></div><form><input placeholder="Your name"/><input type="email" placeholder="Email address"/><button>Subscribe <Arrow/></button></form></section><section className="m-archive"><Eyebrow>THE ARCHIVE</Eyebrow><h2>Previous issues.</h2><article><div className="m-issue-cover"><span>SAW<br/>POINT.</span><small>ISSUE 001</small></div><div><span>AUGUST 2026</span><h3>Issue 001</h3><p>New Zealand timber news, market movement and what matters next.</p></div><a href="#">Read issue <Arrow/></a></article></section><PageCTA/></>}
+function SawPointPage(){return <><section className="m-saw-hero"><Eyebrow>FPX PRESENTS</Eyebrow><h1>Saw Point<span>.</span></h1><h2>Straight talk on NZ timber. No sawdust.</h2><p>A straight read on what matters: selected news and developments worth paying attention to in the industry.</p><small>WRITTEN BY GEORGE HARMAN · FPX</small></section><section className="m-subscribe"><div><span>THE NEXT ISSUE</span><h2>Get Saw Point in your inbox.</h2><p>A focused monthly read from FPX.</p></div><form><input placeholder="Your name"/><input type="email" placeholder="Email address"/><button>Subscribe <Arrow/></button></form></section><section className="m-archive"><Eyebrow>THE ARCHIVE</Eyebrow><h2>Previous issues.</h2><article><div className="m-issue-cover"><span>SAW<br/>POINT.</span><small>ISSUE 001</small></div><div><span>AUGUST 2026</span><h3>Issue 001</h3><p>New Zealand timber news, market movement and what matters next.</p></div><a href="#">Read issue <Arrow/></a></article></section><PageCTA/></>}
 
-function ResourcesPage(){const items=[["Radiata pine characteristics","How growth and environment shape timber in New Zealand.","category-appearance-grades.webp"],["The science of kiln drying","Moisture content and why it matters for Radiata pine.","category-untreated-timber.webp"],["Understanding treatment classes","A practical guide to matching timber with its application.","category-treated-timber.webp"],["Nominal vs finished size","Specify dimensions with fewer surprises.","category-manufacturing-grades.webp"]];return <><section className="m-resource-hero"><Eyebrow>INDUSTRY RESOURCES</Eyebrow><h1>Timber knowledge,<br/><em>without the runaround.</em></h1><div className="m-resource-search"><Search/><input placeholder="Search guides, products or topics"/><button>Search</button></div></section><section className="m-resource-grid">{items.map((x,i)=><article key={x[0]}><div><img src={`/images/${x[2]}`} alt=""/><span>0{i+1}</span></div><small>FPX FIELD GUIDE</small><h2>{x[0]}</h2><p>{x[1]}</p><a href="#">Read guide <Arrow/></a></article>)}</section><PageCTA/></>}
+function ResourcesPage(){const items=[["Radiata pine characteristics","How growth and environment shape timber in New Zealand.","category-appearance-grades.webp"],["The science of kiln drying","Moisture content and why it matters for Radiata pine.","category-untreated-timber.webp"],["Understanding treatment classes","A practical guide to matching timber with its application.","category-treated-timber.webp"],["Nominal vs finished size","Specify dimensions with fewer surprises.","category-manufacturing-grades.webp"]];return <><section className="m-resource-hero"><Eyebrow>INDUSTRY RESOURCES</Eyebrow><h1>Practical timber<br/><em>knowledge.</em></h1><div className="m-resource-search"><Search/><input placeholder="Search guides, products or topics"/><button>Search</button></div></section><section className="m-resource-grid">{items.map((x,i)=><article key={x[0]}><div><img src={`/images/${x[2]}`} alt=""/><span>0{i+1}</span></div><small>FPX FIELD GUIDE</small><h2>{x[0]}</h2><p>{x[1]}</p><a href="#">Read guide <Arrow/></a></article>)}</section><PageCTA/></>}
 
 const faqItems=[["What is FPX Sourcing?","FPX is a digital timber sourcing service for New Zealand buyers, combining product discovery, pricing visibility and industry support."],["Who is FPX for?","Contractors, builders, merchants, processors and procurement teams that buy commercial timber."],["Do I need to be a large buyer?","No. FPX supports businesses of different sizes and different requirement types."],["What can I do through FPX?","Browse stock, view current offers and create detailed multi-product requests."],["What if I cannot find the timber I need?","Create a request with the specifications and quantity required and FPX will review it."],["How much does FPX cost?","FPX is free for buyers to use."],["Can I apply for trade credit?","Eligible buyers can apply after account verification and credit assessment."],["Who do I contact for help?","Email support@fpx.nz or use the contact page."]];
 function FAQPage(){return <><InnerHero slug="faq"/><section className="m-faq"><aside><span>08 QUESTIONS</span><h2>Everything buyers need to know.</h2><p>Still unsure? The FPX team can help.</p><Link href="/contact-us">Ask us directly <Arrow/></Link></aside><div>{faqItems.map((f,i)=><details key={f[0]} open={i===0}><summary><span>0{i+1}</span>{f[0]}<ChevronDown/></summary><p>{f[1]}</p></details>)}</div></section><PageCTA/></>}
 
-function AboutPage(){return <><InnerHero slug="about-us"/><section className="m-about-statement"><Eyebrow>WHY FPX EXISTS</Eyebrow><p>Timber sourcing should not live across phone calls, static lists and email chains. FPX gives buyers a clearer digital starting point while keeping real industry support close.</p></section><section className="m-values">{[["01","Make timber easier to find."],["02","Keep specifications clear."],["03","Support the path to delivery."]].map(x=><article key={x[0]}><span>{x[0]}</span><h2>{x[1]}</h2></article>)}</section><section className="m-origin"><div><Eyebrow>NEW ZEALAND BUILT</Eyebrow><h2>Designed around the way the timber trade actually moves.</h2></div><p>FPX focuses on practical commercial requirements across categories, specifications and applications—not generic marketplace mechanics.</p></section><PageCTA/></>}
+function AboutPage(){return <><InnerHero slug="about-us"/><section className="m-about-statement"><Eyebrow>WHY FPX EXISTS</Eyebrow><p>FPX gives timber buyers a clear digital starting point for product discovery and sourcing, supported by people who understand the New Zealand timber trade.</p></section><section className="m-values">{[["01","Make timber easier to find."],["02","Keep specifications clear."],["03","Support the path to delivery."]].map(x=><article key={x[0]}><span>{x[0]}</span><h2>{x[1]}</h2></article>)}</section><section className="m-origin"><div><Eyebrow>NEW ZEALAND BUILT</Eyebrow><h2>Designed around the way the timber trade actually moves.</h2></div><p>FPX is designed around practical commercial timber requirements across categories, specifications and applications, with digital tools and industry support working together.</p></section><PageCTA/></>}
 
 function ContactPage(){return <><InnerHero slug="contact-us"/><section className="m-contact"><aside><Eyebrow>REACH US DIRECTLY</Eyebrow><a href="mailto:support@fpx.nz"><Mail/> support@fpx.nz</a><a href="tel:+642108473262"><Phone/> +64 210 847 3262</a><p>Raglan · New Zealand</p></aside><form><label>Full name<input placeholder="Your name"/></label><label>Company<input placeholder="Company name"/></label><label>Email<input type="email" placeholder="you@company.co.nz"/></label><label>Phone<input placeholder="Your phone number"/></label><label className="wide">What can we help with?<select><option>Timber sourcing requirement</option><option>Using the FPX platform</option><option>General enquiry</option></select></label><label className="wide">Message<textarea placeholder="Tell us what timber you need, including dimensions, grade, treatment and quantity if known."/></label><button>Send enquiry <Arrow/></button></form></section><PageCTA/></>}
 
