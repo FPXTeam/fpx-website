@@ -28,3 +28,5 @@ export function LinkedinIcon(props: IconProps) {
     </svg>
   );
 }
+
+export const LinkedInIcon = LinkedinIcon;
