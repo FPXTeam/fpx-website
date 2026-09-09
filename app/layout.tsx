@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "../components/revised-pages.css";
 import "../components/inner-refresh.css";
+import "../components/brand-system-2026.css";
 
 const siteUrl = "https://fpx.nz";
 const socialImage = "/images/social/fpx-social-share.jpg";
