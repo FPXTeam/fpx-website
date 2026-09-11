@@ -22,5 +22,5 @@ export function MasterInnerPage({slug}:{slug:string}){
   else if(slug==="contact-us")body=<ContactPage/>;
   else if(slug==="timber-growth-rings"||slug==="the-science-of-kiln-drying")body=<InsightArticlePage slug={slug}/>;
   else body=<LegalPage slug={slug}/>;
-  return <Shell><main id="main-content" className="master-site m-inner-site">{body}</main></Shell>;
+  return <Shell><main className="master-site m-inner-site">{body}</main></Shell>;
 }
