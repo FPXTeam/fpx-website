@@ -1,0 +1,139 @@
+/* FPX public website — September 2026 final visual/UX polish.
+   Presentation only: approved page content, product groups, categories and sourcing logic remain unchanged. */
+
+:root{
+  --fpx-focus:#A38560;
+  --fpx-header-h:82px;
+}
+
+html{scroll-padding-top:calc(var(--fpx-header-h) + 18px)}
+body{min-width:320px}
+
+/* Perceived performance: no first-visit blocking animation. */
+.preloader{display:none!important}
+
+/* Keyboard and accessibility treatment. */
+.skip-link{position:fixed;left:16px;top:12px;z-index:10000;padding:11px 16px;border-radius:7px;background:#040E0E;color:#fff;font:700 13px "Open Sans",Arial,sans-serif;transform:translateY(-160%);transition:transform .18s ease}
+.skip-link:focus{transform:translateY(0)}
+:where(a,button,input,textarea,select,summary):focus-visible{outline:3px solid var(--fpx-focus);outline-offset:3px}
+:where(a,button){-webkit-tap-highlight-color:transparent}
+
+/* Navigation: clearer state, stronger mobile utility. */
+.desktop-nav>a,.desktop-nav .drop>button{position:relative}
+.desktop-nav>a::after,.desktop-nav .drop>button::after{content:"";position:absolute;left:0;right:0;bottom:5px;height:2px;background:#40973C;transform:scaleX(0);transform-origin:left;transition:transform .2s ease}
+.desktop-nav>a:hover::after,.desktop-nav>a.is-active::after,.desktop-nav .drop>button:hover::after,.desktop-nav .drop>button.is-active::after{transform:scaleX(1)}
+.desktop-nav>a.is-active,.desktop-nav .drop>button.is-active{color:#235f33}
+.mobile-nav{max-height:calc(100dvh - var(--fpx-header-h));overflow:auto;overscroll-behavior:contain}
+.mobile-nav>a{min-height:46px;display:flex;align-items:center}
+.mobile-nav>a.is-active{color:#2f7f43}
+.mobile-nav .mobile-section-label{padding:14px 0 6px;font:700 10px Lato,Arial,sans-serif;letter-spacing:.16em;color:#758956;text-transform:uppercase}
+.mobile-nav-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;padding-top:16px;border-top:1px solid #e0e7e1}
+.mobile-nav-actions a{min-height:48px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.mobile-nav-actions .mobile-login{border:1px solid #b8c8ba;color:#244c35}
+.mobile-nav-actions .mobile-browse{background:#40973C;color:#fff}
+
+/* Shared rhythm: stronger hierarchy without changing copy. */
+.master-site section{isolation:isolate}
+.master-site .m-eyebrow{margin-bottom:18px}
+.master-site p{max-width:72ch}
+.m-btn,.nav-cta{min-height:48px}
+.m-btn{border-radius:7px}
+.m-text-link{min-height:44px;display:inline-flex;align-items:center}
+
+/* Avoid card/template fatigue: lighter borders and more editorial spacing. */
+.m-product-group-card,.m-resource-card,.m-saw-issue-card{transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease}
+.m-product-group-card:hover,.m-resource-card:hover,.m-saw-issue-card:hover{transform:translateY(-5px)}
+
+/* Product group pages: retain every category, improve scanability. */
+.m-product-category-list{align-content:start}
+.m-product-category-list>div{min-height:68px;display:grid;grid-template-columns:46px 1fr;align-items:center;gap:14px}
+.m-product-category-list>div span{font-variant-numeric:tabular-nums}
+.m-product-category-list>div b{line-height:1.25}
+.m-product-category-list.is-single>div{max-width:620px}
+
+/* Long product taxonomies need rhythm rather than a wall of rows. */
+.m-product-category-list:not(.is-single){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:34px}
+.m-product-category-list:not(.is-single)>div{border-bottom:1px solid #d5ded7}
+
+/* Product imagery: consistent aspect handling and less layout shift. */
+.m-product-detail-hero-image,.m-product-gallery>div,.m-product-group-image,.m-end-use-image,.m-resource-card>div:first-child{background:#e8eee9;overflow:hidden}
+.m-product-detail-hero-image img,.m-product-gallery img,.m-product-group-image img,.m-end-use-image img,.m-resource-card img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* Insights: make sparse library and articles feel intentional. */
+.m-resource-grid{align-items:start}
+.m-resource-card h2{max-width:18ch}
+.m-resource-card p{max-width:58ch}
+.m-insight-body{max-width:900px}
+.m-insight-body>section{padding-block:34px;border-bottom:1px solid #dbe3dc}
+.m-insight-body>section:last-child{border-bottom:0}
+.m-insight-body h2{max-width:22ch}
+.m-insight-body p{font-size:clamp(16px,1.15vw,18px);line-height:1.78;color:#4f6259}
+
+/* FAQ controls: clearer affordance and larger touch targets. */
+.m-faq aside nav button{min-height:52px}
+.m-faq-topic summary{min-height:58px;cursor:pointer}
+.m-faq-topic summary::-webkit-details-marker{display:none}
+
+/* Contact/form fields: consistent focus, labels and touch size. */
+.master-site input,.master-site textarea,.master-site select{min-height:48px;font-size:16px}
+.master-site textarea{min-height:140px;resize:vertical}
+.master-site label{line-height:1.4}
+
+/* Footer readability and target sizing. */
+.footer-grid div>a:not(.logo){min-height:32px;display:flex;align-items:center}
+.footer-social a{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+
+/* Tablet: compress oversized cinematic spacing before content becomes tiring. */
+@media(max-width:1050px){
+  .m-product-category-list:not(.is-single){column-gap:22px}
+  .master-site .m-cta{min-height:520px}
+}
+
+/* Mobile polish: reduce vertical fatigue, protect line lengths and tap targets. */
+@media(max-width:700px){
+  :root{--fpx-header-h:74px}
+  .site-header{height:var(--fpx-header-h)}
+  .brand img{width:82px;height:auto}
+  .master-site .m-eyebrow{font-size:10px!important;line-height:1.3!important;letter-spacing:.16em!important}
+  .master-site h1{letter-spacing:-.04em!important}
+  .master-site h2{letter-spacing:-.03em!important}
+  .master-site p{line-height:1.65}
+  .m-actions{gap:9px}
+  .m-actions .m-btn{width:100%;justify-content:center}
+  .m-entry-float{max-width:calc(100vw - 32px)}
+  .m-scroll-cue{display:none}
+  .m-category-pocket,.m-category-pocket.is-compact{height:auto!important}
+  .m-category-pin{height:auto!important;display:block!important;padding:80px 20px!important}
+  .m-category-copy{padding:0 0 28px!important}
+  .m-category-copy:after{display:none}
+  .m-category-window{overflow:visible!important;background:transparent!important;box-shadow:none!important}
+  .m-category-window:before,.m-category-window:after{display:none}
+  .m-category-track{position:static!important;inset:auto!important;display:grid!important;grid-template-columns:1fr!important;gap:14px!important}
+  .m-category-card,.m-category-card:nth-child(even){min-height:0!important;transform:none!important}
+  .m-category-image{height:210px!important}
+  .m-product-category-list:not(.is-single){grid-template-columns:1fr;column-gap:0}
+  .m-product-category-list>div{min-height:58px;grid-template-columns:38px 1fr}
+  .m-product-gallery{gap:8px}
+  .m-product-examples>div:last-child{gap:8px}
+  .m-insight-body>section{padding-block:26px}
+  .m-resource-card h2{max-width:none}
+  .m-cta-board{opacity:.28;pointer-events:none}
+  .footer-bottom{gap:10px;flex-direction:column}
+}
+
+@media(max-width:430px){
+  .nav-wrap{padding-inline:18px}
+  .mobile-nav{padding-inline:20px}
+  .m-product-detail-actions{align-items:stretch}
+  .m-product-detail-actions .m-btn{width:100%}
+  .m-product-detail-actions .m-text-link{justify-content:center}
+  .m-answer-strip article{padding-block:22px}
+  .m-saw-subscribe-card,.m-faq-hero-note{border-radius:10px}
+}
+
+/* Users who request reduced motion should get an immediate, stable interface. */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  [data-master-parallax],[data-horizontal-scroll]{transform:none!important}
+}
