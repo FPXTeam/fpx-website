@@ -163,14 +163,72 @@ export function CustomersPage(){
   </>;
 }
 
-export function AboutPage(){const team=[{name:"George Harman",role:"Director",image:"https://assets.softr-files.com/applications/bfc5c9f5-7e6e-44f9-b058-0da4dbec6efe/assets/6446200e-fdaf-4b71-8073-c9287ca48b93.png",copy:"George brings hands-on timber industry experience to FPX, with a focus on practical sourcing, commercial relationships and making the buying process easier to navigate."},{name:"Gabriela Molloy",role:"General Manager",image:"https://assets.softr-files.com/applications/bfc5c9f5-7e6e-44f9-b058-0da4dbec6efe/assets/2d8c0d1f-62c9-454a-8e12-a6786ac94371.png",copy:"Gabriela leads the day-to-day delivery of FPX, helping keep the sourcing experience clear, responsive and useful for timber buyers across New Zealand."}];return <>
-  <section className="pa-hero"><div className="pa-hero-copy"><Eyebrow>ABOUT FPX</Eyebrow><h1>Built around the way<br/><span>New Zealand buys timber.</span></h1><p>FPX gives commercial timber buyers a clearer digital starting point for sourcing, backed by people who understand the products, the market and the practical details that matter.</p></div><div className="pa-hero-image"><img src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber yard"/></div></section>
-  <section className="pa-facts"><article><small>LEGAL COMPANY</small><h3>Forest Products Exchange Limited</h3><p>Company number 8469278</p></article><article><small>WHAT FPX DOES</small><h3>Commercial timber sourcing across New Zealand</h3><p>Browse timber, review offers or send specific requirements.</p></article><article><small>COMPANY RELATIONSHIP</small><h3>FPX Sourcing is backed by Sutcliffe Trading Limited</h3><p>Digital sourcing supported by New Zealand timber trading experience.</p></article></section>
-  <section className="pa-story"><div><Eyebrow>WHY FPX EXISTS</Eyebrow><h2>A simpler way to move from requirement to supply.</h2></div><div><p>Timber buying can involve a lot of moving parts: product specifications, availability, pricing, lead times and delivery requirements. FPX brings those starting points together so buyers can browse, compare and request timber in one place.</p><p>The website helps buyers understand the range. The FPX sourcing platform carries the detail, from current timber and offers through to specific product requests.</p></div></section>
-  <section className="pa-principles"><article><span>01</span><h3>Clear product information</h3><p>Understand the timber range before moving into detailed specifications and current availability.</p></article><article><span>02</span><h3>Flexible ways to start</h3><p>Browse stock, review current offers or send a specific timber requirement.</p></article><article><span>03</span><h3>Timber knowledge when it matters</h3><p>Digital tools are supported by people who understand commercial timber sourcing in New Zealand.</p></article></section>
-  <section className="pa-team"><header><Eyebrow>THE PEOPLE BEHIND FPX</Eyebrow><h2>Industry experience.<br/>Practical support.</h2><p>FPX combines a digital sourcing experience with a team that understands the New Zealand timber trade.</p></header><div>{team.map(person=><article key={person.name}><div className="pa-team-image"><img src={person.image} alt={person.name}/></div><small>{person.role}</small><h3>{person.name}</h3><p>{person.copy}</p></article>)}</div></section>
-  <section className="pa-close"><div><Eyebrow>NEW ZEALAND FOCUSED</Eyebrow><h2>Designed for commercial timber buyers across New Zealand.</h2><p>FPX helps project teams, merchants, processors and other timber buyers move from product discovery to a clear sourcing path.</p></div><div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/shop">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a></div></section>
-</>;}
+export function AboutPage(){
+  const team=[
+    {name:"George Harman",role:"Director",image:"https://assets.softr-files.com/applications/bfc5c9f5-7e6e-44f9-b058-0da4dbec6efe/assets/6446200e-fdaf-4b71-8073-c9287ca48b93.png",copy:"George brings hands-on timber industry experience to FPX, with a focus on practical sourcing, commercial relationships and making the buying process easier to navigate."},
+    {name:"Gabriela Molloy",role:"General Manager",image:"https://assets.softr-files.com/applications/bfc5c9f5-7e6e-44f9-b058-0da4dbec6efe/assets/2d8c0d1f-62c9-454a-8e12-a6786ac94371.png",copy:"Gabriela leads the day-to-day delivery of FPX, helping keep the sourcing experience clear, responsive and useful for timber buyers across New Zealand."}
+  ];
+  return <>
+    <section className="pab-hero">
+      <img src="/images/product-groups/manufacturing/manufacturing-warehouse-bundles.png" alt="Commercial timber bundles in a New Zealand warehouse"/>
+      <div className="pab-hero-shade"/>
+      <div className="pab-hero-copy">
+        <Eyebrow>ABOUT FPX</Eyebrow>
+        <h1>Built around the way<br/>New Zealand buys timber.</h1>
+        <p>FPX gives commercial timber buyers a clearer digital starting point for sourcing, backed by people who understand the products, the market and the practical details that matter.</p>
+      </div>
+    </section>
+
+    <section className="pab-facts">
+      <article><small>LEGAL COMPANY</small><h3>Forest Products Exchange Limited</h3><p>Company number 8469278</p></article>
+      <article><small>WHAT FPX DOES</small><h3>Commercial timber sourcing across New Zealand</h3><p>Browse timber, review offers or send specific requirements.</p></article>
+      <article><small>COMPANY RELATIONSHIP</small><h3>FPX Sourcing is backed by Sutcliffe Trading Limited</h3><p>Digital sourcing supported by New Zealand timber trading experience.</p></article>
+    </section>
+
+    <section className="pab-story">
+      <div className="pab-story-copy">
+        <Eyebrow>WHY FPX EXISTS</Eyebrow>
+        <h2>A clearer way to move from requirement to supply.</h2>
+        <p>Timber buying can involve a lot of moving parts: product specifications, availability, pricing, lead times and delivery requirements. FPX brings those starting points together so buyers can browse, compare and request timber in one place.</p>
+        <p>The website helps buyers understand the range. The FPX sourcing platform carries the detail, from current timber and offers through to specific product requests.</p>
+      </div>
+      <div className="pab-story-visual">
+        <img src="/images/fpx-app-shop.png" alt="FPX timber sourcing platform"/>
+      </div>
+    </section>
+
+    <section className="pab-bridge">
+      <div className="pab-bridge-head">
+        <Eyebrow>WHAT FPX BRINGS TOGETHER</Eyebrow>
+        <h2>Product detail.<br/>Different ways to start.<br/>People who know timber.</h2>
+      </div>
+      <div className="pab-bridge-grid">
+        <article><span>PRODUCT</span><h3>Clear product information</h3><p>Understand the timber range before moving into detailed specifications and current availability.</p></article>
+        <article><span>SOURCING</span><h3>Flexible ways to start</h3><p>Browse stock, review current offers or send a specific timber requirement.</p></article>
+        <article><span>SUPPORT</span><h3>Timber knowledge when it matters</h3><p>Digital tools are supported by people who understand commercial timber sourcing in New Zealand.</p></article>
+      </div>
+    </section>
+
+    <section className="pab-team">
+      <header>
+        <Eyebrow>THE PEOPLE BEHIND FPX</Eyebrow>
+        <h2>Industry experience.<br/>Practical support.</h2>
+        <p>FPX combines a digital sourcing experience with a team that understands the New Zealand timber trade.</p>
+      </header>
+      <div className="pab-team-grid">
+        {team.map(person=><article key={person.name}>
+          <div className="pab-team-image"><img src={person.image} alt={person.name}/></div>
+          <div className="pab-team-copy"><small>{person.role}</small><h3>{person.name}</h3><p>{person.copy}</p></div>
+        </article>)}
+      </div>
+    </section>
+
+    <section className="pab-close">
+      <div><Eyebrow>NEW ZEALAND FOCUSED</Eyebrow><h2>Designed for commercial timber buyers across New Zealand.</h2><p>FPX helps project teams, merchants, processors and other timber buyers move from product discovery to a clear sourcing path.</p></div>
+      <div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/shop">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a></div>
+    </section>
+  </>;
+}
 
 export function ContactPage(){return <>
   <section className="pct-hero"><img src="/images/fpx-hero-timber-yard.webp" alt="Commercial timber yard in New Zealand"/><div className="pct-hero-shade"/><div className="pct-hero-copy"><Eyebrow>CONTACT FPX</Eyebrow><h1>Tell us what timber<br/>you need.</h1><p>Contact Forest Products Exchange for commercial timber sourcing requirements, FPX platform support or general enquiries across New Zealand.</p><div className="pct-quick"><a href="mailto:support@fpx.nz"><Mail/>support@fpx.nz</a><a href="tel:+642108473262"><Phone/>+64 210 847 3262</a><span><MapPin/>New Zealand</span></div></div></section>
