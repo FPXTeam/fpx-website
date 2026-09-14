@@ -683,3 +683,23 @@ body .premium-home .ph-hero .m-btn-ghost{
 body .premium-home .ph-hero-scroll{
   color:#d7dfda!important;
 }
+
+
+/* Position hero scroll cue cleanly in the upper-right */
+body .premium-home .ph-hero-scroll{
+  position:absolute!important;
+  top:118px!important;
+  right:7vw!important;
+  left:auto!important;
+  bottom:auto!important;
+  writing-mode:horizontal-tb!important;
+  transform:none!important;
+  z-index:3!important;
+  font:700 9px/1 Lato,Arial,sans-serif!important;
+  letter-spacing:.18em!important;
+  color:#d7dfda!important;
+  white-space:nowrap!important;
+}
+@media(max-width:700px){
+  body .premium-home .ph-hero-scroll{display:none!important}
+}
