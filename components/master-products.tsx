@@ -19,7 +19,7 @@ const endUses=[
 export function ProductsPage(){
   return <>
     <section className="ppr-hero">
-      <img src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber products in a commercial yard"/>
+      <img src="/images/product-groups/manufacturing/manufacturing-hero-pine-stack.png" alt="Stacked New Zealand timber products"/>
       <div className="ppr-hero-shade"/>
       <div className="ppr-hero-copy">
         <Eyebrow>OUR TIMBER RANGE</Eyebrow>
