@@ -97,23 +97,26 @@ export function CustomersPage(){
       </div>
 
       <div className="poc4-experience">
-        <div className="poc4-orbit">
-          <div className="poc4-globe" aria-live="polite">
-            <div className="poc4-grid-lines"/>
-            <img src={"/images/"+current.image} alt={current.alt}/>
-            <span>0{active+1}</span>
+        <div className="poc4-carousel" aria-live="polite">
+          <div className="poc4-carousel-stage">
+            {customerProfiles.map((g,i)=>{
+              const total=customerProfiles.length;
+              const offset=(i-active+total)%total;
+              const position=offset===0?"is-active":offset===1?"is-next":offset===total-1?"is-prev":"is-back";
+              return <button
+                key={g.title}
+                type="button"
+                className={"poc4-card "+position}
+                onClick={()=>setActive(i)}
+                aria-label={`Show ${g.title}`}
+                aria-pressed={active===i}
+              >
+                <span className="poc4-card-number">0{i+1}</span>
+                <img src={"/images/"+g.image} alt={g.alt}/>
+                <b>{g.label}</b>
+              </button>
+            })}
           </div>
-
-          {customerProfiles.map((g,i)=><button
-            key={g.title}
-            type="button"
-            className={"poc4-orbit-avatar orbit-"+i+(active===i?" active":"")}
-            onClick={()=>setActive(i)}
-            aria-label={`Show ${g.title}`}
-            aria-pressed={active===i}
-          >
-            <img src={"/images/"+g.image} alt=""/>
-          </button>)}
 
           <div className="poc4-nav">
             <button type="button" onClick={()=>setActive((active-1+customerProfiles.length)%customerProfiles.length)} aria-label="Previous customer">←</button>
