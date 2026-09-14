@@ -62,29 +62,57 @@ export function CustomersPage(){
       </div>
     </section>
 
-    <section className="poc2-needs">
-      <div className="poc2-needs-head">
-        <Eyebrow>DIFFERENT STARTING POINTS</Eyebrow>
-        <h2>The job changes.<br/>The need for clarity doesn’t.</h2>
-        <p>Different buyers come to FPX with different pressures. The platform gives each of them a clearer place to start.</p>
+    <section className="poc2-deep">
+      <div className="poc2-deep-head">
+        <Eyebrow>BUYER PROFILES</Eyebrow>
+        <h2>What each buyer actually needs.</h2>
+        <p>Open a customer profile for the practical sourcing details that matter most to that type of buyer.</p>
       </div>
-      <div className="poc2-needs-grid">
-        <article><span>01</span><small>CONTRACTORS & BUILDERS</small><h3>Product fit</h3><p>Clear product fit, timing and an easy way to source what the job actually needs.</p></article>
-        <article><span>02</span><small>PROCUREMENT TEAMS</small><h3>Specification clarity</h3><p>A structured way to compare requirements, keep specifications clear and move orders forward.</p></article>
-        <article><span>03</span><small>TIMBER MERCHANTS</small><h3>Repeat needs</h3><p>A practical way to handle repeat needs, spot requirements and opportunities without extra admin.</p></article>
-        <article><span>04</span><small>WOOD PROCESSORS</small><h3>Feedstock visibility</h3><p>Reliable feedstock visibility, useful specifications and a clear route to specific manufacturing requirements.</p></article>
-      </div>
-    </section>
 
-    <section className="poc2-pillars">
-      <div className="poc2-pillars-head">
-        <Eyebrow>BUILT AROUND BUYERS</Eyebrow>
-        <h2>Three things FPX keeps simple.</h2>
-      </div>
-      <div className="poc2-pillars-grid">
-        <article><span>01</span><h3>Know what you’re looking at.</h3><p>Understand the product group, application and key specifications before moving into sourcing detail.</p></article>
-        <article><span>02</span><h3>Start the way that suits the job.</h3><p>Browse available stock, review current offers or create a specific request when the requirement is already defined.</p></article>
-        <article><span>03</span><h3>Get support when the detail matters.</h3><p>Use FPX with practical timber knowledge behind the process when the requirement needs more than a catalogue search.</p></article>
+      <div className="poc2-deep-list">
+        <details open>
+          <summary><span>01</span><div><small>BUILDERS & CONTRACTORS</small><h3>Contractors & builders</h3></div><b aria-hidden="true">+</b></summary>
+          <div className="poc2-deep-body">
+            <article><small>TYPICAL NEED</small><h4>Timber matched to an active job.</h4><p>Product fit, dimensions, treatment, quantity and timing all need to line up with what is happening on site.</p></article>
+            <article><small>WHAT MATTERS</small><h4>Clarity before commitment.</h4><p>Builders need to know what the product is, whether it suits the application, how much is available and when it can be supplied.</p></article>
+            <article><small>HOW FPX HELPS</small><h4>Start with the job, not the catalogue.</h4><p>Browse suitable timber when the requirement is flexible, or create a request when the specification is already defined.</p></article>
+            <article><small>BEST STARTING ROUTE</small><h4>Shop or Request List</h4><p>Use Shop for available timber. Use the Request List when the job needs a specific grade, dimension, treatment or quantity.</p></article>
+            <article><small>PREPARE BEFORE SOURCING</small><h4>Bring the key job details.</h4><p>Application, dimensions, grade, treatment, quantity, required timing and delivery location where known.</p></article>
+          </div>
+        </details>
+
+        <details>
+          <summary><span>02</span><div><small>PROCUREMENT TEAMS</small><h3>Procurement teams</h3></div><b aria-hidden="true">+</b></summary>
+          <div className="poc2-deep-body">
+            <article><small>TYPICAL NEED</small><h4>A structured commercial requirement.</h4><p>Procurement teams often need to source to a defined specification while keeping product information, quantities and timing organised.</p></article>
+            <article><small>WHAT MATTERS</small><h4>Consistency across the requirement.</h4><p>Clear specifications, comparable options and a sourcing trail that can be understood internally.</p></article>
+            <article><small>HOW FPX HELPS</small><h4>Bring the requirement into one sourcing flow.</h4><p>FPX gives teams a place to browse, review offers or send a structured product request without rebuilding the requirement across separate emails and documents.</p></article>
+            <article><small>BEST STARTING ROUTE</small><h4>Request List or Offers</h4><p>Use Requests for defined procurement requirements. Review Offers when a current opportunity may suit the specification or volume.</p></article>
+            <article><small>PREPARE BEFORE SOURCING</small><h4>Define the commercial brief.</h4><p>Product, specification, quantity, treatment, timing, delivery requirements and any non-negotiable project conditions.</p></article>
+          </div>
+        </details>
+
+        <details>
+          <summary><span>03</span><div><small>TIMBER MERCHANTS</small><h3>Timber merchants</h3></div><b aria-hidden="true">+</b></summary>
+          <div className="poc2-deep-body">
+            <article><small>TYPICAL NEED</small><h4>Ongoing stock and spot requirements.</h4><p>Merchants may be filling a known gap, responding to a customer need or looking for commercially useful timber opportunities.</p></article>
+            <article><small>WHAT MATTERS</small><h4>Product relevance and commercial fit.</h4><p>Grade, dimensions, quantity, pricing, lead time and whether the product complements existing stock or customer demand.</p></article>
+            <article><small>HOW FPX HELPS</small><h4>More than one way to source.</h4><p>Browse available timber, review current offers or send a specific requirement when the product is not already visible.</p></article>
+            <article><small>BEST STARTING ROUTE</small><h4>Shop, Offers or Requests</h4><p>Merchants can use all three sourcing routes depending on whether the requirement is immediate, opportunistic or highly specific.</p></article>
+            <article><small>PREPARE BEFORE SOURCING</small><h4>Know the target product.</h4><p>Preferred grades, dimensions, quantity, treatment, acceptable alternatives and the commercial timing of the requirement.</p></article>
+          </div>
+        </details>
+
+        <details>
+          <summary><span>04</span><div><small>WOOD PROCESSORS</small><h3>Wood processors</h3></div><b aria-hidden="true">+</b></summary>
+          <div className="poc2-deep-body">
+            <article><small>TYPICAL NEED</small><h4>Feedstock that suits production.</h4><p>Processors need timber that aligns with manufacturing inputs, recovery expectations and the specifications of the finished product.</p></article>
+            <article><small>WHAT MATTERS</small><h4>Grade, size and consistency.</h4><p>Feedstock characteristics need to make commercial sense for the process, yield and intended output.</p></article>
+            <article><small>HOW FPX HELPS</small><h4>Make specific feedstock requirements easier to communicate.</h4><p>Browse available manufacturing timber or send FPX the exact grade, size, quantity and other requirements needed for production.</p></article>
+            <article><small>BEST STARTING ROUTE</small><h4>Shop or Request List</h4><p>Use Shop when suitable feedstock is already available. Use Requests when the manufacturing requirement is more specific.</p></article>
+            <article><small>PREPARE BEFORE SOURCING</small><h4>Define the feedstock requirement.</h4><p>Grade, dimensions, acceptable characteristics, volume, moisture or treatment requirements where relevant, and required timing.</p></article>
+          </div>
+        </details>
       </div>
     </section>
 
