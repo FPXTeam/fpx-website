@@ -79,7 +79,7 @@ export function CustomersPage(){
 
   return <>
     <section className="poc2-hero">
-      <img className="poc2-hero-bg" src="/images/fpx-hero-timber-yard.webp" alt="Commercial timber yard in New Zealand"/>
+      <img className="poc2-hero-bg" src="/images/product-groups/building-construction/building-symmetrical-framing.png" alt="Timber framing for a commercial construction project in New Zealand"/>
       <div className="poc2-hero-shade"/>
       <div className="poc2-hero-copy">
         <Eyebrow>OUR CUSTOMERS</Eyebrow>
