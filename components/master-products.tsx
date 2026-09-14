@@ -10,10 +10,10 @@ export const productGroupDetails: Record<string,{title:string;description:string
 };
 
 const endUses=[
-  ["Fencing","Palings · Posts · Rails · Fence Capping · Pegs","product-groups/outdoor-landscaping/outdoor-townhouse-fence.png"],
-  ["Retaining","Posts · Retaining Boards · Sleepers · Squares & Beams","product-groups/outdoor-landscaping/outdoor-steps.png"],
-  ["Decking","Decking Boards · Balustrade Timber · Posts · Rails","product-groups/building-construction/building-deck-construction.png"],
-  ["Commercial projects","Bridges · Boardwalks · Specialist outdoor structures","product-groups/outdoor-landscaping/outdoor-boardwalk.png"]
+  ["Fencing","Palings · Posts · Rails · Fence Capping · Pegs","product-groups/outdoor-landscaping/outdoor-townhouse-fence.png","https://app.fpx.nz/categories-products?recordId=recooQcbCktBh8rJA"],
+  ["Retaining","Posts · Retaining Boards · Sleepers · Squares & Beams","product-groups/outdoor-landscaping/outdoor-steps.png","https://app.fpx.nz/categories-products?recordId=recRkQGH44OakERvd"],
+  ["Decking","Decking Boards · Balustrade Timber · Posts · Rails","product-groups/building-construction/building-deck-construction.png","https://app.fpx.nz/categories-products?recordId=recR0Rtm3bul50Clo"],
+  ["Commercial projects","Bridges · Boardwalks · Specialist outdoor structures","product-groups/outdoor-landscaping/outdoor-boardwalk.png","https://app.fpx.nz/categories-products?recordId=recnOUIy2AOU7E1LE"]
 ];
 
 export function ProductsPage(){
@@ -53,16 +53,19 @@ export function ProductsPage(){
       <header>
         <Eyebrow>EXPLORE BY APPLICATION</Eyebrow>
         <h2>Start with the job.</h2>
-        <p>Fencing, retaining, decking and commercial work can also be a useful way into the range.</p>
+        <p>Fencing, retaining, decking, commercial work and many more can also be a useful way into the range.</p>
       </header>
       <div className="ppr-application-grid">
         {endUses.map((use,i)=><article key={use[0]}>
-          <div><img src={`/images/${use[2]}`} alt={`${use[0]} timber application`}/></div>
+          <a href={use[3]} className="ppr-application-image" aria-label={`View ${use[0]} products in FPX`}>
+            <img src={`/images/${use[2]}`} alt={`${use[0]} timber application`}/>
+          </a>
           <span>0{i+1}</span>
           <h3>{use[0]}</h3>
           <p>{use[1]}</p>
         </article>)}
       </div>
+      <a className="ppr-view-all" href="https://app.fpx.nz/shop">View all categories <Arrow/></a>
     </section>
 
     <section className="ppr-close">
