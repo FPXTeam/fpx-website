@@ -633,3 +633,53 @@ footer{
   border-color:#ffffff70!important;
 }
 .ph-hero-scroll{color:#d4ddd7!important}
+
+
+/* HARD OVERRIDE: homepage hero must remain dark and cinematic */
+body .premium-home .ph-hero{
+  background:#040E0E!important;
+  color:#fff!important;
+  isolation:isolate!important;
+}
+body .premium-home .ph-hero-bg{
+  z-index:0!important;
+  filter:brightness(.78) saturate(.92)!important;
+}
+body .premium-home .ph-hero-shade{
+  display:block!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+  background:
+    linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(4,14,14,.76) 40%,rgba(4,14,14,.34) 72%,rgba(0,0,0,.12) 100%),
+    linear-gradient(0deg,rgba(0,0,0,.52) 0%,rgba(0,0,0,0) 58%)!important;
+}
+body .premium-home .ph-hero-copy,
+body .premium-home .ph-hero-scroll{
+  position:relative!important;
+  z-index:2!important;
+}
+body .premium-home .ph-hero .m-eyebrow{
+  color:#fff!important;
+  opacity:.82!important;
+}
+body .premium-home .ph-hero h1,
+body .premium-home .ph-hero h1 span{
+  color:#fff!important;
+}
+body .premium-home .ph-hero-copy>p:not(.m-eyebrow){
+  color:#d8e1dc!important;
+}
+body .premium-home .ph-hero .m-btn-primary{
+  background:#fff!important;
+  color:#040E0E!important;
+  border-color:#fff!important;
+}
+body .premium-home .ph-hero .m-btn-ghost{
+  background:transparent!important;
+  color:#fff!important;
+  border-color:rgba(255,255,255,.55)!important;
+}
+body .premium-home .ph-hero-scroll{
+  color:#d7dfda!important;
+}
