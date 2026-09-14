@@ -606,3 +606,30 @@ footer{
   background:#040E0E!important;
   color:#fff!important;
 }
+
+
+/* Hero exception: cinematic dark overlay while body remains light */
+.ph-hero{
+  background:#040E0E!important;
+  color:#fff!important;
+}
+.ph-hero-shade{
+  background:
+    linear-gradient(90deg,rgba(4,14,14,.92) 0%,rgba(4,14,14,.78) 42%,rgba(4,14,14,.26) 76%,rgba(4,14,14,.08) 100%),
+    linear-gradient(0deg,rgba(4,14,14,.58),transparent 55%)!important;
+}
+.ph-hero .m-eyebrow{color:#fff!important;opacity:.82!important}
+.ph-hero h1,
+.ph-hero h1 span{color:#fff!important}
+.ph-hero-copy>p:not(.m-eyebrow){color:#d7e1db!important}
+.ph-hero .m-btn-primary{
+  background:#fff!important;
+  color:#040E0E!important;
+  border-color:#fff!important;
+}
+.ph-hero .m-btn-ghost{
+  background:transparent!important;
+  color:#fff!important;
+  border-color:#ffffff70!important;
+}
+.ph-hero-scroll{color:#d4ddd7!important}
