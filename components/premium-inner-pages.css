@@ -395,3 +395,21 @@
   .ppr-application-grid article>div{height:340px}
   .ppr-close{padding-top:90px;padding-bottom:100px}
 }
+
+
+/* Products application links */
+.ppr-application-image{
+  display:block;height:390px;overflow:hidden;border-radius:14px;background:#f3f5f3
+}
+.ppr-application-image img{
+  width:100%;height:100%;object-fit:cover;transition:transform .7s ease
+}
+.ppr-application-image:hover img{transform:scale(1.03)}
+.ppr-application-grid article>div{display:none}
+.ppr-view-all{
+  display:inline-flex;align-items:center;gap:9px;margin-top:46px;
+  color:var(--pi-green);font:700 13px Lato,Arial,sans-serif
+}
+@media(max-width:700px){
+  .ppr-application-image{height:340px}
+}
