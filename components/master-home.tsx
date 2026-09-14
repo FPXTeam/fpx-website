@@ -39,45 +39,52 @@ function RangeStory(){
 
 function PlatformStory(){
   const screens=[
-    {label:"SHOP",title:"See what’s available.",copy:"Browse available timber by category, grade and specification, then order directly when the right product is ready.",image:"fpx-app-shop.png",href:"https://app.fpx.nz/shop"},
-    {label:"OFFERS",title:"See current opportunities.",copy:"Review current timber offers and enquire when the opportunity suits your volumes and requirements.",image:"fpx-app-offers.png",href:"https://app.fpx.nz/offers"},
-    {label:"REQUESTS",title:"Tell FPX what you need.",copy:"Start with a catalogue product or send a custom requirement when the timber you need is more specific.",image:"fpx-app-requests.png",href:"https://app.fpx.nz/request-cart"}
+    ["Browse Stock","Search available timber by category, grade and specification.","fpx-app-shop.png","https://app.fpx.nz/shop","AVAILABLE TIMBER"],
+    ["View Offers","Review current packet and bulk timber opportunities.","fpx-app-offers.png","https://app.fpx.nz/offers","CURRENT OPPORTUNITIES"],
+    ["Create a Request","Tell FPX what you need and receive suitable sourcing options.","fpx-app-requests.png","https://app.fpx.nz/request-cart","EXACT REQUIREMENTS"]
   ];
   const [active,setActive]=useState(0);
-  useEffect(()=>{const t=setInterval(()=>setActive(v=>(v+1)%screens.length),5200);return()=>clearInterval(t)},[]);
-  return <section className="ph-platform">
+  useEffect(()=>{const t=setInterval(()=>setActive(v=>(v+1)%screens.length),4800);return()=>clearInterval(t)},[]);
+  return <section className="ph-platform ph-platform-laptop">
     <div className="ph-platform-head">
       <Eyebrow>FPX SOURCING</Eyebrow>
       <h2>Three ways in.<br/>One place to start.</h2>
       <p>You do not need to learn the whole platform before you begin. Start with the route that matches the job.</p>
       <Link href="/source-timber">See how FPX sourcing works <Arrow/></Link>
     </div>
-    <div className="ph-platform-stage">
-      <div className="ph-platform-screen">
-        {screens.map((s,i)=><img className={i===active?"active":""} key={s.image} src={`/images/${s.image}`} alt={`${s.label} in the FPX platform`}/>)}
+    <div className="m-source-platform ph-laptop-showcase">
+      <div className="m-laptop-wrap">
+        <div className="m-laptop-glow"/>
+        <div className="m-laptop-screen">{screens.map((s,i)=><img key={s[0]} className={i===active?"active":""} src={`/images/${s[2]}`} alt={`${s[0]} view in the FPX platform`}/>)}</div>
+        <img className="m-laptop-frame" src="/images/fpx-laptop-frame.png" alt="FPX sourcing platform displayed on a laptop"/>
+        <div className="m-laptop-status"><span>PLATFORM VIEW</span><b>{screens[active][0]}</b></div>
       </div>
-      <div className="ph-platform-tabs">
-        {screens.map((s,i)=><button className={i===active?"active":""} onClick={()=>setActive(i)} onMouseEnter={()=>setActive(i)} key={s.label}>
-          <span>0{i+1}</span><small>{s.label}</small><h3>{s.title}</h3><p>{s.copy}</p><a href={s.href}>Start here <Arrow/></a>
-        </button>)}
+      <div className="m-source-cards" aria-label="Ways to source timber through FPX">
+        {screens.map((s,i)=><a href={s[3]} key={s[0]} className={i===active?"active":""} onMouseEnter={()=>setActive(i)} onFocus={()=>setActive(i)}>
+          <small>{s[4]}</small><h3>{s[0]}</h3><p>{s[1]}</p><b>Start here <Arrow/></b><i aria-hidden="true"/>
+        </a>)}
       </div>
     </div>
   </section>
 }
 
 function BuyerStory(){
+  const [active,setActive]=useState(0);
   const groups=[
-    ["Builders & Contractors","Project-specific timber for active jobs and upcoming work.","/images/fpx-customer-builder.png"],
-    ["Procurement Teams","A clearer sourcing path for planned purchasing and recurring requirements.","/images/fpx-customer-procurement.png"],
-    ["Timber Merchants","Additional stock, current offers and support for specific customer demand.","/images/fpx-customer-merchant.png"],
-    ["Wood Processors","Feedstock and timber aligned with production specifications and required volumes.","/images/fpx-customer-processor.png"]
+    ["Builders & Contractors","Project-specific timber without the sourcing runaround.","fpx-customer-builder.png"],
+    ["Procurement Teams","Clear timber options for planned purchasing and ongoing requirements.","fpx-customer-procurement.png"],
+    ["Timber Merchants","Additional stock, current offers and support for specific customer demand.","fpx-customer-merchant.png"],
+    ["Wood Processors","Timber sourcing aligned with production specifications and required volumes.","fpx-customer-processor.png"]
   ];
-  return <section className="ph-buyers">
-    <div className="ph-buyers-head"><Eyebrow>OUR CUSTOMERS</Eyebrow><h2>Built for businesses<br/>that buy timber.</h2><Link href="/our-customers">Meet our customers <Arrow/></Link></div>
-    <div className="ph-buyers-grid">{groups.map((g,i)=><article key={g[0]}>
-      <div className="ph-buyers-image"><img src={g[2]} alt={g[0]}/></div>
-      <span>0{i+1}</span><h3>{g[0]}</h3><p>{g[1]}</p>
-    </article>)}</div>
+  return <section className="m-customers ph-customers-returned">
+    <div className="m-customers-title"><Eyebrow>OUR CUSTOMERS</Eyebrow><h2>Built for businesses<br/>that buy timber.</h2><Link href="/our-customers">Meet our customers <Arrow/></Link></div>
+    <div className={`m-customer-stage active-${active+1}`} aria-label="Four New Zealand professionals who buy commercial timber">
+      <div className="m-customer-people">{groups.map((g,i)=><button type="button" key={g[0]} className={`m-person-button ${i===active?"active":""}`} onMouseEnter={()=>setActive(i)} onFocus={()=>setActive(i)} onClick={()=>setActive(i)} aria-label={`Show information for ${g[0]}`}>
+        <img className="m-person" src={`/images/${g[2]}`} alt={`${g[0]} using FPX for commercial timber sourcing`}/>
+      </button>)}</div>
+      <div className={`m-customer-panel panel-${active+1}`} aria-live="polite"><h3>{groups[active][0]}</h3><p>{groups[active][1]}</p></div>
+      <p className="m-customer-instruction"><span className="instruction-hover">Hover to meet our customers</span><span className="instruction-tap">Tap to meet our customers</span></p>
+    </div>
   </section>
 }
 
