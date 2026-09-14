@@ -170,75 +170,75 @@ export function AboutPage(){
   ];
 
   return <>
-    <section className="pab2-hero">
+    <section className="pab3-hero">
       <img src="/images/product-groups/manufacturing/manufacturing-warehouse-bundles.png" alt="Commercial timber bundles in a New Zealand warehouse"/>
-      <div className="pab2-hero-shade"/>
-      <div className="pab2-hero-copy">
+      <div className="pab3-hero-shade"/>
+      <div className="pab3-hero-copy">
         <Eyebrow>ABOUT FPX</Eyebrow>
         <h1>Timber expertise.<br/>A clearer way to source.</h1>
         <p>FPX is a New Zealand timber sourcing service built to make commercial buying easier to understand, easier to start and easier to move forward.</p>
       </div>
     </section>
 
-    <section className="pab2-intro">
-      <div className="pab2-intro-kicker"><Eyebrow>FOREST PRODUCTS EXCHANGE</Eyebrow><span>New Zealand</span></div>
-      <div className="pab2-intro-statement">
+    <section className="pab3-frame pab3-statement">
+      <div className="pab3-statement-main">
+        <Eyebrow>FOREST PRODUCTS EXCHANGE</Eyebrow>
         <h2>We bring the timber requirement and the sourcing process into one place.</h2>
-        <p>FPX gives commercial buyers a digital starting point for timber sourcing, supported by practical industry knowledge behind the platform.</p>
       </div>
-      <div className="pab2-meta">
-        <div><small>COMPANY</small><b>Forest Products Exchange Limited</b><span>Company number 8469278</span></div>
-        <div><small>FOCUS</small><b>Commercial timber sourcing</b><span>Across New Zealand</span></div>
-        <div><small>BACKED BY</small><b>Sutcliffe Trading Limited</b><span>Timber trading experience since 1988</span></div>
+      <div className="pab3-statement-side">
+        <p>FPX gives commercial buyers a digital starting point for timber sourcing, supported by practical industry knowledge behind the platform.</p>
+        <div className="pab3-meta">
+          <div><small>COMPANY</small><b>Forest Products Exchange Limited</b><span>Company number 8469278</span></div>
+          <div><small>FOCUS</small><b>Commercial timber sourcing</b><span>Across New Zealand</span></div>
+          <div><small>BACKED BY</small><b>Sutcliffe Trading Limited</b><span>Timber trading experience since 1988</span></div>
+        </div>
       </div>
     </section>
 
-    <section className="pab2-duality">
-      <div className="pab2-duality-copy">
+    <section className="pab3-frame pab3-platform">
+      <div className="pab3-platform-copy">
         <Eyebrow>WHAT FPX BRINGS TOGETHER</Eyebrow>
         <h2>Digital when it helps.<br/>Human when it matters.</h2>
-        <p>FPX combines a practical sourcing platform with people who understand timber. Buyers can browse available products, review current offers or send a specific requirement when the job needs something more exact.</p>
-        <div className="pab2-duality-points">
-          <div><span>01</span><p><b>Clear product detail</b> before moving into the sourcing decision.</p></div>
-          <div><span>02</span><p><b>Different ways to start</b> depending on what the buyer already knows.</p></div>
-          <div><span>03</span><p><b>Practical sourcing support</b> when the requirement needs more than a catalogue search.</p></div>
+        <p>Browse available timber, review current offers or send a specific requirement. FPX keeps the digital sourcing path simple while practical timber knowledge stays behind the process.</p>
+        <div className="pab3-platform-points">
+          <div><span>01</span><b>Clear product detail</b></div>
+          <div><span>02</span><b>Different ways to start</b></div>
+          <div><span>03</span><b>Practical sourcing support</b></div>
         </div>
       </div>
-
-      <div className="pab2-duality-visual">
-        <div className="pab2-timber-frame"><img src="/images/product-groups/manufacturing/manufacturing-rollers.png" alt="Timber processing in New Zealand"/></div>
-        <div className="pab2-laptop">
-          <img className="pab2-laptop-screen" src="/images/fpx-app-shop.png" alt="FPX timber sourcing platform"/>
-          <img className="pab2-laptop-frame" src="/images/fpx-laptop-frame.png" alt=""/>
+      <div className="pab3-platform-visual">
+        <div className="pab3-platform-photo"><img src="/images/product-groups/manufacturing/manufacturing-rollers.png" alt="Timber processing in New Zealand"/></div>
+        <div className="pab3-platform-laptop">
+          <img className="pab3-screen" src="/images/fpx-app-shop.png" alt="FPX timber sourcing platform"/>
+          <img className="pab3-frame-img" src="/images/fpx-laptop-frame.png" alt=""/>
         </div>
       </div>
     </section>
 
-    <section className="pab2-purpose">
-      <div className="pab2-purpose-number">FPX</div>
-      <div className="pab2-purpose-copy">
+    <section className="pab3-frame pab3-purpose">
+      <div className="pab3-purpose-title">
         <Eyebrow>WHY FPX EXISTS</Eyebrow>
         <h2>Clarity before commitment.</h2>
-        <p>Commercial timber buying involves product specifications, availability, pricing, lead times and delivery requirements. FPX exists to make those moving parts easier to navigate from the first requirement through to the sourcing decision.</p>
+        <p>Commercial timber buying involves product specifications, availability, pricing, lead times and delivery requirements. FPX makes those moving parts easier to navigate from the first requirement through to the sourcing decision.</p>
       </div>
-      <div className="pab2-purpose-lines">
+      <div className="pab3-purpose-grid">
         <article><small>UNDERSTAND</small><h3>Know what you’re looking at.</h3><p>Product groups and applications make the range easier to understand before detailed sourcing begins.</p></article>
         <article><small>START</small><h3>Choose the right way in.</h3><p>Shop available timber, review offers or send a specific requirement.</p></article>
         <article><small>MOVE</small><h3>Keep the requirement moving.</h3><p>Use the platform and FPX team to carry the sourcing detail forward.</p></article>
       </div>
     </section>
 
-    <section className="pab2-team">
-      <div className="pab2-team-head">
+    <section className="pab3-frame pab3-team">
+      <div className="pab3-team-heading">
         <Eyebrow>THE PEOPLE BEHIND FPX</Eyebrow>
-        <h2>Timber knowledge behind the platform.</h2>
+        <h2>Industry experience behind the platform.</h2>
         <p>FPX is digital by design, but the sourcing experience is supported by people who understand the New Zealand timber trade.</p>
       </div>
 
-      <div className="pab2-team-grid">
-        {team.map((person,i)=><article className={i===1?"is-second":""} key={person.name}>
-          <div className="pab2-team-photo"><img src={person.image} alt={person.name}/></div>
-          <div className="pab2-team-info">
+      <div className="pab3-team-members">
+        {team.map((person,i)=><article key={person.name}>
+          <div className="pab3-team-photo"><img src={person.image} alt={person.name}/></div>
+          <div className="pab3-team-copy">
             <span>0{i+1}</span>
             <small>{person.role}</small>
             <h3>{person.name}</h3>
@@ -248,7 +248,7 @@ export function AboutPage(){
       </div>
     </section>
 
-    <section className="pab2-close">
+    <section className="pab3-close">
       <div>
         <Eyebrow>NEW ZEALAND TIMBER SOURCING</Eyebrow>
         <h2>Built for the requirement you have now.</h2>
