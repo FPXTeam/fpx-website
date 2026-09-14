@@ -111,7 +111,6 @@ export function CustomersPage(){
                 aria-label={`Show ${g.title}`}
                 aria-pressed={active===i}
               >
-                <span className="poc4-card-number">0{i+1}</span>
                 <img src={"/images/"+g.image} alt={g.alt}/>
                 <b>{g.label}</b>
               </button>
@@ -120,7 +119,6 @@ export function CustomersPage(){
 
           <div className="poc4-nav">
             <button type="button" onClick={()=>setActive((active-1+customerProfiles.length)%customerProfiles.length)} aria-label="Previous customer">←</button>
-            <span>0{active+1} / 04</span>
             <button type="button" onClick={()=>setActive((active+1)%customerProfiles.length)} aria-label="Next customer">→</button>
           </div>
         </div>
