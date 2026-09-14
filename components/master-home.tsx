@@ -14,7 +14,6 @@ function PremiumHero(){
       <p>Browse available timber, review current offers or send FPX a specific requirement. One clear starting point for commercial timber sourcing across New Zealand.</p>
       <AppButtons/>
     </div>
-    <div className="ph-hero-note"><span>01</span><p>Built for commercial buyers who need clarity before commitment.</p></div>
     <div className="ph-hero-scroll">SCROLL TO EXPLORE</div>
   </section>
 }
