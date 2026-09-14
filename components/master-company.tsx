@@ -22,6 +22,8 @@ export function CustomersPage(){
   const current=customerProfiles[active];
   return <>
     <section className="poc2-hero">
+      <img className="poc2-hero-bg" src="/images/fpx-hero-timber-yard.webp" alt="Commercial timber yard in New Zealand"/>
+      <div className="poc2-hero-shade"/>
       <div className="poc2-hero-copy">
         <Eyebrow>OUR CUSTOMERS</Eyebrow>
         <h1>Built for businesses<br/>that buy timber.</h1>
@@ -60,27 +62,29 @@ export function CustomersPage(){
       </div>
     </section>
 
-    <section className="poc2-compare">
-      <div className="poc2-compare-intro">
+    <section className="poc2-needs">
+      <div className="poc2-needs-head">
         <Eyebrow>DIFFERENT STARTING POINTS</Eyebrow>
-        <h2>What changes by buyer.</h2>
-        <p>The sourcing route depends on the job, the level of specification and how much is already known.</p>
+        <h2>The job changes.<br/>The need for clarity doesn’t.</h2>
+        <p>Different buyers come to FPX with different pressures. The platform gives each of them a clearer place to start.</p>
       </div>
-      <div className="poc2-compare-list">
-        {customerProfiles.map((g,i)=><article key={g.title}>
-          <span>0{i+1}</span>
-          <h3>{g.title}</h3>
-          <p>{g.need}</p>
-        </article>)}
+      <div className="poc2-needs-grid">
+        <article><span>01</span><small>CONTRACTORS & BUILDERS</small><h3>Product fit</h3><p>Clear product fit, timing and an easy way to source what the job actually needs.</p></article>
+        <article><span>02</span><small>PROCUREMENT TEAMS</small><h3>Specification clarity</h3><p>A structured way to compare requirements, keep specifications clear and move orders forward.</p></article>
+        <article><span>03</span><small>TIMBER MERCHANTS</small><h3>Repeat needs</h3><p>A practical way to handle repeat needs, spot requirements and opportunities without extra admin.</p></article>
+        <article><span>04</span><small>WOOD PROCESSORS</small><h3>Feedstock visibility</h3><p>Reliable feedstock visibility, useful specifications and a clear route to specific manufacturing requirements.</p></article>
       </div>
     </section>
 
-    <section className="poc2-fit">
-      <div><Eyebrow>BUILT AROUND BUYERS</Eyebrow><h2>Useful information.<br/>Clear starting points.</h2></div>
-      <div>
-        <article><span>01</span><h3>Clear product information</h3><p>Understand the product group, application and key specifications before moving into the sourcing detail.</p></article>
-        <article><span>02</span><h3>Flexible starting points</h3><p>Browse available stock, review current offers or create a specific request when the job is already defined.</p></article>
-        <article><span>03</span><h3>Supported sourcing</h3><p>Use FPX with practical timber knowledge behind the process when the requirement needs more than a catalogue search.</p></article>
+    <section className="poc2-pillars">
+      <div className="poc2-pillars-head">
+        <Eyebrow>BUILT AROUND BUYERS</Eyebrow>
+        <h2>Three things FPX keeps simple.</h2>
+      </div>
+      <div className="poc2-pillars-grid">
+        <article><span>01</span><h3>Know what you’re looking at.</h3><p>Understand the product group, application and key specifications before moving into sourcing detail.</p></article>
+        <article><span>02</span><h3>Start the way that suits the job.</h3><p>Browse available stock, review current offers or create a specific request when the requirement is already defined.</p></article>
+        <article><span>03</span><h3>Get support when the detail matters.</h3><p>Use FPX with practical timber knowledge behind the process when the requirement needs more than a catalogue search.</p></article>
       </div>
     </section>
 
