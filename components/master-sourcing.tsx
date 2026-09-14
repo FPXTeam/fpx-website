@@ -87,9 +87,9 @@ export function SourceTimberPage(){return <>
           <div><h3>From our catalogue</h3><p>Add a catalogue product to your Request List when it is not currently available.</p></div>
           <div><h3>Custom request</h3><p>Send the specification, quantity and requirements when the job needs something more specific.</p></div>
         </div>
-        <a href="https://app.fpx.nz/request-cart">Go to Request List <Arrow/></a>
       </div>
       <div className="pst-route-visual"><img src="/images/fpx-app-requests.png" alt="FPX request workflow"/></div>
+      <a className="pst-route-cta" href="https://app.fpx.nz/request-cart">Go to Request List <Arrow/></a>
       <div className="pst-route-path">
         <small>REQUEST PATH</small>
         <div>{requestSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h4>{title}</h4><p>{copy}</p></div>)}</div>
@@ -106,9 +106,9 @@ export function SourceTimberPage(){return <>
           <div><h3>Available stock</h3><p>Browse timber that is currently available through FPX.</p></div>
           <div><h3>Specials</h3><p>Review discounted single-packet or multi-packet opportunities when available.</p></div>
         </div>
-        <a href="https://app.fpx.nz/shop">Start shopping <Arrow/></a>
       </div>
       <div className="pst-route-visual"><img src="/images/fpx-app-shop.png" alt="FPX available timber shop"/></div>
+      <a className="pst-route-cta" href="https://app.fpx.nz/shop">Start shopping <Arrow/></a>
       <div className="pst-route-path">
         <small>SHOP PATH</small>
         <div>{shopSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h4>{title}</h4><p>{copy}</p></div>)}</div>
@@ -124,9 +124,9 @@ export function SourceTimberPage(){return <>
         <div className="pst-route-points">
           <div><h3>Current offers</h3><p>Review current timber opportunities, then enquire so FPX can respond for your volumes and requirements.</p></div>
         </div>
-        <a href="https://app.fpx.nz/offers">View offers & enquire <Arrow/></a>
       </div>
       <div className="pst-route-visual"><img src="/images/fpx-app-offers.png" alt="FPX current timber offers"/></div>
+      <a className="pst-route-cta" href="https://app.fpx.nz/offers">View offers & enquire <Arrow/></a>
       <div className="pst-route-path">
         <small>OFFER PATH</small>
         <div>{offerSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h4>{title}</h4><p>{copy}</p></div>)}</div>
