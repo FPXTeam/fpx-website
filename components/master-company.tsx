@@ -86,7 +86,6 @@ export function CustomersPage(){
         <h1>Built for businesses<br/>that buy timber.</h1>
         <p>FPX supports commercial timber buyers across New Zealand, from project teams to merchants and processors.</p>
       </div>
-      <div className="poc2-hero-note"><span>4 CUSTOMER GROUPS</span><p>Different buying needs. One clearer sourcing experience.</p></div>
     </section>
 
     <section className="poc4-stage">
