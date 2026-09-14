@@ -18,30 +18,61 @@ const endUses=[
 
 export function ProductsPage(){
   return <>
-    <section className="pp-hero">
-      <div className="pp-hero-copy"><Eyebrow>OUR TIMBER RANGE</Eyebrow><h1>Understand the range.<br/><span>Then source the detail.</span></h1><p>Explore the main FPX product groups and the applications they serve. Current stock, offers, grades, sizes and detailed specifications live in the FPX sourcing platform.</p></div>
-      <div className="pp-hero-image"><img src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber products in a commercial yard"/></div>
+    <section className="ppr-hero">
+      <img src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber products in a commercial yard"/>
+      <div className="ppr-hero-shade"/>
+      <div className="ppr-hero-copy">
+        <Eyebrow>OUR TIMBER RANGE</Eyebrow>
+        <h1>Timber for the work<br/>New Zealand does.</h1>
+        <p>Explore the main FPX product groups, understand where they fit, then move into FPX for current stock, offers and detailed specifications.</p>
+      </div>
     </section>
 
-    <section className="pp-groups">
-      <header><Eyebrow>PRODUCT GROUPS</Eyebrow><h2>Four clear ways to explore timber.</h2><p>Each group is organised around what the timber is supplied for, so buyers can understand the range without wading through every specification first.</p></header>
-      <div className="pp-group-list">{productGroups.map((group,i)=><Link href={`/${group[3]}`} className="pp-group-row" key={group[0]}>
-        <div className="pp-group-image"><img src={`/images/${group[2]}`} alt={`${group[0]} timber product group`}/></div>
-        <span>0{i+1}</span>
-        <div><small>PRODUCT GROUP</small><h3>{group[0]}</h3><p>{group[1]}</p></div>
-        <b>Explore <Arrow/></b>
-      </Link>)}</div>
+    <section className="ppr-intro">
+      <Eyebrow>PRODUCT GROUPS</Eyebrow>
+      <h2>Four clear ways to understand the range.</h2>
+      <p>Each group is organised around what the timber is supplied for. Start with the application, then go deeper when you need the actual product detail.</p>
     </section>
 
-    <section className="pp-enduses">
-      <div className="pp-enduses-intro"><Eyebrow>EXPLORE BY APPLICATION</Eyebrow><h2>Start with the job.</h2><p>Applications sit separately from Product Categories, giving buyers another simple way into the range.</p></div>
-      <div className="pp-enduse-grid">{endUses.map((use,i)=><article key={use[0]}>
-        <div><img src={`/images/${use[2]}`} alt={`${use[0]} timber application`}/><span>0{i+1}</span></div>
-        <h3>{use[0]}</h3><p>{use[1]}</p>
-      </article>)}</div>
+    <section className="ppr-groups">
+      {productGroups.map((group,i)=><article className={i%2===1?"is-reverse":""} key={group[0]}>
+        <Link href={`/${group[3]}`} className="ppr-group-image">
+          <img src={`/images/${group[2]}`} alt={`${group[0]} timber product group`}/>
+          <span>0{i+1}</span>
+        </Link>
+        <div className="ppr-group-copy">
+          <Eyebrow>PRODUCT GROUP {String(i+1).padStart(2,"0")}</Eyebrow>
+          <h2>{group[0]}</h2>
+          <p>{group[1]}</p>
+          <Link href={`/${group[3]}`}>Explore {group[0]} <Arrow/></Link>
+        </div>
+      </article>)}
     </section>
 
-    <section className="pp-close"><div><Eyebrow>FULL PRODUCT DETAIL LIVES IN FPX</Eyebrow><h2>Ready to work with the actual product?</h2><p>Move into FPX for current timber, offers and detailed specifications.</p></div><AppButtons/></section>
+    <section className="ppr-applications">
+      <header>
+        <Eyebrow>EXPLORE BY APPLICATION</Eyebrow>
+        <h2>Start with the job.</h2>
+        <p>Fencing, retaining, decking and commercial work can also be a useful way into the range.</p>
+      </header>
+      <div className="ppr-application-grid">
+        {endUses.map((use,i)=><article key={use[0]}>
+          <div><img src={`/images/${use[2]}`} alt={`${use[0]} timber application`}/></div>
+          <span>0{i+1}</span>
+          <h3>{use[0]}</h3>
+          <p>{use[1]}</p>
+        </article>)}
+      </div>
+    </section>
+
+    <section className="ppr-close">
+      <div>
+        <Eyebrow>FULL PRODUCT DETAIL LIVES IN FPX</Eyebrow>
+        <h2>Know the group?<br/>Move into the detail.</h2>
+        <p>Browse current timber, review offers or send FPX the requirement you already have.</p>
+      </div>
+      <AppButtons/>
+    </section>
   </>;
 }
 
