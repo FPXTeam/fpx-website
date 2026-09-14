@@ -2718,3 +2718,12 @@
   .poc4-card>b{bottom:-42px}
   .poc4-card-number{bottom:-22px}
 }
+
+
+/* Customer carousel without numeric counters */
+.poc4-nav{
+  gap:18px;
+}
+.poc4-card-number{
+  display:none!important;
+}
