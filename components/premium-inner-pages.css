@@ -2727,3 +2727,36 @@
 .poc4-card-number{
   display:none!important;
 }
+
+
+/* Match Our Customers hero framing to Timber Range and Source Timber */
+.poc2-hero{
+  min-height:82vh;
+  padding:130px 7vw 88px;
+  display:flex;
+  align-items:flex-end;
+  grid-template-columns:none;
+}
+.poc2-hero-copy{
+  max-width:900px;
+}
+.poc2-hero h1{
+  font-size:clamp(64px,7.5vw,122px);
+  line-height:.89;
+  letter-spacing:-.06em;
+}
+.poc2-hero-copy>p:not(.m-eyebrow){
+  margin-top:28px;
+  max-width:680px;
+  font-size:17px;
+  line-height:1.75;
+}
+@media(max-width:700px){
+  .poc2-hero{
+    min-height:78svh;
+    padding:105px 24px 58px;
+  }
+  .poc2-hero h1{
+    font-size:clamp(54px,16vw,78px);
+  }
+}
