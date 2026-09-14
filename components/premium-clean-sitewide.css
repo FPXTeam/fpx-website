@@ -338,3 +338,70 @@ body{background:#fff}
   .ph-buyers-image{height:460px}
   .ph-close{min-height:auto}
 }
+
+
+/* Palette unification: reduce section-to-section colour jumps */
+:root{
+  --premium-surface:#ffffff;
+  --premium-soft:#f4f7f4;
+  --premium-line:#dfe6e1;
+  --premium-ink:#040E0E;
+  --premium-muted:#64736C;
+}
+.m-inner-hero,
+.m-about-hero,
+.m-customers-hero,
+.m-resource-hero,
+.m-faq-hero-revamp,
+.m-source-hero-v2,
+.m-buyers-principles,
+.m-about-team,
+.m-saw-subscribe-revamp,
+.m-product-detail-hero,
+.m-source-feature.is-reverse,
+.ph-platform,
+.ph-close{
+  background:var(--premium-soft)!important;
+}
+.m-source-feature,
+.m-source-story-premium,
+.ph-range,
+.m-about-story,
+.m-customer-stories,
+.m-resource-grid,
+.m-faq-shell,
+.m-how-page-flow{
+  background:var(--premium-surface)!important;
+}
+.m-source-feature-screen,
+.ph-range-image,
+.ph-platform-tabs button.active{
+  background:#edf2ee!important;
+}
+.m-cta-panel{
+  background:var(--premium-soft)!important;
+}
+.m-source-feature,
+.ph-range-item,
+.m-customer-stories-revamp article,
+.m-buyers-principles-grid article,
+.m-about-entity>div,
+.m-about-principles article,
+.m-how-page-cards article,
+.m-faq-list article,
+.m-faq-item{
+  border-color:var(--premium-line)!important;
+}
+
+/* Footer: original X mark only */
+footer{background:#040E0E!important}
+.footer-brand-mark{display:flex;align-items:center;margin-bottom:28px}
+.footer-brand-mark img{width:86px;height:86px;object-fit:contain;background:transparent!important;padding:0!important;border-radius:0!important}
+.footer-brand-column>p{max-width:340px;color:#aab6af!important}
+.footer-social a{border-color:#ffffff26!important;background:transparent!important}
+.footer-grid h4{color:#7f9d88!important}
+.footer-bottom{border-top-color:#ffffff1f!important;color:#7d8982!important}
+
+@media(max-width:700px){
+  .footer-brand-mark img{width:72px;height:72px}
+}
