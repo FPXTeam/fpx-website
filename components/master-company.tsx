@@ -11,10 +11,48 @@ const customerGroups=[
 ];
 
 export function CustomersPage(){return <>
-  <section className="pc-hero"><div className="pc-hero-copy"><Eyebrow>OUR CUSTOMERS</Eyebrow><h1>Built for businesses<br/><span>that buy timber.</span></h1><p>FPX supports commercial timber buyers across New Zealand, from project teams to merchants and processors.</p><div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/shop">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a></div></div><div className="pc-hero-image"><img src="/images/product-groups/building-construction/building-shed-frame.png" alt="Timber framing for a New Zealand construction project"/></div></section>
-  <section className="pc-customers"><header><Eyebrow>WHO USES FPX</Eyebrow><h2>Different requirements.<br/>One clearer route to supply.</h2></header><div className="pc-customer-list">{customerGroups.map((g,i)=><article key={g.title}><div className="pc-customer-image"><img src={"/images/"+g.image} alt={g.alt}/></div><span>0{i+1}</span><div><h3>{g.title}</h3><p>{g.blurb}</p></div><a href="https://app.fpx.nz/shop">Start sourcing <Arrow/></a></article>)}</div></section>
-  <section className="pc-principles"><div><Eyebrow>BUILT AROUND BUYERS</Eyebrow><h2>Useful information.<br/>Clear starting points.</h2><p>FPX is designed around the information and handovers commercial timber buyers actually need.</p></div><div className="pc-principle-list"><article><span>01</span><h3>Clear product information</h3><p>Understand the product group, application and key specifications before moving into the sourcing detail.</p></article><article><span>02</span><h3>Flexible starting points</h3><p>Browse available stock, review current offers or create a specific request when the job is already defined.</p></article><article><span>03</span><h3>Supported sourcing</h3><p>Use FPX with practical timber knowledge behind the process when the requirement needs more than a catalogue search.</p></article></div></section>
-  <section className="pc-close"><div><Eyebrow>START SOURCING</Eyebrow><h2>Start with the requirement you have.</h2><p>Browse available timber or send FPX the detail you already know.</p></div><div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/shop">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a></div></section>
+  <section className="poc-hero">
+    <img src="/images/product-groups/building-construction/building-shed-frame.png" alt="Timber framing for a New Zealand construction project"/>
+    <div className="poc-hero-shade"/>
+    <div className="poc-hero-copy">
+      <Eyebrow>OUR CUSTOMERS</Eyebrow>
+      <h1>Built for businesses<br/>that buy timber.</h1>
+      <p>FPX supports commercial timber buyers across New Zealand, from project teams to merchants and processors.</p>
+      <div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/shop">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a></div>
+    </div>
+  </section>
+
+  <section className="poc-intro">
+    <Eyebrow>WHO USES FPX</Eyebrow>
+    <h2>Different buying needs.<br/>One clear sourcing path.</h2>
+    <p>FPX is built around commercial timber buying, whether the requirement starts with a live project, ongoing procurement, merchant stock or manufacturing feedstock.</p>
+  </section>
+
+  <section className="poc-groups">
+    {customerGroups.map((g,i)=><article className={i%2===1?"is-reverse":""} key={g.title}>
+      <div className="poc-group-image"><img src={"/images/"+g.image} alt={g.alt}/><span>0{i+1}</span></div>
+      <div className="poc-group-copy">
+        <Eyebrow>CUSTOMER GROUP {String(i+1).padStart(2,"0")}</Eyebrow>
+        <h2>{g.title}</h2>
+        <p>{g.blurb}</p>
+        <a href="https://app.fpx.nz/shop">Start sourcing <Arrow/></a>
+      </div>
+    </article>)}
+  </section>
+
+  <section className="poc-fit">
+    <div className="poc-fit-intro"><Eyebrow>BUILT AROUND BUYERS</Eyebrow><h2>Useful information.<br/>Clear starting points.</h2><p>FPX is designed around the information and handovers commercial timber buyers actually need.</p></div>
+    <div className="poc-fit-list">
+      <article><span>01</span><div><h3>Clear product information</h3><p>Understand the product group, application and key specifications before moving into the sourcing detail.</p></div></article>
+      <article><span>02</span><div><h3>Flexible starting points</h3><p>Browse available stock, review current offers or create a specific request when the job is already defined.</p></div></article>
+      <article><span>03</span><div><h3>Supported sourcing</h3><p>Use FPX with practical timber knowledge behind the process when the requirement needs more than a catalogue search.</p></div></article>
+    </div>
+  </section>
+
+  <section className="poc-close">
+    <div><Eyebrow>START SOURCING</Eyebrow><h2>Start with the requirement you have.</h2><p>Browse available timber or send FPX the detail you already know.</p></div>
+    <div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/shop">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a></div>
+  </section>
 </>;}
 
 export function AboutPage(){const team=[{name:"George Harman",role:"Director",image:"https://assets.softr-files.com/applications/bfc5c9f5-7e6e-44f9-b058-0da4dbec6efe/assets/6446200e-fdaf-4b71-8073-c9287ca48b93.png",copy:"George brings hands-on timber industry experience to FPX, with a focus on practical sourcing, commercial relationships and making the buying process easier to navigate."},{name:"Gabriela Molloy",role:"General Manager",image:"https://assets.softr-files.com/applications/bfc5c9f5-7e6e-44f9-b058-0da4dbec6efe/assets/2d8c0d1f-62c9-454a-8e12-a6786ac94371.png",copy:"Gabriela leads the day-to-day delivery of FPX, helping keep the sourcing experience clear, responsive and useful for timber buyers across New Zealand."}];return <>
