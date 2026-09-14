@@ -649,3 +649,95 @@
     font-size:14px;
   }
 }
+
+
+/* Sourcing process disclosure sits beneath each app preview */
+.pst-route{
+  grid-template-areas:
+    "copy visual"
+    "copy path"
+    "cta cta";
+  grid-template-rows:minmax(0,1fr) auto auto;
+}
+.pst-route.is-reverse{
+  grid-template-areas:
+    "visual copy"
+    "path copy"
+    "cta cta";
+}
+.pst-route-path{
+  grid-area:path;
+  width:100%;
+  border-top:1px solid var(--pi-line);
+  border-bottom:1px solid var(--pi-line);
+  padding:0;
+  align-self:start;
+}
+.pst-route-path summary{
+  list-style:none;
+  min-height:54px;
+  display:grid;
+  grid-template-columns:1fr auto 24px;
+  align-items:center;
+  gap:12px;
+  cursor:pointer;
+  color:var(--pi-ink);
+}
+.pst-route-path summary::-webkit-details-marker{display:none}
+.pst-route-path summary>span{
+  font:700 9px Lato,Arial,sans-serif;
+  letter-spacing:.14em;
+  color:var(--pi-green);
+}
+.pst-route-path summary>small{
+  font:600 11px Lato,Arial,sans-serif;
+  color:var(--pi-muted);
+}
+.pst-route-path summary>b{
+  font:400 20px/1 Lato,Arial,sans-serif;
+  color:var(--pi-muted);
+  text-align:right;
+  transition:transform .2s ease;
+}
+.pst-route-path[open] summary>b{transform:rotate(45deg)}
+.pst-route-path>div{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  margin:0;
+  padding:6px 0 22px;
+}
+.pst-route:nth-child(2) .pst-route-path>div,
+.pst-route:nth-child(3) .pst-route-path>div{
+  grid-template-columns:repeat(3,1fr);
+}
+.pst-route-path>div>div{
+  padding:12px 20px 0 0;
+  min-height:82px;
+  border-right:1px solid var(--pi-line);
+}
+.pst-route-path>div>div+div{padding-left:20px}
+.pst-route-path>div>div:last-child{border-right:0}
+.pst-route-cta{
+  grid-area:cta;
+  margin-top:8px;
+}
+@media(max-width:1000px){
+  .pst-route,.pst-route.is-reverse{
+    grid-template-areas:"copy" "visual" "path" "cta";
+  }
+}
+@media(max-width:700px){
+  .pst-route-path summary{min-height:58px}
+  .pst-route-path>div,
+  .pst-route:nth-child(2) .pst-route-path>div,
+  .pst-route:nth-child(3) .pst-route-path>div{
+    grid-template-columns:1fr;
+  }
+  .pst-route-path>div>div,
+  .pst-route-path>div>div+div{
+    padding:14px 0;
+    border-right:0;
+    border-bottom:1px solid var(--pi-line);
+  }
+  .pst-route-path>div>div:last-child{border-bottom:0}
+}
