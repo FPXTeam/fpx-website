@@ -89,54 +89,68 @@ export function CustomersPage(){
       <div className="poc2-hero-note"><span>4 CUSTOMER GROUPS</span><p>Different buying needs. One clearer sourcing experience.</p></div>
     </section>
 
-    <section className="poc3-stage">
-      <div className="poc3-head">
+    <section className="poc4-stage">
+      <div className="poc4-head">
         <Eyebrow>WHO USES FPX</Eyebrow>
-        <h2>Choose your customer type.</h2>
-        <p>Select a customer group to see how FPX fits the way they buy timber.</p>
+        <h2>Different buyers.<br/>Different priorities.</h2>
+        <p>Move through the customer types to see how FPX fits the way each one buys timber.</p>
       </div>
 
-      <div className="poc3-people" role="tablist" aria-label="FPX customer groups">
-        {customerProfiles.map((g,i)=><button key={g.title} type="button" className={active===i?"active":""} onFocus={()=>setActive(i)} onClick={()=>setActive(i)} role="tab" aria-selected={active===i}>
-          <img src={"/images/"+g.image} alt={g.alt}/>
-          <span>0{i+1}</span>
-          <b>{g.label}</b>
-        </button>)}
-      </div>
+      <div className="poc4-experience">
+        <div className="poc4-orbit">
+          <div className="poc4-globe" aria-live="polite">
+            <div className="poc4-grid-lines"/>
+            <img src={"/images/"+current.image} alt={current.alt}/>
+            <span>0{active+1}</span>
+          </div>
 
-      <div className="poc3-profile" role="tabpanel">
-        <div className="poc3-profile-main">
-          <span>0{active+1}</span>
-          <small>{current.label}</small>
-          <h3>{current.title}</h3>
-          <p>{current.blurb}</p>
-          <div className="poc3-need">
+          {customerProfiles.map((g,i)=><button
+            key={g.title}
+            type="button"
+            className={"poc4-orbit-avatar orbit-"+i+(active===i?" active":"")}
+            onClick={()=>setActive(i)}
+            aria-label={`Show ${g.title}`}
+            aria-pressed={active===i}
+          >
+            <img src={"/images/"+g.image} alt=""/>
+          </button>)}
+
+          <div className="poc4-nav">
+            <button type="button" onClick={()=>setActive((active-1+customerProfiles.length)%customerProfiles.length)} aria-label="Previous customer">←</button>
+            <span>0{active+1} / 04</span>
+            <button type="button" onClick={()=>setActive((active+1)%customerProfiles.length)} aria-label="Next customer">→</button>
+          </div>
+        </div>
+
+        <div className="poc4-details">
+          <div className="poc4-title">
+            <small>{current.label}</small>
+            <h3>{current.title}</h3>
+            <p>{current.blurb}</p>
+          </div>
+
+          <div className="poc4-need">
             <small>WHAT THEY NEED</small>
             <p>{current.need}</p>
           </div>
-          <div className="poc3-actions">
+
+          <div className="poc4-focus">
+            <small>PRIMARY FOCUS</small>
+            <h4>{current.focusTitle}</h4>
+            <p>{current.focusCopy}</p>
+          </div>
+
+          <div className="poc4-pillars">
+            <small>THREE THINGS FPX KEEPS SIMPLE</small>
+            <div>{current.pillars.map((pillar,i)=><article key={pillar[0]}>
+              <span>0{i+1}</span>
+              <div><h4>{pillar[0]}</h4><p>{pillar[1]}</p></div>
+            </article>)}</div>
+          </div>
+
+          <div className="poc4-actions">
             <a href="https://app.fpx.nz/shop">Browse timber <Arrow/></a>
             <a href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a>
-          </div>
-        </div>
-
-        <div className="poc3-focus">
-          <small>{current.label}</small>
-          <h3>{current.focusTitle}</h3>
-          <p>{current.focusCopy}</p>
-        </div>
-
-        <div className="poc3-pillars">
-          <div className="poc3-pillars-head">
-            <Eyebrow>BUILT AROUND BUYERS</Eyebrow>
-            <h3>Three things FPX keeps simple.</h3>
-          </div>
-          <div className="poc3-pillars-grid">
-            {current.pillars.map((pillar,i)=><article key={pillar[0]}>
-              <span>0{i+1}</span>
-              <h4>{pillar[0]}</h4>
-              <p>{pillar[1]}</p>
-            </article>)}
           </div>
         </div>
       </div>
