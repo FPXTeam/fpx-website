@@ -2760,3 +2760,42 @@
     font-size:clamp(54px,16vw,78px);
   }
 }
+
+
+/* Force Our Customers hero to match Products / Source Timber framing exactly */
+.master-site .poc2-hero{
+  min-height:82vh!important;
+  height:82vh!important;
+  padding:130px 7vw 88px!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:flex-start!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+.master-site .poc2-hero-copy{
+  position:relative!important;
+  z-index:2!important;
+  max-width:900px!important;
+}
+.master-site .poc2-hero h1{
+  font-size:clamp(64px,7.5vw,122px)!important;
+  line-height:.89!important;
+  letter-spacing:-.06em!important;
+}
+.master-site .poc2-hero-copy>p:not(.m-eyebrow){
+  margin-top:28px!important;
+  max-width:680px!important;
+  font-size:17px!important;
+  line-height:1.75!important;
+}
+@media(max-width:700px){
+  .master-site .poc2-hero{
+    min-height:78svh!important;
+    height:78svh!important;
+    padding:105px 24px 58px!important;
+  }
+  .master-site .poc2-hero h1{
+    font-size:clamp(54px,16vw,78px)!important;
+  }
+}
