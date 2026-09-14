@@ -405,3 +405,114 @@ footer{background:#040E0E!important}
 @media(max-width:700px){
   .footer-brand-mark img{width:72px;height:72px}
 }
+
+
+/* Monochrome premium pass: white + forest + green accent only */
+:root{
+  --premium-surface:#ffffff;
+  --premium-soft:#ffffff;
+  --premium-line:#e4e8e5;
+  --premium-ink:#040E0E;
+  --premium-muted:#6f7973;
+}
+
+/* Remove tinted light section backgrounds */
+.m-inner-hero,
+.m-about-hero,
+.m-customers-hero,
+.m-resource-hero,
+.m-faq-hero-revamp,
+.m-source-hero-v2,
+.m-buyers-principles,
+.m-about-team,
+.m-saw-subscribe-revamp,
+.m-product-detail-hero,
+.m-source-feature.is-reverse,
+.ph-platform,
+.ph-close,
+.m-cta-panel,
+.m-source-feature-screen,
+.ph-range-image,
+.ph-platform-tabs button.active{
+  background:#fff!important;
+}
+
+/* Keep only deliberate dark anchor sections */
+.m-source-closing-premium,
+.m-saw-hero-revamp,
+.m-social-band-revamp,
+.m-end-uses,
+.ph-customers-returned,
+footer{
+  background:#040E0E!important;
+}
+
+/* Neutral separators instead of coloured blocks */
+.m-source-feature,
+.m-source-feature.is-reverse,
+.ph-range,
+.ph-platform,
+.ph-close,
+.m-buyers-principles,
+.m-about-team,
+.m-saw-subscribe-revamp,
+.m-product-detail-hero{
+  border-top:1px solid #e4e8e5!important;
+}
+
+/* Green becomes accent only */
+.m-eyebrow,
+.ph-range-intro>a,
+.ph-range-copy b,
+.ph-range-item>span,
+.ph-platform-head>a,
+.m-source-feature-link,
+.m-source-journey>small,
+.m-source-journey span{
+  color:#40973C!important;
+}
+
+/* Footer refinement */
+.footer-brand-mark{margin-bottom:22px!important}
+.footer-brand-mark img{
+  width:48px!important;
+  height:48px!important;
+  object-fit:contain!important;
+}
+.footer-brand-column>p{
+  margin-top:0!important;
+  color:#8f9a94!important;
+  font-size:15px!important;
+  line-height:1.6!important;
+}
+.footer-social a{
+  width:42px!important;
+  height:42px!important;
+  border-color:#ffffff20!important;
+}
+.footer-grid h4{
+  color:#ffffff!important;
+  opacity:.82;
+}
+.footer-grid a{
+  color:#a7b0ab!important;
+}
+.footer-grid a:hover{
+  color:#fff!important;
+}
+.footer-bottom{
+  border-top-color:#ffffff18!important;
+  color:#747e78!important;
+}
+
+/* Keep CTAs clean */
+.m-btn-primary{background:#40973C!important;color:#fff!important;border-color:#40973C!important}
+.m-btn-ghost{background:#fff!important;color:#040E0E!important;border-color:#d6ddd8!important}
+
+/* Homepage hero and customer section remain the primary dark anchors */
+.ph-hero,
+.ph-customers-returned{background:#040E0E!important}
+
+@media(max-width:700px){
+  .footer-brand-mark img{width:42px!important;height:42px!important}
+}
