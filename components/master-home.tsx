@@ -1,21 +1,91 @@
 "use client";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Shell } from "./site-shell";
-import { productGroups, Eyebrow, Arrow, AppButtons, LightCTA, useParallax } from "./master-shared";
-function MasterHero(){
-  return <section className="m-hero">
-    <img className="m-hero-bg" src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber stored in a commercial yard" data-master-parallax data-speed=".35"/>
-    <div className="m-hero-shade"/>
-    <div className="m-hero-copy"><Eyebrow>NEW ZEALAND TIMBER SOURCING</Eyebrow><h1>A better way to source <em>New Zealand Timber</em></h1><p>FPX helps commercial timber buyers across New Zealand browse available stock, review current offers and source specific timber requirements through one clear, supported process.</p><AppButtons/></div>
-    <nav className="m-entry-float" aria-label="FPX sourcing entry points"><a href="https://app.fpx.nz/shop" data-master-parallax data-speed=".055"><span>01</span><div><b>Shop</b><small>Browse available timber</small></div><ArrowUpRight size={14}/></a><a href="https://app.fpx.nz/offers" data-master-parallax data-speed=".085"><span>02</span><div><b>Offers</b><small>See current opportunities</small></div><ArrowUpRight size={14}/></a><a href="https://app.fpx.nz/request-cart" data-master-parallax data-speed=".12"><span>03</span><div><b>Request</b><small>Tell FPX what you need</small></div><ArrowUpRight size={14}/></a></nav>
-    <div className="m-scroll-cue"><i/> Scroll to explore</div><div className="m-hero-edge" aria-hidden="true"/>
-  </section>;
+import { productGroups, Eyebrow, Arrow, AppButtons } from "./master-shared";
+
+function PremiumHero(){
+  return <section className="ph-hero">
+    <img className="ph-hero-bg" src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber stored in a commercial yard"/>
+    <div className="ph-hero-shade"/>
+    <div className="ph-hero-copy">
+      <Eyebrow>NEW ZEALAND TIMBER SOURCING</Eyebrow>
+      <h1>Timber sourcing,<br/><span>made clearer.</span></h1>
+      <p>Browse available timber, review current offers or send FPX a specific requirement. One clear starting point for commercial timber sourcing across New Zealand.</p>
+      <AppButtons/>
+    </div>
+    <div className="ph-hero-note"><span>01</span><p>Built for commercial buyers who need clarity before commitment.</p></div>
+    <div className="ph-hero-scroll">SCROLL TO EXPLORE</div>
+  </section>
 }
-function CategoryPocket({compact=false}:{compact?:boolean}){return <section className={`m-category-pocket ${compact?"is-compact":""}`}><div className="m-category-pin"><div className="m-category-copy"><Eyebrow>EXPLORE OUR TIMBER RANGE</Eyebrow><h2>Timber by product group.</h2><p>Understand the range first, then move into FPX for current stock, offers and full specifications.</p><Link href="/products">View the full timber range <Arrow/></Link></div><div className="m-category-window"><div className="m-category-track" data-horizontal-scroll>{productGroups.map((c,i)=><Link href={`/${c[3]}`} className={`m-category-card card-${i+1}`} key={c[0]} data-master-parallax data-speed={.035+(i%3)*.02}><div className="m-category-image"><img src={`/images/${c[2]}`} alt={`${c[0]} timber product group`}/></div><div className="m-category-card-copy"><h3>{c[0]}</h3><p>{c[1]}</p><b>Explore product group <Arrow/></b></div></Link>)}</div></div></div></section>;}
-function SourceWays(){return <section className="m-source-ways"><div className="m-section-heading m-section-heading-centered"><Eyebrow>HOW TO SOURCE</Eyebrow><h2>Three ways in. <em>One clear process.</em></h2><p>Start with what you already know.</p></div><PlatformShowcase/></section>;}
-function PlatformShowcase(){const [active,setActive]=useState(0);const screens=[["Browse Stock","Search available timber by category, grade and specification.","fpx-app-shop.png","https://app.fpx.nz/shop","AVAILABLE TIMBER"],["View Offers","Review current packet and bulk timber opportunities.","fpx-app-offers.png","https://app.fpx.nz/offers","CURRENT OPPORTUNITIES"],["Create a Request","Tell FPX what you need and receive suitable sourcing options.","fpx-app-requests.png","https://app.fpx.nz/request-cart","EXACT REQUIREMENTS"]];useEffect(()=>{const t=setInterval(()=>setActive(v=>(v+1)%screens.length),4800);return()=>clearInterval(t)},[]);return <div className="m-source-platform"><div className="m-laptop-wrap" data-master-parallax data-speed=".035"><div className="m-laptop-glow"/><div className="m-laptop-screen">{screens.map((s,i)=><img key={s[0]} className={i===active?"active":""} src={`/images/${s[2]}`} alt={`${s[0]} view in the FPX platform`}/>)}</div><img className="m-laptop-frame" src="/images/fpx-laptop-frame.png" alt="FPX sourcing platform displayed on a laptop"/><div className="m-laptop-status"><span>LIVE PLATFORM VIEW</span><b>{screens[active][0]}</b></div></div><div className="m-source-cards" aria-label="Ways to source timber through FPX">{screens.map((s,i)=><a href={s[3]} key={s[0]} className={i===active?"active":""} onMouseEnter={()=>setActive(i)} onFocus={()=>setActive(i)}><small>{s[4]}</small><h3>{s[0]}</h3><p>{s[1]}</p><b>Start here <Arrow/></b><i aria-hidden="true"/></a>)}</div></div>;}
-function HowFpxWorks(){const routes=[{eyebrow:"REQUESTS",title:"You know what you need",copy:"Add a product from the catalogue to your Request List, or send a custom requirement with the specifications and volumes you need.",cta:"Go to Request List",href:"https://app.fpx.nz/request-cart"},{eyebrow:"SHOP – ORDER DIRECT",title:"See what’s available",copy:"Browse available stock and specials when you’re ready to order directly through FPX.",cta:"Browse available stock",href:"https://app.fpx.nz/shop"},{eyebrow:"OFFERS – ENQUIRE",title:"Take advantage of current offers",copy:"Review current timber opportunities and submit an enquiry so FPX can respond with pricing based on your volumes and requirements.",cta:"View current offers",href:"https://app.fpx.nz/offers"}];return <section className="m-home-source-map"><div className="m-home-source-head"><Eyebrow>HOW FPX WORKS</Eyebrow><h2>Find it, request it or <em>take advantage of it.</em></h2><p>A simple preview of the sourcing routes available through FPX. The full workflow lives on the FPX Sourcing page.</p></div><div className="m-home-source-grid">{routes.map(route=><article key={route.title} className="m-home-source-card"><span>{route.eyebrow}</span><h3>{route.title}</h3><p>{route.copy}</p><a href={route.href}>{route.cta}<Arrow/></a></article>)}</div><div className="m-home-source-footer" style={{justifyContent:"center"}}><Link href="/source-timber">See the full FPX sourcing workflow <Arrow/></Link></div></section>;}
-function CustomersCinematic(){const [active,setActive]=useState(0);const groups=[["Builders & Contractors","Project-specific timber without the sourcing runaround.","fpx-customer-builder.png"],["Procurement Teams","Clear timber options for planned purchasing and ongoing requirements.","fpx-customer-procurement.png"],["Timber Merchants","Additional stock, current offers and support for specific customer demand.","fpx-customer-merchant.png"],["Wood Processors","Timber sourcing aligned with production specifications and required volumes.","fpx-customer-processor.png"]];return <section className="m-customers"><div className="m-customers-title"><Eyebrow>OUR CUSTOMERS</Eyebrow><h2>Built for businesses<br/>that buy timber.</h2><Link href="/our-customers">Meet our customers <Arrow/></Link></div><div className={`m-customer-stage active-${active+1}`} aria-label="Four New Zealand professionals who buy commercial timber"><div className="m-customer-people">{groups.map((g,i)=><button type="button" key={g[0]} className={`m-person-button ${i===active?"active":""}`} onMouseEnter={()=>setActive(i)} onFocus={()=>setActive(i)} onClick={()=>setActive(i)} aria-label={`Show information for ${g[0]}`} data-master-parallax data-speed={.018+i*.008}><img className="m-person" src={`/images/${g[2]}`} alt={`${g[0]} using FPX for commercial timber sourcing`}/></button>)}</div><div className={`m-customer-panel panel-${active+1}`} aria-live="polite"><h3>{groups[active][0]}</h3><p>{groups[active][1]}</p></div><p className="m-customer-instruction"><span className="instruction-hover">Hover to meet our customers</span><span className="instruction-tap">Tap to meet our customers</span></p></div></section>;}
-export function MasterHome(){useParallax();return <Shell><main className="master-site"><MasterHero/><CategoryPocket/><SourceWays/><HowFpxWorks/><CustomersCinematic/><LightCTA/></main></Shell>}
+
+function RangeStory(){
+  return <section className="ph-range">
+    <div className="ph-range-intro">
+      <Eyebrow>THE FPX TIMBER RANGE</Eyebrow>
+      <h2>Start with the<br/>right product group.</h2>
+      <p>Explore the range at a high level first. Then move into FPX for current stock, offers and detailed specifications.</p>
+      <Link href="/products">Explore the full timber range <Arrow/></Link>
+    </div>
+    <div className="ph-range-list">
+      {productGroups.map((group,i)=><Link href={`/${group[3]}`} className="ph-range-item" key={group[0]}>
+        <div className="ph-range-image"><img src={`/images/${group[2]}`} alt={`${group[0]} timber product group`}/></div>
+        <span>0{i+1}</span>
+        <div className="ph-range-copy"><h3>{group[0]}</h3><p>{group[1]}</p><b>Explore <Arrow/></b></div>
+      </Link>)}
+    </div>
+  </section>
+}
+
+function PlatformStory(){
+  const screens=[
+    {label:"SHOP",title:"See what’s available.",copy:"Browse available timber by category, grade and specification, then order directly when the right product is ready.",image:"fpx-app-shop.png",href:"https://app.fpx.nz/shop"},
+    {label:"OFFERS",title:"See current opportunities.",copy:"Review current timber offers and enquire when the opportunity suits your volumes and requirements.",image:"fpx-app-offers.png",href:"https://app.fpx.nz/offers"},
+    {label:"REQUESTS",title:"Tell FPX what you need.",copy:"Start with a catalogue product or send a custom requirement when the timber you need is more specific.",image:"fpx-app-requests.png",href:"https://app.fpx.nz/request-cart"}
+  ];
+  const [active,setActive]=useState(0);
+  useEffect(()=>{const t=setInterval(()=>setActive(v=>(v+1)%screens.length),5200);return()=>clearInterval(t)},[]);
+  return <section className="ph-platform">
+    <div className="ph-platform-head">
+      <Eyebrow>FPX SOURCING</Eyebrow>
+      <h2>Three ways in.<br/>One place to start.</h2>
+      <p>You do not need to learn the whole platform before you begin. Start with the route that matches the job.</p>
+      <Link href="/source-timber">See how FPX sourcing works <Arrow/></Link>
+    </div>
+    <div className="ph-platform-stage">
+      <div className="ph-platform-screen">
+        {screens.map((s,i)=><img className={i===active?"active":""} key={s.image} src={`/images/${s.image}`} alt={`${s.label} in the FPX platform`}/>)}
+      </div>
+      <div className="ph-platform-tabs">
+        {screens.map((s,i)=><button className={i===active?"active":""} onClick={()=>setActive(i)} onMouseEnter={()=>setActive(i)} key={s.label}>
+          <span>0{i+1}</span><small>{s.label}</small><h3>{s.title}</h3><p>{s.copy}</p><a href={s.href}>Start here <Arrow/></a>
+        </button>)}
+      </div>
+    </div>
+  </section>
+}
+
+function BuyerStory(){
+  const groups=[
+    ["Builders & Contractors","Project-specific timber for active jobs and upcoming work.","/images/fpx-customer-builder.png"],
+    ["Procurement Teams","A clearer sourcing path for planned purchasing and recurring requirements.","/images/fpx-customer-procurement.png"],
+    ["Timber Merchants","Additional stock, current offers and support for specific customer demand.","/images/fpx-customer-merchant.png"],
+    ["Wood Processors","Feedstock and timber aligned with production specifications and required volumes.","/images/fpx-customer-processor.png"]
+  ];
+  return <section className="ph-buyers">
+    <div className="ph-buyers-head"><Eyebrow>OUR CUSTOMERS</Eyebrow><h2>Built for businesses<br/>that buy timber.</h2><Link href="/our-customers">Meet our customers <Arrow/></Link></div>
+    <div className="ph-buyers-grid">{groups.map((g,i)=><article key={g[0]}>
+      <div className="ph-buyers-image"><img src={g[2]} alt={g[0]}/></div>
+      <span>0{i+1}</span><h3>{g[0]}</h3><p>{g[1]}</p>
+    </article>)}</div>
+  </section>
+}
+
+function Closing(){
+  return <section className="ph-close">
+    <div><Eyebrow>START WITH FPX</Eyebrow><h2>Find the timber.<br/>Move with clarity.</h2><p>Browse available timber or send FPX the requirement you already have.</p></div>
+    <AppButtons/>
+  </section>
+}
+
+export function MasterHome(){return <Shell><main className="master-site premium-home"><PremiumHero/><RangeStory/><PlatformStory/><BuyerStory/><Closing/></main></Shell>}
