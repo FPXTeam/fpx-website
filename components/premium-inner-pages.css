@@ -1418,3 +1418,171 @@
   .poc2-compare-list article p{grid-column:2}
   .poc2-close{padding-top:90px;padding-bottom:100px}
 }
+
+
+/* Our Customers refinement: cinematic hero + editorial lower sections */
+.poc2-hero{
+  position:relative;
+  overflow:hidden;
+  color:#fff;
+  background:#040E0E;
+}
+.poc2-hero-bg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.poc2-hero-shade{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,rgba(4,14,14,.90) 0%,rgba(4,14,14,.72) 42%,rgba(4,14,14,.24) 74%,rgba(4,14,14,.08) 100%),
+    linear-gradient(0deg,rgba(4,14,14,.5),transparent 58%);
+}
+.poc2-hero-copy,
+.poc2-hero-note{position:relative;z-index:2}
+.poc2-hero .m-eyebrow{color:#fff!important;opacity:.82}
+.poc2-hero h1{color:#fff}
+.poc2-hero-copy>p:not(.m-eyebrow){color:#d6e0da}
+.poc2-hero-note{border-top-color:#ffffff40}
+.poc2-hero-note span{color:#fff}
+.poc2-hero-note p{color:#cbd5cf}
+
+/* Keep WHO USES FPX interactive stage untouched above this point */
+
+.poc2-needs{
+  padding:125px 7vw 135px;
+  background:#fff;
+  border-top:1px solid var(--pi-line);
+}
+.poc2-needs-head{
+  max-width:980px;
+  margin-bottom:64px;
+}
+.poc2-needs-head h2{
+  font-size:clamp(50px,5.5vw,88px);
+  line-height:.95;
+  letter-spacing:-.05em;
+  margin:0;
+}
+.poc2-needs-head>p:not(.m-eyebrow){
+  max-width:700px;
+  margin-top:24px;
+  font-size:16px;
+  line-height:1.75;
+  color:var(--pi-muted);
+}
+.poc2-needs-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:0;
+  border-top:1px solid var(--pi-line);
+  border-bottom:1px solid var(--pi-line);
+}
+.poc2-needs-grid article{
+  position:relative;
+  min-height:360px;
+  padding:30px 28px 34px;
+  border-right:1px solid var(--pi-line);
+  display:flex;
+  flex-direction:column;
+}
+.poc2-needs-grid article:last-child{border-right:0}
+.poc2-needs-grid article>span{
+  font:700 10px Lato,Arial,sans-serif;
+  color:var(--pi-green);
+  letter-spacing:.12em;
+}
+.poc2-needs-grid article>small{
+  margin-top:auto;
+  font:700 9px Lato,Arial,sans-serif;
+  color:var(--pi-green);
+  letter-spacing:.12em;
+}
+.poc2-needs-grid h3{
+  font-size:clamp(27px,2.4vw,38px);
+  line-height:1;
+  margin:10px 0 14px;
+}
+.poc2-needs-grid p{
+  font-size:13px;
+  line-height:1.7;
+  color:var(--pi-muted);
+  margin:0;
+}
+
+.poc2-pillars{
+  padding:125px 7vw 135px;
+  background:#fff;
+  border-top:1px solid var(--pi-line);
+}
+.poc2-pillars-head{
+  display:grid;
+  grid-template-columns:.7fr 1.3fr;
+  gap:8vw;
+  align-items:end;
+  margin-bottom:58px;
+}
+.poc2-pillars-head h2{
+  font-size:clamp(50px,5.4vw,86px);
+  line-height:.95;
+  letter-spacing:-.05em;
+  margin:0;
+}
+.poc2-pillars-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:26px;
+}
+.poc2-pillars-grid article{
+  position:relative;
+  min-height:330px;
+  padding:34px 0 0;
+  border-top:1px solid var(--pi-line);
+}
+.poc2-pillars-grid article>span{
+  display:block;
+  margin-bottom:58px;
+  font:700 10px Lato,Arial,sans-serif;
+  color:var(--pi-green);
+  letter-spacing:.12em;
+}
+.poc2-pillars-grid h3{
+  font-size:clamp(28px,2.8vw,42px);
+  line-height:1.05;
+  margin:0 0 16px;
+  max-width:340px;
+}
+.poc2-pillars-grid p{
+  font-size:14px;
+  line-height:1.75;
+  color:var(--pi-muted);
+  margin:0;
+  max-width:360px;
+}
+
+@media(max-width:1000px){
+  .poc2-needs-grid{grid-template-columns:repeat(2,1fr)}
+  .poc2-needs-grid article:nth-child(2){border-right:0}
+  .poc2-needs-grid article:nth-child(-n+2){border-bottom:1px solid var(--pi-line)}
+  .poc2-pillars-head{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+  .poc2-needs,.poc2-pillars{
+    padding:90px 24px 100px;
+  }
+  .poc2-needs-grid{grid-template-columns:1fr}
+  .poc2-needs-grid article{
+    min-height:auto;
+    border-right:0!important;
+    border-bottom:1px solid var(--pi-line);
+    padding:28px 0;
+  }
+  .poc2-needs-grid article:last-child{border-bottom:0}
+  .poc2-needs-grid article>small{margin-top:42px}
+  .poc2-pillars-grid{grid-template-columns:1fr}
+  .poc2-pillars-grid article{min-height:auto;padding-bottom:30px}
+  .poc2-pillars-grid article>span{margin-bottom:28px}
+}
