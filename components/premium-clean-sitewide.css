@@ -516,3 +516,93 @@ footer{
 @media(max-width:700px){
   .footer-brand-mark img{width:42px!important;height:42px!important}
 }
+
+
+/* Light-first palette: Forest is an accent, not a page background */
+.m-source-closing-premium,
+.m-saw-hero-revamp,
+.m-social-band-revamp,
+.m-end-uses,
+.ph-customers-returned,
+.ph-hero{
+  background:#fff!important;
+  color:#040E0E!important;
+}
+
+/* Restore dark text inside formerly-dark sections */
+.m-source-closing-premium h2,
+.m-source-closing-premium h3,
+.m-saw-hero-revamp h1,
+.m-saw-hero-revamp h2,
+.m-social-band-revamp h2,
+.m-end-uses h2,
+.m-end-uses h3,
+.ph-customers-returned h2,
+.ph-customers-returned h3,
+.ph-hero h1{
+  color:#040E0E!important;
+}
+.m-source-closing-premium p:not(.m-eyebrow),
+.m-saw-hero-revamp p,
+.m-social-band-revamp p,
+.m-end-uses p,
+.ph-customers-returned p,
+.ph-hero-copy>p:not(.m-eyebrow){
+  color:#64736C!important;
+}
+
+/* Hero becomes image-led and bright rather than dark-canvas */
+.ph-hero{
+  background:#fff!important;
+}
+.ph-hero-shade{
+  background:linear-gradient(90deg,rgba(255,255,255,.94) 0%,rgba(255,255,255,.82) 40%,rgba(255,255,255,.28) 72%,rgba(255,255,255,.05) 100%),linear-gradient(0deg,rgba(255,255,255,.7),transparent 56%)!important;
+}
+.ph-hero .m-eyebrow{color:#40973C!important;opacity:1!important}
+.ph-hero h1 span{color:#758956!important}
+.ph-hero .m-btn-primary{background:#40973C!important;color:#fff!important;border-color:#40973C!important}
+.ph-hero .m-btn-ghost{background:#fff!important;color:#040E0E!important;border-color:#d6ddd8!important}
+.ph-hero-scroll{color:#64736C!important}
+
+/* Former dark customer section becomes editorial white */
+.ph-customers-returned{
+  border-top:1px solid #e4e8e5!important;
+}
+.ph-customers-returned .m-eyebrow{color:#40973C!important}
+.ph-customers-returned .m-customers-title>a{color:#040E0E!important}
+.ph-customers-returned .m-customer-panel{
+  background:#fff!important;
+  color:#040E0E!important;
+  border:1px solid #e4e8e5!important;
+}
+.ph-customers-returned .m-customer-panel h3{color:#040E0E!important}
+.ph-customers-returned .m-customer-panel p{color:#64736C!important}
+.ph-customers-returned .m-customer-instruction{color:#64736C!important}
+
+/* Other formerly-dark anchors become light sections with Forest accents */
+.m-source-closing-premium,
+.m-social-band-revamp,
+.m-end-uses,
+.m-saw-hero-revamp{
+  border-top:1px solid #e4e8e5!important;
+}
+.m-source-closing-premium .m-btn-primary,
+.m-social-band-revamp .m-btn-primary,
+.m-end-uses .m-btn-primary{
+  background:#40973C!important;
+  color:#fff!important;
+  border-color:#40973C!important;
+}
+.m-source-closing-premium .m-btn-ghost,
+.m-social-band-revamp .m-btn-ghost,
+.m-end-uses .m-btn-ghost{
+  background:#fff!important;
+  color:#040E0E!important;
+  border-color:#d6ddd8!important;
+}
+
+/* Footer remains the only full dark canvas */
+footer{
+  background:#040E0E!important;
+  color:#fff!important;
+}
