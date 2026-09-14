@@ -97,7 +97,7 @@ export function CustomersPage(){
       </div>
 
       <div className="poc3-people" role="tablist" aria-label="FPX customer groups">
-        {customerProfiles.map((g,i)=><button key={g.title} type="button" className={active===i?"active":""} onMouseEnter={()=>setActive(i)} onFocus={()=>setActive(i)} onClick={()=>setActive(i)} role="tab" aria-selected={active===i}>
+        {customerProfiles.map((g,i)=><button key={g.title} type="button" className={active===i?"active":""} onFocus={()=>setActive(i)} onClick={()=>setActive(i)} role="tab" aria-selected={active===i}>
           <img src={"/images/"+g.image} alt={g.alt}/>
           <span>0{i+1}</span>
           <b>{g.label}</b>
