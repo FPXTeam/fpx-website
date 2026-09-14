@@ -16,61 +16,61 @@ export function CustomersPage(){
     {
       title:"Contractors & builders",
       label:"BUILDERS & CONTRACTORS",
-      blurb:"Timber for active jobs, upcoming projects and specific applications.",
-      need:"Clear product fit, timing and an easy way to source what the job actually needs.",
+      blurb:"Timber for active jobs and specific project requirements.",
+      need:"Clear product fit, timing and supply for the job.",
       focusTitle:"Product fit",
-      focusCopy:"Clear product fit, timing and an easy way to source what the job actually needs.",
+      focusCopy:"Match the timber to the application, specification and timing.",
       image:"fpx-customer-builder.png",
       alt:"Builder customer",
       pillars:[
-        ["Know what fits the job.","Understand product group, application, grade, treatment and key specifications before committing."],
-        ["Start with the job requirement.","Browse available timber when the need is flexible, or create a request when the specification is already defined."],
-        ["Keep timing visible.","Use FPX to keep product, quantity and delivery timing connected to what is happening on site."]
+        ["Know what fits.","Check product, grade, treatment and key specifications."],
+        ["Start the right way.","Browse stock or create a request for a defined requirement."],
+        ["Keep timing clear.","Keep quantity and delivery timing aligned with the job."]
       ]
     },
     {
       title:"Procurement teams",
       label:"PROCUREMENT TEAMS",
-      blurb:"Clear specifications and supported sourcing for commercial requirements.",
-      need:"A structured way to compare requirements, keep specifications clear and move orders forward.",
+      blurb:"Structured sourcing for defined commercial requirements.",
+      need:"Clear specifications and a consistent way to review options.",
       focusTitle:"Specification clarity",
-      focusCopy:"Keep the requirement organised so options can be reviewed against the same commercial brief.",
+      focusCopy:"Keep every option tied back to the same commercial brief.",
       image:"fpx-customer-procurement.png",
       alt:"Procurement customer",
       pillars:[
-        ["Keep the brief consistent.","Bring dimensions, grade, treatment, quantity, timing and delivery requirements into one clear sourcing requirement."],
-        ["Compare against the same need.","Use FPX to review suitable options without losing the original commercial specification."],
-        ["Keep handovers clear.","Move from requirement to review and order with the detail easier for internal teams to follow."]
+        ["Keep the brief consistent.","Bring the important specification into one sourcing requirement."],
+        ["Compare like with like.","Review suitable options against the same commercial need."],
+        ["Keep handovers clear.","Make the requirement easier for internal teams to follow."]
       ]
     },
     {
       title:"Timber merchants",
       label:"TIMBER MERCHANTS",
-      blurb:"Ongoing product needs, spot requirements and supply opportunities.",
-      need:"A practical way to handle repeat needs, spot requirements and opportunities without extra admin.",
+      blurb:"Ongoing stock needs, spot requirements and supply opportunities.",
+      need:"A practical way to source repeat needs and spot opportunities.",
       focusTitle:"Commercial fit",
-      focusCopy:"Find products that make sense for current stock needs, customer demand and spot opportunities.",
+      focusCopy:"Find timber that makes sense for stock needs and customer demand.",
       image:"fpx-customer-merchant.png",
       alt:"Timber merchant customer",
       pillars:[
-        ["See what is available.","Browse current timber and offers when the opportunity is immediate or commercially useful."],
-        ["Handle repeat needs faster.","Use known product requirements as the starting point instead of rebuilding the same sourcing detail each time."],
-        ["Keep alternatives open.","Use Requests when the exact product is not visible and suitable alternatives may still work."]
+        ["See what is available.","Browse current timber and offers quickly."],
+        ["Handle repeat needs faster.","Start from known product requirements."],
+        ["Keep alternatives open.","Use Requests when the exact product is not visible."]
       ]
     },
     {
       title:"Wood processors",
       label:"WOOD PROCESSORS",
-      blurb:"Feedstock and timber products aligned with manufacturing needs.",
-      need:"Reliable feedstock visibility, useful specifications and a clear route to specific manufacturing requirements.",
+      blurb:"Feedstock and timber aligned with manufacturing requirements.",
+      need:"Useful feedstock visibility and a clear route to specific needs.",
       focusTitle:"Feedstock fit",
-      focusCopy:"Match grade, size, quantity and timber characteristics to the needs of the manufacturing process.",
+      focusCopy:"Match grade, size and volume to the production requirement.",
       image:"fpx-customer-processor.png",
       alt:"Wood processor customer",
       pillars:[
-        ["Define the feedstock clearly.","Set the grade, dimensions, volume and characteristics that matter to the process and finished product."],
-        ["Separate available stock from specific needs.","Browse current manufacturing timber first, then use Requests when the feedstock requirement is more exact."],
-        ["Source around production needs.","Keep timing, consistency and required volume connected to the manufacturing schedule."]
+        ["Define the feedstock.","Set grade, dimensions and volume clearly."],
+        ["Separate stock from specific needs.","Browse first, then use Requests for exact requirements."],
+        ["Source around production.","Keep volume and timing aligned with the manufacturing schedule."]
       ]
     }
   ];
