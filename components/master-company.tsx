@@ -229,32 +229,30 @@ export function AboutPage(){
       </div>
     </section>
 
-    <section className="pab4-team">
-      <div className="pab4-team-head">
+    <section className="pab5-team">
+      <div className="pab5-team-head">
         <Eyebrow>THE PEOPLE BEHIND FPX</Eyebrow>
         <h2>Timber knowledge behind the platform.</h2>
         <p>FPX is digital by design, but the sourcing experience is supported by people who understand the New Zealand timber trade.</p>
       </div>
 
-      <div className="pab4-team-stage">
-        <div className="pab4-team-mark">FPX</div>
-
-        <article className="pab4-person pab4-george">
-          <div className="pab4-person-figure"><img src={team[0].image} alt={team[0].name}/></div>
-          <div className="pab4-person-copy">
-            <small>{team[0].role}</small>
-            <h3>{team[0].name}</h3>
-            <p>{team[0].copy}</p>
-          </div>
+      <div className="pab5-team-stage">
+        <article className="pab5-bio pab5-bio-left">
+          <small>{team[0].role}</small>
+          <h3>{team[0].name}</h3>
+          <p>{team[0].copy}</p>
         </article>
 
-        <article className="pab4-person pab4-gabriela">
-          <div className="pab4-person-copy">
-            <small>{team[1].role}</small>
-            <h3>{team[1].name}</h3>
-            <p>{team[1].copy}</p>
-          </div>
-          <div className="pab4-person-figure"><img src={team[1].image} alt={team[1].name}/></div>
+        <div className="pab5-figures" aria-label="George Harman and Gabriela Molloy">
+          <div className="pab5-mark">FPX</div>
+          <img className="pab5-figure pab5-george" src={team[0].image} alt={team[0].name}/>
+          <img className="pab5-figure pab5-gabriela" src={team[1].image} alt={team[1].name}/>
+        </div>
+
+        <article className="pab5-bio pab5-bio-right">
+          <small>{team[1].role}</small>
+          <h3>{team[1].name}</h3>
+          <p>{team[1].copy}</p>
         </article>
       </div>
     </section>
