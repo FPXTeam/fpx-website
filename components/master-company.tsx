@@ -165,8 +165,8 @@ export function CustomersPage(){
 
 export function AboutPage(){
   const team=[
-    {name:"George Harman",role:"Director",image:"https://assets.softr-files.com/applications/bfc5c9f5-7e6e-44f9-b058-0da4dbec6efe/assets/6446200e-fdaf-4b71-8073-c9287ca48b93.png",copy:"George brings hands-on timber industry experience to FPX, with a focus on practical sourcing, commercial relationships and making the buying process easier to navigate."},
-    {name:"Gabriela Molloy",role:"General Manager",image:"https://assets.softr-files.com/applications/bfc5c9f5-7e6e-44f9-b058-0da4dbec6efe/assets/2d8c0d1f-62c9-454a-8e12-a6786ac94371.png",copy:"Gabriela leads the day-to-day delivery of FPX, helping keep the sourcing experience clear, responsive and useful for timber buyers across New Zealand."}
+    {name:"George Harman",role:"Director",image:"/images/team/george.webp",copy:"George brings hands-on timber industry experience to FPX, with a focus on practical sourcing, commercial relationships and making the buying process easier to navigate."},
+    {name:"Gabriela Molloy",role:"General Manager",image:"/images/team/gabriela.webp",copy:"Gabriela leads the day-to-day delivery of FPX, helping keep the sourcing experience clear, responsive and useful for timber buyers across New Zealand."}
   ];
 
   return <>
@@ -228,23 +228,33 @@ export function AboutPage(){
       </div>
     </section>
 
-    <section className="pab3-frame pab3-team">
-      <div className="pab3-team-heading">
+    <section className="pab4-team">
+      <div className="pab4-team-head">
         <Eyebrow>THE PEOPLE BEHIND FPX</Eyebrow>
-        <h2>Industry experience behind the platform.</h2>
+        <h2>Timber knowledge behind the platform.</h2>
         <p>FPX is digital by design, but the sourcing experience is supported by people who understand the New Zealand timber trade.</p>
       </div>
 
-      <div className="pab3-team-members">
-        {team.map((person,i)=><article key={person.name}>
-          <div className="pab3-team-photo"><img src={person.image} alt={person.name}/></div>
-          <div className="pab3-team-copy">
-            <span>0{i+1}</span>
-            <small>{person.role}</small>
-            <h3>{person.name}</h3>
-            <p>{person.copy}</p>
+      <div className="pab4-team-stage">
+        <div className="pab4-team-mark">FPX</div>
+
+        <article className="pab4-person pab4-george">
+          <div className="pab4-person-figure"><img src={team[0].image} alt={team[0].name}/></div>
+          <div className="pab4-person-copy">
+            <small>{team[0].role}</small>
+            <h3>{team[0].name}</h3>
+            <p>{team[0].copy}</p>
           </div>
-        </article>)}
+        </article>
+
+        <article className="pab4-person pab4-gabriela">
+          <div className="pab4-person-copy">
+            <small>{team[1].role}</small>
+            <h3>{team[1].name}</h3>
+            <p>{team[1].copy}</p>
+          </div>
+          <div className="pab4-person-figure"><img src={team[1].image} alt={team[1].name}/></div>
+        </article>
       </div>
     </section>
 
