@@ -4610,3 +4610,45 @@
     line-height:.96!important;
   }
 }
+
+
+/* =========================================================
+   HEADING SEMANTICS + ACCENT FONT ENFORCEMENT
+   Keep semantic heading levels independent from visual style.
+   ========================================================= */
+.master-site h1 > .headline-accent,
+.master-site h2 > .headline-accent,
+.master-site h3 > .headline-accent{
+  font-family:var(--font-accent-serif), "Cormorant Garamond", Georgia, serif!important;
+  font-style:italic!important;
+  font-weight:500!important;
+  font-synthesis:none!important;
+  letter-spacing:-.045em!important;
+  line-height:.9!important;
+  font-size:1.06em!important;
+}
+
+/* Make sure forced Montserrat heading rules never leak into the accent span. */
+.master-site h1 .headline-accent *,
+.master-site h2 .headline-accent *,
+.master-site h3 .headline-accent *{
+  font-family:inherit!important;
+}
+
+/* Shared FAQ note now uses H2 semantically, but retains compact card scale. */
+.master-site .pfq-hero aside h2{
+  font-size:27px!important;
+  line-height:1.08!important;
+  margin:14px 0 8px!important;
+}
+
+/* Sourcing process step headings are H3 for correct H2 -> H3 order. */
+.master-site .pst-route-path h3,
+.master-site .m-source-journey h3{
+  font-family:Lato,Arial,sans-serif!important;
+  font-size:17px!important;
+  line-height:1.2!important;
+  font-weight:700!important;
+  letter-spacing:-.01em!important;
+  margin:10px 0 6px!important;
+}
