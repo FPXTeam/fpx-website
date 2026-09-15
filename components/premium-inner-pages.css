@@ -4281,3 +4281,274 @@
     text-align:left!important;
   }
 }
+
+
+/* =========================================================
+   SITEWIDE TYPOGRAPHY + ALIGNMENT CONTRACT
+   Eyebrow, headline and supporting copy must share an axis.
+   ========================================================= */
+
+/* Core typography rhythm */
+.master-site .m-eyebrow{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  padding:0!important;
+  margin-top:0!important;
+  margin-bottom:16px!important;
+  font-family:Lato,Arial,sans-serif!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:1.2!important;
+  letter-spacing:.16em!important;
+  text-transform:uppercase!important;
+  text-align:inherit!important;
+  color:#40973C!important;
+}
+
+.master-site h1,
+.master-site h2,
+.master-site h3,
+.master-site h4{
+  text-wrap:balance;
+  font-kerning:normal;
+}
+
+.master-site h1{
+  letter-spacing:-.052em;
+}
+.master-site h2{
+  letter-spacing:-.046em;
+}
+.master-site h3{
+  letter-spacing:-.028em;
+}
+.master-site h4{
+  letter-spacing:-.015em;
+}
+
+.master-site p{
+  letter-spacing:-.005em;
+  line-height:1.72;
+}
+
+.master-site .m-eyebrow + h1,
+.master-site .m-eyebrow + h2,
+.master-site .m-eyebrow + h3{
+  margin-top:0;
+}
+
+/* CENTERED COPY BLOCKS
+   Headline, eyebrow and paragraph share the same physical centre. */
+.master-site :is(
+  .ppr-intro,
+  .pst-intro,
+  .poc-intro,
+  .m-source-story-intro,
+  .m-section-heading-centered,
+  .ph-platform-head,
+  .m-source-routes-head,
+  .m-source-account-head,
+  .m-saw-hero,
+  .m-resource-hero,
+  .pab3-statement-main,
+  .pab3-statement-side,
+  .pab5-team-head
+){
+  text-align:center!important;
+}
+
+.master-site :is(
+  .ppr-intro,
+  .pst-intro,
+  .poc-intro,
+  .m-source-story-intro,
+  .m-section-heading-centered,
+  .ph-platform-head,
+  .m-source-routes-head,
+  .m-source-account-head,
+  .m-saw-hero,
+  .m-resource-hero,
+  .pab3-statement-main,
+  .pab3-statement-side,
+  .pab5-team-head
+) .m-eyebrow{
+  margin-left:auto!important;
+  margin-right:auto!important;
+  text-align:center!important;
+}
+
+.master-site :is(
+  .ppr-intro,
+  .pst-intro,
+  .poc-intro,
+  .m-source-story-intro,
+  .m-section-heading-centered,
+  .ph-platform-head,
+  .m-source-routes-head,
+  .m-source-account-head,
+  .m-saw-hero,
+  .m-resource-hero,
+  .pab3-statement-main,
+  .pab3-statement-side,
+  .pab5-team-head
+) > p:not(.m-eyebrow){
+  margin-left:auto!important;
+  margin-right:auto!important;
+  text-align:center!important;
+}
+
+/* Shared centered inner-page heroes */
+.master-site :is(
+  .hero-contact-us,
+  .hero-faq,
+  .hero-terms-and-conditions,
+  .hero-privacy-policy
+) > div:first-child{
+  text-align:center!important;
+}
+
+.master-site :is(
+  .hero-contact-us,
+  .hero-faq,
+  .hero-terms-and-conditions,
+  .hero-privacy-policy
+) > div:first-child .m-eyebrow{
+  margin-left:auto!important;
+  margin-right:auto!important;
+  text-align:center!important;
+}
+
+.master-site :is(
+  .hero-contact-us,
+  .hero-faq,
+  .hero-terms-and-conditions,
+  .hero-privacy-policy
+) > div:first-child > p:not(.m-eyebrow){
+  margin-left:auto!important;
+  margin-right:auto!important;
+  text-align:center!important;
+}
+
+/* About page intentional RIGHT copy blocks.
+   Right edge of eyebrow, headline and paragraph is identical. */
+@media(min-width:1001px){
+  .master-site .pab3-platform-copy,
+  .master-site .pab3-purpose-title{
+    text-align:right!important;
+  }
+
+  .master-site .pab3-platform-copy .m-eyebrow,
+  .master-site .pab3-purpose-title .m-eyebrow{
+    margin-left:auto!important;
+    margin-right:0!important;
+    text-align:right!important;
+  }
+
+  .master-site .pab3-platform-copy > p:not(.m-eyebrow),
+  .master-site .pab3-purpose-title > p:not(.m-eyebrow){
+    margin-left:auto!important;
+    margin-right:0!important;
+    text-align:right!important;
+  }
+}
+
+/* Explicit LEFT blocks.
+   Prevent old centered/right overrides from leaking into them. */
+.master-site :is(
+  .ppr-hero-copy,
+  .pst-hero-copy,
+  .poc-hero-copy,
+  .poc2-hero-copy,
+  .pab3-hero-copy,
+  .ph-hero-copy,
+  .m-platform-copy,
+  .m-category-copy,
+  .m-how-heading,
+  .pab3-close > div:first-child
+){
+  text-align:left;
+}
+
+.master-site :is(
+  .ppr-hero-copy,
+  .pst-hero-copy,
+  .poc-hero-copy,
+  .poc2-hero-copy,
+  .pab3-hero-copy,
+  .ph-hero-copy,
+  .m-platform-copy,
+  .m-category-copy,
+  .m-how-heading,
+  .pab3-close > div:first-child
+) .m-eyebrow{
+  margin-left:0!important;
+  margin-right:auto!important;
+  text-align:left!important;
+}
+
+.master-site :is(
+  .ppr-hero-copy,
+  .pst-hero-copy,
+  .poc-hero-copy,
+  .poc2-hero-copy,
+  .pab3-hero-copy,
+  .ph-hero-copy,
+  .m-platform-copy,
+  .m-category-copy,
+  .m-how-heading,
+  .pab3-close > div:first-child
+) > p:not(.m-eyebrow){
+  margin-left:0;
+  margin-right:auto;
+  text-align:left;
+}
+
+/* More natural display spacing without loosening the design */
+.master-site :is(
+  .ppr-intro,
+  .pst-intro,
+  .poc-intro,
+  .m-source-story-intro,
+  .ph-platform-head,
+  .pab3-statement-main,
+  .pab5-team-head
+) h2{
+  line-height:.95;
+}
+
+.master-site :is(
+  .ppr-intro,
+  .pst-intro,
+  .poc-intro,
+  .m-source-story-intro,
+  .ph-platform-head,
+  .pab3-statement-main,
+  .pab5-team-head
+) > p:not(.m-eyebrow){
+  margin-top:24px!important;
+  line-height:1.72!important;
+}
+
+/* Responsive rule remains identical: whichever alignment the headline uses,
+   the eyebrow and paragraph follow it. */
+@media(max-width:1000px){
+  .master-site .pab3-platform-copy,
+  .master-site .pab3-purpose-title{
+    text-align:left!important;
+  }
+
+  .master-site .pab3-platform-copy .m-eyebrow,
+  .master-site .pab3-purpose-title .m-eyebrow{
+    margin-left:0!important;
+    margin-right:auto!important;
+    text-align:left!important;
+  }
+
+  .master-site .pab3-platform-copy > p:not(.m-eyebrow),
+  .master-site .pab3-purpose-title > p:not(.m-eyebrow){
+    margin-left:0!important;
+    margin-right:auto!important;
+    text-align:left!important;
+  }
+}
