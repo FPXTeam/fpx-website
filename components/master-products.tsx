@@ -23,7 +23,7 @@ export function ProductsPage(){
       <div className="ppr-hero-shade"/>
       <div className="ppr-hero-copy">
         <Eyebrow>OUR TIMBER RANGE</Eyebrow>
-        <h1>Timber for the work<br/>New Zealand does.</h1>
+        <h1>Timber for the work<br/><span className="headline-accent">New Zealand does.</span></h1>
         <p>Explore the main FPX product groups, understand where they fit, then move into FPX for current stock, offers and detailed specifications.</p>
       </div>
     </section>
@@ -71,7 +71,7 @@ export function ProductsPage(){
     <section className="ppr-close">
       <div>
         <Eyebrow>FULL PRODUCT DETAIL LIVES IN FPX</Eyebrow>
-        <h2>Know the group?<br/>Move into the detail.</h2>
+        <h2>Know the group?<br/><span className="headline-accent">Move into the detail.</span></h2>
         <p>Browse current timber, review offers or send FPX the requirement you already have.</p>
       </div>
       <AppButtons/>
