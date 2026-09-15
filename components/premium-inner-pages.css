@@ -3585,3 +3585,150 @@
   .pab3-team-copy p{font-size:13px}
   .pab3-close{min-height:auto;padding-top:90px;padding-bottom:100px}
 }
+
+
+/* About Us leadership spread using transparent team portraits */
+.pab4-team{
+  position:relative;
+  min-height:calc(100svh - 88px);
+  padding:70px 7vw 52px;
+  background:#fff;
+  border-bottom:1px solid var(--pi-line);
+  overflow:hidden;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr);
+}
+.pab4-team-head{
+  position:relative;
+  z-index:3;
+  max-width:860px;
+}
+.pab4-team-head h2{
+  font-size:clamp(50px,5.5vw,88px);
+  line-height:.94;
+  letter-spacing:-.055em;
+  margin:0;
+}
+.pab4-team-head>p:not(.m-eyebrow){
+  max-width:650px;
+  margin:20px 0 0;
+  font-size:16px;
+  line-height:1.72;
+  color:var(--pi-muted);
+}
+.pab4-team-stage{
+  position:relative;
+  min-height:0;
+  margin-top:24px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5vw;
+  align-items:end;
+}
+.pab4-team-mark{
+  position:absolute;
+  inset:auto 50% 3% auto;
+  transform:translateX(50%);
+  font:700 clamp(150px,22vw,360px)/.75 Montserrat,Arial,sans-serif;
+  letter-spacing:-.08em;
+  color:#f1f4f2;
+  pointer-events:none;
+  user-select:none;
+  z-index:0;
+}
+.pab4-person{
+  position:relative;
+  z-index:2;
+  min-width:0;
+  display:grid;
+  grid-template-columns:minmax(220px,.9fr) minmax(220px,1.1fr);
+  gap:24px;
+  align-items:end;
+}
+.pab4-person-figure{
+  height:min(58vh,620px);
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+.pab4-person-figure img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center bottom;
+  filter:drop-shadow(0 22px 32px rgba(4,14,14,.08));
+}
+.pab4-person-copy{
+  padding-bottom:42px;
+  border-top:1px solid var(--pi-line);
+  padding-top:18px;
+}
+.pab4-person-copy small{
+  display:block;
+  font:700 9px Lato,Arial,sans-serif;
+  letter-spacing:.14em;
+  color:var(--pi-green);
+}
+.pab4-person-copy h3{
+  font-size:clamp(28px,2.7vw,42px);
+  line-height:1;
+  margin:7px 0 12px;
+}
+.pab4-person-copy p{
+  max-width:390px;
+  margin:0;
+  font-size:13px;
+  line-height:1.68;
+  color:var(--pi-muted);
+}
+.pab4-gabriela{
+  grid-template-columns:minmax(220px,1.1fr) minmax(220px,.9fr);
+}
+@media(max-width:1100px){
+  .pab4-team{
+    min-height:auto;
+    padding-top:100px;
+    padding-bottom:100px;
+  }
+  .pab4-team-stage{
+    grid-template-columns:1fr;
+    gap:70px;
+  }
+  .pab4-team-mark{
+    top:28%;
+    bottom:auto;
+  }
+  .pab4-person{
+    grid-template-columns:minmax(220px,.8fr) minmax(0,1.2fr);
+  }
+  .pab4-gabriela{
+    grid-template-columns:minmax(0,1.2fr) minmax(220px,.8fr);
+  }
+  .pab4-person-figure{
+    height:500px;
+  }
+}
+@media(max-width:700px){
+  .pab4-team{
+    padding:90px 24px 100px;
+  }
+  .pab4-team-stage{
+    gap:56px;
+  }
+  .pab4-person,
+  .pab4-gabriela{
+    grid-template-columns:1fr;
+  }
+  .pab4-gabriela .pab4-person-copy{order:2}
+  .pab4-gabriela .pab4-person-figure{order:1}
+  .pab4-person-figure{
+    height:420px;
+  }
+  .pab4-person-copy{
+    padding-bottom:0;
+  }
+  .pab4-team-mark{
+    display:none;
+  }
+}
