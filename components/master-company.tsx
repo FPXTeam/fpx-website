@@ -83,7 +83,7 @@ export function CustomersPage(){
       <div className="poc2-hero-shade"/>
       <div className="poc2-hero-copy">
         <Eyebrow>OUR CUSTOMERS</Eyebrow>
-        <h1>Built for businesses<br/>that buy timber.</h1>
+        <h1>Built for businesses<br/><span className="headline-accent">that buy timber.</span></h1>
         <p>FPX supports commercial timber buyers across New Zealand, from project teams to merchants and processors.</p>
       </div>
     </section>
@@ -175,7 +175,7 @@ export function AboutPage(){
       <div className="pab3-hero-shade"/>
       <div className="pab3-hero-copy">
         <Eyebrow>ABOUT FPX</Eyebrow>
-        <h1>Timber expertise.<br/>A clearer way to source.</h1>
+        <h1>Timber expertise.<br/><span className="headline-accent">A clearer way to source.</span></h1>
         <p>FPX is a New Zealand timber sourcing service built to make commercial buying easier to understand, easier to start and easier to move forward.</p>
       </div>
     </section>
@@ -198,7 +198,7 @@ export function AboutPage(){
     <section className="pab3-frame pab3-platform">
       <div className="pab3-platform-copy">
         <Eyebrow>WHAT FPX BRINGS TOGETHER</Eyebrow>
-        <h2>Digital when it helps.<br/>Human when it matters.</h2>
+        <h2>Digital when it helps.<br/><span className="headline-accent">Human when it matters.</span></h2>
         <p>Browse available timber, review current offers or send a specific requirement. FPX keeps the digital sourcing path simple while practical timber knowledge stays behind the process.</p>
         <div className="pab3-platform-points">
           <div><span>01</span><b>Clear product detail</b></div>
