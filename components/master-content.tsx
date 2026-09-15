@@ -43,7 +43,7 @@ export function FAQPage(){
   const [active,setActive]=useState("Getting started");
   const visible=faqGroups.find(g=>g.title===active)??faqGroups[0];
   return <>
-    <section className="pfq-hero"><div><Eyebrow>FREQUENTLY ASKED QUESTIONS</Eyebrow><h1>Straight answers.<br/><span className="headline-accent">No clutter.</span></h1><p>Everything you need to know about sourcing timber through FPX, from browsing products to requests, orders and support.</p></div><aside><small>CAN'T FIND IT?</small><h3>Ask the FPX team.</h3><p>Send us your requirement and we will point you in the right direction.</p><Link href="/contact-us">Contact FPX <Arrow/></Link></aside></section>
+    <section className="pfq-hero"><div><Eyebrow>FREQUENTLY ASKED QUESTIONS</Eyebrow><h1>Straight answers.<br/><span className="headline-accent">No clutter.</span></h1><p>Everything you need to know about sourcing timber through FPX, from browsing products to requests, orders and support.</p></div><aside><small>CAN'T FIND IT?</small><h2>Ask the FPX team.</h2><p>Send us your requirement and we will point you in the right direction.</p><Link href="/contact-us">Contact FPX <Arrow/></Link></aside></section>
     <section className="pfq-main">
       <nav aria-label="FAQ topics">{faqGroups.map((group,i)=><button key={group.title} type="button" className={active===group.title?"active":""} onClick={()=>setActive(group.title)}><span>0{i+1}</span>{group.title}</button>)}</nav>
       <div className="pfq-topic" key={visible.title}><small>FAQ TOPIC</small><h2>{visible.title}</h2>{visible.items.map(([question,answer],i)=><details key={question} open={i===0}><summary><span>{String(i+1).padStart(2,"0")}</span><b>{question}</b><ChevronDown/></summary><p>{answer}</p></details>)}</div>
