@@ -165,8 +165,8 @@ export function CustomersPage(){
 
 export function AboutPage(){
   const team=[
-    {name:"George Harman",role:"Director",image:"/images/team/george.webp",copy:"George brings hands-on timber industry experience to FPX, with a focus on practical sourcing, commercial relationships and making the buying process easier to navigate."},
-    {name:"Gabriela Molloy",role:"General Manager",image:"/images/team/gabriela.webp",copy:"Gabriela leads the day-to-day delivery of FPX, helping keep the sourcing experience clear, responsive and useful for timber buyers across New Zealand."}
+    {name:"George Harman",role:"Director",image:"https://assets.softr-files.com/applications/bfc5c9f5-7e6e-44f9-b058-0da4dbec6efe/assets/6446200e-fdaf-4b71-8073-c9287ca48b93.png",copy:"George brings hands-on timber industry experience to FPX, with a focus on practical sourcing, commercial relationships and making the buying process easier to navigate."},
+    {name:"Gabriela Molloy",role:"General Manager",image:"https://assets.softr-files.com/applications/bfc5c9f5-7e6e-44f9-b058-0da4dbec6efe/assets/2d8c0d1f-62c9-454a-8e12-a6786ac94371.png",copy:"Gabriela leads the day-to-day delivery of FPX, helping keep the sourcing experience clear, responsive and useful for timber buyers across New Zealand."}
   ];
 
   return <>
@@ -208,9 +208,10 @@ export function AboutPage(){
       </div>
       <div className="pab3-platform-visual">
         <div className="pab3-platform-photo"><img src="/images/product-groups/manufacturing/manufacturing-rollers.png" alt="Timber processing in New Zealand"/></div>
-        <div className="pab3-platform-laptop">
-          <img className="pab3-screen" src="/images/fpx-app-shop.png" alt="FPX timber sourcing platform"/>
-          <img className="pab3-frame-img" src="/images/fpx-laptop-frame.png" alt=""/>
+        <div className="pab3-platform-device">
+          <div className="pab3-device-top"><span/><span/><span/></div>
+          <img src="/images/fpx-app-shop.png" alt="FPX timber sourcing platform"/>
+          <div className="pab3-device-base"/>
         </div>
       </div>
     </section>
