@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import "../components/revised-pages.css";
 import "../components/inner-refresh.css";
@@ -6,6 +7,14 @@ import "../components/brand-system-2026.css";
 import "../components/source-timber-redesign.css";
 import "../components/premium-clean-sitewide.css";
 import "../components/premium-inner-pages.css";
+
+const cormorant = Cormorant_Garamond({
+  subsets:["latin"],
+  style:["italic"],
+  weight:["500","600"],
+  variable:"--font-accent-serif",
+  display:"swap",
+});
 
 const siteUrl = "https://fpx.nz";
 const socialImage = "/images/social/fpx-social-share.jpg";
@@ -40,5 +49,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en-NZ"><body className="antialiased">{children}</body></html>;
+  return <html lang="en-NZ"><body className={`${cormorant.variable} antialiased`}>{children}</body></html>;
 }
