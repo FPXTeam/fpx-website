@@ -49,7 +49,7 @@ function SourceStory(){return <section className="m-source-story-premium">
 </section>}
 
 function SourceClosing(){return <section className="m-source-closing-premium">
-  <div><Eyebrow>ONE NETWORK. MORE OPTIONS.</Eyebrow><h2>One place to start.<br/>Different ways to buy.</h2><p>FPX brings sourcing routes together for timber merchants, wood processors, builders, contractors and commercial project teams across New Zealand.</p></div>
+  <div><Eyebrow>ONE NETWORK. MORE OPTIONS.</Eyebrow><h2>One place to start.<br/><span className="headline-accent">Different ways to buy.</span></h2><p>FPX brings sourcing routes together for timber merchants, wood processors, builders, contractors and commercial project teams across New Zealand.</p></div>
   <div className="m-source-closing-actions"><AppButtons/></div>
 </section>}
 
