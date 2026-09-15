@@ -272,6 +272,81 @@ export function AboutPage(){
 }
 
 export function ContactPage(){return <>
-  <section className="pct-hero"><img src="/images/fpx-hero-timber-yard.webp" alt="Commercial timber yard in New Zealand"/><div className="pct-hero-shade"/><div className="pct-hero-copy"><Eyebrow>CONTACT FPX</Eyebrow><h1>Tell us what timber<br/><span className="headline-accent">you need.</span></h1><p>Contact Forest Products Exchange for commercial timber sourcing requirements, FPX platform support or general enquiries across New Zealand.</p><div className="pct-quick"><a href="mailto:support@fpx.nz"><Mail/>support@fpx.nz</a><a href="tel:+642108473262"><Phone/>+64 210 847 3262</a><span><MapPin/>New Zealand</span></div></div></section>
-  <section className="pct-main"><aside><Eyebrow>START HERE</Eyebrow><h2>What can we help with?</h2><p>If you already know the timber specification, include the dimensions, grade, treatment and quantity. If you do not, tell us about the application and we can help you choose a starting point.</p><nav className="pct-routes"><a href="https://app.fpx.nz/shop"><span>01</span><b>Browse available timber</b><Arrow/></a><a href="https://app.fpx.nz/request-cart"><span>02</span><b>Create a timber request</b><Arrow/></a><a href="https://app.fpx.nz/offers"><span>03</span><b>Review current offers</b><Arrow/></a></nav><nav className="pct-social" aria-label="FPX social profiles"><a href="https://www.linkedin.com/company/forest-products-exchange" target="_blank" rel="noreferrer" aria-label="FPX on LinkedIn"><LinkedInIcon/></a><a href="https://www.instagram.com/fpx.nz/" target="_blank" rel="noreferrer" aria-label="FPX on Instagram"><InstagramIcon/></a><a href="https://www.facebook.com/people/Forest-Products-Exchange/61583101360304/" target="_blank" rel="noreferrer" aria-label="FPX on Facebook"><FacebookIcon/></a></nav></aside><form className="pct-form" aria-label="Contact FPX"><div className="pct-form-head"><MessageSquareText/><div><small>GENERAL ENQUIRY</small><h2>Send FPX a message.</h2></div></div><div className="pct-fields"><label>Full name<input name="name" autoComplete="name" placeholder="Your name"/></label><label>Company<input name="company" autoComplete="organization" placeholder="Company name"/></label><label>Email<input name="email" type="email" autoComplete="email" placeholder="you@company.co.nz"/></label><label>Phone<input name="phone" autoComplete="tel" placeholder="Your phone number"/></label><label className="wide">What can we help with?<select name="topic" defaultValue="Timber sourcing requirement"><option>Timber sourcing requirement</option><option>Using the FPX platform</option><option>General enquiry</option></select></label><label className="wide">Message<textarea name="message" placeholder="Tell us what timber you need, including dimensions, grade, treatment and quantity if known."/></label></div><a className="pct-email-link" href="mailto:support@fpx.nz">Email support@fpx.nz <Arrow/></a><small>Direct form sending will be connected once the FPX Resend integration is added.</small></form></section>
+  <section className="pct2-hero">
+    <img className="pct2-hero-image" src="/images/fpx-contact-george-gabriela.png" alt="George Harman and Gabriela Molloy discussing timber requirements"/>
+    <div className="pct2-hero-wash"/>
+    <div className="pct2-hero-copy">
+      <Eyebrow>CONTACT FPX</Eyebrow>
+      <h1>Tell us what timber<br/><span className="headline-accent">you need.</span></h1>
+      <p>Share the requirement you already have, ask a sourcing question or get help choosing the right way to start.</p>
+      <div className="pct2-direct">
+        <a href="mailto:support@fpx.nz"><Mail/><span><small>EMAIL FPX</small><b>support@fpx.nz</b></span></a>
+        <a href="tel:+642108473262"><Phone/><span><small>CALL FPX</small><b>+64 210 847 3262</b></span></a>
+      </div>
+    </div>
+  </section>
+
+  <section className="pct2-start">
+    <div className="pct2-start-copy">
+      <Eyebrow>START WHERE IT MAKES SENSE</Eyebrow>
+      <h2>Already know the requirement?</h2>
+      <p>If you know the product, dimensions, grade, treatment or quantity, use the route that best matches what you have. If you are not sure, contact FPX and we can help you choose a starting point.</p>
+      <div className="pct2-team-note">
+        <span><MapPin/>NEW ZEALAND</span>
+        <p>FPX supports commercial timber buyers across New Zealand.</p>
+      </div>
+      <nav className="pct-social" aria-label="FPX social profiles">
+        <a href="https://www.linkedin.com/company/forest-products-exchange" target="_blank" rel="noreferrer" aria-label="FPX on LinkedIn"><LinkedInIcon/></a>
+        <a href="https://www.instagram.com/fpx.nz/" target="_blank" rel="noreferrer" aria-label="FPX on Instagram"><InstagramIcon/></a>
+        <a href="https://www.facebook.com/people/Forest-Products-Exchange/61583101360304/" target="_blank" rel="noreferrer" aria-label="FPX on Facebook"><FacebookIcon/></a>
+      </nav>
+    </div>
+
+    <nav className="pct2-routes" aria-label="Ways to start sourcing timber through FPX">
+      <a href="https://app.fpx.nz/shop">
+        <span>01</span>
+        <div><small>AVAILABLE TIMBER</small><h3>Browse current timber.</h3><p>Start with products that are already available through FPX.</p></div>
+        <Arrow/>
+      </a>
+      <a href="https://app.fpx.nz/request-cart">
+        <span>02</span>
+        <div><small>SPECIFIC REQUIREMENT</small><h3>Create a timber request.</h3><p>Send the specification and quantity when you already know what the job needs.</p></div>
+        <Arrow/>
+      </a>
+      <a href="https://app.fpx.nz/offers">
+        <span>03</span>
+        <div><small>CURRENT OPPORTUNITIES</small><h3>Review current offers.</h3><p>See whether a current FPX opportunity suits the requirement.</p></div>
+        <Arrow/>
+      </a>
+    </nav>
+  </section>
+
+  <section className="pct2-enquiry">
+    <header className="pct2-enquiry-head">
+      <Eyebrow>GENERAL ENQUIRY</Eyebrow>
+      <h2>Send FPX<br/><span className="headline-accent">a message.</span></h2>
+      <p>For timber sourcing, platform support or a general question, send through the detail you know and the FPX team can take it from there.</p>
+    </header>
+
+    <form className="pct2-form" aria-label="Contact FPX">
+      <div className="pct-fields">
+        <label>Full name<input name="name" autoComplete="name" placeholder="Your name"/></label>
+        <label>Company<input name="company" autoComplete="organization" placeholder="Company name"/></label>
+        <label>Email<input name="email" type="email" autoComplete="email" placeholder="you@company.co.nz"/></label>
+        <label>Phone<input name="phone" autoComplete="tel" placeholder="Your phone number"/></label>
+        <label className="wide">What can we help with?
+          <select name="topic" defaultValue="Timber sourcing requirement">
+            <option>Timber sourcing requirement</option>
+            <option>Using the FPX platform</option>
+            <option>General enquiry</option>
+          </select>
+        </label>
+        <label className="wide">Message<textarea name="message" placeholder="Tell us what timber you need, including dimensions, grade, treatment and quantity if known."/></label>
+      </div>
+      <div className="pct2-form-foot">
+        <a className="pct-email-link" href="mailto:support@fpx.nz">Email support@fpx.nz <Arrow/></a>
+        <small>Direct form sending will be connected once the FPX Resend integration is added.</small>
+      </div>
+    </form>
+  </section>
 </>;}
