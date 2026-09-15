@@ -28,7 +28,7 @@ export function ResourcesPage(){
   ];
   const shown=items.filter(item=>(item.title+" "+item.subtitle+" "+item.copy).toLowerCase().includes(query.toLowerCase()));
   return <>
-    <section className="pri-hero"><div><Eyebrow>FPX INSIGHTS</Eyebrow><h1>Practical timber<br/><span>knowledge.</span></h1><p>Clear, useful explanations of timber characteristics, processing and specification topics for New Zealand buyers.</p></div><div className="pri-search"><Search aria-hidden="true"/><label className="sr-only" htmlFor="insight-search">Search FPX Insights</label><input id="insight-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search FPX Insights"/></div></section>
+    <section className="pri-hero"><div><Eyebrow>FPX INSIGHTS</Eyebrow><h1>Practical timber<br/><span className="headline-accent">knowledge.</span></h1><p>Clear, useful explanations of timber characteristics, processing and specification topics for New Zealand buyers.</p></div><div className="pri-search"><Search aria-hidden="true"/><label className="sr-only" htmlFor="insight-search">Search FPX Insights</label><input id="insight-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search FPX Insights"/></div></section>
     <section className="pri-list" aria-live="polite">{shown.map((item,i)=><Link href={item.href} className="pri-article" key={item.title}><div className="pri-image"><img src={`/images/${item.image}`} alt={`${item.title} FPX Insight`}/></div><span>0{i+1}</span><div><small>{item.type}</small><h2>{item.title}</h2><h3>{item.subtitle}</h3><p>{item.copy}</p><b>Read FPX Insight <Arrow/></b></div></Link>)}{shown.length===0&&<div className="m-no-results"><h2>No matching FPX Insights.</h2><p>Try a broader timber topic.</p></div>}</section>
   </>;
 }
@@ -43,7 +43,7 @@ export function FAQPage(){
   const [active,setActive]=useState("Getting started");
   const visible=faqGroups.find(g=>g.title===active)??faqGroups[0];
   return <>
-    <section className="pfq-hero"><div><Eyebrow>FREQUENTLY ASKED QUESTIONS</Eyebrow><h1>Straight answers.<br/><span>No clutter.</span></h1><p>Everything you need to know about sourcing timber through FPX, from browsing products to requests, orders and support.</p></div><aside><small>CAN'T FIND IT?</small><h3>Ask the FPX team.</h3><p>Send us your requirement and we will point you in the right direction.</p><Link href="/contact-us">Contact FPX <Arrow/></Link></aside></section>
+    <section className="pfq-hero"><div><Eyebrow>FREQUENTLY ASKED QUESTIONS</Eyebrow><h1>Straight answers.<br/><span className="headline-accent">No clutter.</span></h1><p>Everything you need to know about sourcing timber through FPX, from browsing products to requests, orders and support.</p></div><aside><small>CAN'T FIND IT?</small><h3>Ask the FPX team.</h3><p>Send us your requirement and we will point you in the right direction.</p><Link href="/contact-us">Contact FPX <Arrow/></Link></aside></section>
     <section className="pfq-main">
       <nav aria-label="FAQ topics">{faqGroups.map((group,i)=><button key={group.title} type="button" className={active===group.title?"active":""} onClick={()=>setActive(group.title)}><span>0{i+1}</span>{group.title}</button>)}</nav>
       <div className="pfq-topic" key={visible.title}><small>FAQ TOPIC</small><h2>{visible.title}</h2>{visible.items.map(([question,answer],i)=><details key={question} open={i===0}><summary><span>{String(i+1).padStart(2,"0")}</span><b>{question}</b><ChevronDown/></summary><p>{answer}</p></details>)}</div>
