@@ -3732,3 +3732,71 @@
     display:none;
   }
 }
+
+
+/* About platform visual fix: clean device presentation */
+.pab3-platform-laptop,
+.pab3-screen,
+.pab3-frame-img{display:none!important}
+
+.pab3-platform-device{
+  position:absolute;
+  left:2%;
+  bottom:1%;
+  width:82%;
+  border:1px solid var(--pi-line);
+  border-radius:18px 18px 10px 10px;
+  background:#fff;
+  box-shadow:0 28px 60px rgba(4,14,14,.12);
+  overflow:visible;
+  z-index:2;
+}
+.pab3-platform-device>img{
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius:0 0 10px 10px;
+}
+.pab3-device-top{
+  height:30px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:0 12px;
+  border-bottom:1px solid var(--pi-line);
+  background:#f7f8f7;
+  border-radius:18px 18px 0 0;
+}
+.pab3-device-top span{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#cfd6d1;
+}
+.pab3-device-base{
+  position:absolute;
+  left:10%;
+  right:10%;
+  height:13px;
+  bottom:-13px;
+  background:#d9dedb;
+  border-radius:0 0 14px 14px;
+}
+@media(max-width:700px){
+  .pab3-platform-device{
+    width:92%;
+    left:0;
+  }
+}
+
+/* Ensure About leadership portraits are visible and proportioned cleanly */
+.pab4-person-figure{
+  min-height:360px;
+}
+.pab4-person-figure img{
+  opacity:1!important;
+  visibility:visible!important;
+  max-width:100%;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+}
