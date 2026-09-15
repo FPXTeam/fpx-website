@@ -19,7 +19,7 @@ const offerSteps=[
 ];
 
 function JourneySteps({label,steps}:{label:string,steps:string[][]}){
-  return <div className="m-source-journey"><small>{label}</small><div>{steps.map(([num,title,copy])=><article key={num}><span>{num}</span><h4>{title}</h4><p>{copy}</p></article>)}</div></div>
+  return <div className="m-source-journey"><small>{label}</small><div>{steps.map(([num,title,copy])=><article key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></article>)}</div></div>
 }
 
 function SourceFeature({index,eyebrow,title,copy,image,alt,items,cta,href,steps,label,reverse=false}:{index:string,eyebrow:string,title:string,copy:string,image:string,alt:string,items:{title:string,copy:string}[],cta:string,href:string,steps:string[][],label:string,reverse?:boolean}){
@@ -91,7 +91,7 @@ export function SourceTimberPage(){return <>
       <div className="pst-route-visual"><img src="/images/fpx-app-requests.png" alt="FPX request workflow"/></div>
       <details className="pst-route-path">
         <summary><span>REQUEST PATH</span><small>4 steps</small><b aria-hidden="true">+</b></summary>
-        <div>{requestSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h4>{title}</h4><p>{copy}</p></div>)}</div>
+        <div>{requestSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></div>)}</div>
       </details>
       <a className="pst-route-cta" href="https://app.fpx.nz/request-cart">Go to Request List <Arrow/></a>
     </article>
@@ -110,7 +110,7 @@ export function SourceTimberPage(){return <>
       <div className="pst-route-visual"><img src="/images/fpx-app-shop.png" alt="FPX available timber shop"/></div>
       <details className="pst-route-path">
         <summary><span>SHOP PATH</span><small>3 steps</small><b aria-hidden="true">+</b></summary>
-        <div>{shopSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h4>{title}</h4><p>{copy}</p></div>)}</div>
+        <div>{shopSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></div>)}</div>
       </details>
       <a className="pst-route-cta" href="https://app.fpx.nz/shop">Start shopping <Arrow/></a>
     </article>
@@ -128,7 +128,7 @@ export function SourceTimberPage(){return <>
       <div className="pst-route-visual"><img src="/images/fpx-app-offers.png" alt="FPX current timber offers"/></div>
       <details className="pst-route-path">
         <summary><span>OFFER PATH</span><small>3 steps</small><b aria-hidden="true">+</b></summary>
-        <div>{offerSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h4>{title}</h4><p>{copy}</p></div>)}</div>
+        <div>{offerSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></div>)}</div>
       </details>
       <a className="pst-route-cta" href="https://app.fpx.nz/offers">View offers & enquire <Arrow/></a>
     </article>
