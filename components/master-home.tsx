@@ -10,7 +10,7 @@ function PremiumHero(){
     <div className="ph-hero-shade"/>
     <div className="ph-hero-copy">
       <Eyebrow>NEW ZEALAND TIMBER SOURCING</Eyebrow>
-      <h1>Timber sourcing,<br/><span>made clearer.</span></h1>
+      <h1>Timber sourcing,<br/><span className="headline-accent">made clearer.</span></h1>
       <p>Browse available timber, review current offers or send FPX a specific requirement. One clear starting point for commercial timber sourcing across New Zealand.</p>
       <AppButtons/>
     </div>
@@ -22,7 +22,7 @@ function RangeStory(){
   return <section className="ph-range">
     <div className="ph-range-intro">
       <Eyebrow>THE FPX TIMBER RANGE</Eyebrow>
-      <h2>Start with the<br/>right product group.</h2>
+      <h2>Start with the<br/><span className="headline-accent">right product group.</span></h2>
       <p>Explore the range at a high level first. Then move into FPX for current stock, offers and detailed specifications.</p>
       <Link href="/products">Explore the full timber range <Arrow/></Link>
     </div>
@@ -47,7 +47,7 @@ function PlatformStory(){
   return <section className="ph-platform ph-platform-laptop">
     <div className="ph-platform-head">
       <Eyebrow>FPX SOURCING</Eyebrow>
-      <h2>Three ways in.<br/>One place to start.</h2>
+      <h2>Three ways in.<br/><span className="headline-accent">One place to start.</span></h2>
       <p>You do not need to learn the whole platform before you begin. Start with the route that matches the job.</p>
       <Link href="/source-timber">See how FPX sourcing works <Arrow/></Link>
     </div>
@@ -76,7 +76,7 @@ function BuyerStory(){
     ["Wood Processors","Timber sourcing aligned with production specifications and required volumes.","fpx-customer-processor.png"]
   ];
   return <section className="m-customers ph-customers-returned">
-    <div className="m-customers-title"><Eyebrow>OUR CUSTOMERS</Eyebrow><h2>Built for businesses<br/>that buy timber.</h2><Link href="/our-customers">Meet our customers <Arrow/></Link></div>
+    <div className="m-customers-title"><Eyebrow>OUR CUSTOMERS</Eyebrow><h2>Built for businesses<br/><span className="headline-accent">that buy timber.</span></h2><Link href="/our-customers">Meet our customers <Arrow/></Link></div>
     <div className={`m-customer-stage active-${active+1}`} aria-label="Four New Zealand professionals who buy commercial timber">
       <div className="m-customer-people">{groups.map((g,i)=><button type="button" key={g[0]} className={`m-person-button ${i===active?"active":""}`} onMouseEnter={()=>setActive(i)} onFocus={()=>setActive(i)} onClick={()=>setActive(i)} aria-label={`Show information for ${g[0]}`}>
         <img className="m-person" src={`/images/${g[2]}`} alt={`${g[0]} using FPX for commercial timber sourcing`}/>
@@ -89,7 +89,7 @@ function BuyerStory(){
 
 function Closing(){
   return <section className="ph-close">
-    <div><Eyebrow>START WITH FPX</Eyebrow><h2>Find the timber.<br/>Move with clarity.</h2><p>Browse available timber or send FPX the requirement you already have.</p></div>
+    <div><Eyebrow>START WITH FPX</Eyebrow><h2>Find the timber.<br/><span className="headline-accent">Move with clarity.</span></h2><p>Browse available timber or send FPX the requirement you already have.</p></div>
     <AppButtons/>
   </section>
 }
