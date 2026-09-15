@@ -4026,3 +4026,85 @@
   .pab5-gabriela{right:0}
   .pab5-mark{display:none}
 }
+
+
+/* About Us title rhythm variations */
+@media(min-width:1001px){
+  /* Platform section: shift the heading rhythm to the right */
+  .pab3-platform-copy .m-eyebrow,
+  .pab3-platform-copy h2{
+    text-align:right;
+  }
+  .pab3-platform-copy>p:not(.m-eyebrow){
+    margin-left:auto;
+  }
+
+  /* Why FPX: centered statement with three balanced columns */
+  .pab3-purpose{
+    grid-template-columns:1fr;
+    gap:0;
+    text-align:center;
+    align-content:center;
+  }
+  .pab3-purpose-title{
+    max-width:980px;
+    margin:0 auto;
+  }
+  .pab3-purpose-title>p:not(.m-eyebrow){
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .pab3-purpose-grid{
+    grid-template-columns:repeat(3,1fr);
+    gap:28px;
+    margin-top:52px;
+    border-top:0;
+    text-align:left;
+  }
+  .pab3-purpose-grid article{
+    display:block;
+    padding:22px 0 0;
+    border-top:1px solid var(--pi-line);
+    border-bottom:0;
+  }
+  .pab3-purpose-grid small,
+  .pab3-purpose-grid h3,
+  .pab3-purpose-grid p{
+    display:block;
+    grid-column:auto;
+  }
+  .pab3-purpose-grid h3{
+    margin:14px 0 10px;
+  }
+
+  /* Leadership: centre the section introduction */
+  .pab5-team-head{
+    max-width:900px;
+    margin:0 auto;
+    text-align:center;
+  }
+  .pab5-team-head>p:not(.m-eyebrow){
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  /* Closing: offset the title block to the right for a final change in rhythm */
+  .pab3-close>div:first-child{
+    justify-self:end;
+    text-align:right;
+    max-width:900px;
+  }
+  .pab3-close>div:first-child p{
+    margin-left:auto;
+  }
+}
+
+/* Keep the varied composition readable on tablet/mobile */
+@media(max-width:1000px){
+  .pab3-platform-copy .m-eyebrow,
+  .pab3-platform-copy h2,
+  .pab5-team-head,
+  .pab3-close>div:first-child{
+    text-align:left;
+  }
+}
