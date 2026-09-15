@@ -4184,3 +4184,100 @@
     border-bottom:0!important;
   }
 }
+
+
+/* About: Why FPX horizontal composition + restore left-led CTA */
+@media(min-width:1001px){
+  .pab3-purpose{
+    grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)!important;
+    gap:8vw!important;
+    text-align:left!important;
+    align-content:center!important;
+  }
+
+  .pab3-purpose-grid{
+    grid-column:1;
+    grid-row:1;
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:0!important;
+    margin-top:0!important;
+    border-top:1px solid var(--pi-line)!important;
+    text-align:left!important;
+  }
+
+  .pab3-purpose-grid article{
+    display:grid!important;
+    grid-template-columns:100px 1fr!important;
+    column-gap:24px!important;
+    padding:22px 0!important;
+    border-top:0!important;
+    border-bottom:1px solid var(--pi-line)!important;
+  }
+
+  .pab3-purpose-grid small{
+    grid-column:1!important;
+    display:block!important;
+    padding-top:4px!important;
+  }
+
+  .pab3-purpose-grid h3{
+    grid-column:2!important;
+    margin:0 0 8px!important;
+  }
+
+  .pab3-purpose-grid p{
+    grid-column:2!important;
+    margin:0!important;
+    max-width:560px!important;
+  }
+
+  .pab3-purpose-title{
+    grid-column:2;
+    grid-row:1;
+    max-width:620px!important;
+    margin:0!important;
+    justify-self:end;
+    text-align:right;
+  }
+
+  .pab3-purpose-title .m-eyebrow,
+  .pab3-purpose-title h2{
+    text-align:right;
+  }
+
+  .pab3-purpose-title>p:not(.m-eyebrow){
+    margin-left:auto!important;
+    margin-right:0!important;
+    max-width:560px!important;
+  }
+
+  .pab3-close{
+    grid-template-columns:1fr auto!important;
+    align-items:end!important;
+  }
+
+  .pab3-close>div:first-child{
+    justify-self:start!important;
+    text-align:left!important;
+    max-width:900px!important;
+  }
+
+  .pab3-close>div:first-child p{
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+}
+
+@media(max-width:1000px){
+  .pab3-purpose{
+    text-align:left!important;
+  }
+  .pab3-purpose-title{
+    text-align:left!important;
+  }
+  .pab3-purpose-title .m-eyebrow,
+  .pab3-purpose-title h2{
+    text-align:left!important;
+  }
+}
