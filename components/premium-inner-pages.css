@@ -4552,3 +4552,61 @@
     text-align:left!important;
   }
 }
+
+
+/* =========================================================
+   FPX SECONDARY HEADLINE ACCENT
+   Cormorant Garamond Italic is reserved for the softer
+   second thought inside major display headlines.
+   ========================================================= */
+.master-site .headline-accent{
+  display:inline-block;
+  font-family:var(--font-accent-serif), "Cormorant Garamond", Georgia, serif!important;
+  font-style:italic!important;
+  font-weight:500!important;
+  letter-spacing:-.035em!important;
+  line-height:.92!important;
+  text-transform:none!important;
+}
+
+/* Existing intentional headline spans now follow the same system. */
+.master-site :is(
+  .pri-hero,
+  .pfq-hero,
+  .phw-hero
+) h1 > span{
+  font-family:var(--font-accent-serif), "Cormorant Garamond", Georgia, serif!important;
+  font-style:italic!important;
+  font-weight:500!important;
+  letter-spacing:-.035em!important;
+  line-height:.92!important;
+}
+
+/* Keep the serif accent slightly lighter than the primary clause on dark heroes. */
+.master-site :is(
+  .ph-hero,
+  .ppr-hero,
+  .pst-hero,
+  .poc2-hero,
+  .pab3-hero
+) .headline-accent{
+  color:#F7F4EA!important;
+}
+
+/* Light-background sections use FPX Forest for the accent phrase. */
+.master-site :is(
+  .ph-range,
+  .ph-platform,
+  .ph-close,
+  .ppr-close,
+  .pst-close
+) .headline-accent{
+  color:#040E0E!important;
+}
+
+@media(max-width:700px){
+  .master-site .headline-accent{
+    letter-spacing:-.025em!important;
+    line-height:.96!important;
+  }
+}
