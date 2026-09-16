@@ -5,6 +5,8 @@ import { ChevronDown, Search } from "lucide-react";
 import { Eyebrow, Arrow, Breadcrumbs, PageCTA } from "./master-shared";
 import { privacyPolicy } from "./legal-privacy";
 import { termsAndConditions } from "./legal-terms";
+import { cookiePolicy } from "./legal-cookies";
+import { CookieSettingsPanel } from "./cookie-consent";
 import { KilnDryingArticle } from "./kiln-drying-article";
 
 export { SawPointPage } from "./saw-point-page";
@@ -82,17 +84,28 @@ const faqGroups=[
 ];
 export function FAQPage(){
   const [active,setActive]=useState("Getting started");
-  const visible=faqGroups.find(g=>g.title===active)??faqGroups[0];
+  function goTo(title:string){
+    setActive(title);
+    const id="faq-"+title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
+    requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"}));
+  }
   return <>
-    <section className="pfq-hero"><div><Eyebrow>FREQUENTLY ASKED QUESTIONS</Eyebrow><h1>Straight answers.<br/><span className="headline-accent">No clutter.</span></h1><p>Everything you need to know about sourcing timber through FPX, from browsing products to requests, orders and support.</p></div><aside><small>CAN'T FIND IT?</small><h2>Ask the FPX team.</h2><p>Send us your requirement and we will point you in the right direction.</p><Link href="/contact-us">Contact FPX <Arrow/></Link></aside></section>
-    <section className="pfq-main">
-      <nav aria-label="FAQ topics">{faqGroups.map((group,i)=><button key={group.title} type="button" className={active===group.title?"active":""} onClick={()=>setActive(group.title)}><span>0{i+1}</span>{group.title}</button>)}</nav>
-      <div className="pfq-topic" key={visible.title}><small>FAQ TOPIC</small><h2>{visible.title}</h2>{visible.items.map(([question,answer],i)=><details key={question} open={i===0}><summary><span>{String(i+1).padStart(2,"0")}</span><b>{question}</b><ChevronDown/></summary><p>{answer}</p></details>)}</div>
+    <section className="pfq-hero"><div><Eyebrow>FREQUENTLY ASKED QUESTIONS</Eyebrow><h1>Straight answers.<br/><span className="headline-accent">No clutter.</span></h1><p>Everything you need to know about sourcing timber through FPX, from browsing products to requests, orders and support.</p></div><aside><small>CAN&apos;T FIND IT?</small><h2>Ask the FPX team.</h2><p>Send us your requirement and we will point you in the right direction.</p><Link href="/contact-us">Contact FPX <Arrow/></Link></aside></section>
+    <section className="pfq-main pfq-main-all">
+      <nav aria-label="FAQ topics">{faqGroups.map((group,i)=><button key={group.title} type="button" className={active===group.title?"active":""} onClick={()=>goTo(group.title)}><span>0{i+1}</span>{group.title}</button>)}</nav>
+      <div className="pfq-all-topics">{faqGroups.map(group=>{
+        const id="faq-"+group.title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
+        return <section className="pfq-topic" id={id} key={group.title}><small>FAQ TOPIC</small><h2>{group.title}</h2>{group.items.map(([question,answer],i)=><details key={question} open={group.title==="Getting started"&&i===0}><summary><span>{String(i+1).padStart(2,"0")}</span><b>{question}</b><ChevronDown/></summary><p>{answer}</p></details>)}</section>
+      })}</div>
     </section>
   </>;
 }
 
-export function LegalPage({slug}:{slug:string}){const doc=slug==="privacy-policy"?privacyPolicy:termsAndConditions;return <><Breadcrumbs items={[["Home","/"],[doc.title,`/${slug}`]]}/><section className="m-legal-hero m-animate-in"><Eyebrow>FPX LEGAL</Eyebrow><h1>{doc.title}</h1><p>Forest Products Exchange Limited</p></section><section className="m-legal m-legal-full"><aside><span>FOREST PRODUCTS EXCHANGE LIMITED</span><p>Official FPX legal document.</p><nav aria-label={`${doc.title} sections`}>{doc.toc.map(([num,title])=><a key={num} href={`#legal-${num}`}><b>{String(num).padStart(2,"0")}</b>{title}</a>)}</nav></aside><article className="m-legal-document" dangerouslySetInnerHTML={{__html:doc.html}}/></section></>}
+export function LegalPage({slug}:{slug:string}){
+  if(slug==="cookie-settings")return <><Breadcrumbs items={[["Home","/"],["Cookie Settings","/cookie-settings"]]}/><section className="m-legal-hero m-animate-in"><Eyebrow>FPX PRIVACY</Eyebrow><h1>Cookie Settings</h1><p>Review optional browser storage preferences for the FPX website.</p></section><section className="m-cookie-settings"><div><Eyebrow>YOUR CHOICES</Eyebrow><h2>Choose what FPX can remember.</h2><p>Strictly necessary storage remains active because it is required for core website functionality and to remember your privacy choice. Optional preferences can be changed below at any time.</p><p>Analytics and marketing trackers are not currently enabled through FPX public website code.</p><div className="m-cookie-links"><Link href="/cookie-policy">Read Cookie Policy <Arrow/></Link><Link href="/privacy-policy">Read Privacy Policy <Arrow/></Link></div></div><CookieSettingsPanel/></section></>;
+  const doc=slug==="privacy-policy"?privacyPolicy:slug==="cookie-policy"?cookiePolicy:termsAndConditions;
+  return <><Breadcrumbs items={[["Home","/"],[doc.title,`/${slug}`]]}/><section className="m-legal-hero m-animate-in"><Eyebrow>FPX LEGAL</Eyebrow><h1>{doc.title}</h1><p>Forest Products Exchange Limited</p>{doc.lastUpdated&&<small>Last updated: {doc.lastUpdated}</small>}</section><section className="m-legal m-legal-full"><aside><span>FOREST PRODUCTS EXCHANGE LIMITED</span><p>Official FPX legal document.</p><nav aria-label={`${doc.title} sections`}>{doc.toc.map(([num,title])=><a key={num} href={`#legal-${num}`}><b>{String(num).padStart(2,"0")}</b>{title}</a>)}</nav></aside><article className="m-legal-document" dangerouslySetInnerHTML={{__html:doc.html}}/></section></>;
+}
 
 
 const radiataSections = [

@@ -14,6 +14,8 @@ export function SawPointPage(){
   const [archiveYear,setArchiveYear]=useState("ALL");
   const [archivePage,setArchivePage]=useState(1);
   const [archivePerPage,setArchivePerPage]=useState(5);
+  const [subscribeStatus,setSubscribeStatus]=useState<"idle"|"sending"|"success"|"error">("idle");
+  const [subscribeMessage,setSubscribeMessage]=useState("");
 
   const archiveYears=useMemo(
     ()=>Array.from(new Set(archive.map(item=>item.date.match(/\b\d{4}\b/)?.[0]).filter(Boolean) as string[])).sort((a,b)=>Number(b)-Number(a)),
@@ -36,6 +38,16 @@ export function SawPointPage(){
   function updateArchiveQuery(value:string){setArchiveQuery(value);setArchivePage(1)}
   function updateArchiveYear(value:string){setArchiveYear(value);setArchivePage(1)}
   function updateArchivePerPage(value:number){setArchivePerPage(value);setArchivePage(1)}
+  async function subscribe(event:React.FormEvent<HTMLFormElement>){
+    event.preventDefault();setSubscribeStatus("sending");setSubscribeMessage("");
+    const form=event.currentTarget;const payload=Object.fromEntries(new FormData(form).entries());
+    try{
+      const response=await fetch("/api/saw-point-subscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(data?.error||"Unable to subscribe right now.");
+      form.reset();setSubscribeStatus("success");setSubscribeMessage("You're on the Saw Point list.");
+    }catch(error){setSubscribeStatus("error");setSubscribeMessage(error instanceof Error?error.message:"Unable to subscribe right now.")}
+  }
 
   return <>
     <section className="spx-hero">
@@ -152,13 +164,13 @@ export function SawPointPage(){
         </div>
       </div>
 
-      <form className="spx-form" aria-label="Saw Point subscription">
+      <form className="spx-form" aria-label="Saw Point subscription" onSubmit={subscribe}>
         <div className="spx-form-icon"><Mail aria-hidden="true"/></div>
         <h3>Join the Saw Point list</h3>
-        <label><span>Name</span><input name="name" autoComplete="name" placeholder="Your name"/></label>
-        <label><span>Email</span><input name="email" type="email" autoComplete="email" placeholder="you@company.co.nz"/></label>
-        <button type="button" disabled aria-disabled="true">Subscribe <ArrowRight size={17}/></button>
-        <small>Subscription connection will be reconnected to the existing FPX Make workflow at launch.</small>
+        <label><span>Name</span><input name="name" autoComplete="name" placeholder="Your name" required/></label>
+        <label><span>Email</span><input name="email" type="email" autoComplete="email" placeholder="you@company.co.nz" required/></label>
+        <button type="submit" disabled={subscribeStatus==="sending"}>{subscribeStatus==="sending"?"Subscribing…":"Subscribe"} <ArrowRight size={17}/></button>
+        <small aria-live="polite">{subscribeMessage||<>Monthly Saw Point updates. Unsubscribe any time. See our <a href="/privacy-policy">Privacy Policy</a>.</>}</small>
       </form>
     </section>
 
@@ -310,7 +322,7 @@ export function SawPointPage(){
       .spx-form label{display:block;margin-top:16px}
       .spx-form label>span{display:block;margin-bottom:8px;font:700 9px/1 Lato,Arial,sans-serif;letter-spacing:.13em;color:#758956}
       .spx-form input{width:100%;min-height:54px;border:1px solid #DDE4DF;background:#FBFCFB;padding:0 15px;font:400 14px/1 Open Sans,Arial,sans-serif;color:#040E0E}
-      .spx-form button{width:100%;min-height:56px;margin-top:20px;border:0;display:flex;align-items:center;justify-content:center;gap:10px;background:#40973C;color:#fff;font:700 12px/1 Lato,Arial,sans-serif;cursor:not-allowed;opacity:.72}
+      .spx-form button{width:100%;min-height:56px;margin-top:20px;border:0;display:flex;align-items:center;justify-content:center;gap:10px;background:#40973C;color:#fff;font:700 12px/1 Lato,Arial,sans-serif;cursor:pointer;opacity:1}
       .spx-form>small{display:block;margin-top:13px;color:#758956;font-size:10px;line-height:1.5}
 
       @media(max-width:1000px){

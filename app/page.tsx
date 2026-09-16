@@ -1,6 +1,6 @@
 import { MasterHome } from "@/components/master-site";
 
-const siteUrl = "https://fpx.nz";
+const siteUrl = "https://www.fpx.nz";
 
 const organizationSchema = {
   "@context": "https://schema.org",

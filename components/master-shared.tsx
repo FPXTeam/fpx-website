@@ -28,6 +28,8 @@ export const pageData: Record<string,{eyebrow:string;title:string;intro:string}>
   "contact-us": {eyebrow:"CONTACT FPX",title:"What timber are you looking for?",intro:"Tell us what you need, ask a sourcing question or get help choosing the right way to start."},
   "terms-and-conditions": {eyebrow:"FPX LEGAL",title:"Terms and Conditions",intro:"Forest Products Exchange Limited"},
   "privacy-policy": {eyebrow:"FPX LEGAL",title:"Privacy Policy",intro:"Forest Products Exchange Limited"},
+  "cookie-policy": {eyebrow:"FPX LEGAL",title:"Cookie Policy",intro:"Forest Products Exchange Limited"},
+  "cookie-settings": {eyebrow:"FPX PRIVACY",title:"Cookie Settings",intro:"Control optional website preferences."},
 };
 
 export const masterPages = Object.keys(pageData);
@@ -48,7 +50,22 @@ export function useSiteMotion(){
       ".pri-featured",
       ".pri-card",
       ".m-saw-issue-card",
-      ".pab5-team article"
+      ".pab5-team article",
+      ".ria-intro",
+      ".ria-section > header",
+      ".ria-section .ria-copy",
+      ".ria-section figure",
+      ".ria-section blockquote",
+      ".kda-benefits",
+      ".kda-stats",
+      ".kda-study",
+      ".kda-comparison",
+      ".ria-sourcing > div",
+      ".ria-conclusion > div",
+      ".ria-sources",
+      ".ria-next",
+      ".m-cookie-settings > div",
+      ".cookie-settings-panel article"
     ].join(",");
     const targets=Array.from(root.querySelectorAll<HTMLElement>(selector))
       .filter((el,index,self)=>self.indexOf(el)===index);
@@ -109,6 +126,6 @@ export const Arrow=()=> <ArrowRight aria-hidden="true" size={17}/>;
 export const AppButtons=()=> <div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/shop">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a></div>;
 export const Breadcrumbs=({items}:{items:[string,string][]})=><nav className="m-breadcrumbs" aria-label="Breadcrumb">{items.map(([label,href],i)=><span key={href}>{i>0&&<b>/</b>}{i===items.length-1?<span aria-current="page">{label}</span>:<Link href={href}>{label}</Link>}</span>)}</nav>;
 export function LightCTA(){return <section className="m-cta"><div className="m-cta-panel"><div className="m-cta-lines"/><div className="m-cta-content"><Eyebrow>START SOURCING</Eyebrow><h2>Ready to source <span className="headline-accent">smarter?</span></h2><p>Browse available timber or tell FPX exactly what you need.</p><AppButtons/></div><img className="m-cta-x" src="/images/fpx-logo-x-original.png" alt="FPX"/></div></section>;}
-export function InnerHero({slug}:{slug:string}){const d=pageData[slug] ?? pageData["source-timber"];const image=slug==="our-customers"?"customer-buyers.webp":slug==="source-timber"?"category-manufacturing-grades.webp":slug==="about-us"?"fpx-hero-timber-yard.webp":"category-structural-timber.webp";return <section className={`m-inner-hero hero-${slug} m-animate-in`}><div><Eyebrow>{d.eyebrow}</Eyebrow><h1>{d.title}</h1><p>{d.intro}</p>{!["faq","saw-point","industry-resources","terms-and-conditions","privacy-policy"].includes(slug)&&<AppButtons/>}</div>{!['terms-and-conditions','privacy-policy','faq','saw-point','industry-resources','contact-us'].includes(slug)&&<div className="m-inner-visual"><img src={`/images/${image}`} alt={`${d.title} in the New Zealand timber sector`}/>{slug!=="how-fpx-works"&&<span>{d.eyebrow}</span>}</div>}</section>;}
+export function InnerHero({slug}:{slug:string}){const d=pageData[slug] ?? pageData["source-timber"];const image=slug==="our-customers"?"customer-buyers.webp":slug==="source-timber"?"category-manufacturing-grades.webp":slug==="about-us"?"fpx-hero-timber-yard.webp":"category-structural-timber.webp";return <section className={`m-inner-hero hero-${slug} m-animate-in`}><div><Eyebrow>{d.eyebrow}</Eyebrow><h1>{d.title}</h1><p>{d.intro}</p>{!["faq","saw-point","industry-resources","terms-and-conditions","privacy-policy","cookie-policy","cookie-settings"].includes(slug)&&<AppButtons/>}</div>{!['terms-and-conditions','privacy-policy','cookie-policy','cookie-settings','faq','saw-point','industry-resources','contact-us'].includes(slug)&&<div className="m-inner-visual"><img src={`/images/${image}`} alt={`${d.title} in the New Zealand timber sector`}/>{slug!=="how-fpx-works"&&<span>{d.eyebrow}</span>}</div>}</section>;}
 export function PageCTA(){return <LightCTA/>}
 export function SourcePageCTA(){return <section className="m-cta m-source-cta"><div className="m-cta-panel"><div className="m-cta-lines"/><div className="m-cta-content"><Eyebrow>START SOURCING</Eyebrow><h2>Ready to source <span className="headline-accent">smarter?</span></h2><p>Browse available timber or tell FPX exactly what you need.</p><div className="m-source-cta-proof"><span>Searchable catalogue</span><span>Current offers</span><span>Trading-desk expertise</span></div><AppButtons/></div><img className="m-cta-x" src="/images/fpx-logo-x-original.png" alt="FPX"/></div></section>}

@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "OAI-SearchBot", allow: "/" },
       { userAgent: "ChatGPT-User", allow: "/" },
     ],
-    sitemap: "https://fpx.nz/sitemap.xml",
-    host: "https://fpx.nz",
+    sitemap: "https://www.fpx.nz/sitemap.xml",
+    host: "https://www.fpx.nz",
   };
 }

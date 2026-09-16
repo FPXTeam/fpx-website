@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-const base = "https://fpx.nz";
+const base = "https://www.fpx.nz";
 
 const pages = [
   { path:"", modified:"2026-09-16", changeFrequency:"weekly" as const, priority:1 },
@@ -20,6 +20,8 @@ const pages = [
   { path:"/frequently-asked-questions", modified:"2026-09-16", changeFrequency:"monthly" as const, priority:.7 },
   { path:"/terms-and-conditions", modified:"2026-09-16", changeFrequency:"yearly" as const, priority:.4 },
   { path:"/privacy-policy", modified:"2026-09-16", changeFrequency:"yearly" as const, priority:.4 },
+  { path:"/cookie-policy", modified:"2026-09-16", changeFrequency:"yearly" as const, priority:.3 },
+  { path:"/cookie-settings", modified:"2026-09-16", changeFrequency:"yearly" as const, priority:.2 },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

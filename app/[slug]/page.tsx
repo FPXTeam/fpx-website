@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { MasterInnerPage } from "@/components/master-site";
 
-const siteUrl = "https://fpx.nz";
+const siteUrl = "https://www.fpx.nz";
 const masterPages = [
   "timber",
   "products",
@@ -23,6 +23,8 @@ const masterPages = [
   "contact-us",
   "terms-and-conditions",
   "privacy-policy",
+  "cookie-policy",
+  "cookie-settings",
   "timber-growth-rings",
   "the-science-of-kiln-drying",
 ] as const;
@@ -50,7 +52,9 @@ const pageMeta: Record<MasterPage, PageMeta> = {
   "about-us": { title: "About FPX | Forest Products Exchange New Zealand", description: "Learn about Forest Products Exchange Limited, the team behind FPX and how FPX supports commercial timber sourcing across New Zealand." },
   "contact-us": { title: "Contact FPX | New Zealand Timber Sourcing", description: "Contact Forest Products Exchange about commercial timber sourcing requirements, FPX platform support or general enquiries in New Zealand." },
   "terms-and-conditions": { title: "Terms and Conditions | Forest Products Exchange Ltd", description: "Terms and Conditions for Forest Products Exchange Limited and use of the FPX website and platform." },
-  "privacy-policy": { title: "Privacy Policy | Forest Products Exchange Ltd", description: "Privacy Policy for Forest Products Exchange Limited, including collection, use, disclosure and protection of personal information." },
+  "privacy-policy": { title: "Privacy Policy | Forest Products Exchange Ltd", description: "How Forest Products Exchange Limited collects, uses, stores, protects and discloses personal information under New Zealand privacy law." },
+  "cookie-policy": { title: "Cookie Policy | Forest Products Exchange Ltd", description: "How the FPX website uses cookies, browser storage and similar technologies, including necessary and preference technologies." },
+  "cookie-settings": { title: "Cookie Settings | FPX", description: "Review and update optional browser storage preferences for the FPX website." },
   "timber-growth-rings": { title: "Radiata Pine Characteristics | Growth & Environment", description: "FPX Insight on how growth and environment shape Radiata pine timber characteristics in New Zealand.", image: "/images/radiata-pine-growth-rings-hero.png", type: "article", publishedAt: "2026-03-13", modifiedAt: "2026-03-13", articleSection: "Timber Characteristics" },
   "the-science-of-kiln-drying": { title: "The Science of Kiln Drying Radiata Pine", description: "FPX Insight covering conventional and continuous kilns, moisture content and why kiln drying matters for Radiata pine.", image: "/images/kiln-drying-cover.png", type: "article", publishedAt: "2026-09-16", modifiedAt: "2026-09-16", articleSection: "Timber Processing" },
 };
@@ -63,7 +67,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const data = pageMeta[slug as MasterPage];
   const image = data.image ?? defaultImage;
   const path = data.canonical ?? `/${slug}`;
-  const robots = { index: slug !== "faq", follow: true, googleBot: { index: slug !== "faq", follow: true, "max-image-preview": "large" as const, "max-snippet": -1, "max-video-preview": -1 } };
+  const shouldIndex = slug !== "faq" && slug !== "cookie-settings";
+  const robots = { index: shouldIndex, follow: true, googleBot: { index: shouldIndex, follow: true, "max-image-preview": "large" as const, "max-snippet": -1, "max-video-preview": -1 } };
   const openGraph = data.type === "article"
     ? { type: "article" as const, locale: "en_NZ", url: path, siteName: "FPX | Forest Products Exchange", title: `${data.title} | FPX`, description: data.description, images: [{ url: image, width: 1200, height: 630, alt: `${data.title} | FPX` }], publishedTime: data.publishedAt, modifiedTime: data.modifiedAt, section: data.articleSection, authors: [`${siteUrl}/about-us`] }
     : { type: "website" as const, locale: "en_NZ", url: path, siteName: "FPX | Forest Products Exchange", title: `${data.title} | FPX`, description: data.description, images: [{ url: image, width: 1200, height: 630, alt: `${data.title} | FPX` }] };
@@ -192,8 +197,20 @@ function pageSchema(slug: string) {
       inLanguage:"en-NZ"
     };
   }
-  if (["manufacturing","building-construction","outdoor-landscaping","dunnage","saw-point"].includes(slug)) {
-    return { "@context":"https://schema.org", "@type":"CollectionPage", name:data.title, description:data.description, url, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
+  if (slug === "fpx-sourcing") {
+    return { "@context":"https://schema.org", "@type":"Service", name:"FPX Sourcing", description:data.description, url, provider:{"@id":`${siteUrl}/#organization`}, areaServed:{"@type":"Country","name":"New Zealand"}, audience:{"@type":"BusinessAudience","audienceType":"Commercial timber buyers"}, serviceType:"Commercial timber sourcing", isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
+  }
+  const productSchemas:Record<string,string[]> = {
+    "manufacturing":["Manufacturing Timber"],
+    "building-construction":["Structural Timber","Weatherboards","House Piles","Ceiling Battens","Tile Battens","Mouldings","Fascia","Scaffold Planks","Soleboards","Kickboards","Stair Treads"],
+    "outdoor-landscaping":["Outdoor","Posts","Rails","Palings","Decking","Retaining Boards","Sleepers, Squares & Beams","Screening","Pickets","Capping","Fence Battens","Trellis Battens","Roundwood","Pegs"],
+    "dunnage":["Dunnage"]
+  };
+  if (productSchemas[slug]) {
+    return { "@context":"https://schema.org", "@type":"CollectionPage", name:data.title, description:data.description, url, mainEntity:{"@type":"ItemList","itemListElement":productSchemas[slug].map((name,index)=>({"@type":"ListItem",position:index+1,name}))}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
+  }
+  if (slug === "saw-point") {
+    return { "@context":"https://schema.org", "@type":"CollectionPage", name:data.title, description:data.description, url, mainEntity:{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"name":"Saw Point | Issue 002","url":"https://www.linkedin.com/pulse/saw-point-issue-002-september-2026-forest-products-exchange-j04nc"},{"@type":"ListItem","position":2,"name":"Saw Point | Issue 001","url":"https://www.linkedin.com/pulse/saw-point-issue-001-august-2026-forest-products-exchange-rctec"}]}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
   }
   if (slug === "about-us") {
     return { "@context":"https://schema.org", "@type":"AboutPage", name:data.title, description:data.description, url, about:{"@id":`${siteUrl}/#organization`}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };

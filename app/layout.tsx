@@ -18,7 +18,7 @@ const cormorant = Cormorant_Garamond({
   display:"swap",
 });
 
-const siteUrl = "https://fpx.nz";
+const siteUrl = "https://www.fpx.nz";
 const socialImage = "/images/social/fpx-social-share.jpg";
 
 export const metadata: Metadata = {

@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import { Mail, Phone, MapPin, MessageSquareText } from "lucide-react";
 import { Eyebrow, Arrow, Breadcrumbs, PageCTA } from "./master-shared";
 
@@ -368,7 +369,7 @@ export function ContactPage(){
         <button className="m-btn m-btn-primary" type="submit" disabled={status==="sending"}>
           {status==="sending"?"Sending…":"Send message"} <Arrow/>
         </button>
-        <small aria-live="polite">{message||"Your message will be sent directly to the FPX team."}</small>
+        <small aria-live="polite">{message||"Your message will be sent directly to the FPX team."}</small><p className="pct2-privacy">By sending this form, you provide the information above to FPX so we can respond to your enquiry. See our <Link href="/privacy-policy">Privacy Policy</Link>.</p>
       </div>
     </form>
   </section>

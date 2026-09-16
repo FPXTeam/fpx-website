@@ -43,7 +43,7 @@ function PlatformStory(){
     ["Create a Request","Tell FPX what you need and receive suitable sourcing options.","fpx-app-requests.png","https://app.fpx.nz/request-cart","EXACT REQUIREMENTS"]
   ];
   const [active,setActive]=useState(0);
-  useEffect(()=>{const t=setInterval(()=>setActive(v=>(v+1)%screens.length),4800);return()=>clearInterval(t)},[]);
+  useEffect(()=>{if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;const t=setInterval(()=>setActive(v=>(v+1)%screens.length),4800);return()=>clearInterval(t)},[]);
   return <section className="ph-platform ph-platform-laptop">
     <div className="ph-platform-head">
       <Eyebrow>FPX SOURCING</Eyebrow>
