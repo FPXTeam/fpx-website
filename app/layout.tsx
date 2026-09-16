@@ -8,6 +8,7 @@ import "../components/source-timber-redesign.css";
 import "../components/premium-clean-sitewide.css";
 import "../components/premium-inner-pages.css";
 import "../components/kiln-drying-article.css";
+import "../components/site-motion.css";
 
 const cormorant = Cormorant_Garamond({
   subsets:["latin"],
@@ -26,6 +27,7 @@ export const metadata: Metadata = {
   description: "FPX helps commercial timber buyers across New Zealand browse available stock, review current offers and source specific timber requirements.",
   applicationName: "FPX",
   alternates: { canonical: "/" },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
   icons: {
     icon: [
       { url: "/favicon.ico" },
