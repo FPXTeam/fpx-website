@@ -4,7 +4,31 @@ import { ChevronDown, Menu, X, ArrowUpRight } from "lucide-react";
 import { LinkedInIcon, InstagramIcon, FacebookIcon } from "./social-icons";
 import { useEffect,useState } from "react";
 import { CookieConsent, readFpxConsent } from "./cookie-consent";
-export function Preloader(){const[done,setDone]=useState(true);useEffect(()=>{if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;if(sessionStorage.getItem("fpx-intro-seen"))return;setDone(false);const t=setTimeout(()=>{if(readFpxConsent()?.preferences)sessionStorage.setItem("fpx-intro-seen","1");setDone(true)},1800);return()=>clearTimeout(t)},[]);const skip=()=>{if(readFpxConsent()?.preferences)sessionStorage.setItem("fpx-intro-seen","1");setDone(true)};return <div className={`preloader ${done?"is-done":""}`} aria-hidden={done}><div className="pre-top"/><div className="pre-bottom"/><div className="pre-logo"><img src="/images/fpx-logo-x-original.png" alt="FPX"/><span>FOREST PRODUCTS EXCHANGE</span></div>{!done&&<button type="button" className="skip-intro" onClick={skip}>Skip intro</button>}</div>}
+import { AnimatedGradient } from "./animated-gradient";
+export function Preloader(){
+  const[done,setDone]=useState(true);
+  useEffect(()=>{
+    if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+    if(sessionStorage.getItem("fpx-intro-seen"))return;
+    setDone(false);
+    const t=setTimeout(()=>{if(readFpxConsent()?.preferences)sessionStorage.setItem("fpx-intro-seen","1");setDone(true)},2300);
+    return()=>clearTimeout(t);
+  },[]);
+  const skip=()=>{if(readFpxConsent()?.preferences)sessionStorage.setItem("fpx-intro-seen","1");setDone(true)};
+  return <div className={`preloader fpx-gradient-intro ${done?"is-done":""}`} aria-hidden={done}>
+    {!done&&<AnimatedGradient
+      className="fpx-intro-gradient"
+      config={{preset:"custom",color1:"#F7F4EA",color2:"#E4EEE2",color3:"#E7D9C3",rotation:-18,proportion:64,scale:.5,speed:6,distortion:8,swirl:16,swirlIterations:6,softness:100,offset:80,shape:"Edge",shapeSize:58}}
+      noise={{opacity:.025,scale:1.1}}
+    />}
+    <div className="fpx-intro-content">
+      <img className="fpx-intro-logo" src="/images/fpx-logo-full-original.png" alt="FPX Forest Products Exchange"/>
+      <p>BUILT FROM INSIDE THE INDUSTRY</p>
+      <div className="fpx-intro-progress" aria-hidden="true"><span/></div>
+    </div>
+    {!done&&<button type="button" className="skip-intro" onClick={skip}>Skip intro</button>}
+  </div>
+}
 export function Header(){const[open,setOpen]=useState(false);return <header className="site-header"><div className="nav-wrap"><Link href="/" className="brand" aria-label="FPX home"><img src="/images/fpx-logo-horizontal-original.png" alt="FPX Forest Products Exchange"/></Link><nav className="desktop-nav" aria-label="Primary navigation"><Link href="/fpx-sourcing">FPX Sourcing</Link><Link href="/timber">Timber Range</Link><Link href="/our-customers">Our Customers</Link><div className="drop"><button type="button" aria-haspopup="true">Resources <ChevronDown size={14}/></button><div className="drop-menu"><Link href="/saw-point"><b>Saw Point</b><span>Straight talk on NZ timber.</span></Link><Link href="/industry-insights"><b>FPX Insights</b><span>Guides and practical timber knowledge.</span></Link><Link href="/frequently-asked-questions"><b>FAQ</b><span>Answers about sourcing through FPX.</span></Link></div></div><Link href="/about-us">About Us</Link><Link href="/contact-us">Contact</Link></nav><div className="nav-actions"><a href="https://app.fpx.nz">Login</a><a className="nav-cta" href="https://app.fpx.nz/shop">Browse Timber <ArrowUpRight size={15}/></a></div><button type="button" className="menu-btn" aria-label={open?"Close navigation":"Open navigation"} aria-expanded={open} onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>}</button></div>{open&&<nav className="mobile-nav" aria-label="Mobile navigation"><Link href="/fpx-sourcing">FPX Sourcing</Link><Link href="/timber">Timber Range</Link><Link href="/our-customers">Our Customers</Link><span>Resources</span><Link href="/saw-point">Saw Point</Link><Link href="/industry-insights">FPX Insights</Link><Link href="/frequently-asked-questions">FAQ</Link><Link href="/about-us">About Us</Link><Link href="/contact-us">Contact</Link></nav>}</header>}
 export function Footer(){
   const[status,setStatus]=useState<"idle"|"sending"|"success"|"error">("idle");
