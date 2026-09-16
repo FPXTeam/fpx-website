@@ -1,24 +1,12 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { ChevronDown, Search, ExternalLink, Mail } from "lucide-react";
-import { LinkedInIcon, InstagramIcon, FacebookIcon } from "./social-icons";
+import { ChevronDown, Search } from "lucide-react";
 import { Eyebrow, Arrow, Breadcrumbs, PageCTA } from "./master-shared";
 import { privacyPolicy } from "./legal-privacy";
 import { termsAndConditions } from "./legal-terms";
 
-export function SawPointPage(){
-  const issues=[
-    {issue:"002",date:"SEPTEMBER 2026",title:"Saw Point | Issue 002",copy:"New Zealand timber market developments and industry news selected by George Harman.",href:"https://www.linkedin.com/pulse/saw-point-issue-002-september-2026-forest-products-exchange-j04nc"},
-    {issue:"001",date:"AUGUST 2026",title:"Saw Point | Issue 001",copy:"The first edition of Saw Point, covering selected developments worth paying attention to across the New Zealand timber industry.",href:"https://www.linkedin.com/pulse/saw-point-issue-001-august-2026-forest-products-exchange-rctec"}
-  ];
-  return <>
-    <section className="psp-hero"><div className="psp-copy"><Eyebrow>FPX PRESENTS</Eyebrow><h1>Saw Point.</h1><h2>Straight talk on NZ timber. <span className="headline-accent">No sawdust.</span></h2><p>A straight read on what matters: selected news and developments worth paying attention to in the New Zealand timber industry.</p><div className="psp-byline"><small>WRITTEN BY</small><b>George Harman</b><span>Director, FPX</span></div></div><div className="psp-image"><img src="/images/product-groups/manufacturing/manufacturing-hero-pine-stack.png" alt="Stacked New Zealand timber"/></div></section>
-    <section className="psp-archive"><header><Eyebrow>THE ARCHIVE</Eyebrow><h2>Read every issue.</h2><p>Saw Point is published by FPX and written by George Harman.</p></header><div className="psp-issues">{issues.map(item=><a key={item.issue} href={item.href} target="_blank" rel="noreferrer"><span>ISSUE {item.issue}</span><small>{item.date}</small><h3>{item.title}</h3><p>{item.copy}</p><b>Read on LinkedIn <ExternalLink size={15}/></b></a>)}</div></section>
-    <section className="psp-subscribe"><div><Eyebrow>GET THE NEXT ISSUE</Eyebrow><h2>Saw Point in your inbox.</h2><p>Get each new issue when it is published. No daily noise, just the latest Saw Point and selected FPX updates.</p><div className="psp-proof"><span>Monthly industry read</span><span>Written by George Harman</span><span>Unsubscribe any time</span></div></div><form aria-label="Saw Point subscription"><Mail/><h3>Join the Saw Point list</h3><label>Name<input name="name" autoComplete="name" placeholder="Your name"/></label><label>Email<input name="email" type="email" autoComplete="email" placeholder="you@company.co.nz"/></label><button type="button" disabled aria-disabled="true">Subscribe <Arrow/></button><small>Subscription connection will be reconnected to the existing FPX Make workflow at launch.</small></form></section>
-    <section className="psp-social"><div><Eyebrow>FOLLOW FPX</Eyebrow><h2>Stay close to what is happening in timber.</h2><p>Follow FPX for new Saw Point issues, timber sourcing updates and practical industry content between editions.</p></div><nav aria-label="FPX social profiles"><a href="https://www.linkedin.com/company/forest-products-exchange" target="_blank" rel="noreferrer"><LinkedInIcon/><span><b>LinkedIn</b><small>Industry updates</small></span><Arrow/></a><a href="https://www.instagram.com/fpx.nz/" target="_blank" rel="noreferrer"><InstagramIcon/><span><b>Instagram</b><small>FPX in the market</small></span><Arrow/></a><a href="https://www.facebook.com/people/Forest-Products-Exchange/61583101360304/" target="_blank" rel="noreferrer"><FacebookIcon/><span><b>Facebook</b><small>Company updates</small></span><Arrow/></a></nav></section>
-  </>;
-}
+export { SawPointPage } from "./saw-point-page";
 
 export function ResourcesPage(){
   const [query,setQuery]=useState("");
