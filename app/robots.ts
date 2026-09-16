@@ -6,6 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "Googlebot", allow: "/" },
       { userAgent: "Bingbot", allow: "/" },
       { userAgent: "OAI-SearchBot", allow: "/" },
+      { userAgent: "ChatGPT-User", allow: "/" },
     ],
     sitemap: "https://fpx.nz/sitemap.xml",
     host: "https://fpx.nz",
