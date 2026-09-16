@@ -12,8 +12,8 @@ export { SawPointPage } from "./saw-point-page";
 export function ResourcesPage(){
   const [query,setQuery]=useState("");
   const items=[
-    {title:"Radiata Pine Characteristics",subtitle:"How Growth and Environment Shape Timber in New Zealand",copy:"A practical FPX guide to the relationship between Radiata pine growth, environment and timber characteristics.",image:"radiata-pine-characteristics-cover.png",href:"/timber-growth-rings",type:"TIMBER CHARACTERISTICS",publishedAt:"2026-03-13"},
-    {title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",copy:"An FPX guide to kiln-drying methods, moisture content and why drying matters when specifying Radiata pine.",image:"kiln-drying-cover.png",href:"/the-science-of-kiln-drying",type:"TIMBER PROCESSING",publishedAt:"2026-09-16"}
+    {title:"Radiata Pine Characteristics",subtitle:"How Growth and Environment Shape Timber in New Zealand",copy:"A practical FPX guide to the relationship between Radiata pine growth, environment and timber characteristics.",image:"radiata-pine-characteristics-cover.png",href:"/timber-growth-rings",type:"TIMBER CHARACTERISTICS",publishedAt:"2026-03-13",displayDate:"13 MARCH 2026"},
+    {title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",copy:"An FPX guide to kiln-drying methods, moisture content and why drying matters when specifying Radiata pine.",image:"kiln-drying-cover.png",href:"/the-science-of-kiln-drying",type:"TIMBER PROCESSING",publishedAt:"2026-09-16",displayDate:"16 SEPTEMBER 2026"}
   ];
   const sorted=[...items].sort((a,b)=>new Date(b.publishedAt).getTime()-new Date(a.publishedAt).getTime());
   const shown=sorted.filter(item=>(item.title+" "+item.subtitle+" "+item.copy+" "+item.type).toLowerCase().includes(query.toLowerCase()));
@@ -44,7 +44,7 @@ export function ResourcesPage(){
         <Link href={featured.href} className="pri-featured">
           <div className={`pri-featured-image ${featured.image==="radiata-pine-characteristics-cover.png"?"is-contain":""}`}><img src={`/images/${featured.image}`} alt={`${featured.title} FPX Insight`}/></div>
           <div className="pri-featured-copy">
-            <small>{featured.type}</small>
+            <small>{featured.type} · {featured.displayDate}</small>
             <h2>{featured.title}</h2>
             <h3>{featured.subtitle}</h3>
             <p>{featured.copy}</p>
@@ -59,7 +59,7 @@ export function ResourcesPage(){
           <div className="pri-grid">
             {remaining.map((item,i)=><Link href={item.href} className="pri-card" key={item.title}>
               <div className="pri-card-image"><img src={`/images/${item.image}`} alt={`${item.title} FPX Insight`}/></div>
-              <div className="pri-card-meta"><span>{String(i+2).padStart(2,"0")}</span><small>{item.type}</small></div>
+              <div className="pri-card-meta"><span>{String(i+2).padStart(2,"0")}</span><small>{item.type} · {item.displayDate}</small></div>
               <h2>{item.title}</h2>
               <h3>{item.subtitle}</h3>
               <p>{item.copy}</p>
