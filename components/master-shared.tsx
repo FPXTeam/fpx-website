@@ -85,7 +85,7 @@ export function useSiteMotion(){
           observer.unobserve(entry.target);
         }
       });
-    },{threshold:.08,rootMargin:"0px 0px -7% 0px"});
+    },{threshold:.01,rootMargin:"0px 0px -7% 0px"});
     targets.forEach(el=>observer.observe(el));
     return()=>{observer.disconnect();root.classList.remove("site-motion-ready")};
   },[]);
