@@ -14,10 +14,61 @@ export function ResourcesPage(){
     {title:"Radiata Pine Characteristics",subtitle:"How Growth and Environment Shape Timber in New Zealand",copy:"A practical FPX guide to the relationship between Radiata pine growth, environment and timber characteristics.",image:"category-appearance-grades.webp",href:"/timber-growth-rings",type:"TIMBER CHARACTERISTICS"},
     {title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",copy:"An FPX guide to kiln-drying methods, moisture content and why drying matters when specifying Radiata pine.",image:"category-untreated-timber.webp",href:"/the-science-of-kiln-drying",type:"TIMBER PROCESSING"}
   ];
-  const shown=items.filter(item=>(item.title+" "+item.subtitle+" "+item.copy).toLowerCase().includes(query.toLowerCase()));
+  const shown=items.filter(item=>(item.title+" "+item.subtitle+" "+item.copy+" "+item.type).toLowerCase().includes(query.toLowerCase()));
+  const featured=shown[0];
+  const remaining=shown.slice(1);
+
   return <>
-    <section className="pri-hero"><div><Eyebrow>FPX INSIGHTS</Eyebrow><h1>Practical timber<br/><span className="headline-accent">knowledge.</span></h1><p>Clear, useful explanations of timber characteristics, processing and specification topics for New Zealand buyers.</p></div><div className="pri-search"><Search aria-hidden="true"/><label className="sr-only" htmlFor="insight-search">Search FPX Insights</label><input id="insight-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search FPX Insights"/></div></section>
-    <section className="pri-list" aria-live="polite">{shown.map((item,i)=><Link href={item.href} className="pri-article" key={item.title}><div className="pri-image"><img src={`/images/${item.image}`} alt={`${item.title} FPX Insight`}/></div><span>0{i+1}</span><div><small>{item.type}</small><h2>{item.title}</h2><h3>{item.subtitle}</h3><p>{item.copy}</p><b>Read FPX Insight <Arrow/></b></div></Link>)}{shown.length===0&&<div className="m-no-results"><h2>No matching FPX Insights.</h2><p>Try a broader timber topic.</p></div>}</section>
+    <section className="pri-hero">
+      <div className="pri-hero-copy">
+        <Eyebrow>INDUSTRY INSIGHTS</Eyebrow>
+        <h1>Timber knowledge,<br/><span className="headline-accent">made useful.</span></h1>
+        <p>Practical FPX guides covering timber characteristics, processing, specifications and sourcing topics for New Zealand buyers.</p>
+      </div>
+      <div className="pri-search-wrap">
+        <span>EXPLORE THE LIBRARY</span>
+        <div className="pri-search">
+          <Search aria-hidden="true"/>
+          <label className="sr-only" htmlFor="insight-search">Search Industry Insights</label>
+          <input id="insight-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search timber topics"/>
+        </div>
+        <small>{shown.length} {shown.length===1?"article":"articles"} available</small>
+      </div>
+    </section>
+
+    <section className="pri-library" aria-live="polite">
+      {featured&&<>
+        <div className="pri-library-label"><span>FEATURED INSIGHT</span><i/></div>
+        <Link href={featured.href} className="pri-featured">
+          <div className="pri-featured-image"><img src={`/images/${featured.image}`} alt={`${featured.title} FPX Insight`}/></div>
+          <div className="pri-featured-copy">
+            <small>{featured.type}</small>
+            <h2>{featured.title}</h2>
+            <h3>{featured.subtitle}</h3>
+            <p>{featured.copy}</p>
+            <b>Read FPX Insight <Arrow/></b>
+          </div>
+        </Link>
+      </>}
+
+      {remaining.length>0&&
+        <div className="pri-more">
+          <div className="pri-library-label"><span>MORE INSIGHTS</span><i/></div>
+          <div className="pri-grid">
+            {remaining.map((item,i)=><Link href={item.href} className="pri-card" key={item.title}>
+              <div className="pri-card-image"><img src={`/images/${item.image}`} alt={`${item.title} FPX Insight`}/></div>
+              <div className="pri-card-meta"><span>{String(i+2).padStart(2,"0")}</span><small>{item.type}</small></div>
+              <h2>{item.title}</h2>
+              <h3>{item.subtitle}</h3>
+              <p>{item.copy}</p>
+              <b>Read FPX Insight <Arrow/></b>
+            </Link>)}
+          </div>
+        </div>
+      }
+
+      {shown.length===0&&<div className="m-no-results pri-empty"><h2>No matching Industry Insights.</h2><p>Try a broader timber topic.</p></div>}
+    </section>
   </>;
 }
 
