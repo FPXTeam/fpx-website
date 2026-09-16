@@ -12,12 +12,13 @@ export { SawPointPage } from "./saw-point-page";
 export function ResourcesPage(){
   const [query,setQuery]=useState("");
   const items=[
-    {title:"Radiata Pine Characteristics",subtitle:"How Growth and Environment Shape Timber in New Zealand",copy:"A practical FPX guide to the relationship between Radiata pine growth, environment and timber characteristics.",image:"radiata-pine-characteristics-cover.png",href:"/timber-growth-rings",type:"TIMBER CHARACTERISTICS"},
-    {title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",copy:"An FPX guide to kiln-drying methods, moisture content and why drying matters when specifying Radiata pine.",image:"kiln-drying-cover.png",href:"/the-science-of-kiln-drying",type:"TIMBER PROCESSING"}
+    {title:"Radiata Pine Characteristics",subtitle:"How Growth and Environment Shape Timber in New Zealand",copy:"A practical FPX guide to the relationship between Radiata pine growth, environment and timber characteristics.",image:"radiata-pine-characteristics-cover.png",href:"/timber-growth-rings",type:"TIMBER CHARACTERISTICS",publishedAt:"2026-03-13"},
+    {title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",copy:"An FPX guide to kiln-drying methods, moisture content and why drying matters when specifying Radiata pine.",image:"kiln-drying-cover.png",href:"/the-science-of-kiln-drying",type:"TIMBER PROCESSING",publishedAt:"2026-09-16"}
   ];
-  const shown=items.filter(item=>(item.title+" "+item.subtitle+" "+item.copy+" "+item.type).toLowerCase().includes(query.toLowerCase()));
-  const featured=query.trim()?shown[0]:items[0];
-  const remaining=query.trim()?shown.slice(1):items.slice(1);
+  const sorted=[...items].sort((a,b)=>new Date(b.publishedAt).getTime()-new Date(a.publishedAt).getTime());
+  const shown=sorted.filter(item=>(item.title+" "+item.subtitle+" "+item.copy+" "+item.type).toLowerCase().includes(query.toLowerCase()));
+  const featured=shown[0];
+  const remaining=shown.slice(1);
 
   return <>
     <section className="pri-hero">
