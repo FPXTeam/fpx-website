@@ -3,25 +3,11 @@
 import { ExternalLink, Mail, ArrowRight, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Eyebrow } from "./master-shared";
+import sawPointIssues from "../data/saw-point-issues.json";
 
-const issues = [
-  {
-    issue: "002",
-    date: "SEPTEMBER 2026",
-    title: "Saw Point | Issue 002",
-    copy: "New Zealand timber market developments and industry news selected by George Harman.",
-    href: "https://www.linkedin.com/pulse/saw-point-issue-002-september-2026-forest-products-exchange-j04nc"
-  },
-  {
-    issue: "001",
-    date: "AUGUST 2026",
-    title: "Saw Point | Issue 001",
-    copy: "The first edition of Saw Point, covering selected developments worth paying attention to across the New Zealand timber industry.",
-    href: "https://www.linkedin.com/pulse/saw-point-issue-001-august-2026-forest-products-exchange-rctec"
-  }
-];
+const issues=sawPointIssues;
 
-export function SawPointPage(){
+export function SawPointPage()
   const latest = issues[0];
   const archive = issues.slice(1);
   const [archiveQuery,setArchiveQuery]=useState("");
@@ -38,7 +24,7 @@ export function SawPointPage(){
     return archive.filter(item=>{
       const itemYear=item.date.match(/\b\d{4}\b/)?.[0]||"";
       const matchesYear=archiveYear==="ALL"||itemYear===archiveYear;
-      const haystack=[item.issue,item.date,item.title,item.copy].join(" ").toLowerCase();
+      const haystack=[item.issue,item.date,item.title,item.excerpt].join(" ").toLowerCase();
       return matchesYear&&(!query||haystack.includes(query));
     });
   },[archive,archiveQuery,archiveYear]);
@@ -75,12 +61,12 @@ export function SawPointPage(){
         <span>{latest.date}</span>
       </div>
 
-      <a className="spx-feature" href={latest.href} target="_blank" rel="noreferrer">
+      <a className="spx-feature" href={latest.linkedinUrl} target="_blank" rel="noreferrer">
         <div className="spx-feature-number">{latest.issue}</div>
         <div className="spx-feature-copy">
           <small>ISSUE {latest.issue}</small>
           <h2>The latest<br/>Saw Point.</h2>
-          <p>{latest.copy}</p>
+          <p>{latest.excerpt}</p>
           <span className="spx-read">Read issue on LinkedIn <ExternalLink size={16}/></span>
         </div>
         <div className="spx-feature-side">
@@ -134,12 +120,12 @@ export function SawPointPage(){
 
       <div className="spx-archive-list" aria-live="polite">
         {visibleArchive.map(item=>
-          <a href={item.href} target="_blank" rel="noreferrer" key={item.issue}>
+          <a href={item.linkedinUrl} target="_blank" rel="noreferrer" key={item.issue}>
             <span className="spx-archive-issue">ISSUE {item.issue}</span>
             <div className="spx-archive-copy">
               <small>{item.date}</small>
               <h3>{item.title}</h3>
-              <p>{item.copy}</p>
+              <p>{item.excerpt}</p>
             </div>
             <span className="spx-archive-link">Read issue <ExternalLink size={14}/></span>
           </a>
