@@ -61,13 +61,13 @@ export function SawPointPage(){
         <span>{latest.date}</span>
       </div>
 
-      <a className="spx-feature" href={latest.linkedinUrl} target="_blank" rel="noreferrer">
+      <a className="spx-feature" href={latest.body?"/saw-point/"+latest.slug:latest.linkedinUrl} target={latest.body?undefined:"_blank"} rel={latest.body?undefined:"noreferrer"}>
         <div className="spx-feature-number">{latest.issue}</div>
         <div className="spx-feature-copy">
           <small>ISSUE {latest.issue}</small>
           <h2>The latest<br/>Saw Point.</h2>
           <p>{latest.excerpt}</p>
-          <span className="spx-read">Read issue on LinkedIn <ExternalLink size={16}/></span>
+          <span className="spx-read">{latest.body?"Read issue":"Read issue on LinkedIn"} <ExternalLink size={16}/></span>
         </div>
         <div className="spx-feature-side">
           <span>MONTHLY INDUSTRY READ</span>
@@ -120,7 +120,7 @@ export function SawPointPage(){
 
       <div className="spx-archive-list" aria-live="polite">
         {visibleArchive.map(item=>
-          <a href={item.linkedinUrl} target="_blank" rel="noreferrer" key={item.issue}>
+          <a href={item.body?"/saw-point/"+item.slug:item.linkedinUrl} target={item.body?undefined:"_blank"} rel={item.body?undefined:"noreferrer"} key={item.issue}>
             <span className="spx-archive-issue">ISSUE {item.issue}</span>
             <div className="spx-archive-copy">
               <small>{item.date}</small>
