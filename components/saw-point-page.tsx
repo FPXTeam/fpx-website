@@ -26,24 +26,26 @@ export function SawPointPage(){
 
   return <>
     <section className="spx-hero">
-      <div className="spx-hero-copy">
-        <Eyebrow>FPX PRESENTS</Eyebrow>
-        <h1>Saw Point.</h1>
-        <p className="spx-kicker">Straight talk on NZ timber. <span>No sawdust.</span></p>
-        <p className="spx-intro">A straight read on what matters — selected news and developments worth paying attention to in the industry.</p>
-        <div className="spx-byline">
-          <span>WRITTEN BY</span>
-          <strong>George Harman</strong>
-          <small>Director, FPX</small>
-        </div>
-      </div>
+      <div className="spx-hero-shell">
+        <div className="spx-hero-card">
+          <div className="spx-hero-copy">
+            <div className="spx-presents"><span/><small>FPX PRESENTS</small><span/></div>
+            <h1>Saw Point<span className="spx-dot">.</span></h1>
+            <h2>Straight talk on NZ timber - no sawdust.</h2>
+            <p className="spx-intro">Monthly NZ timber industry news, market updates, and a straight read on what’s happening.</p>
+            <div className="spx-mini-rule"/>
+            <div className="spx-meta">
+              <strong>Written by George Harman</strong>
+              <span/>
+              <p>Director, FPX</p>
+              <span/>
+              <b>Monthly</b>
+            </div>
+          </div>
 
-      <div className="spx-hero-visual">
-        <img src="/images/product-groups/manufacturing/manufacturing-hero-pine-stack.png" alt="New Zealand timber stacks"/>
-        <div className="spx-cover-mark">
-          <span>SAW</span>
-          <b>POINT.</b>
-          <small>FOREST PRODUCTS EXCHANGE</small>
+          <div className="spx-hero-image">
+            <img src="/images/product-groups/manufacturing/manufacturing-hero-pine-stack.png" alt="New Zealand timber stacks"/>
+          </div>
         </div>
       </div>
     </section>
@@ -117,24 +119,26 @@ export function SawPointPage(){
     </section>
 
     <style jsx global>{`
-      .spx-hero{min-height:calc(100svh - 88px);display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);background:#F7F4EA;overflow:hidden}
-      .spx-hero-copy{padding:120px 7vw 90px;display:flex;flex-direction:column;justify-content:center}
-      .spx-hero-copy .m-eyebrow{color:#40973C!important}
-      .spx-hero h1{margin:6px 0 0;font-size:clamp(76px,9vw,150px);line-height:.82;letter-spacing:-.075em;color:#040E0E}
-      .spx-kicker{margin:30px 0 0;max-width:640px;font:700 clamp(24px,2.6vw,42px)/1.05 Lato,Arial,sans-serif;letter-spacing:-.03em;color:#040E0E}
-      .spx-kicker span{color:#40973C}
-      .spx-intro{margin:24px 0 0;max-width:560px;color:#52645B;font-size:16px;line-height:1.75}
-      .spx-byline{margin-top:46px;padding-top:22px;border-top:1px solid rgba(4,14,14,.14);display:grid;grid-template-columns:auto 1fr;gap:3px 18px;max-width:420px}
-      .spx-byline span{grid-row:1/3;align-self:center;font:700 9px/1.2 Lato,Arial,sans-serif;letter-spacing:.16em;color:#758956}
-      .spx-byline strong{font:700 17px/1.2 Lato,Arial,sans-serif;color:#040E0E}
-      .spx-byline small{font-size:12px;color:#64736C}
-      .spx-hero-visual{min-height:720px;position:relative;overflow:hidden;background:#12211B}
-      .spx-hero-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,14,14,.03),rgba(4,14,14,.32))}
-      .spx-hero-visual img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.01)}
-      .spx-cover-mark{position:absolute;z-index:2;left:54px;bottom:50px;color:#fff;display:flex;flex-direction:column}
-      .spx-cover-mark span,.spx-cover-mark b{font:800 clamp(48px,6vw,90px)/.78 Montserrat,Arial,sans-serif;letter-spacing:-.075em}
-      .spx-cover-mark b{color:#53C396}
-      .spx-cover-mark small{margin-top:20px;font:700 9px/1 Lato,Arial,sans-serif;letter-spacing:.18em}
+      .spx-hero{background:linear-gradient(180deg,#F2F5F1 0%,#EDF2ED 100%);padding:34px 24px 0}
+      .spx-hero-shell{width:min(1540px,100%);margin:0 auto}
+      .spx-hero-card{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(440px,.85fr);min-height:760px;border-radius:28px;overflow:hidden;background:#F4F6F3}
+      .spx-hero-copy{padding:74px 56px 58px;display:flex;flex-direction:column;justify-content:center}
+      .spx-presents{display:flex;align-items:center;gap:18px;margin-bottom:34px;max-width:520px}
+      .spx-presents span{flex:1;height:2px;background:#6AA869}
+      .spx-presents small{white-space:nowrap;font:700 12px/1 Lato,Arial,sans-serif;letter-spacing:.22em;color:#40973C}
+      .spx-hero h1{margin:0;font-size:clamp(76px,9vw,140px);line-height:.84;letter-spacing:-.075em;color:#071512}
+      .spx-dot{color:#53C396}
+      .spx-hero h2{margin:32px 0 0;max-width:900px;font:700 clamp(30px,3.1vw,54px)/1.04 Lato,Arial,sans-serif;letter-spacing:-.04em;color:#071512}
+      .spx-intro{margin:28px 0 0;max-width:760px;color:#6A7684;font-size:19px;line-height:1.65}
+      .spx-mini-rule{width:106px;height:3px;background:#5AA05A;margin:42px 0 36px}
+      .spx-meta{display:flex;align-items:center;flex-wrap:wrap;gap:18px}
+      .spx-meta strong{font:700 17px/1.3 Lato,Arial,sans-serif;color:#071512}
+      .spx-meta p{margin:0;font-size:17px;color:#6A7684}
+      .spx-meta b{font:700 17px/1.3 Lato,Arial,sans-serif;color:#40973C}
+      .spx-meta span{width:1px;height:26px;background:rgba(7,21,18,.2)}
+      .spx-hero-image{position:relative;min-height:760px;overflow:hidden;border-bottom-left-radius:72px}
+      .spx-hero-image:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,14,14,0) 60%,rgba(4,14,14,.12) 100%);pointer-events:none}
+      .spx-hero-image img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transform:scale(1.015)}
 
       .spx-latest{padding:110px 7vw;background:#fff}
       .spx-section-label{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:30px}
@@ -181,12 +185,24 @@ export function SawPointPage(){
       .spx-form>small{display:block;margin-top:13px;color:#758956;font-size:10px;line-height:1.5}
 
       @media(max-width:1000px){
-        .spx-hero{grid-template-columns:1fr}.spx-hero-copy{padding:100px 7vw 70px}.spx-hero-visual{min-height:620px}
+        .spx-hero{padding:24px 18px 0}
+        .spx-hero-card{grid-template-columns:1fr;min-height:auto}
+        .spx-hero-copy{padding:64px 38px 50px}
+        .spx-hero-image{min-height:500px;border-bottom-left-radius:0}
         .spx-feature{grid-template-columns:150px 1fr}.spx-feature-side{grid-column:1/-1;border-left:0;border-top:1px solid rgba(255,255,255,.13);min-height:200px}
         .spx-subscribe{grid-template-columns:1fr;gap:60px}.spx-form{max-width:650px}
       }
       @media(max-width:700px){
-        .spx-hero-copy{padding:86px 24px 58px}.spx-hero h1{font-size:clamp(68px,22vw,105px)}.spx-kicker{font-size:26px}.spx-hero-visual{min-height:500px}.spx-cover-mark{left:24px;bottom:28px}
+        .spx-hero{padding:16px 12px 0}
+        .spx-hero-card{border-radius:22px}
+        .spx-hero-copy{padding:42px 22px 34px}
+        .spx-presents{gap:12px;margin-bottom:24px}.spx-presents span{max-width:64px}.spx-presents small{font-size:10px;letter-spacing:.18em}
+        .spx-hero h1{font-size:clamp(58px,18vw,84px)}
+        .spx-hero h2{margin-top:20px;font-size:clamp(24px,7vw,34px)}
+        .spx-intro{margin-top:20px;font-size:16px}
+        .spx-mini-rule{margin:28px 0 24px}
+        .spx-meta{gap:12px}.spx-meta strong,.spx-meta p,.spx-meta b{font-size:15px}.spx-meta span{height:18px}
+        .spx-hero-image{min-height:340px;border-bottom-left-radius:0}
         .spx-latest,.spx-archive,.spx-subscribe{padding-left:24px;padding-right:24px}.spx-latest{padding-top:76px;padding-bottom:76px}
         .spx-feature{grid-template-columns:1fr}.spx-feature-number{justify-content:flex-start;border-right:0;border-bottom:1px solid rgba(255,255,255,.13);font-size:100px;padding:32px}.spx-feature-copy{padding:42px 32px}.spx-feature-side{grid-column:auto;padding:34px 32px}
         .spx-archive{padding-top:76px;padding-bottom:82px}.spx-archive>header{grid-template-columns:1fr;gap:20px}.spx-archive-list>a{grid-template-columns:34px 1fr;gap:18px}.spx-archive-link{grid-column:2;margin-top:4px}
