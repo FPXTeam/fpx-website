@@ -15,8 +15,11 @@ export function ResourcesPage(){
     {title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",copy:"An FPX guide to kiln-drying methods, moisture content and why drying matters when specifying Radiata pine.",image:"category-untreated-timber.webp",href:"/the-science-of-kiln-drying",type:"TIMBER PROCESSING"}
   ];
   const shown=items.filter(item=>(item.title+" "+item.subtitle+" "+item.copy+" "+item.type).toLowerCase().includes(query.toLowerCase()));
-  const featured=shown[0];
-  const remaining=shown.slice(1);
+  const now=new Date();
+  const daySeed=Number(`${now.getUTCFullYear()}${String(now.getUTCMonth()+1).padStart(2,"0")}${String(now.getUTCDate()).padStart(2,"0")}`);
+  const dailyFeatured=items[daySeed%items.length];
+  const featured=query.trim()?shown[0]:dailyFeatured;
+  const remaining=query.trim()?shown.slice(1):shown.filter(item=>item.href!==featured?.href);
 
   return <>
     <section className="pri-hero">
