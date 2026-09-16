@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { ChevronDown, Search } from "lucide-react";
 import { Eyebrow, Arrow, Breadcrumbs, PageCTA } from "./master-shared";
@@ -44,7 +45,7 @@ export function ResourcesPage(){
       {featured&&<>
         <div className="pri-library-label"><span>FEATURED INSIGHT</span><i/></div>
         <Link href={featured.href} className="pri-featured">
-          <div className={`pri-featured-image ${featured.image==="radiata-pine-characteristics-cover.png"?"is-contain":""}`}><img src={`/images/${featured.image}`} alt={`${featured.title} FPX Insight`}/></div>
+          <div className={`pri-featured-image ${featured.image==="radiata-pine-characteristics-cover.png"?"is-contain":""}`}><Image src={`/images/${featured.image}`} alt={`${featured.title} FPX Insight`} width={1400} height={1000} sizes="(max-width: 1000px) 100vw, 52vw" priority/></div>
           <div className="pri-featured-copy">
             <small>{featured.type} · {featured.displayDate}</small>
             <h2>{featured.title}</h2>
@@ -60,7 +61,7 @@ export function ResourcesPage(){
           <div className="pri-library-label"><span>MORE INSIGHTS</span><i/></div>
           <div className="pri-grid">
             {remaining.map((item,i)=><Link href={item.href} className="pri-card" key={item.title}>
-              <div className="pri-card-image"><img src={`/images/${item.image}`} alt={`${item.title} FPX Insight`}/></div>
+              <div className="pri-card-image"><Image src={`/images/${item.image}`} alt={`${item.title} FPX Insight`} width={1200} height={800} sizes="(max-width: 700px) 100vw, 50vw"/></div>
               <div className="pri-card-meta"><span>{String(i+2).padStart(2,"0")}</span><small>{item.type} · {item.displayDate}</small></div>
               <h2>{item.title}</h2>
               <h3>{item.subtitle}</h3>
@@ -223,7 +224,7 @@ function RadiataPineArticle(){
         <div className="ria-meta"><span>BY FPX</span><span>13 MARCH 2026</span><span>6 MIN READ</span></div>
       </div>
       <div className="ria-hero-image">
-        <img src="/images/radiata-pine-growth-rings-hero.png" alt="Close-up of Radiata Pine growth rings"/>
+        <Image src="/images/radiata-pine-growth-rings-hero.png" alt="Close-up of Radiata Pine growth rings" width={1920} height={900} sizes="(max-width: 900px) 100vw, 55vw" priority/>
         <span>RADIATA PINE · GROWTH RINGS</span>
       </div>
     </header>
@@ -254,7 +255,7 @@ function RadiataPineArticle(){
         </header>
         <div className="ria-copy">{section.paragraphs.map(p=><p key={p}>{p}</p>)}</div>
         {index===0&&<blockquote>These rings serve as a retrospective look at the tree&apos;s life and properties rather than a primary tool for timber selection in the modern processing or market stages.</blockquote>}
-        <figure><img src={section.image} alt={section.imageAlt}/><figcaption>{section.caption}</figcaption></figure>
+        <figure><Image src={section.image} alt={section.imageAlt} width={1600} height={1200} sizes="(max-width: 800px) 92vw, 72vw"/><figcaption>{section.caption}</figcaption></figure>
       </section>)}
     </div>
 

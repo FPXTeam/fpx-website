@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, Phone, MapPin, MessageSquareText } from "lucide-react";
 import { Eyebrow, Arrow, Breadcrumbs, PageCTA } from "./master-shared";
 
@@ -79,7 +80,7 @@ export function CustomersPage(){
 
   return <>
     <section className="poc2-hero">
-      <img className="poc2-hero-bg" src="/images/product-groups/building-construction/building-symmetrical-framing.png" alt="Timber framing for a commercial construction project in New Zealand"/>
+      <Image className="poc2-hero-bg" src="/images/product-groups/building-construction/building-symmetrical-framing.png" alt="Timber framing for a commercial construction project in New Zealand" width={1920} height={1200} sizes="100vw" priority/>
       <div className="poc2-hero-shade"/>
       <div className="poc2-hero-copy">
         <Eyebrow>OUR CUSTOMERS</Eyebrow>
@@ -110,7 +111,7 @@ export function CustomersPage(){
                 aria-label={`Show ${g.title}`}
                 aria-pressed={active===i}
               >
-                <img src={"/images/"+g.image} alt={g.alt}/>
+                <Image src={"/images/"+g.image} alt={g.alt} width={900} height={1200} sizes="(max-width: 700px) 75vw, 30vw"/>
                 <b>{g.label}</b>
               </button>
             })}
@@ -171,7 +172,7 @@ export function AboutPage(){
 
   return <>
     <section className="pab3-hero">
-      <img src="/images/product-groups/manufacturing/manufacturing-warehouse-bundles.png" alt="Commercial timber bundles in a New Zealand warehouse"/>
+      <Image src="/images/product-groups/manufacturing/manufacturing-warehouse-bundles.png" alt="Commercial timber bundles in a New Zealand warehouse" width={1920} height={1200} sizes="100vw" priority/>
       <div className="pab3-hero-shade"/>
       <div className="pab3-hero-copy">
         <Eyebrow>ABOUT FPX</Eyebrow>
@@ -207,10 +208,10 @@ export function AboutPage(){
         </div>
       </div>
       <div className="pab3-platform-visual">
-        <div className="pab3-platform-photo"><img src="/images/product-groups/manufacturing/manufacturing-rollers.png" alt="Timber processing in New Zealand"/></div>
+        <div className="pab3-platform-photo"><Image src="/images/product-groups/manufacturing/manufacturing-rollers.png" alt="Timber processing in New Zealand" width={1400} height={1000} sizes="(max-width: 900px) 100vw, 50vw"/></div>
         <div className="pab3-platform-device">
           <div className="pab3-device-top"><span/><span/><span/></div>
-          <img src="/images/fpx-app-shop.png" alt="FPX timber sourcing platform"/>
+          <Image src="/images/fpx-app-shop.png" alt="FPX timber sourcing platform" width={1500} height={960} sizes="(max-width: 900px) 90vw, 48vw"/>
           <div className="pab3-device-base"/>
         </div>
       </div>
@@ -245,8 +246,8 @@ export function AboutPage(){
 
         <div className="pab5-figures" aria-label="George Harman and Gabriela Molloy">
           <div className="pab5-mark">FPX</div>
-          <img className="pab5-figure pab5-george" src={team[0].image} alt={team[0].name}/>
-          <img className="pab5-figure pab5-gabriela" src={team[1].image} alt={team[1].name}/>
+          <Image className="pab5-figure pab5-george" src={team[0].image} alt={team[0].name} width={800} height={1200} sizes="(max-width: 700px) 55vw, 28vw"/>
+          <Image className="pab5-figure pab5-gabriela" src={team[1].image} alt={team[1].name} width={800} height={1200} sizes="(max-width: 700px) 55vw, 28vw"/>
         </div>
 
         <article className="pab5-bio pab5-bio-right">
@@ -300,7 +301,7 @@ export function ContactPage(){
 
   return <>
   <section className="pct2-hero">
-    <img className="pct2-hero-image" src="/images/george-gabriela.png" alt="George Harman and Gabriela Molloy discussing timber requirements"/>
+    <Image className="pct2-hero-image" src="/images/george-gabriela.png" alt="George Harman and Gabriela Molloy discussing timber requirements" width={1920} height={1200} sizes="100vw" priority/>
     <div className="pct2-hero-wash"/>
     <div className="pct2-hero-copy">
       <Eyebrow>CONTACT FPX</Eyebrow>

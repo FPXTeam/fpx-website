@@ -21,7 +21,6 @@ const pages = [
   { path:"/terms-and-conditions", modified:"2026-09-16", changeFrequency:"yearly" as const, priority:.4 },
   { path:"/privacy-policy", modified:"2026-09-16", changeFrequency:"yearly" as const, priority:.4 },
   { path:"/cookie-policy", modified:"2026-09-16", changeFrequency:"yearly" as const, priority:.3 },
-  { path:"/cookie-settings", modified:"2026-09-16", changeFrequency:"yearly" as const, priority:.2 },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

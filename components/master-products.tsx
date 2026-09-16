@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { productGroups, Eyebrow, Arrow, AppButtons } from "./master-shared";
 
 export const productGroupDetails: Record<string,{title:string;description:string;hero:string;gallery:string[];categories:string[];examples?:string[];note:string;}> = {
@@ -19,7 +20,7 @@ const endUses=[
 export function ProductsPage(){
   return <>
     <section className="ppr-hero">
-      <img src="/images/product-groups/manufacturing/manufacturing-hero-pine-stack.png" alt="Stacked New Zealand timber products"/>
+      <Image src="/images/product-groups/manufacturing/manufacturing-hero-pine-stack.png" alt="Stacked New Zealand timber products" width={1920} height={1200} sizes="100vw" priority/>
       <div className="ppr-hero-shade"/>
       <div className="ppr-hero-copy">
         <Eyebrow>OUR TIMBER RANGE</Eyebrow>
@@ -37,7 +38,7 @@ export function ProductsPage(){
     <section className="ppr-groups">
       {productGroups.map((group,i)=><article className={i%2===1?"is-reverse":""} key={group[0]}>
         <Link href={`/${group[3]}`} className="ppr-group-image">
-          <img src={`/images/${group[2]}`} alt={`${group[0]} timber product group`}/>
+          <Image src={`/images/${group[2]}`} alt={`${group[0]} timber product group`} width={1400} height={1000} sizes="(max-width: 800px) 100vw, 52vw"/>
           <span>0{i+1}</span>
         </Link>
         <div className="ppr-group-copy">
@@ -58,7 +59,7 @@ export function ProductsPage(){
       <div className="ppr-application-grid">
         {endUses.map((use,i)=><article key={use[0]}>
           <a href={use[3]} className="ppr-application-image" aria-label={`View ${use[0]} products in FPX`}>
-            <img src={`/images/${use[2]}`} alt={`${use[0]} timber application`}/>
+            <Image src={`/images/${use[2]}`} alt={`${use[0]} timber application`} width={1200} height={900} sizes="(max-width: 800px) 100vw, 25vw"/>
           </a>
           <span>0{i+1}</span>
           <h3>{use[0]}</h3>
@@ -86,7 +87,7 @@ export function ProductGroupPage({slug}:{slug:string}){
   return <>
     <section className="pg-hero">
       <div className="pg-hero-copy"><span className="pg-number">{number}</span><Eyebrow>PRODUCT GROUP</Eyebrow><h1>{group.title}</h1><p>{group.description}</p><div className="m-actions"><a href="https://app.fpx.nz/shop" className="m-btn m-btn-primary">Browse current timber <Arrow/></a><a href="https://app.fpx.nz/request-cart" className="m-btn m-btn-ghost">Request a product <Arrow/></a></div></div>
-      <div className="pg-hero-image"><img src={`/images/${group.hero}`} alt={`${group.title} timber`}/></div>
+      <div className="pg-hero-image"><Image src={`/images/${group.hero}`} alt={`${group.title} timber`} width={1800} height={1200} sizes="(max-width: 900px) 100vw, 50vw" priority/></div>
     </section>
 
     <section className="pg-summary">
@@ -96,7 +97,7 @@ export function ProductGroupPage({slug}:{slug:string}){
     </section>
 
     <section className={`pg-gallery ${group.gallery.length===2?"is-two":""}`}>
-      {group.gallery.map((image,i)=><figure key={image}><img src={`/images/${image}`} alt={`${group.title} timber example ${i+1}`}/></figure>)}
+      {group.gallery.map((image,i)=><figure key={image}><Image src={`/images/${image}`} alt={`${group.title} timber example ${i+1}`} width={1400} height={1000} sizes="(max-width: 800px) 100vw, 33vw"/></figure>)}
     </section>
 
     <section className="pg-catalogue">
