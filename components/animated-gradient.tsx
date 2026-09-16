@@ -18,7 +18,7 @@ interface AnimatedGradientProps{config:CustomConfig;noise?:NoiseConfig;style?:CS
 export function AnimatedGradient({config,noise,style,className}:AnimatedGradientProps){
   const canvasRef=useRef<HTMLCanvasElement>(null);
   const containerRef=useRef<HTMLDivElement>(null);
-  const frameIdRef=useRef<number>();
+  const frameIdRef=useRef<number | undefined>(undefined);
   const startTimeRef=useRef(0);
   const[failed,setFailed]=useState(false);
   const params=useMemo(()=>({
