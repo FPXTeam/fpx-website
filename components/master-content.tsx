@@ -11,15 +11,12 @@ export { SawPointPage } from "./saw-point-page";
 export function ResourcesPage(){
   const [query,setQuery]=useState("");
   const items=[
-    {title:"Radiata Pine Characteristics",subtitle:"How Growth and Environment Shape Timber in New Zealand",copy:"A practical FPX guide to the relationship between Radiata pine growth, environment and timber characteristics.",image:"category-appearance-grades.webp",href:"/timber-growth-rings",type:"TIMBER CHARACTERISTICS"},
+    {title:"Radiata Pine Characteristics",subtitle:"How Growth and Environment Shape Timber in New Zealand",copy:"A practical FPX guide to the relationship between Radiata pine growth, environment and timber characteristics.",image:"radiata-pine-characteristics-cover.png",href:"/timber-growth-rings",type:"TIMBER CHARACTERISTICS"},
     {title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",copy:"An FPX guide to kiln-drying methods, moisture content and why drying matters when specifying Radiata pine.",image:"category-untreated-timber.webp",href:"/the-science-of-kiln-drying",type:"TIMBER PROCESSING"}
   ];
   const shown=items.filter(item=>(item.title+" "+item.subtitle+" "+item.copy+" "+item.type).toLowerCase().includes(query.toLowerCase()));
-  const now=new Date();
-  const daySeed=Number(`${now.getUTCFullYear()}${String(now.getUTCMonth()+1).padStart(2,"0")}${String(now.getUTCDate()).padStart(2,"0")}`);
-  const dailyFeatured=items[daySeed%items.length];
-  const featured=query.trim()?shown[0]:dailyFeatured;
-  const remaining=query.trim()?shown.slice(1):shown.filter(item=>item.href!==featured?.href);
+  const featured=query.trim()?shown[0]:items[0];
+  const remaining=query.trim()?shown.slice(1):items.slice(1);
 
   return <>
     <section className="pri-hero">
