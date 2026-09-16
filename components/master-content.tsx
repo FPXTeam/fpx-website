@@ -95,4 +95,182 @@ export function FAQPage(){
 
 export function LegalPage({slug}:{slug:string}){const doc=slug==="privacy-policy"?privacyPolicy:termsAndConditions;return <><Breadcrumbs items={[["Home","/"],[doc.title,`/${slug}`]]}/><section className="m-legal-hero m-animate-in"><Eyebrow>FPX LEGAL</Eyebrow><h1>{doc.title}</h1><p>Forest Products Exchange Limited</p></section><section className="m-legal m-legal-full"><aside><span>FOREST PRODUCTS EXCHANGE LIMITED</span><p>Official FPX legal document.</p><nav aria-label={`${doc.title} sections`}>{doc.toc.map(([num,title])=><a key={num} href={`#legal-${num}`}><b>{String(num).padStart(2,"0")}</b>{title}</a>)}</nav></aside><article className="m-legal-document" dangerouslySetInnerHTML={{__html:doc.html}}/></section></>}
 
-export function InsightArticlePage({slug}:{slug:string}){const article=slug==="timber-growth-rings"?{title:"Radiata Pine Characteristics",subtitle:"How Growth and Environment Shape Timber in New Zealand",type:"TIMBER CHARACTERISTICS",image:"category-appearance-grades.webp",sections:[["What this FPX Insight covers","This guide focuses on how growth and environment relate to the characteristics visible in Radiata pine timber, and why those characteristics matter when buyers are considering timber for different applications."],["Growth rings and timber characteristics","Growth rings provide a visible record of how a tree developed over time. Reading those characteristics alongside the intended application helps buyers ask better questions about product suitability and specification."],["Why it matters when sourcing timber","Timber sourcing decisions are stronger when the product, application and specification are considered together. FPX uses product information and timber knowledge to help buyers move from a requirement to suitable options."]]}:{title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",type:"TIMBER PROCESSING",image:"category-untreated-timber.webp",sections:[["What this FPX Insight covers","This guide introduces conventional and continuous kiln drying, moisture content and why controlled drying is an important part of preparing Radiata pine for many commercial applications."],["Why moisture content matters","Moisture content is one of the practical product details buyers may need to consider alongside grade, treatment, dimensions and intended use."],["How this connects to sourcing","When moisture condition matters to a requirement, include it in the timber specification or request so FPX can review suitable product options."]]};return <><Breadcrumbs items={[["Home","/"],["FPX Insights","/industry-insights"],[article.title,`/${slug}`]]}/><article className="m-insight-article"><header className="m-insight-hero m-animate-in"><div><Eyebrow>{article.type}</Eyebrow><h1>{article.title}</h1><p>{article.subtitle}</p><div className="m-article-meta"><span>FPX INSIGHTS</span><span>FOREST PRODUCTS EXCHANGE</span></div></div><div><img src={`/images/${article.image}`} alt={`${article.title} by FPX`}/></div></header><div className="m-insight-body m-animate-in">{article.sections.map(([heading,copy])=><section key={heading}><h2>{heading}</h2><p>{copy}</p></section>)}<section className="m-related-links"><h2>Related FPX pages</h2><div><Link href="/timber">Explore the FPX timber range <Arrow/></Link><Link href="/fpx-sourcing">See how FPX sourcing works <Arrow/></Link><Link href="/contact-us">Ask FPX a timber question <Arrow/></Link></div></section></div></article><PageCTA/></>}
+
+const radiataSections = [
+  {
+    id:"plantation-species",
+    number:"01",
+    eyebrow:"PLANTATION SPECIES",
+    title:"The Evolution of Radiata Pine as a Key Plantation Species",
+    image:"/images/radiata-pine-plantation-growth.png",
+    imageAlt:"Radiata Pine plantation illustrating annual growth rate variations in New Zealand",
+    imageClass:"ria-image-wide",
+    paragraphs:[
+      "New Zealand’s reliance on Radiata Pine was a strategic decision made in the early 20th century. At that time, the depletion of native forests became a significant concern for the government and the building industry. To ensure a sustainable future for the country, plantation expansion was accelerated. Radiata Pine was selected because of its rapid growth, consistent yields, and how well it responded to silvicultural practices like pruning and thinning.",
+      "Unlike many native species that traditionally take around 40-60+ years, Radiata Pine reaches a harvestable size much more quickly, typically in 25 to 30 years. This timeframe varies slightly depending on the specific site conditions, the intended end-product, and sometimes market factors such as log prices or volume needs, which can push forests to be harvested sooner or later. Overall, the average harvest age in New Zealand appears to be trending closer to 25 years rather than 30.",
+      "Within the professional industry, the focus is placed on grading, treatment, and compliance with national and international standards. Features like ring width, colour and growth can tell us a lot about the properties of the timber."
+    ],
+    caption:"Radiata Pine plantation illustrating annual growth rate variations and how growth conditions influence timber development."
+  },
+  {
+    id:"growth-rings",
+    number:"02",
+    eyebrow:"SEASONAL GROWTH",
+    title:"How Growth Rings Develop in the New Zealand Climate",
+    image:"/images/radiata-pine-earlywood-latewood.png",
+    imageAlt:"Radiata Pine earlywood and latewood growth pattern",
+    imageClass:"ria-image-note",
+    paragraphs:[
+      "Growth rings are the result of a tree’s natural response to seasonal cycles. Every year, a Radiata Pine forms a new layer consisting of two distinct wood types: earlywood and latewood. Earlywood is produced during the spring when growth is rapid and water is plentiful, resulting in wood that is generally lighter in colour and less dense. As growth slows during the summer and autumn, the wood cells become thicker and more robust, forming the denser latewood.",
+      "In New Zealand, the ratio of earlywood to latewood shifts based on climate, soil quality, and hydration levels. Because our trees grow in a temperate climate with relatively high rainfall, they typically exhibit wider rings than the slower-growing softwoods found in the Northern Hemisphere. This accelerated growth cycle is a direct reflection of New Zealand conditions, and these environmental factors directly influence the regional density variations found across the country."
+    ],
+    caption:"Seasonal growth produces lighter earlywood and denser latewood within each annual ring."
+  },
+  {
+    id:"wood-density",
+    number:"03",
+    eyebrow:"WOOD DENSITY",
+    title:"The Practical Importance of Wood Density",
+    image:"/images/one-timber-stack.png",
+    imageAlt:"Stacked Radiata Pine timber for commercial use in New Zealand",
+    imageClass:"ria-image-wide",
+    paragraphs:[
+      "Density is a core attribute that influences the strength and the stiffness of the timber. Radiata Pine is classified as a moderately low-density softwood. Although this classification may seem counterintuitive it is one of the species greatest strengths because it provides an effective weight-to-strength ratio suitable for a wide range of applications.",
+      "Historically in New Zealand, dense hardwoods were used for structural and outdoor purposes. However because Radiata pine has a favourable weight-to-strength ratio and can be effectively treated, it can perform similarly in many of these uses.",
+      "There are variations in density in Radiata Pine due to both the tree’s growth rate and the climate conditions where it was grown. These two factors vary considerably throughout New Zealand.",
+      "Typically rapid growth produces a higher proportion of earlywood, which is less dense, while slower or more moderated growth increases the proportion of latewood, boosting overall density."
+    ],
+    caption:"Processed Radiata Pine timber showing the scale of commercial material supplied into the New Zealand market."
+  },
+  {
+    id:"density-variation",
+    number:"04",
+    eyebrow:"REGIONAL VARIATION",
+    title:"Density Variation in Radiata Pine",
+    image:"/images/radiata-pine-density-variation.png",
+    imageAlt:"New Zealand map illustrating regional Radiata Pine density variation",
+    imageClass:"ria-image-note",
+    paragraphs:[
+      "These regional environmental factors create distinct density profiles by influencing how growth rings develop. In warmer northern regions such as Northland and the Coromandel, forests benefit from longer growing seasons and reliable rainfall. However, the higher density typically found in these areas is also a result of soil variability. Many northern forests grow on less fertile clay-based soils, which moderate growth rates and encourage a stronger proportion of latewood. This combination of warmth and controlled growth contributes to relatively dense timber.",
+      "By contrast, forests in the Central North Island, particularly around the Rotorua and Taupō areas, grow on highly fertile volcanic ash soils. These nutrient-rich conditions support very rapid tree growth, which often results in wider growth rings with a higher proportion of earlywood. This can lead to slightly lower average wood density compared with slower or more moderated sites. In cooler southern areas, growth is typically slower due to shorter growing seasons and colder winter temperatures. While this slow growth generally favours latewood formation, the overall annual wood volume is reduced. Beyond these geographical differences, density also varies within the log itself, where timber from the outer area contains mature wood that is typically much denser than the juvenile wood found near the core."
+    ],
+    caption:"Regional climate, soils and growing season length contribute to density variation across New Zealand."
+  },
+  {
+    id:"cell-structure",
+    number:"05",
+    eyebrow:"CELL STRUCTURE",
+    title:"Cell Structure and Its Influence on Processing",
+    image:"/images/radiata-pine-mature-outerwood.png",
+    imageAlt:"Radiata Pine cross section showing sapwood heartwood and pith",
+    imageClass:"ria-image-note",
+    paragraphs:[
+      "The fibre makeup of Radiata Pine refers to the length, alignment, and integrity of the wood cells. The structure of the cells shapes how the timber behaves during drying and preservative treatments and evolves over the life of the tree depending on growth conditions.",
+      "Consistent growth rates across the plantation life of a tree tend to produce more uniform fibres/cells. Better cell uniformity helps moisture leave the wood evenly during kiln drying, reducing warping, cracking, and internal stresses, and also supports more consistent preservative uptake throughout the timber.",
+      "Timber cut from the outer sections of a log generally contains mature wood which Is characterised as having longer and sturdier fibres than the juvenile wood found closer to the core.",
+      "Radiata Pine consists of sapwood and heartwood, each with distinct characteristics. Sapwood is lighter in colour, contains living cells, and is highly permeable, while heartwood is darker in colour and less permeable.",
+      "Radiata from the Central North Island tends to have larger sapwood zones and therefore highly permeable cell structures, which makes it particularly well suited to preservative treatment.",
+      "However proper treatment ensures both sapwood and heartwood are treated to the required hazard class throughout the country."
+    ],
+    caption:"A Radiata Pine cross-section showing the relationship between sapwood, heartwood and the central pith."
+  }
+] as const;
+
+function RadiataPineArticle(){
+  const intro=[
+    "For Radiata Pine, which is the dominant species in our forestry sector, this quality is determined by a combination of biological growth processes and the specific environmental influences found across our plantation landscapes.",
+    "Radiata Pine, known scientifically as Pinus radiata, is the engine room of New Zealand's commercial forestry. It supports a vast network of industries including construction, engineered wood products, packaging, and international export markets. Although it originated in the coastal regions of California, Radiata Pine has adapted remarkably well to the unique climate and soil profiles of New Zealand. While it is planted most extensively in the North Island, large areas of Radiata Pine are also grown in the South Island, alongside Douglas Fir which performs well in the cooler southern regions.",
+    "This article examines Radiata Pine as a managed plantation species. It highlights how specific growth characteristics and regional conditions in New Zealand affect the timber produced for the market. We will look at growth rings as a biological indicator to provide context for the development of the species. These rings serve as a retrospective look at the tree's life and properties rather than a primary tool for timber selection in the modern processing or market stages."
+  ];
+  const sourcing=[
+    "In the modern industry, sourcing timber is about identifying the correct grades and specifications for a particular project. Professionals need clear visibility into what is available in the market and how it meets the necessary standards.",
+    "At FPX, our focus is on providing that visibility. We provide a digital platform that reflects the current availability of timber products across New Zealand. We understand that our users value clarity and accountability, and our goal is to simplify the sourcing process by connecting buyers and suppliers through a transparent system. While a knowledge of growth traits and forest biology offers useful context, it is the established industry standards and mechanical grading that should guide purchasing decisions.",
+    "By providing a stable structure for these transactions, we ensure that the sourcing process is as efficient and reliable as the timber itself. Our platform is designed to align with the needs of a professional industry that expects performance, consistency, compliance and a straightforward approach to business."
+  ];
+  const conclusion=[
+    "Radiata Pine remains the anchor of the New Zealand forestry sector because of its versatility and the predictability that comes from managed plantations. While the biological factors like growth rings and regional climates inform how the wood is formed, it is the industry’s rigorous processing and grading standards that ensure a standardized outcome for every user.",
+    "Understanding the relationship between the environment and timber characteristics underscores the value of Radiata Pine across the entire supply chain. As management practices and technology continue to evolve, this species will continue to be a vital contributor to New Zealand’s manufacturing, construction, and export industries."
+  ];
+  const sources=[
+    'Cown, D.J. (1972). "Density of Radiata Pine: Its Variation and Manipulation." New Zealand Institute of Forestry Journal.',
+    'Beets, P.N., et al. (2001). "Wood Density of Radiata Pine: Effect of Nitrogen Supply." Forest Ecology and Management.',
+    '"Radiata Pine." Te Ara – The Encyclopedia of New Zealand.',
+    '"Radiata Pine Characteristics." Kiwi Lumber.',
+    'Palmer, D.J., et al. (2013). "Modelling Variation in Wood Density Within and Among Trees in Stands of New Zealand-Grown Radiata Pine." New Zealand Journal of Forestry Science.',
+    "Kimberley et al. (2015): Modelling variation in wood density",
+    "RPBC Bulletin No. 2: Radiata Pine Wood Density",
+    "Cown, D. J. (1999): NZ Radiata Pine and Douglas-fir: Suitability for Processing"
+  ];
+  return <article className="ria">
+    <header className="ria-hero">
+      <div className="ria-hero-copy">
+        <Eyebrow>INDUSTRY INSIGHT</Eyebrow>
+        <h1>Radiata Pine<br/><span className="headline-accent">Characteristics</span></h1>
+        <h2>How Growth and Environment Shape Timber in New Zealand</h2>
+        <p>Understanding timber quality begins long before installation: it starts with the tree itself.</p>
+        <div className="ria-meta"><span>BY FPX</span><span>13 MARCH 2026</span><span>6 MIN READ</span></div>
+      </div>
+      <div className="ria-hero-image">
+        <img src="/images/radiata-pine-growth-rings-hero.png" alt="Close-up of Radiata Pine growth rings"/>
+        <span>RADIATA PINE · GROWTH RINGS</span>
+      </div>
+    </header>
+
+    <section className="ria-start">
+      <div>
+        <Eyebrow>START HERE</Eyebrow>
+        <h2>A practical guide to how growth, climate and wood structure shape Radiata Pine in New Zealand.</h2>
+      </div>
+      <nav aria-label="Article contents">
+        <small>IN THIS ARTICLE</small>
+        {radiataSections.map(section=><a href={`#${section.id}`} key={section.id}><span>{section.number}</span>{section.title}</a>)}
+        <a href="#digital-market"><span>06</span>Sourcing Radiata Pine in a Digital Market</a>
+        <a href="#radiata-conclusion"><span>07</span>Conclusion</a>
+      </nav>
+    </section>
+
+    <div className="ria-reading">
+      <div className="ria-intro">
+        <p className="ria-lead">The quality of timber in the New Zealand market is the result of a long-term process that starts decades before a single log reaches a sawmill.</p>
+        {intro.map(p=><p key={p}>{p}</p>)}
+      </div>
+
+      {radiataSections.map((section,index)=><section id={section.id} className={`ria-section ${section.imageClass}`} key={section.id}>
+        <header>
+          <span className="ria-number">{section.number}</span>
+          <div><small>{section.eyebrow}</small><h2>{section.title}</h2></div>
+        </header>
+        <div className="ria-copy">{section.paragraphs.map(p=><p key={p}>{p}</p>)}</div>
+        {index===0&&<blockquote>These rings serve as a retrospective look at the tree&apos;s life and properties rather than a primary tool for timber selection in the modern processing or market stages.</blockquote>}
+        <figure><img src={section.image} alt={section.imageAlt}/><figcaption>{section.caption}</figcaption></figure>
+      </section>)}
+    </div>
+
+    <section id="digital-market" className="ria-sourcing">
+      <div>
+        <span>06 · SOURCING</span>
+        <h2>Sourcing Radiata Pine<br/><em>in a Digital Market</em></h2>
+      </div>
+      <div className="ria-sourcing-copy">{sourcing.map(p=><p key={p}>{p}</p>)}<Link href="/fpx-sourcing">Explore FPX Sourcing <Arrow/></Link></div>
+    </section>
+
+    <section id="radiata-conclusion" className="ria-conclusion">
+      <div><span>07 · CONCLUSION</span><h2>Conclusion</h2></div>
+      <div>{conclusion.map(p=><p key={p}>{p}</p>)}</div>
+    </section>
+
+    <section className="ria-sources">
+      <Eyebrow>SOURCES</Eyebrow>
+      <h2>Research and industry references.</h2>
+      <p>This article draws on publicly available research and industry resources for accuracy. Key references include:</p>
+      <ol>{sources.map(source=><li key={source}>{source}</li>)}</ol>
+    </section>
+
+    <section className="ria-next">
+      <div><Eyebrow>NEXT IN INDUSTRY INSIGHTS</Eyebrow><h2>The Science of Kiln Drying</h2><p>Conventional and continuous kilns, moisture content, and why it matters for Radiata Pine.</p></div>
+      <Link href="/the-science-of-kiln-drying">Read next <Arrow/></Link>
+    </section>
+  </article>;
+}
+
+export function InsightArticlePage({slug}:{slug:string}){if(slug==="timber-growth-rings")return <RadiataPineArticle/>;const article={title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",type:"TIMBER PROCESSING",image:"category-untreated-timber.webp",sections:[["What this FPX Insight covers","This guide introduces conventional and continuous kiln drying, moisture content and why controlled drying is an important part of preparing Radiata pine for many commercial applications."],["Why moisture content matters","Moisture content is one of the practical product details buyers may need to consider alongside grade, treatment, dimensions and intended use."],["How this connects to sourcing","When moisture condition matters to a requirement, include it in the timber specification or request so FPX can review suitable product options."]]};return <><Breadcrumbs items={[["Home","/"],["FPX Insights","/industry-insights"],[article.title,`/${slug}`]]}/><article className="m-insight-article"><header className="m-insight-hero m-animate-in"><div><Eyebrow>{article.type}</Eyebrow><h1>{article.title}</h1><p>{article.subtitle}</p><div className="m-article-meta"><span>FPX INSIGHTS</span><span>FOREST PRODUCTS EXCHANGE</span></div></div><div><img src={`/images/${article.image}`} alt={`${article.title} by FPX`}/></div></header><div className="m-insight-body m-animate-in">{article.sections.map(([heading,copy])=><section key={heading}><h2>{heading}</h2><p>{copy}</p></section>)}<section className="m-related-links"><h2>Related FPX pages</h2><div><Link href="/timber">Explore the FPX timber range <Arrow/></Link><Link href="/fpx-sourcing">See how FPX sourcing works <Arrow/></Link><Link href="/contact-us">Ask FPX a timber question <Arrow/></Link></div></section></div></article><PageCTA/></>}
