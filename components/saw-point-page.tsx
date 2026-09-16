@@ -7,7 +7,7 @@ import sawPointIssues from "../data/saw-point-issues.json";
 
 const issues=sawPointIssues;
 
-export function SawPointPage()
+export function SawPointPage(){
   const latest = issues[0];
   const archive = issues.slice(1);
   const [archiveQuery,setArchiveQuery]=useState("");
