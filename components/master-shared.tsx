@@ -32,6 +32,48 @@ export const pageData: Record<string,{eyebrow:string;title:string;intro:string}>
 
 export const masterPages = Object.keys(pageData);
 
+
+export function useSiteMotion(){
+  useEffect(()=>{
+    const root=document.querySelector<HTMLElement>(".master-site");
+    if(!root) return;
+    const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const selector=[
+      ":scope > section",
+      ":scope > article > header",
+      ":scope > article > section",
+      ".ph-range-item",
+      ".m-source-cards > a",
+      ".phw-flow article",
+      ".pri-featured",
+      ".pri-card",
+      ".m-saw-issue-card",
+      ".pab5-team article"
+    ].join(",");
+    const targets=Array.from(root.querySelectorAll<HTMLElement>(selector))
+      .filter((el,index,self)=>self.indexOf(el)===index);
+    root.classList.add("site-motion-ready");
+    targets.forEach((el,index)=>{
+      el.classList.add("site-reveal");
+      el.style.setProperty("--site-reveal-delay",`${Math.min(index%4,3)*55}ms`);
+    });
+    if(reduced){
+      targets.forEach(el=>el.classList.add("is-visible"));
+      return()=>root.classList.remove("site-motion-ready");
+    }
+    const observer=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          (entry.target as HTMLElement).classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },{threshold:.08,rootMargin:"0px 0px -7% 0px"});
+    targets.forEach(el=>observer.observe(el));
+    return()=>{observer.disconnect();root.classList.remove("site-motion-ready")};
+  },[]);
+}
+
 export function useParallax(){
   useEffect(()=>{
     if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
