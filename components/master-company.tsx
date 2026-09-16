@@ -273,7 +273,7 @@ export function AboutPage(){
 
 export function ContactPage(){return <>
   <section className="pct2-hero">
-    <img className="pct2-hero-image" src="/images/fpx-contact-george-gabriela.png" alt="George Harman and Gabriela Molloy discussing timber requirements"/>
+    <img className="pct2-hero-image" src="/images/fpx-contact-george-gabriela-2026.svg" alt="George Harman and Gabriela Molloy discussing timber requirements"/>
     <div className="pct2-hero-wash"/>
     <div className="pct2-hero-copy">
       <Eyebrow>CONTACT FPX</Eyebrow>
