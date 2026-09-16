@@ -24,7 +24,7 @@ function RangeStory(){
       <Eyebrow>THE FPX TIMBER RANGE</Eyebrow>
       <h2>Start with the<br/><span className="headline-accent">right product group.</span></h2>
       <p>Explore the range at a high level first. Then move into FPX for current stock, offers and detailed specifications.</p>
-      <Link href="/products">Explore the full timber range <Arrow/></Link>
+      <Link href="/timber">Explore the full timber range <Arrow/></Link>
     </div>
     <div className="ph-range-list">
       {productGroups.map((group,i)=><Link href={`/${group[3]}`} className="ph-range-item" key={group[0]}>
@@ -49,7 +49,7 @@ function PlatformStory(){
       <Eyebrow>FPX SOURCING</Eyebrow>
       <h2>Three ways in.<br/><span className="headline-accent">One place to start.</span></h2>
       <p>You do not need to learn the whole platform before you begin. Start with the route that matches the job.</p>
-      <Link href="/source-timber">See how FPX sourcing works <Arrow/></Link>
+      <Link href="/fpx-sourcing">See how FPX sourcing works <Arrow/></Link>
     </div>
     <div className="m-source-platform ph-laptop-showcase">
       <div className="m-laptop-wrap">
