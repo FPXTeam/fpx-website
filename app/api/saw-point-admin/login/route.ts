@@ -3,8 +3,15 @@ import { sawPointAdminCookieName, sawPointAdminCookieValue } from "../../../../l
 
 export async function POST(request:Request){
   const form=await request.formData();
-  const password=String(form.get("password")||"");
-  const expected=process.env.SAW_POINT_ADMIN_PASSWORD || "";
+  const normalize=(value:string)=>{
+    const trimmed=value.trim();
+    if((trimmed.startsWith('"')&&trimmed.endsWith('"'))||(trimmed.startsWith("'")&&trimmed.endsWith("'"))){
+      return trimmed.slice(1,-1).trim();
+    }
+    return trimmed;
+  };
+  const password=normalize(String(form.get("password")||""));
+  const expected=normalize(process.env.SAW_POINT_ADMIN_PASSWORD || "");
   if(!expected || password!==expected){
     return NextResponse.redirect(new URL("/saw-point-admin?error=1",request.url),303);
   }
