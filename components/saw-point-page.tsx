@@ -26,26 +26,18 @@ export function SawPointPage(){
 
   return <>
     <section className="spx-hero">
-      <div className="spx-hero-shell">
-        <div className="spx-hero-card">
-          <div className="spx-hero-copy">
-            <div className="spx-presents"><span/><small>FPX PRESENTS</small><span/></div>
-            <h1>Saw Point<span className="spx-dot">.</span></h1>
-            <h2>Straight talk on NZ timber - no sawdust.</h2>
-            <p className="spx-intro">Monthly NZ timber industry news, market updates, and a straight read on what’s happening.</p>
-            <div className="spx-mini-rule"/>
-            <div className="spx-meta">
-              <strong>Written by George Harman</strong>
-              <span/>
-              <p>Director, FPX</p>
-              <span/>
-              <b>Monthly</b>
-            </div>
-          </div>
-
-          <div className="spx-hero-image">
-            <img src="/images/product-groups/manufacturing/manufacturing-hero-pine-stack.png" alt="New Zealand timber stacks"/>
-          </div>
+      <div className="spx-hero-copy">
+        <div className="spx-presents"><span/><small>FPX PRESENTS</small><span/></div>
+        <h1>Saw Point<span className="spx-dot">.</span></h1>
+        <h2>Straight talk on NZ timber -<br/>no sawdust.</h2>
+        <p className="spx-intro">Monthly NZ timber industry news, market updates,<br className="spx-desktop-break"/> and a straight read on what’s happening.</p>
+        <div className="spx-mini-rule"/>
+        <div className="spx-meta">
+          <strong>Written by George Harman</strong>
+          <span/>
+          <p>Director, FPX</p>
+          <span/>
+          <b>Monthly</b>
         </div>
       </div>
     </section>
@@ -119,26 +111,87 @@ export function SawPointPage(){
     </section>
 
     <style jsx global>{`
-      .spx-hero{background:linear-gradient(180deg,#F2F5F1 0%,#EDF2ED 100%);padding:34px 24px 0}
-      .spx-hero-shell{width:min(1540px,100%);margin:0 auto}
-      .spx-hero-card{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(440px,.85fr);min-height:760px;border-radius:28px;overflow:hidden;background:#F4F6F3}
-      .spx-hero-copy{padding:74px 56px 58px;display:flex;flex-direction:column;justify-content:center}
-      .spx-presents{display:flex;align-items:center;gap:18px;margin-bottom:34px;max-width:520px}
-      .spx-presents span{flex:1;height:2px;background:#6AA869}
-      .spx-presents small{white-space:nowrap;font:700 12px/1 Lato,Arial,sans-serif;letter-spacing:.22em;color:#40973C}
-      .spx-hero h1{margin:0;font-size:clamp(76px,9vw,140px);line-height:.84;letter-spacing:-.075em;color:#071512}
-      .spx-dot{color:#53C396}
-      .spx-hero h2{margin:32px 0 0;max-width:900px;font:700 clamp(30px,3.1vw,54px)/1.04 Lato,Arial,sans-serif;letter-spacing:-.04em;color:#071512}
-      .spx-intro{margin:28px 0 0;max-width:760px;color:#6A7684;font-size:19px;line-height:1.65}
-      .spx-mini-rule{width:106px;height:3px;background:#5AA05A;margin:42px 0 36px}
-      .spx-meta{display:flex;align-items:center;flex-wrap:wrap;gap:18px}
+      .spx-hero{
+        min-height:720px;
+        position:relative;
+        isolation:isolate;
+        overflow:hidden;
+        display:flex;
+        align-items:center;
+        background-color:#EEF3EE;
+        background-image:url("/images/fpx-hero-timber-yard.webp");
+        background-size:cover;
+        background-position:center 48%;
+      }
+      .spx-hero:before{
+        content:"";
+        position:absolute;
+        inset:0;
+        z-index:-1;
+        background:
+          linear-gradient(90deg,
+            rgba(247,249,246,.98) 0%,
+            rgba(247,249,246,.96) 24%,
+            rgba(247,249,246,.82) 40%,
+            rgba(247,249,246,.46) 53%,
+            rgba(247,249,246,.08) 67%,
+            rgba(247,249,246,0) 78%);
+      }
+      .spx-hero:after{
+        content:"";
+        position:absolute;
+        inset:0;
+        z-index:-1;
+        pointer-events:none;
+        background:linear-gradient(180deg,rgba(4,14,14,0) 72%,rgba(4,14,14,.08) 100%);
+      }
+      .spx-hero-copy{
+        width:min(760px,54vw);
+        margin-left:max(6vw,72px);
+        padding:82px 0 76px;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+      }
+      .spx-presents{
+        width:min(600px,100%);
+        display:grid;
+        grid-template-columns:minmax(72px,1fr) auto minmax(72px,1fr);
+        align-items:center;
+        gap:18px;
+        margin-bottom:34px;
+      }
+      .spx-presents span{height:2px;background:#40973C}
+      .spx-presents small{white-space:nowrap;font:700 12px/1 Lato,Arial,sans-serif;letter-spacing:.23em;color:#40973C}
+      .spx-hero h1{
+        margin:0;
+        font-size:clamp(84px,8.3vw,142px);
+        line-height:.84;
+        letter-spacing:-.078em;
+        color:#071512;
+      }
+      .spx-dot{color:#40973C}
+      .spx-hero h2{
+        margin:32px 0 0;
+        max-width:710px;
+        font:700 clamp(34px,3.1vw,55px)/1.02 Lato,Arial,sans-serif;
+        letter-spacing:-.045em;
+        color:#071512;
+      }
+      .spx-intro{
+        margin:28px 0 0;
+        max-width:700px;
+        color:#64736C;
+        font-size:19px;
+        line-height:1.62;
+      }
+      .spx-mini-rule{width:104px;height:3px;background:#40973C;margin:40px 0 34px}
+      .spx-meta{display:flex;align-items:center;flex-wrap:wrap;gap:17px}
       .spx-meta strong{font:700 17px/1.3 Lato,Arial,sans-serif;color:#071512}
-      .spx-meta p{margin:0;font-size:17px;color:#6A7684}
+      .spx-meta p{margin:0;font-size:17px;color:#64736C}
       .spx-meta b{font:700 17px/1.3 Lato,Arial,sans-serif;color:#40973C}
-      .spx-meta span{width:1px;height:26px;background:rgba(7,21,18,.2)}
-      .spx-hero-image{position:relative;min-height:760px;overflow:hidden;border-bottom-left-radius:72px}
-      .spx-hero-image:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,14,14,0) 60%,rgba(4,14,14,.12) 100%);pointer-events:none}
-      .spx-hero-image img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transform:scale(1.015)}
+      .spx-meta span{width:1px;height:27px;background:rgba(7,21,18,.25)}
+      .spx-desktop-break{display:block}
 
       .spx-latest{padding:110px 7vw;background:#fff}
       .spx-section-label{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:30px}
@@ -185,24 +238,22 @@ export function SawPointPage(){
       .spx-form>small{display:block;margin-top:13px;color:#758956;font-size:10px;line-height:1.5}
 
       @media(max-width:1000px){
-        .spx-hero{padding:24px 18px 0}
-        .spx-hero-card{grid-template-columns:1fr;min-height:auto}
-        .spx-hero-copy{padding:64px 38px 50px}
-        .spx-hero-image{min-height:500px;border-bottom-left-radius:0}
+        .spx-hero{min-height:680px;background-position:58% center}
+        .spx-hero:before{background:linear-gradient(90deg,rgba(247,249,246,.98) 0%,rgba(247,249,246,.94) 36%,rgba(247,249,246,.65) 58%,rgba(247,249,246,.08) 82%)}
+        .spx-hero-copy{width:min(680px,70vw);margin-left:6vw;padding:70px 0}
         .spx-feature{grid-template-columns:150px 1fr}.spx-feature-side{grid-column:1/-1;border-left:0;border-top:1px solid rgba(255,255,255,.13);min-height:200px}
         .spx-subscribe{grid-template-columns:1fr;gap:60px}.spx-form{max-width:650px}
       }
       @media(max-width:700px){
-        .spx-hero{padding:16px 12px 0}
-        .spx-hero-card{border-radius:22px}
-        .spx-hero-copy{padding:42px 22px 34px}
-        .spx-presents{gap:12px;margin-bottom:24px}.spx-presents span{max-width:64px}.spx-presents small{font-size:10px;letter-spacing:.18em}
-        .spx-hero h1{font-size:clamp(58px,18vw,84px)}
-        .spx-hero h2{margin-top:20px;font-size:clamp(24px,7vw,34px)}
-        .spx-intro{margin-top:20px;font-size:16px}
-        .spx-mini-rule{margin:28px 0 24px}
-        .spx-meta{gap:12px}.spx-meta strong,.spx-meta p,.spx-meta b{font-size:15px}.spx-meta span{height:18px}
-        .spx-hero-image{min-height:340px;border-bottom-left-radius:0}
+        .spx-hero{min-height:680px;align-items:flex-end;background-position:68% center}
+        .spx-hero:before{background:linear-gradient(180deg,rgba(247,249,246,.18) 0%,rgba(247,249,246,.58) 35%,rgba(247,249,246,.97) 67%,rgba(247,249,246,.99) 100%)}
+        .spx-hero-copy{width:auto;margin:0;padding:280px 24px 44px}
+        .spx-presents{gap:12px;margin-bottom:24px}.spx-presents span{min-width:40px}.spx-presents small{font-size:10px;letter-spacing:.18em}
+        .spx-hero h1{font-size:clamp(60px,19vw,88px)}
+        .spx-hero h2{margin-top:20px;font-size:clamp(26px,7.8vw,36px)}
+        .spx-intro{margin-top:18px;font-size:15px}.spx-desktop-break{display:none}
+        .spx-mini-rule{margin:26px 0 22px}
+        .spx-meta{gap:10px}.spx-meta strong,.spx-meta p,.spx-meta b{font-size:14px}.spx-meta span{height:17px}
         .spx-latest,.spx-archive,.spx-subscribe{padding-left:24px;padding-right:24px}.spx-latest{padding-top:76px;padding-bottom:76px}
         .spx-feature{grid-template-columns:1fr}.spx-feature-number{justify-content:flex-start;border-right:0;border-bottom:1px solid rgba(255,255,255,.13);font-size:100px;padding:32px}.spx-feature-copy{padding:42px 32px}.spx-feature-side{grid-column:auto;padding:34px 32px}
         .spx-archive{padding-top:76px;padding-bottom:82px}.spx-archive>header{grid-template-columns:1fr;gap:20px}.spx-archive-list>a{grid-template-columns:34px 1fr;gap:18px}.spx-archive-link{grid-column:2;margin-top:4px}
