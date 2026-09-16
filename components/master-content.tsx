@@ -40,7 +40,7 @@ export function ResourcesPage(){
       {featured&&<>
         <div className="pri-library-label"><span>FEATURED INSIGHT</span><i/></div>
         <Link href={featured.href} className="pri-featured">
-          <div className="pri-featured-image"><img src={`/images/${featured.image}`} alt={`${featured.title} FPX Insight`}/></div>
+          <div className={`pri-featured-image ${featured.image==="radiata-pine-characteristics-cover.png"?"is-contain":""}`}><img src={`/images/${featured.image}`} alt={`${featured.title} FPX Insight`}/></div>
           <div className="pri-featured-copy">
             <small>{featured.type}</small>
             <h2>{featured.title}</h2>

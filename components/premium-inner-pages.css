@@ -5597,3 +5597,32 @@
     max-height:none;
   }
 }
+
+
+/* Industry Insights featured cover — portrait artwork should read as a cover, not a billboard */
+.pri-featured-image.is-contain{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:28px;
+  background:#F7F4EA;
+}
+.pri-featured-image.is-contain img{
+  width:auto;
+  max-width:100%;
+  height:440px;
+  min-height:0;
+  object-fit:contain;
+}
+.pri-featured:has(.pri-featured-image.is-contain){
+  min-height:440px;
+}
+@media(max-width:1000px){
+  .pri-featured-image.is-contain img{height:380px}
+  .pri-featured:has(.pri-featured-image.is-contain){min-height:380px}
+}
+@media(max-width:700px){
+  .pri-featured-image.is-contain{padding:18px}
+  .pri-featured-image.is-contain img{height:320px}
+  .pri-featured:has(.pri-featured-image.is-contain){min-height:0}
+}
