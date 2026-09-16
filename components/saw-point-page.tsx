@@ -118,32 +118,36 @@ export function SawPointPage(){
         overflow:hidden;
         display:flex;
         align-items:center;
-        background-color:#EEF3EE;
-        background-image:url("/images/saw-point.png");
-        background-size:cover;
-        background-position:center 48%;
+        background-color:#F4F7F3;
       }
       .spx-hero:before{
         content:"";
         position:absolute;
         inset:0;
         z-index:-1;
+        pointer-events:none;
         background:
           linear-gradient(90deg,
-            rgba(247,249,246,.98) 0%,
-            rgba(247,249,246,.96) 24%,
-            rgba(247,249,246,.82) 40%,
-            rgba(247,249,246,.46) 53%,
-            rgba(247,249,246,.08) 67%,
-            rgba(247,249,246,0) 78%);
+            rgba(247,249,246,1) 0%,
+            rgba(247,249,246,1) 50%,
+            rgba(247,249,246,.97) 55%,
+            rgba(247,249,246,.78) 61%,
+            rgba(247,249,246,.30) 69%,
+            rgba(247,249,246,0) 77%);
       }
       .spx-hero:after{
         content:"";
         position:absolute;
-        inset:0;
-        z-index:-1;
+        top:0;
+        right:0;
+        bottom:0;
+        width:62%;
+        z-index:-2;
         pointer-events:none;
-        background:linear-gradient(180deg,rgba(4,14,14,0) 72%,rgba(4,14,14,.08) 100%);
+        background-image:url("/images/saw-point.png");
+        background-repeat:no-repeat;
+        background-size:175% auto;
+        background-position:right center;
       }
       .spx-hero-copy{
         width:min(760px,54vw);
@@ -238,15 +242,17 @@ export function SawPointPage(){
       .spx-form>small{display:block;margin-top:13px;color:#758956;font-size:10px;line-height:1.5}
 
       @media(max-width:1000px){
-        .spx-hero{min-height:680px;background-position:58% center}
-        .spx-hero:before{background:linear-gradient(90deg,rgba(247,249,246,.98) 0%,rgba(247,249,246,.94) 36%,rgba(247,249,246,.65) 58%,rgba(247,249,246,.08) 82%)}
+        .spx-hero{min-height:680px}
+        .spx-hero:before{background:linear-gradient(90deg,rgba(247,249,246,1) 0%,rgba(247,249,246,1) 48%,rgba(247,249,246,.94) 56%,rgba(247,249,246,.58) 66%,rgba(247,249,246,0) 82%)}
+        .spx-hero:after{width:68%;background-size:185% auto;background-position:right center}
         .spx-hero-copy{width:min(680px,70vw);margin-left:6vw;padding:70px 0}
         .spx-feature{grid-template-columns:150px 1fr}.spx-feature-side{grid-column:1/-1;border-left:0;border-top:1px solid rgba(255,255,255,.13);min-height:200px}
         .spx-subscribe{grid-template-columns:1fr;gap:60px}.spx-form{max-width:650px}
       }
       @media(max-width:700px){
-        .spx-hero{min-height:680px;align-items:flex-end;background-position:68% center}
-        .spx-hero:before{background:linear-gradient(180deg,rgba(247,249,246,.18) 0%,rgba(247,249,246,.58) 35%,rgba(247,249,246,.97) 67%,rgba(247,249,246,.99) 100%)}
+        .spx-hero{min-height:680px;align-items:flex-end}
+        .spx-hero:after{top:0;right:0;bottom:auto;width:100%;height:52%;background-size:130% auto;background-position:right 42%}
+        .spx-hero:before{background:linear-gradient(180deg,rgba(247,249,246,.08) 0%,rgba(247,249,246,.18) 24%,rgba(247,249,246,.80) 48%,rgba(247,249,246,.98) 62%,rgba(247,249,246,1) 100%)}
         .spx-hero-copy{width:auto;margin:0;padding:280px 24px 44px}
         .spx-presents{gap:12px;margin-bottom:24px}.spx-presents span{min-width:40px}.spx-presents small{font-size:10px;letter-spacing:.18em}
         .spx-hero h1{font-size:clamp(60px,19vw,88px)}
