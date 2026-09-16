@@ -1,6 +1,7 @@
 "use client";
 
-import { ExternalLink, Mail, ArrowRight } from "lucide-react";
+import { ExternalLink, Mail, ArrowRight, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { useMemo, useState } from "react";
 import { Eyebrow } from "./master-shared";
 
 const issues = [
@@ -23,6 +24,32 @@ const issues = [
 export function SawPointPage(){
   const latest = issues[0];
   const archive = issues.slice(1);
+  const [archiveQuery,setArchiveQuery]=useState("");
+  const [archiveYear,setArchiveYear]=useState("ALL");
+  const [archivePage,setArchivePage]=useState(1);
+  const [archivePerPage,setArchivePerPage]=useState(5);
+
+  const archiveYears=useMemo(
+    ()=>Array.from(new Set(archive.map(item=>item.date.match(/\b\d{4}\b/)?.[0]).filter(Boolean) as string[])).sort((a,b)=>Number(b)-Number(a)),
+    [archive]
+  );
+  const filteredArchive=useMemo(()=>{
+    const query=archiveQuery.trim().toLowerCase();
+    return archive.filter(item=>{
+      const itemYear=item.date.match(/\b\d{4}\b/)?.[0]||"";
+      const matchesYear=archiveYear==="ALL"||itemYear===archiveYear;
+      const haystack=[item.issue,item.date,item.title,item.copy].join(" ").toLowerCase();
+      return matchesYear&&(!query||haystack.includes(query));
+    });
+  },[archive,archiveQuery,archiveYear]);
+  const totalArchivePages=Math.max(1,Math.ceil(filteredArchive.length/archivePerPage));
+  const safeArchivePage=Math.min(archivePage,totalArchivePages);
+  const archiveStart=(safeArchivePage-1)*archivePerPage;
+  const visibleArchive=filteredArchive.slice(archiveStart,archiveStart+archivePerPage);
+
+  function updateArchiveQuery(value:string){setArchiveQuery(value);setArchivePage(1)}
+  function updateArchiveYear(value:string){setArchiveYear(value);setArchivePage(1)}
+  function updateArchivePerPage(value:number){setArchivePerPage(value);setArchivePage(1)}
 
   return <>
     <section className="spx-hero">
@@ -73,18 +100,57 @@ export function SawPointPage(){
         <p>Saw Point is published by FPX and written by George Harman.</p>
       </header>
 
-      <div className="spx-archive-list">
-        {archive.map((item,index)=>
+      <div className="spx-archive-tools">
+        <div className="spx-archive-search">
+          <Search size={17} aria-hidden="true"/>
+          <label className="sr-only" htmlFor="saw-point-search">Search Saw Point issues</label>
+          <input
+            id="saw-point-search"
+            type="search"
+            value={archiveQuery}
+            onChange={e=>updateArchiveQuery(e.target.value)}
+            placeholder="Search issues, dates or topics"
+          />
+        </div>
+
+        <div className="spx-year-filters" aria-label="Filter Saw Point archive by year">
+          <button type="button" className={archiveYear==="ALL"?"active":""} onClick={()=>updateArchiveYear("ALL")}>All years</button>
+          {archiveYears.map(year=><button type="button" key={year} className={archiveYear===year?"active":""} onClick={()=>updateArchiveYear(year)}>{year}</button>)}
+        </div>
+
+        <label className="spx-per-page">
+          <span>Show</span>
+          <select value={archivePerPage} onChange={e=>updateArchivePerPage(Number(e.target.value))}>
+            <option value={5}>5</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </select>
+        </label>
+      </div>
+
+      <div className="spx-archive-status">
+        <span>{filteredArchive.length===0?"No issues found":`Showing ${archiveStart+1}–${Math.min(archiveStart+archivePerPage,filteredArchive.length)} of ${filteredArchive.length}`}</span>
+      </div>
+
+      <div className="spx-archive-list" aria-live="polite">
+        {visibleArchive.map(item=>
           <a href={item.href} target="_blank" rel="noreferrer" key={item.issue}>
-            <span className="spx-archive-index">{String(index+1).padStart(2,"0")}</span>
-            <div>
-              <small>ISSUE {item.issue} · {item.date}</small>
+            <span className="spx-archive-issue">ISSUE {item.issue}</span>
+            <div className="spx-archive-copy">
+              <small>{item.date}</small>
               <h3>{item.title}</h3>
               <p>{item.copy}</p>
             </div>
-            <span className="spx-archive-link">Read issue <ExternalLink size={15}/></span>
+            <span className="spx-archive-link">Read issue <ExternalLink size={14}/></span>
           </a>
         )}
+        {visibleArchive.length===0&&<div className="spx-archive-empty"><strong>No matching issues.</strong><span>Try another search term or year.</span></div>}
+      </div>
+
+      <div className="spx-pagination" aria-label="Saw Point archive pagination">
+        <button type="button" onClick={()=>setArchivePage(Math.max(1,safeArchivePage-1))} disabled={safeArchivePage<=1}><ChevronLeft size={16}/> Previous</button>
+        <span>Page <b>{safeArchivePage}</b> of <b>{totalArchivePages}</b></span>
+        <button type="button" onClick={()=>setArchivePage(Math.min(totalArchivePages,safeArchivePage+1))} disabled={safeArchivePage>=totalArchivePages}>Next <ChevronRight size={16}/></button>
       </div>
     </section>
 
@@ -214,17 +280,37 @@ export function SawPointPage(){
       .spx-feature-side svg{color:#53C396;width:28px;height:28px}
 
       .spx-archive{padding:105px 7vw 120px;background:#F7F4EA;border-top:1px solid rgba(4,14,14,.09)}
-      .spx-archive>header{display:grid;grid-template-columns:1fr minmax(260px,.55fr);gap:8vw;align-items:end;margin-bottom:52px}
+      .spx-archive>header{display:grid;grid-template-columns:1fr minmax(260px,.55fr);gap:8vw;align-items:end;margin-bottom:42px}
       .spx-archive h2{margin:8px 0 0;font-size:clamp(50px,5.4vw,84px);line-height:.92;letter-spacing:-.055em}
       .spx-archive>header>p{margin:0;color:#64736C;font-size:15px;line-height:1.7}
+      .spx-archive-tools{display:grid;grid-template-columns:minmax(280px,1fr) auto auto;gap:14px;align-items:center;padding:18px 0;border-top:1px solid rgba(4,14,14,.16);border-bottom:1px solid rgba(4,14,14,.16)}
+      .spx-archive-search{height:46px;display:flex;align-items:center;gap:10px;padding:0 14px;background:#fff;border:1px solid rgba(4,14,14,.14)}
+      .spx-archive-search svg{flex:0 0 auto;color:#758956}
+      .spx-archive-search input{width:100%;border:0;outline:0;background:transparent;color:#040E0E;font:400 13px/1 Open Sans,Arial,sans-serif}
+      .spx-archive-search input::placeholder{color:#89968F}
+      .spx-year-filters{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+      .spx-year-filters button{min-height:38px;padding:0 13px;border:1px solid rgba(4,14,14,.15);background:transparent;color:#52645B;font:700 10px/1 Lato,Arial,sans-serif;letter-spacing:.04em;cursor:pointer;transition:.2s ease}
+      .spx-year-filters button:hover,.spx-year-filters button.active{background:#071512;border-color:#071512;color:#fff}
+      .spx-per-page{height:46px;display:flex;align-items:center;gap:8px;padding:0 10px 0 12px;background:#fff;border:1px solid rgba(4,14,14,.14)}
+      .spx-per-page span{font:700 9px/1 Lato,Arial,sans-serif;letter-spacing:.10em;color:#758956;text-transform:uppercase}
+      .spx-per-page select{border:0;outline:0;background:transparent;color:#040E0E;font:700 12px/1 Lato,Arial,sans-serif;cursor:pointer}
+      .spx-archive-status{display:flex;justify-content:flex-end;padding:15px 0 10px}
+      .spx-archive-status span{font:600 10px/1 Lato,Arial,sans-serif;letter-spacing:.06em;color:#758956}
       .spx-archive-list{border-top:1px solid rgba(4,14,14,.16)}
-      .spx-archive-list>a{min-height:210px;display:grid;grid-template-columns:70px minmax(0,1fr) auto;gap:36px;align-items:center;padding:38px 0;border-bottom:1px solid rgba(4,14,14,.16);color:#040E0E;text-decoration:none;transition:padding .25s ease,background .25s ease}
-      .spx-archive-list>a:hover{padding-left:18px;padding-right:18px;background:rgba(255,255,255,.55)}
-      .spx-archive-index{font:700 11px/1 Lato,Arial,sans-serif;color:#40973C}
-      .spx-archive-list small{font:700 9px/1 Lato,Arial,sans-serif;letter-spacing:.15em;color:#758956}
-      .spx-archive-list h3{margin:10px 0 10px;font-size:clamp(28px,3vw,46px);line-height:1}
-      .spx-archive-list p{margin:0;max-width:740px;color:#64736C;font-size:14px;line-height:1.65}
-      .spx-archive-link{display:flex;align-items:center;gap:8px;white-space:nowrap;font:700 11px/1 Lato,Arial,sans-serif}
+      .spx-archive-list>a{min-height:118px;display:grid;grid-template-columns:105px minmax(0,1fr) auto;gap:28px;align-items:center;padding:20px 4px;border-bottom:1px solid rgba(4,14,14,.16);color:#040E0E;text-decoration:none;transition:padding .2s ease,background .2s ease}
+      .spx-archive-list>a:hover{padding-left:14px;padding-right:14px;background:rgba(255,255,255,.58)}
+      .spx-archive-issue{font:700 10px/1 Lato,Arial,sans-serif;letter-spacing:.12em;color:#40973C}
+      .spx-archive-copy small{display:block;font:700 9px/1 Lato,Arial,sans-serif;letter-spacing:.13em;color:#758956}
+      .spx-archive-list h3{margin:7px 0 5px;font-size:clamp(20px,1.8vw,28px);line-height:1.05;letter-spacing:-.025em}
+      .spx-archive-list p{margin:0;max-width:780px;color:#64736C;font-size:12px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .spx-archive-link{display:flex;align-items:center;gap:7px;white-space:nowrap;font:700 10px/1 Lato,Arial,sans-serif}
+      .spx-archive-empty{min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;border-bottom:1px solid rgba(4,14,14,.16);color:#040E0E}
+      .spx-archive-empty strong{font:700 18px/1.2 Lato,Arial,sans-serif}.spx-archive-empty span{font-size:13px;color:#758956}
+      .spx-pagination{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;padding-top:24px}
+      .spx-pagination button{display:flex;align-items:center;gap:6px;width:max-content;min-height:40px;padding:0 13px;border:1px solid rgba(4,14,14,.16);background:#fff;color:#040E0E;font:700 10px/1 Lato,Arial,sans-serif;cursor:pointer}
+      .spx-pagination button:last-child{justify-self:end}
+      .spx-pagination button:disabled{opacity:.35;cursor:not-allowed}
+      .spx-pagination>span{font:600 10px/1 Lato,Arial,sans-serif;letter-spacing:.05em;color:#758956}
 
       .spx-subscribe{padding:115px 7vw;display:grid;grid-template-columns:minmax(0,.9fr) minmax(420px,.62fr);gap:10vw;background:#071512;color:#fff;align-items:center}
       .spx-subscribe .m-eyebrow{color:#53C396!important}
@@ -262,7 +348,7 @@ export function SawPointPage(){
         .spx-meta{gap:10px}.spx-meta strong,.spx-meta p,.spx-meta b{font-size:14px}.spx-meta span{height:17px}
         .spx-latest,.spx-archive,.spx-subscribe{padding-left:24px;padding-right:24px}.spx-latest{padding-top:76px;padding-bottom:76px}
         .spx-feature{grid-template-columns:1fr}.spx-feature-number{justify-content:flex-start;border-right:0;border-bottom:1px solid rgba(255,255,255,.13);font-size:100px;padding:32px}.spx-feature-copy{padding:42px 32px}.spx-feature-side{grid-column:auto;padding:34px 32px}
-        .spx-archive{padding-top:76px;padding-bottom:82px}.spx-archive>header{grid-template-columns:1fr;gap:20px}.spx-archive-list>a{grid-template-columns:34px 1fr;gap:18px}.spx-archive-link{grid-column:2;margin-top:4px}
+        .spx-archive{padding-top:76px;padding-bottom:82px}.spx-archive>header{grid-template-columns:1fr;gap:20px}.spx-archive-tools{grid-template-columns:1fr}.spx-year-filters{order:2}.spx-per-page{order:3;width:max-content}.spx-archive-status{justify-content:flex-start}.spx-archive-list>a{grid-template-columns:1fr auto;gap:8px 16px;min-height:102px;padding:18px 0}.spx-archive-issue{grid-column:1}.spx-archive-copy{grid-column:1}.spx-archive-list p{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.spx-archive-link{grid-column:2;grid-row:1/3;align-self:center}.spx-pagination{grid-template-columns:1fr 1fr}.spx-pagination>span{grid-column:1/-1;grid-row:1;text-align:center}.spx-pagination button:first-child{grid-column:1;grid-row:2}.spx-pagination button:last-child{grid-column:2;grid-row:2}
         .spx-subscribe{padding-top:82px;padding-bottom:82px}.spx-form{padding:28px 22px}
       }
     `}</style>
