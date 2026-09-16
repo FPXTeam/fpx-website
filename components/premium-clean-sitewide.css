@@ -711,87 +711,90 @@ body .premium-home .ph-hero-scroll{
 }
 
 
-/* Saw Point footer subscription */
+/* Saw Point footer subscription — compact */
 .footer-saw-point{
   display:grid;
-  grid-template-columns:minmax(0,.9fr) minmax(520px,1.1fr);
-  gap:70px;
-  align-items:end;
-  padding:0 0 46px;
-  margin-bottom:46px;
-  border-bottom:1px solid rgba(255,255,255,.12);
+  grid-template-columns:minmax(0,.85fr) minmax(420px,1.15fr);
+  gap:36px;
+  align-items:center;
+  padding:0 0 24px;
+  margin-bottom:28px;
+  border-bottom:1px solid rgba(255,255,255,.10);
 }
 .footer-saw-point>div>span{
   display:block;
-  margin-bottom:10px;
+  margin-bottom:7px;
   color:#53C396;
-  font:700 10px/1 Lato,Arial,sans-serif;
-  letter-spacing:.16em;
+  font:700 9px/1 Lato,Arial,sans-serif;
+  letter-spacing:.15em;
 }
 .footer-saw-point h3{
   margin:0;
   color:#fff;
-  font-size:clamp(28px,3vw,44px);
-  line-height:1.02;
-  letter-spacing:-.035em;
+  font-size:clamp(22px,2.2vw,32px);
+  line-height:1.05;
+  letter-spacing:-.025em;
 }
+.footer-saw-point h3 br{display:none}
 .footer-saw-point>div>p{
-  margin:16px 0 0;
-  max-width:520px;
+  margin:9px 0 0;
+  max-width:500px;
   color:#8f9a94;
-  font-size:14px;
-  line-height:1.6;
+  font-size:12px;
+  line-height:1.5;
 }
 .footer-saw-point form{
   display:grid;
   grid-template-columns:1fr 1fr auto;
-  gap:10px;
+  gap:8px;
   align-items:end;
 }
 .footer-saw-point label>span{
   display:block;
-  margin-bottom:7px;
+  margin-bottom:5px;
   color:#9aa59f;
-  font:700 9px/1 Lato,Arial,sans-serif;
-  letter-spacing:.12em;
+  font:700 8px/1 Lato,Arial,sans-serif;
+  letter-spacing:.11em;
   text-transform:uppercase;
 }
 .footer-saw-point input{
   width:100%;
-  height:48px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.04);
+  height:40px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.035);
   color:#fff;
-  padding:0 13px;
+  padding:0 11px;
   outline:none;
+  font-size:12px;
 }
 .footer-saw-point input::placeholder{color:#728078}
 .footer-saw-point input:focus{border-color:#53C396}
 .footer-saw-point button{
-  height:48px;
-  padding:0 20px;
+  height:40px;
+  padding:0 16px;
   border:1px solid #40973C;
   background:#40973C;
   color:#fff;
-  font:700 11px/1 Lato,Arial,sans-serif;
+  font:700 10px/1 Lato,Arial,sans-serif;
   cursor:pointer;
 }
 .footer-saw-point button:disabled{opacity:.6;cursor:wait}
 .footer-saw-point form>small{
   grid-column:1/-1;
-  min-height:14px;
-  margin-top:2px;
+  min-height:12px;
+  margin-top:0;
   color:#748079;
-  font-size:10px;
-  line-height:1.4;
+  font-size:9px;
+  line-height:1.35;
 }
 
 @media(max-width:900px){
-  .footer-saw-point{grid-template-columns:1fr;gap:28px}
+  .footer-saw-point{grid-template-columns:1fr;gap:18px}
   .footer-saw-point form{grid-template-columns:1fr 1fr auto}
 }
 @media(max-width:700px){
-  .footer-saw-point{padding-bottom:38px;margin-bottom:38px}
+  .footer-saw-point{padding-bottom:22px;margin-bottom:24px}
+  .footer-saw-point h3{font-size:24px}
   .footer-saw-point form{grid-template-columns:1fr}
   .footer-saw-point button{width:100%}
 }
