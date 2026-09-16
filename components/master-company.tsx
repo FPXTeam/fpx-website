@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { Mail, Phone, MapPin, MessageSquareText } from "lucide-react";
-import { LinkedInIcon, InstagramIcon, FacebookIcon } from "./social-icons";
 import { Eyebrow, Arrow, Breadcrumbs, PageCTA } from "./master-shared";
 
 const customerGroups=[
@@ -271,7 +270,34 @@ export function AboutPage(){
   </>;
 }
 
-export function ContactPage(){return <>
+export function ContactPage(){
+  const [status,setStatus]=React.useState<"idle"|"sending"|"success"|"error">("idle");
+  const [message,setMessage]=React.useState("");
+
+  async function handleSubmit(event:React.FormEvent<HTMLFormElement>){
+    event.preventDefault();
+    setStatus("sending");
+    setMessage("");
+    const form=event.currentTarget;
+    const payload=Object.fromEntries(new FormData(form).entries());
+    try{
+      const response=await fetch("/api/contact",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(payload)
+      });
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok) throw new Error(data?.error||"Unable to send your message.");
+      form.reset();
+      setStatus("success");
+      setMessage("Thanks — your message has been sent to FPX.");
+    }catch(error){
+      setStatus("error");
+      setMessage(error instanceof Error?error.message:"Unable to send your message.");
+    }
+  }
+
+  return <>
   <section className="pct2-hero">
     <img className="pct2-hero-image" src="/images/george-gabriela.png" alt="George Harman and Gabriela Molloy discussing timber requirements"/>
     <div className="pct2-hero-wash"/>
@@ -295,11 +321,6 @@ export function ContactPage(){return <>
         <span><MapPin/>NEW ZEALAND</span>
         <p>FPX supports commercial timber buyers across New Zealand.</p>
       </div>
-      <nav className="pct-social" aria-label="FPX social profiles">
-        <a href="https://www.linkedin.com/company/forest-products-exchange" target="_blank" rel="noreferrer" aria-label="FPX on LinkedIn"><LinkedInIcon/></a>
-        <a href="https://www.instagram.com/fpx.nz/" target="_blank" rel="noreferrer" aria-label="FPX on Instagram"><InstagramIcon/></a>
-        <a href="https://www.facebook.com/people/Forest-Products-Exchange/61583101360304/" target="_blank" rel="noreferrer" aria-label="FPX on Facebook"><FacebookIcon/></a>
-      </nav>
     </div>
 
     <nav className="pct2-routes" aria-label="Ways to start sourcing timber through FPX">
@@ -328,11 +349,11 @@ export function ContactPage(){return <>
       <p>For timber sourcing, platform support or a general question, send through the detail you know and the FPX team can take it from there.</p>
     </header>
 
-    <form className="pct2-form" aria-label="Contact FPX">
+    <form className="pct2-form" aria-label="Contact FPX" onSubmit={handleSubmit}>
       <div className="pct-fields">
-        <label>Full name<input name="name" autoComplete="name" placeholder="Your name"/></label>
+        <label>Full name<input name="name" autoComplete="name" placeholder="Your name" required/></label>
         <label>Company<input name="company" autoComplete="organization" placeholder="Company name"/></label>
-        <label>Email<input name="email" type="email" autoComplete="email" placeholder="you@company.co.nz"/></label>
+        <label>Email<input name="email" type="email" autoComplete="email" placeholder="you@company.co.nz" required/></label>
         <label>Phone<input name="phone" autoComplete="tel" placeholder="Your phone number"/></label>
         <label className="wide">What can we help with?
           <select name="topic" defaultValue="Timber sourcing requirement">
@@ -341,11 +362,13 @@ export function ContactPage(){return <>
             <option>General enquiry</option>
           </select>
         </label>
-        <label className="wide">Message<textarea name="message" placeholder="Tell us what timber you need, including dimensions, grade, treatment and quantity if known."/></label>
+        <label className="wide">Message<textarea name="message" placeholder="Tell us what timber you need, including dimensions, grade, treatment and quantity if known." required/></label>
       </div>
       <div className="pct2-form-foot">
-        <a className="pct-email-link" href="mailto:support@fpx.nz">Email support@fpx.nz <Arrow/></a>
-        <small>Direct form sending will be connected once the FPX Resend integration is added.</small>
+        <button className="m-btn m-btn-primary" type="submit" disabled={status==="sending"}>
+          {status==="sending"?"Sending…":"Send message"} <Arrow/>
+        </button>
+        <small aria-live="polite">{message||"Your message will be sent directly to the FPX team."}</small>
       </div>
     </form>
   </section>
