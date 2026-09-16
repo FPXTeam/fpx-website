@@ -119,7 +119,7 @@ export function SawPointPage(){
         display:flex;
         align-items:center;
         background-color:#EEF3EE;
-        background-image:url("/images/fpx-hero-timber-yard.webp");
+        background-image:url("/images/saw-point.png");
         background-size:cover;
         background-position:center 48%;
       }
