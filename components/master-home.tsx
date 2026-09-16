@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Shell } from "./site-shell";
-import { productGroups, Eyebrow, Arrow, AppButtons } from "./master-shared";
+import { productGroups, Eyebrow, Arrow, AppButtons, useSiteMotion } from "./master-shared";
 
 function PremiumHero(){
   return <section className="ph-hero">
@@ -94,4 +94,4 @@ function Closing(){
   </section>
 }
 
-export function MasterHome(){return <Shell><main className="master-site premium-home"><PremiumHero/><RangeStory/><PlatformStory/><BuyerStory/><Closing/></main></Shell>}
+export function MasterHome(){useSiteMotion();return <Shell><main className="master-site premium-home"><PremiumHero/><RangeStory/><PlatformStory/><BuyerStory/><Closing/></main></Shell>}
