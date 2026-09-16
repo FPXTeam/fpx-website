@@ -10,19 +10,39 @@ export function Preloader(){
   useEffect(()=>{
     if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
     if(sessionStorage.getItem("fpx-intro-seen"))return;
+    sessionStorage.setItem("fpx-intro-seen","1");
     setDone(false);
-    const t=setTimeout(()=>{if(readFpxConsent()?.preferences)sessionStorage.setItem("fpx-intro-seen","1");setDone(true)},2300);
+    const t=setTimeout(()=>setDone(true),3600);
     return()=>clearTimeout(t);
   },[]);
-  const skip=()=>{if(readFpxConsent()?.preferences)sessionStorage.setItem("fpx-intro-seen","1");setDone(true)};
+  const skip=()=>setDone(true);
   return <div className={`preloader fpx-gradient-intro ${done?"is-done":""}`} aria-hidden={done}>
     {!done&&<AnimatedGradient
       className="fpx-intro-gradient"
-      config={{preset:"custom",color1:"#F7F4EA",color2:"#E4EEE2",color3:"#E7D9C3",rotation:-18,proportion:64,scale:.5,speed:6,distortion:8,swirl:16,swirlIterations:6,softness:100,offset:80,shape:"Edge",shapeSize:58}}
-      noise={{opacity:.025,scale:1.1}}
+      config={{
+        preset:"custom",
+        color1:"#F8F4E9",
+        color2:"#BFD3C0",
+        color3:"#D8C5A6",
+        rotation:-38,
+        proportion:58,
+        scale:.78,
+        speed:13,
+        distortion:34,
+        swirl:72,
+        swirlIterations:11,
+        softness:96,
+        offset:140,
+        shape:"Checks",
+        shapeSize:44
+      }}
+      noise={{opacity:.018,scale:1.15}}
     />}
+    <div className="fpx-intro-wash" aria-hidden="true"/>
     <div className="fpx-intro-content">
-      <img className="fpx-intro-logo" src="/images/fpx-logo-full-original.png" alt="FPX Forest Products Exchange"/>
+      <div className="fpx-intro-logo-stage">
+        <img className="fpx-intro-logo" src="/images/fpx-logo-horizontal-original.png" alt="FPX Forest Products Exchange"/>
+      </div>
       <p>BUILT FROM INSIDE THE INDUSTRY</p>
       <div className="fpx-intro-progress" aria-hidden="true"><span/></div>
     </div>
