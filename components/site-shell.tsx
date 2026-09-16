@@ -31,20 +31,16 @@ export function Footer(){
     }
   }
   return <footer>
-    <div className="footer-saw-point">
-      <div>
-        <span>SAW POINT</span>
-        <h3>Straight talk on NZ timber,<br/>straight to your inbox.</h3>
-        <p>Monthly industry news and market updates from George Harman.</p>
-      </div>
-      <form onSubmit={subscribe} aria-label="Subscribe to Saw Point">
-        <label><span>Name</span><input name="name" autoComplete="name" placeholder="Your name" required/></label>
-        <label><span>Email</span><input name="email" type="email" autoComplete="email" placeholder="you@company.co.nz" required/></label>
-        <button type="submit" disabled={status==="sending"}>{status==="sending"?"Subscribing…":"Subscribe"}</button>
-        <small aria-live="polite">{message||"Monthly. Unsubscribe any time."}</small>
-      </form>
-    </div>
     <div className="footer-grid"><div className="footer-brand-column"><div className="footer-brand-mark"><img src="/images/brand-assets/fpx-logo-x-eggshell-white.png" alt="FPX"/></div><p>A clearer, supported way to source New Zealand timber.</p><nav className="footer-social" aria-label="FPX social profiles"><a href="https://www.linkedin.com/company/forest-products-exchange" target="_blank" rel="noreferrer" aria-label="FPX on LinkedIn"><LinkedInIcon/></a><a href="https://www.instagram.com/fpx.nz/" target="_blank" rel="noreferrer" aria-label="FPX on Instagram"><InstagramIcon/></a><a href="https://www.facebook.com/people/Forest-Products-Exchange/61583101360304/" target="_blank" rel="noreferrer" aria-label="FPX on Facebook"><FacebookIcon/></a></nav></div><div><h4>SOURCING</h4><Link href="/fpx-sourcing">FPX Sourcing</Link><Link href="/timber">Timber Range</Link><a href="https://app.fpx.nz/offers">View Offers</a><a href="https://app.fpx.nz/request-cart">Create a Request</a></div><div><h4>INSIGHTS</h4><Link href="/saw-point">Saw Point</Link><Link href="/industry-insights">FPX Insights</Link><Link href="/frequently-asked-questions">FAQ</Link><Link href="/our-customers">Our Customers</Link></div><div><h4>COMPANY</h4><Link href="/about-us">About Us</Link><Link href="/contact-us">Contact</Link><Link href="/terms-and-conditions">Terms & Conditions</Link><Link href="/privacy-policy">Privacy Policy</Link></div></div>
+    <div className="footer-saw-point">
+      <div className="footer-saw-copy"><span>SAW POINT</span><b>Monthly NZ timber updates.</b></div>
+      <form onSubmit={subscribe} aria-label="Subscribe to Saw Point">
+        <input name="name" autoComplete="name" placeholder="Name" aria-label="Name" required/>
+        <input name="email" type="email" autoComplete="email" placeholder="Email" aria-label="Email" required/>
+        <button type="submit" disabled={status==="sending"}>{status==="sending"?"Subscribing…":"Subscribe"}</button>
+      </form>
+      <small aria-live="polite">{message||"Unsubscribe any time."}</small>
+    </div>
     <div className="footer-bottom"><span>© 2026 Forest Products Exchange Limited</span><span>New Zealand</span></div>
   </footer>
 }
