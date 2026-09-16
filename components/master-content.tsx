@@ -104,7 +104,7 @@ const radiataSections = [
     title:"The Evolution of Radiata Pine as a Key Plantation Species",
     image:"/images/radiata-pine-plantation-growth.png",
     imageAlt:"Radiata Pine plantation illustrating annual growth rate variations in New Zealand",
-    imageClass:"ria-image-wide",
+    imageClass:"ria-image-photo",
     paragraphs:[
       "New Zealand’s reliance on Radiata Pine was a strategic decision made in the early 20th century. At that time, the depletion of native forests became a significant concern for the government and the building industry. To ensure a sustainable future for the country, plantation expansion was accelerated. Radiata Pine was selected because of its rapid growth, consistent yields, and how well it responded to silvicultural practices like pruning and thinning.",
       "Unlike many native species that traditionally take around 40-60+ years, Radiata Pine reaches a harvestable size much more quickly, typically in 25 to 30 years. This timeframe varies slightly depending on the specific site conditions, the intended end-product, and sometimes market factors such as log prices or volume needs, which can push forests to be harvested sooner or later. Overall, the average harvest age in New Zealand appears to be trending closer to 25 years rather than 30.",
@@ -119,7 +119,7 @@ const radiataSections = [
     title:"How Growth Rings Develop in the New Zealand Climate",
     image:"/images/radiata-pine-earlywood-latewood.png",
     imageAlt:"Radiata Pine earlywood and latewood growth pattern",
-    imageClass:"ria-image-note",
+    imageClass:"ria-image-technical",
     paragraphs:[
       "Growth rings are the result of a tree’s natural response to seasonal cycles. Every year, a Radiata Pine forms a new layer consisting of two distinct wood types: earlywood and latewood. Earlywood is produced during the spring when growth is rapid and water is plentiful, resulting in wood that is generally lighter in colour and less dense. As growth slows during the summer and autumn, the wood cells become thicker and more robust, forming the denser latewood.",
       "In New Zealand, the ratio of earlywood to latewood shifts based on climate, soil quality, and hydration levels. Because our trees grow in a temperate climate with relatively high rainfall, they typically exhibit wider rings than the slower-growing softwoods found in the Northern Hemisphere. This accelerated growth cycle is a direct reflection of New Zealand conditions, and these environmental factors directly influence the regional density variations found across the country."
@@ -133,7 +133,7 @@ const radiataSections = [
     title:"The Practical Importance of Wood Density",
     image:"/images/one-timber-stack.png",
     imageAlt:"Stacked Radiata Pine timber for commercial use in New Zealand",
-    imageClass:"ria-image-wide",
+    imageClass:"ria-image-photo",
     paragraphs:[
       "Density is a core attribute that influences the strength and the stiffness of the timber. Radiata Pine is classified as a moderately low-density softwood. Although this classification may seem counterintuitive it is one of the species greatest strengths because it provides an effective weight-to-strength ratio suitable for a wide range of applications.",
       "Historically in New Zealand, dense hardwoods were used for structural and outdoor purposes. However because Radiata pine has a favourable weight-to-strength ratio and can be effectively treated, it can perform similarly in many of these uses.",
@@ -149,7 +149,7 @@ const radiataSections = [
     title:"Density Variation in Radiata Pine",
     image:"/images/radiata-pine-density-variation.png",
     imageAlt:"New Zealand map illustrating regional Radiata Pine density variation",
-    imageClass:"ria-image-note",
+    imageClass:"ria-image-technical",
     paragraphs:[
       "These regional environmental factors create distinct density profiles by influencing how growth rings develop. In warmer northern regions such as Northland and the Coromandel, forests benefit from longer growing seasons and reliable rainfall. However, the higher density typically found in these areas is also a result of soil variability. Many northern forests grow on less fertile clay-based soils, which moderate growth rates and encourage a stronger proportion of latewood. This combination of warmth and controlled growth contributes to relatively dense timber.",
       "By contrast, forests in the Central North Island, particularly around the Rotorua and Taupō areas, grow on highly fertile volcanic ash soils. These nutrient-rich conditions support very rapid tree growth, which often results in wider growth rings with a higher proportion of earlywood. This can lead to slightly lower average wood density compared with slower or more moderated sites. In cooler southern areas, growth is typically slower due to shorter growing seasons and colder winter temperatures. While this slow growth generally favours latewood formation, the overall annual wood volume is reduced. Beyond these geographical differences, density also varies within the log itself, where timber from the outer area contains mature wood that is typically much denser than the juvenile wood found near the core."
@@ -163,7 +163,7 @@ const radiataSections = [
     title:"Cell Structure and Its Influence on Processing",
     image:"/images/radiata-pine-mature-outerwood.png",
     imageAlt:"Radiata Pine cross section showing sapwood heartwood and pith",
-    imageClass:"ria-image-note",
+    imageClass:"ria-image-technical",
     paragraphs:[
       "The fibre makeup of Radiata Pine refers to the length, alignment, and integrity of the wood cells. The structure of the cells shapes how the timber behaves during drying and preservative treatments and evolves over the life of the tree depending on growth conditions.",
       "Consistent growth rates across the plantation life of a tree tend to produce more uniform fibres/cells. Better cell uniformity helps moisture leave the wood evenly during kiln drying, reducing warping, cracking, and internal stresses, and also supports more consistent preservative uptake throughout the timber.",

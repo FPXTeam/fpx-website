@@ -5486,3 +5486,114 @@
   .ria-sources{padding:28px 22px;margin-bottom:80px}
   .ria-next{grid-template-columns:1fr;align-items:start}
 }
+
+
+/* Radiata Pine article — refined image treatment.
+   Photography stays uncropped and editorial; technical visuals are contained. */
+.ria-image-photo figure{
+  width:min(1080px,calc(100% - 48px));
+  height:auto;
+  padding:42px;
+  border:1px solid #E1E7E3;
+  border-radius:18px;
+  background:#F7F9F7;
+  display:grid;
+  grid-template-columns:minmax(0,1.45fr) minmax(250px,.55fr);
+  gap:38px;
+  align-items:end;
+  overflow:visible;
+}
+.ria-image-photo figure img{
+  width:100%;
+  height:auto;
+  max-height:720px;
+  object-fit:contain;
+  border-radius:12px;
+  background:#fff;
+}
+.ria-image-photo figcaption{
+  margin:0;
+  padding:0 0 6px;
+  max-width:280px;
+  font-size:13px;
+  line-height:1.7;
+  color:#64736C;
+}
+#wood-density.ria-image-photo figure{
+  grid-template-columns:minmax(250px,.55fr) minmax(0,1.45fr);
+}
+#wood-density.ria-image-photo figure img{
+  grid-column:2;
+  grid-row:1;
+}
+#wood-density.ria-image-photo figcaption{
+  grid-column:1;
+  grid-row:1;
+  align-self:end;
+}
+
+.ria-image-technical figure{
+  width:min(980px,calc(100% - 48px));
+  min-height:0;
+  padding:36px;
+  border:1px solid #E1E7E3;
+  border-radius:18px;
+  background:#F7F9F7;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(220px,.38fr);
+  gap:34px;
+  align-items:center;
+}
+.ria-image-technical figure img{
+  width:100%;
+  height:auto;
+  max-height:620px;
+  object-fit:contain;
+  border-radius:10px;
+  background:#fff;
+}
+.ria-image-technical figcaption{
+  margin:0;
+  padding:0;
+  max-width:260px;
+  font-size:13px;
+  line-height:1.72;
+  color:#64736C;
+}
+#density-variation.ria-image-technical figure{
+  background:#F7F4EA;
+}
+#cell-structure.ria-image-technical figure{
+  background:#F4F7F5;
+}
+
+@media(max-width:900px){
+  .ria-image-photo figure,
+  #wood-density.ria-image-photo figure,
+  .ria-image-technical figure{
+    grid-template-columns:1fr;
+    gap:18px;
+    padding:24px;
+  }
+  #wood-density.ria-image-photo figure img,
+  #wood-density.ria-image-photo figcaption{
+    grid-column:1;
+    grid-row:auto;
+  }
+  .ria-image-photo figcaption,
+  .ria-image-technical figcaption{
+    max-width:none;
+  }
+}
+@media(max-width:700px){
+  .ria-image-photo figure,
+  .ria-image-technical figure{
+    width:calc(100% - 32px);
+    padding:16px;
+    border-radius:14px;
+  }
+  .ria-image-photo figure img,
+  .ria-image-technical figure img{
+    max-height:none;
+  }
+}
