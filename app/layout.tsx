@@ -7,6 +7,7 @@ import "../components/brand-system-2026.css";
 import "../components/source-timber-redesign.css";
 import "../components/premium-clean-sitewide.css";
 import "../components/premium-inner-pages.css";
+import "../components/kiln-drying-article.css";
 
 const cormorant = Cormorant_Garamond({
   subsets:["latin"],

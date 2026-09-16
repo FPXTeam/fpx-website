@@ -5,6 +5,7 @@ import { ChevronDown, Search } from "lucide-react";
 import { Eyebrow, Arrow, Breadcrumbs, PageCTA } from "./master-shared";
 import { privacyPolicy } from "./legal-privacy";
 import { termsAndConditions } from "./legal-terms";
+import { KilnDryingArticle } from "./kiln-drying-article";
 
 export { SawPointPage } from "./saw-point-page";
 
@@ -12,7 +13,7 @@ export function ResourcesPage(){
   const [query,setQuery]=useState("");
   const items=[
     {title:"Radiata Pine Characteristics",subtitle:"How Growth and Environment Shape Timber in New Zealand",copy:"A practical FPX guide to the relationship between Radiata pine growth, environment and timber characteristics.",image:"radiata-pine-characteristics-cover.png",href:"/timber-growth-rings",type:"TIMBER CHARACTERISTICS"},
-    {title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",copy:"An FPX guide to kiln-drying methods, moisture content and why drying matters when specifying Radiata pine.",image:"category-untreated-timber.webp",href:"/the-science-of-kiln-drying",type:"TIMBER PROCESSING"}
+    {title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",copy:"An FPX guide to kiln-drying methods, moisture content and why drying matters when specifying Radiata pine.",image:"kiln-drying-cover.png",href:"/the-science-of-kiln-drying",type:"TIMBER PROCESSING"}
   ];
   const shown=items.filter(item=>(item.title+" "+item.subtitle+" "+item.copy+" "+item.type).toLowerCase().includes(query.toLowerCase()));
   const featured=query.trim()?shown[0]:items[0];
@@ -270,4 +271,4 @@ function RadiataPineArticle(){
   </article>;
 }
 
-export function InsightArticlePage({slug}:{slug:string}){if(slug==="timber-growth-rings")return <RadiataPineArticle/>;const article={title:"The Science of Kiln Drying",subtitle:"Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine",type:"TIMBER PROCESSING",image:"category-untreated-timber.webp",sections:[["What this FPX Insight covers","This guide introduces conventional and continuous kiln drying, moisture content and why controlled drying is an important part of preparing Radiata pine for many commercial applications."],["Why moisture content matters","Moisture content is one of the practical product details buyers may need to consider alongside grade, treatment, dimensions and intended use."],["How this connects to sourcing","When moisture condition matters to a requirement, include it in the timber specification or request so FPX can review suitable product options."]]};return <><Breadcrumbs items={[["Home","/"],["FPX Insights","/industry-insights"],[article.title,`/${slug}`]]}/><article className="m-insight-article"><header className="m-insight-hero m-animate-in"><div><Eyebrow>{article.type}</Eyebrow><h1>{article.title}</h1><p>{article.subtitle}</p><div className="m-article-meta"><span>FPX INSIGHTS</span><span>FOREST PRODUCTS EXCHANGE</span></div></div><div><img src={`/images/${article.image}`} alt={`${article.title} by FPX`}/></div></header><div className="m-insight-body m-animate-in">{article.sections.map(([heading,copy])=><section key={heading}><h2>{heading}</h2><p>{copy}</p></section>)}<section className="m-related-links"><h2>Related FPX pages</h2><div><Link href="/timber">Explore the FPX timber range <Arrow/></Link><Link href="/fpx-sourcing">See how FPX sourcing works <Arrow/></Link><Link href="/contact-us">Ask FPX a timber question <Arrow/></Link></div></section></div></article><PageCTA/></>}
+export function InsightArticlePage({slug}:{slug:string}){if(slug==="timber-growth-rings")return <RadiataPineArticle/>;if(slug==="the-science-of-kiln-drying")return <KilnDryingArticle/>;return null;}

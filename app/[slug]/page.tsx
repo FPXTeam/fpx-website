@@ -52,7 +52,7 @@ const pageMeta: Record<MasterPage, PageMeta> = {
   "terms-and-conditions": { title: "Terms and Conditions | Forest Products Exchange Ltd", description: "Terms and Conditions for Forest Products Exchange Limited and use of the FPX website and platform." },
   "privacy-policy": { title: "Privacy Policy | Forest Products Exchange Ltd", description: "Privacy Policy for Forest Products Exchange Limited, including collection, use, disclosure and protection of personal information." },
   "timber-growth-rings": { title: "Radiata Pine Characteristics | Growth & Environment", description: "FPX Insight on how growth and environment shape Radiata pine timber characteristics in New Zealand.", type: "article" },
-  "the-science-of-kiln-drying": { title: "The Science of Kiln Drying Radiata Pine", description: "FPX Insight covering conventional and continuous kilns, moisture content and why kiln drying matters for Radiata pine.", type: "article" },
+  "the-science-of-kiln-drying": { title: "The Science of Kiln Drying Radiata Pine", description: "FPX Insight covering conventional and continuous kilns, moisture content and why kiln drying matters for Radiata pine.", image: "/images/kiln-drying-cover.png", type: "article" },
 };
 
 export function generateStaticParams() { return masterPages.map((slug) => ({ slug })); }
