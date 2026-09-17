@@ -1,0 +1,177 @@
+/* Temporary launch state: FPX in-app visuals are intentionally hidden until the application visual refresh is complete.
+   Keep the source assets/components in the repository so the updated app visuals can be restored later. */
+
+/* Safety net: do not expose any current FPX application screenshots. */
+img[src*="fpx-app-"],
+.m-laptop-wrap,
+.pab3-platform-device{
+  display:none!important;
+}
+
+/* Homepage: replace the laptop showcase with a clean three-route presentation. */
+.ph-platform-routes-only{
+  padding-top:135px;
+  padding-bottom:135px;
+}
+.fpx-route-showcase{
+  max-width:1280px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  border-top:1px solid #DDE4DE;
+  border-bottom:1px solid #DDE4DE;
+}
+.fpx-route-card{
+  min-width:0;
+  padding:38px 34px 42px;
+  color:#040E0E;
+  border-right:1px solid #DDE4DE;
+  transition:background .25s ease,transform .25s ease;
+}
+.fpx-route-card:last-child{border-right:0}
+.fpx-route-card:hover,
+.fpx-route-card:focus-visible{background:#F7F4EA}
+.fpx-route-card>span{
+  display:block;
+  margin-bottom:46px;
+  font:700 11px/1 Lato,Arial,sans-serif;
+  color:#40973C;
+  letter-spacing:.12em;
+}
+.fpx-route-card>small{
+  display:block;
+  font:700 9px/1.3 Lato,Arial,sans-serif;
+  color:#758956;
+  letter-spacing:.14em;
+}
+.fpx-route-card h3{
+  margin:13px 0 12px;
+  font-size:clamp(30px,3vw,44px);
+  line-height:1;
+  letter-spacing:-.04em;
+}
+.fpx-route-card p{
+  margin:0 0 30px;
+  min-height:64px;
+  font-size:14px;
+  line-height:1.65;
+  color:#64736C;
+}
+.fpx-route-card b{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font:700 12px Lato,Arial,sans-serif;
+  color:#40973C;
+}
+
+/* FPX Sourcing: keep the information architecture, remove screenshot-dependent columns. */
+.pst-routes-no-app .pst-route,
+.pst-routes-no-app .pst-route.is-reverse{
+  min-height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-areas:"copy" "path" "cta"!important;
+  grid-template-rows:auto!important;
+  gap:34px!important;
+  padding:110px max(7vw,24px)!important;
+}
+.pst-routes-no-app .pst-route:nth-child(2){background:#F7F4EA}
+.pst-routes-no-app .pst-route-copy{
+  width:min(100%,860px);
+  max-width:860px!important;
+  padding-top:0!important;
+}
+.pst-routes-no-app .pst-route-path{
+  width:min(100%,1100px)!important;
+  margin-top:6px!important;
+}
+.pst-routes-no-app .pst-route-cta{
+  justify-self:start!important;
+  margin-top:2px!important;
+}
+
+/* Legacy sourcing story follows the same text-led treatment if it is reused. */
+.m-source-feature-no-app,
+.m-source-feature-no-app.is-reverse{
+  min-height:auto!important;
+  grid-template-columns:1fr!important;
+  grid-template-areas:"copy" "journey"!important;
+  gap:48px!important;
+}
+.m-source-feature-no-app .m-source-feature-copy{max-width:820px}
+
+/* How FPX Works: text-led hero until refreshed application imagery is ready. */
+.phw-hero-no-app{
+  min-height:70vh!important;
+  display:block!important;
+  background:linear-gradient(135deg,#fff 0%,#F7F4EA 100%)!important;
+}
+.phw-hero-no-app>div:first-child{
+  min-height:70vh;
+  max-width:1180px;
+  padding:120px 7vw 105px!important;
+}
+.phw-route-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:34px;
+}
+.phw-route-tags span{
+  display:inline-flex;
+  align-items:center;
+  min-height:42px;
+  padding:0 16px;
+  border:1px solid #DDE4DE;
+  border-radius:999px;
+  background:rgba(255,255,255,.75);
+  font:700 11px Lato,Arial,sans-serif;
+  color:#2D4A3D;
+}
+
+/* About: keep the timber photography, remove the current application device mockup. */
+.pab3-platform-visual{
+  min-height:560px!important;
+  display:flex;
+  align-items:stretch;
+}
+.pab3-platform-photo{
+  position:relative!important;
+  inset:auto!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:560px!important;
+  border-radius:18px!important;
+}
+.pab3-platform-photo img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  border-radius:18px!important;
+}
+
+@media(max-width:900px){
+  .fpx-route-showcase{grid-template-columns:1fr}
+  .fpx-route-card{border-right:0;border-bottom:1px solid #DDE4DE}
+  .fpx-route-card:last-child{border-bottom:0}
+  .fpx-route-card>span{margin-bottom:24px}
+  .fpx-route-card p{min-height:0}
+  .pab3-platform-visual,
+  .pab3-platform-photo{min-height:440px!important}
+}
+
+@media(max-width:700px){
+  .ph-platform-routes-only{padding-top:90px;padding-bottom:90px}
+  .fpx-route-card{padding:30px 0 34px}
+  .pst-routes-no-app .pst-route,
+  .pst-routes-no-app .pst-route.is-reverse{padding-top:82px!important;padding-bottom:82px!important;gap:28px!important}
+  .pst-routes-no-app .pst-route-cta{width:100%!important;justify-self:stretch!important}
+  .phw-hero-no-app>div:first-child{min-height:72svh;padding:100px 24px 70px!important}
+  .phw-route-tags{gap:8px;margin-top:28px}
+  .phw-route-tags span{font-size:10px;padding:0 13px}
+  .pab3-platform-visual,
+  .pab3-platform-photo{min-height:340px!important}
+}

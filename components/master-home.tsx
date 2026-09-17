@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Shell } from "./site-shell";
 import { productGroups, Eyebrow, Arrow, AppButtons, useSiteMotion } from "./master-shared";
 
@@ -38,32 +38,26 @@ function RangeStory(){
 }
 
 function PlatformStory(){
-  const screens=[
-    ["Browse Stock","Search available timber by category, grade and specification.","fpx-app-shop.png","https://app.fpx.nz/shop","AVAILABLE TIMBER"],
-    ["View Offers","Review current packet and bulk timber opportunities.","fpx-app-offers.png","https://app.fpx.nz/offers","CURRENT OPPORTUNITIES"],
-    ["Create a Request","Tell FPX what you need and receive suitable sourcing options.","fpx-app-requests.png","https://app.fpx.nz/request-cart","EXACT REQUIREMENTS"]
+  const routes=[
+    ["Browse Stock","Search available timber by category, grade and specification.","https://app.fpx.nz/shop","AVAILABLE TIMBER"],
+    ["View Offers","Review current packet and bulk timber opportunities.","https://app.fpx.nz/offers","CURRENT OPPORTUNITIES"],
+    ["Create a Request","Tell FPX what you need and receive suitable sourcing options.","https://app.fpx.nz/request-cart","EXACT REQUIREMENTS"]
   ];
-  const [active,setActive]=useState(0);
-  useEffect(()=>{if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;const t=setInterval(()=>setActive(v=>(v+1)%screens.length),4800);return()=>clearInterval(t)},[]);
-  return <section className="ph-platform ph-platform-laptop">
+  return <section className="ph-platform ph-platform-routes-only">
     <div className="ph-platform-head">
       <Eyebrow>FPX SOURCING</Eyebrow>
       <h2>Three ways in.<br/><span className="headline-accent">One place to start.</span></h2>
       <p>You do not need to learn the whole platform before you begin. Start with the route that matches the job.</p>
       <Link href="/fpx-sourcing">See how FPX sourcing works <Arrow/></Link>
     </div>
-    <div className="m-source-platform ph-laptop-showcase">
-      <div className="m-laptop-wrap">
-        <div className="m-laptop-glow"/>
-        <div className="m-laptop-screen">{screens.map((s,i)=><Image key={s[0]} className={i===active?"active":""} src={`/images/${s[2]}`} alt={`${s[0]} view in the FPX platform`} width={1500} height={960} sizes="(max-width: 900px) 90vw, 55vw"/>)}</div>
-        <Image className="m-laptop-frame" src="/images/fpx-laptop-frame.png" alt="FPX sourcing platform displayed on a laptop" width={1600} height={1000} sizes="(max-width: 900px) 95vw, 60vw"/>
-        <div className="m-laptop-status"><span>PLATFORM VIEW</span><b>{screens[active][0]}</b></div>
-      </div>
-      <div className="m-source-cards" aria-label="Ways to source timber through FPX">
-        {screens.map((s,i)=><a href={s[3]} key={s[0]} className={i===active?"active":""} onMouseEnter={()=>setActive(i)} onFocus={()=>setActive(i)}>
-          <small>{s[4]}</small><h3>{s[0]}</h3><p>{s[1]}</p><b>Start here <Arrow/></b><i aria-hidden="true"/>
-        </a>)}
-      </div>
+    <div className="fpx-route-showcase" aria-label="Ways to source timber through FPX">
+      {routes.map((route,i)=><a href={route[2]} key={route[0]} className="fpx-route-card">
+        <span>0{i+1}</span>
+        <small>{route[3]}</small>
+        <h3>{route[0]}</h3>
+        <p>{route[1]}</p>
+        <b>Start here <Arrow/></b>
+      </a>)}
     </div>
   </section>
 }

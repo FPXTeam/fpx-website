@@ -10,6 +10,7 @@ import "../components/premium-inner-pages.css";
 import "../components/kiln-drying-article.css";
 import "../components/site-motion.css";
 import "../components/hero-image-quality.css";
+import "../components/app-visuals-hidden.css";
 
 const cormorant = Cormorant_Garamond({
   subsets:["latin"],
