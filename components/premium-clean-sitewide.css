@@ -897,3 +897,33 @@ body .premium-home .ph-hero-scroll{
   .footer-bottom>nav{max-width:100%}
   .footer-bottom>nav a{overflow-wrap:anywhere}
 }
+
+
+/* Mobile header keeps the same primary actions as desktop */
+.mobile-nav-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+  padding-top:16px;
+  border-top:1px solid #E8ECE9;
+}
+.mobile-nav-actions>a{
+  min-height:46px!important;
+  justify-content:center;
+  border-radius:999px;
+  font-weight:700;
+}
+.mobile-nav-login{
+  border:1px solid #D7DED9;
+  color:#17372A;
+  background:#fff;
+}
+.mobile-nav-cta{
+  gap:7px;
+  background:#40973C;
+  color:#fff!important;
+}
+@media(max-width:420px){
+  .mobile-nav-actions{grid-template-columns:1fr}
+}
