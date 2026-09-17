@@ -1,0 +1,35 @@
+/* Hero image quality safeguards
+   Keep large editorial imagery crisp without disabling Next.js optimization. */
+
+/* Saw Point previously enlarged the source image to 175%, which visibly softened it.
+   Keep the composition while avoiding unnecessary upscaling. */
+.spx-hero:after{
+  background-size:120% auto!important;
+  background-position:right center!important;
+}
+
+/* Avoid browser interpolation artifacts on large hero imagery. */
+.ph-hero-bg,
+.pst-hero>img,
+.ppr-hero>img,
+.pg-hero-image img,
+.poc2-hero-bg,
+.pab3-hero>img{
+  image-rendering:auto;
+  backface-visibility:hidden;
+  transform:translateZ(0);
+}
+
+@media(max-width:900px){
+  .spx-hero:after{
+    background-size:135% auto!important;
+    background-position:72% center!important;
+  }
+}
+
+@media(max-width:700px){
+  .spx-hero:after{
+    background-size:cover!important;
+    background-position:68% center!important;
+  }
+}

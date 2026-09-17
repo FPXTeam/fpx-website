@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   trailingSlash: false,
+  images: {
+    // Next 16 defaults to quality 75. FPX uses large photographic hero imagery
+    // and UI screenshots, so keep optimized delivery but raise the baseline.
+    qualities: [90],
+  },
   async redirects() {
     return [
       { source: "/faq", destination: "/frequently-asked-questions", permanent: true },

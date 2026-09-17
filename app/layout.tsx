@@ -9,6 +9,7 @@ import "../components/premium-clean-sitewide.css";
 import "../components/premium-inner-pages.css";
 import "../components/kiln-drying-article.css";
 import "../components/site-motion.css";
+import "../components/hero-image-quality.css";
 
 const cormorant = Cormorant_Garamond({
   subsets:["latin"],
