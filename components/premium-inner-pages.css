@@ -5883,3 +5883,13 @@
 @media(max-width:520px){
   .m-legal aside nav{grid-template-columns:1fr!important}
 }
+
+
+/* Final mobile hero safety: allow content to grow on short/narrow screens */
+@media(max-width:700px){
+  .master-site .poc2-hero,
+  .pab3-hero{
+    height:auto!important;
+    min-height:78svh!important;
+  }
+}
