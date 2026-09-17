@@ -36,6 +36,7 @@ export function Footer(){
     <div className="footer-saw-point">
       <div className="footer-saw-copy"><span>SAW POINT</span><b>Monthly NZ timber updates.</b></div>
       <form onSubmit={subscribe} aria-label="Subscribe to Saw Point">
+        <input className="fpx-honeypot" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true"/>
         <input name="name" autoComplete="name" placeholder="Name" aria-label="Name" required/>
         <input name="email" type="email" autoComplete="email" placeholder="Email" aria-label="Email" required/>
         <button type="submit" disabled={status==="sending"}>{status==="sending"?"Subscribing…":"Subscribe"}</button>

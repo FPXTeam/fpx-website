@@ -165,6 +165,7 @@ export function SawPointPage(){
       </div>
 
       <form className="spx-form" aria-label="Saw Point subscription" onSubmit={subscribe}>
+        <input className="fpx-honeypot" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true"/>
         <div className="spx-form-icon"><Mail aria-hidden="true"/></div>
         <h3>Join the Saw Point list</h3>
         <label><span>Name</span><input name="name" autoComplete="name" placeholder="Your name" required/></label>

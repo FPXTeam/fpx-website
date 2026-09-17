@@ -4,9 +4,15 @@ export async function POST(request: Request) {
   const body = await request.json();
   const name = String(body.name || "").trim();
   const email = String(body.email || "").trim();
+  const website = String(body.website || "").trim();
 
+  if (website) return NextResponse.json({ ok: true });
   if (!name || !email) {
     return NextResponse.json({ error: "Please enter your name and email." }, { status: 400 });
+  }
+
+  if (!/^\S+@\S+\.\S+$/.test(email) || email.length > 254 || name.length > 120) {
+    return NextResponse.json({ error: "Please enter a valid name and email." }, { status: 400 });
   }
 
   const webhook = process.env.SAW_POINT_SUBSCRIBE_WEBHOOK_URL;

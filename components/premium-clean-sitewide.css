@@ -804,3 +804,55 @@ body .premium-home .ph-hero-scroll{
 .spi-article{max-width:780px;margin:0 auto;padding:70px 24px 110px}
 .spi-article p{margin:0 0 26px;color:#273630;font-size:17px;line-height:1.85;white-space:pre-line}
 .spi-article>a{display:inline-flex;align-items:center;gap:8px;margin-top:24px;color:#40973C;font-weight:700;text-decoration:none}
+
+
+/* Final readiness: keyboard, touch targets and mobile form ergonomics */
+.drop:focus-within .drop-menu{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+.skip-intro{pointer-events:auto;min-height:44px}
+.fpx-honeypot{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
+@media(max-width:900px){
+  .menu-btn{
+    min-width:44px;
+    min-height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .mobile-nav a{
+    min-height:44px;
+    display:flex;
+    align-items:center;
+  }
+}
+@media(max-width:700px){
+  .pct-fields input,
+  .pct-fields select,
+  .pct-fields textarea,
+  .spx-form input,
+  .footer-saw-point input{
+    font-size:16px!important;
+  }
+  .footer-saw-point input,
+  .footer-saw-point button{
+    min-height:44px;
+    height:44px;
+  }
+  .cookie-banner-actions button,
+  .cookie-banner-actions>a{
+    min-height:44px;
+  }
+}

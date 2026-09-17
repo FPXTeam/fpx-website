@@ -352,6 +352,7 @@ export function ContactPage(){
     </header>
 
     <form className="pct2-form" aria-label="Contact FPX" onSubmit={handleSubmit}>
+      <input className="fpx-honeypot" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true"/>
       <div className="pct-fields">
         <label>Full name<input name="name" autoComplete="name" placeholder="Your name" required/></label>
         <label>Company<input name="company" autoComplete="organization" placeholder="Company name"/></label>

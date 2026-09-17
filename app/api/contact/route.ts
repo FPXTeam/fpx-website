@@ -5,8 +5,17 @@ export async function POST(request: Request) {
   const name = String(body.name || "").trim();
   const email = String(body.email || "").trim();
   const message = String(body.message || "").trim();
+  const website = String(body.website || "").trim();
+  if (website) return NextResponse.json({ ok: true });
   if (!name || !email || !message) {
     return NextResponse.json({ error: "Please complete your name, email and message." }, { status: 400 });
+  }
+
+  if (!/^\S+@\S+\.\S+$/.test(email) || email.length > 254) {
+    return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
+  }
+  if (name.length > 120 || message.length > 5000) {
+    return NextResponse.json({ error: "Please shorten your submission and try again." }, { status: 400 });
   }
 
   const key = process.env.RESEND_API_KEY;
