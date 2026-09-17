@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { Eyebrow, Arrow, AppButtons } from "./master-shared";
 
 const requestSteps=[
@@ -32,7 +33,7 @@ function SourceFeature({index,eyebrow,title,copy,image,alt,items,cta,href,steps,
       <div className="m-source-feature-points">{items.map(item=><div key={item.title}><h3>{item.title}</h3><p>{item.copy}</p></div>)}</div>
       <a className="m-source-feature-link" href={href}>{cta}<Arrow/></a>
     </div>
-    <div className="m-source-feature-visual"><div className="m-source-feature-screen"><img src={image} alt={alt}/></div></div>
+    <div className="m-source-feature-visual"><div className="m-source-feature-screen"><Image src={image} alt={alt} width={1500} height={960} sizes="(max-width: 1000px) 92vw, 50vw"/></div></div>
     <JourneySteps label={label} steps={steps}/>
   </section>
 }
@@ -55,7 +56,7 @@ function SourceClosing(){return <section className="m-source-closing-premium">
 
 export function SourceTimberPage(){return <>
   <section className="pst-hero">
-    <img src="/images/product-groups/manufacturing/manufacturing-warehouse-bundles.png" alt="Commercial timber bundles in New Zealand"/>
+    <Image src="/images/product-groups/manufacturing/manufacturing-warehouse-bundles.png" alt="Commercial timber bundles in New Zealand" width={1920} height={1200} sizes="100vw" priority/>
     <div className="pst-hero-shade"/>
     <div className="pst-hero-copy">
       <Eyebrow>FPX SOURCING</Eyebrow>
@@ -88,7 +89,7 @@ export function SourceTimberPage(){return <>
           <div><h3>Custom request</h3><p>Send the specification, quantity and requirements when the job needs something more specific.</p></div>
         </div>
       </div>
-      <div className="pst-route-visual"><img src="/images/fpx-app-requests.png" alt="FPX request workflow"/></div>
+      <div className="pst-route-visual"><Image src="/images/fpx-app-requests.png" alt="FPX request workflow" width={1500} height={960} sizes="(max-width: 1000px) 92vw, 50vw"/></div>
       <details className="pst-route-path">
         <summary><span>REQUEST PATH</span><small>4 steps</small><b aria-hidden="true">+</b></summary>
         <div>{requestSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></div>)}</div>
@@ -107,7 +108,7 @@ export function SourceTimberPage(){return <>
           <div><h3>Specials</h3><p>Review discounted single-packet or multi-packet opportunities when available.</p></div>
         </div>
       </div>
-      <div className="pst-route-visual"><img src="/images/fpx-app-shop.png" alt="FPX available timber shop"/></div>
+      <div className="pst-route-visual"><Image src="/images/fpx-app-shop.png" alt="FPX available timber shop" width={1500} height={960} sizes="(max-width: 1000px) 92vw, 50vw"/></div>
       <details className="pst-route-path">
         <summary><span>SHOP PATH</span><small>3 steps</small><b aria-hidden="true">+</b></summary>
         <div>{shopSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></div>)}</div>
@@ -125,7 +126,7 @@ export function SourceTimberPage(){return <>
           <div><h3>Current offers</h3><p>Review current timber opportunities, then enquire so FPX can respond for your volumes and requirements.</p></div>
         </div>
       </div>
-      <div className="pst-route-visual"><img src="/images/fpx-app-offers.png" alt="FPX current timber offers"/></div>
+      <div className="pst-route-visual"><Image src="/images/fpx-app-offers.png" alt="FPX current timber offers" width={1500} height={960} sizes="(max-width: 1000px) 92vw, 50vw"/></div>
       <details className="pst-route-path">
         <summary><span>OFFER PATH</span><small>3 steps</small><b aria-hidden="true">+</b></summary>
         <div>{offerSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></div>)}</div>
@@ -141,7 +142,7 @@ export function SourceTimberPage(){return <>
 </>}
 
 export function HowPage(){const steps=[["01","Start where you are","Shop available stock, review current offers or send a specific request. Start with the route that best matches what you know."],["02","Share the detail","Add the dimensions, grade, treatment and quantity that matter to the job. Clear inputs make the next step easier."],["03","Choose what fits","Review the timber options and the information around them, then choose the route that works for your team."],["04","Keep it moving","FPX keeps the order and delivery path connected so your team can follow the handover through to site."]];return <>
-<section className="phw-hero"><div><Eyebrow>HOW FPX WORKS</Eyebrow><h1>From requirement<br/><span className="headline-accent">to delivery.</span></h1><p>Start with the information you already have. FPX keeps the sourcing steps connected from the first requirement through to delivery.</p></div><div><img src="/images/fpx-app-requests.png" alt="FPX sourcing workflow"/></div></section>
+<section className="phw-hero"><div><Eyebrow>HOW FPX WORKS</Eyebrow><h1>From requirement<br/><span className="headline-accent">to delivery.</span></h1><p>Start with the information you already have. FPX keeps the sourcing steps connected from the first requirement through to delivery.</p></div><div><Image src="/images/fpx-app-requests.png" alt="FPX sourcing workflow" width={1500} height={960} sizes="(max-width: 1000px) 92vw, 50vw"/></div></section>
 <section className="phw-flow"><header><Eyebrow>THE PROCESS</Eyebrow><h2>Four clear stages.</h2><p>The detail changes by job. The shape of the process stays simple.</p></header><div>{steps.map(([num,title,copy])=><article key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></article>)}</div></section>
 <section className="phw-close"><div><Eyebrow>START WHERE IT MAKES SENSE</Eyebrow><h2>Browse, enquire or request.</h2><p>Choose the route that best matches what you know about the job today.</p></div><AppButtons/></section>
 </>}

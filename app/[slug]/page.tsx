@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { MasterInnerPage } from "@/components/master-site";
 
 const siteUrl = "https://www.fpx.nz";
@@ -67,7 +67,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const data = pageMeta[slug as MasterPage];
   const image = data.image ?? defaultImage;
   const path = data.canonical ?? `/${slug}`;
-  const shouldIndex = slug !== "faq" && slug !== "cookie-settings";
+  const isProduction = process.env.VERCEL_ENV === "production";
+  const shouldIndex = isProduction && slug !== "faq" && slug !== "cookie-settings";
   const robots = { index: shouldIndex, follow: true, googleBot: { index: shouldIndex, follow: true, "max-image-preview": "large" as const, "max-snippet": -1, "max-video-preview": -1 } };
   const openGraph = data.type === "article"
     ? { type: "article" as const, locale: "en_NZ", url: path, siteName: "FPX | Forest Products Exchange", title: `${data.title} | FPX`, description: data.description, images: [{ url: image, width: 1200, height: 630, alt: `${data.title} | FPX` }], publishedTime: data.publishedAt, modifiedTime: data.modifiedAt, section: data.articleSection, authors: [`${siteUrl}/about-us`] }
@@ -237,7 +238,7 @@ const contentSlug: Record<string,string> = {
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   if (!masterPages.includes(slug as MasterPage)) notFound();
-  if (legacyRedirects[slug]) redirect(legacyRedirects[slug]);
+  if (legacyRedirects[slug]) permanentRedirect(legacyRedirects[slug]);
   const schemas = [breadcrumbSchema(slug), pageSchema(slug)];
   return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(schemas)}}/><MasterInnerPage slug={contentSlug[slug] ?? slug}/></>;
 }
