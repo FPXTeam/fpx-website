@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/faq", destination: "/frequently-asked-questions", permanent: true },
+      { source: "/homepage-copy", destination: "/", permanent: true },
+      { source: "/procurement-and-sales-team", destination: "/our-customers", permanent: true },
+      { source: "/inventory-management-system", destination: "/our-customers", permanent: true },
     ];
   },
   async headers() {
