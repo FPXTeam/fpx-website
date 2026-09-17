@@ -1,79 +1,50 @@
 export const privacyPolicy = {
-  title: "Privacy Policy - Forest Products Exchange Ltd",
-  toc: [["1", "Outline of this privacy policy"], ["2", "Application of this privacy policy"], ["3", "Changes to this privacy policy"], ["4", "Collection of personal information"], ["5", "Personal information that may be collected"], ["6", "Use of personal information"], ["7", "Privacy officer"], ["8", "Cookies"], ["9", "Disclosure of personal information"], ["10", "Protection and retention of personal Information"], ["11", "Legal rights and access to personal information"], ["12", "Data processing agreement"], ["13", "Severability"]] as [string,string][],
-  html: `<h2 id="legal-1"><span>1.</span> Outline of this privacy policy</h2>
-<p>1. Forest Product Exhange Limited (the Company, we, us and our) is committed to protecting the personal information of all its website users and customers (Users) in accordance with the Privacy Act 2020 (Privacy Act) and the Information Privacy Principles as set out in the Privacy Act.</p>
-<p>2. This privacy policy will help Users understand how and why the Company collects information, how that information is stored, how they can access and correct that information and when we might disclose information to third parties.</p>
-<p>3. This privacy policy does not limit or exclude any rights that a User has or may have under the Privacy Act and (where applicable) the General Data Protection Regulation 2016/679 (GDPR).</p>
-<p>4. For further information, please see <a href="https://www.privacy.org.nz">www.privacy.org.nz</a>.</p>
-<h2 id="legal-2"><span>2.</span> Application of this privacy policy</h2>
-<p>1. This privacy policy applies to all instances in which personal information is collected from a User by the Company.</p>
-<p>2. By using the services offered by the Company (Services), the User consents to the collection, use, disclosure, storage and processing of personal information in accordance with this privacy policy and the Company’s terms of use on its website, <a href="https://www.fpx.nz">www.fpx.nz</a>  (the Website)].</p>
-<h2 id="legal-3"><span>3.</span> Changes to this privacy policy</h2>
-<p>1. The Company may change this privacy policy at any time by uploading a revised privacy policy to its Website.</p>
-<p>2. All Users agree to be bound by the privacy policy that is in effect at the time they use the Services.</p>
-<h2 id="legal-4"><span>4.</span> Collection of personal information</h2>
-<p>1. The Company will collect the following personal information:</p>
-<p>2. Any communication with the Company either directly, via phone or email.</p>
-<p>3. Information obtained by or submitted to the Company from the User through that User’s use (or prospective use) of the Services.</p>
-<p>4. The Company may supplement the information provided to it with information it receives from third parties.</p>
-<p>5. Except as may be set out in the Terms of Use, we do not collect any other personal information about Users, including details about any User’s race, ethnicity, religious beliefs, sexual orientation, political information or any other genetic or biometric data.</p>
-<h2 id="legal-5"><span>5.</span> Personal information that may be collected</h2>
-<p>1. The Company may, in addition to other information, collect the following information about a User:</p>
-<p>2. The User’s name, phone number, residential address and email address.</p>
-<p>3. The User’s gender and date of birth.</p>
-<p>4. Corporate information and details as may be available on public registries or as provided by or on behalf of the User.</p>
-<p>5. Such other information as set out in the Terms of Use.</p>
-<p>6. If any User chooses not to provide information when we ask for it, they may not be able to use the Services.</p>
-<h2 id="legal-6"><span>6.</span> Use of personal information</h2>
-<p>1. The information that Users provide to the Company may be used:</p>
-<p>2. to verify the identity of the User;</p>
-<p>3. in connection with the supply or provision (or potential supply or provision) of the Services to the User;</p>
-<p>4. to communicate with Users in relation to the Services;</p>
-<p>5. to market our Services to Users, including contacting Users electronically (for example, by text, email or an online messaging platform);</p>
-<p>6. to undertake credit checks of any User (if necessary);</p>
-<p>7. to invoice any User and to collect money that a User owes to us, including authorising and processing credit or debit card transactions;</p>
-<p>8. to respond to communications from a User, including any complaints;</p>
-<p>9. to co-operate with any government, industry or regulatory authorities;</p>
-<p>10. to protect and/or enforce our legal rights and interests, including defending any claim; or</p>
-<p>11. for any other purpose authorised by a User, the Privacy Act and/or GDPR.</p>
-<p>12. for any other purpose as contemplated in the Terms of Use.</p>
-<p>13. The Company reserves the right to use data, on a strictly anonymous basis and on an aggregated basis, in relation to a User’suse of the Services.</p>
-<p>14. Users may request the Company to stop sending marketing messages at any time, by contacting the Company on <a href="mailto:sales@sutcliffetrading.com">sales@sutcliffetrading.com</a>.</p>
-<h2 id="legal-7"><span>7.</span> Privacy officer</h2>
-<p>1. The Company shall at all times have a person appointed as the “Privacy Officer” of the Company (the Privacy Officer).</p>
-<p>2. The Privacy Officer must be familiar with the provisions of this privacy policy and be available to assist on privacy matters for the Company.</p>
-<p>3. The Privacy Officer may be contacted at <a href="mailto:sales@sutcliffetrading.com">sales@sutcliffetrading.com</a>.</p>
-<h2 id="legal-8"><span>8.</span> Cookies</h2>
-<p>1. The Company uses cookies (being an alphanumeric identifier that we transfer to your computer’s hard drive so that we can recognise your browser) in order to monitor your use of the Website.</p>
-<p>2. Users may disable cookies by changing the settings on their browser, although this may mean that you cannot use all of the features of the Website.</p>
-<h2 id="legal-9"><span>9.</span> Disclosure of personal information</h2>
-<p>1. Unless [expressly] authorised to do so by the relevant User or under this privacy policy, [or where it is required under the Terms of Use,] the Company will not disclose any User’s personal information to any third party except where:</p>
-<p>2. disclosure relates to the purposes for which the information was collected (as stated in clause 6.1 above);</p>
-<p>3. where the Company believes that disclosure of your information to courts, law enforcement, government agencies or third parties is appropriate or permitted under the Privacy Act;</p>
-<p>4. there is a dispute relating to your use of the Services; or</p>
-<p>5. the Company believes disclosure is appropriate to protect the rights, property or safety of the Company or third parties.</p>
-<h2 id="legal-10"><span>10.</span> Protection and retention of personal Information</h2>
-<p>1. The Company will take all reasonable steps to ensure the personal information collected, used or disclosed in accordance with this privacy policy and/or the Terms of Use is stored in a secure environment protected from unauthorised access, modification or disclosure.</p>
-<p>2. The Company will hold personal information collected in accordance with this privacy policy and the Terms of Use both before and after the provision of its Services in order to fulfil the purposes for which it was collected, but only for so long as we are legally entitled to do so.</p>
-<p>3. We cannot give an absolute assurance that your personal information will be secure if something outside of our control happens through the internet. Transmission of personal information over the internet is at the User’s own risk and the User should only enter, or instruct the entering of, personal information to the Company within a secure environment.</p>
-<p>4. We will advise any User as soon as practicable after becoming aware that a notifiable privacy breach (as that term is defined in the under the Privacy Act) has occurred in respect of that User, and take all other steps to comply with the Privacy Act requirements.</p>
-<h2 id="legal-11"><span>11.</span> Legal rights and access to personal information</h2>
-<p>1. Users have the following rights in relation to their personal information:</p>
-<p>2. To require confirmation of whether the Company holds any personal information about the User.</p>
-<p>3. To request access to their personal information.</p>
-<p>4. To request a correction to their personal information.</p>
-<p>5. To request the deletion or removal of their personal information.</p>
-<p>6. To object to the processing of their personal information.</p>
-<p>7. To request a restriction on the processing of their personal information.</p>
-<p>8. To request a transfer or their personal information to you or a third party.</p>
-<p>9. To withdraw consent to the use of their personal information.</p>
-<p>10. If a User wishes to exercise any of the above rights, please contact the Company at <a href="mailto:sales@sutcliffetrading.com">sales@sutcliffetrading.com</a>. The Company will process this request as soon as reasonably practicable, provided that we are not otherwise prevented from doing so for legal or other reasons such as, but not limited to:</p>
-<p>11. providing such information would have an unreasonable impact on the privacy or affairs of other individuals;</p>
-<p>12. providing such information is not reasonably practicable in the manner the User has requested; or</p>
-<p>13. we have agreed with the User to arrange access to your personal information.</p>
-<h2 id="legal-12"><span>12.</span> Data processing agreement</h2>
-<p>1. This privacy policy may be supplemented or superseded between a User and the Company pursuant to the terms of any data processing agreement (or document having similar effect) entered into in writing between the User and the Company.</p>
-<h2 id="legal-13"><span>13.</span> Severability</h2>
-<p>1. If any part of this privacy policy is found by a court to be invalid, void or unenforceable, whether under the Privacy Act, GDPR or any other applicable law, such provision will be deemed to be deleted from this privacy policy and the remaining provisions of will continue in full force and effect.</p>`,
+  title: "Privacy Policy",
+  lastUpdated: "16 September 2026",
+  toc: [["1","About this policy"],["2","What information we collect"],["3","How we collect information"],["4","How we use personal information"],["5","Website enquiries and subscriptions"],["6","Cookies and similar technologies"],["7","Service providers and disclosure"],["8","Overseas processing"],["9","Storage, security and retention"],["10","Your privacy rights"],["11","Marketing communications"],["12","Privacy breaches"],["13","Changes to this policy"],["14","Contact us"]] as [string,string][],
+  html: `<h2 id="legal-1"><span>1.</span> About this policy</h2>
+<p>Forest Products Exchange Limited (company number 8469278) (<strong>FPX</strong>, <strong>we</strong>, <strong>us</strong> or <strong>our</strong>) is committed to handling personal information in accordance with the New Zealand Privacy Act 2020 and the Information Privacy Principles.</p>
+<p>This Privacy Policy explains what personal information we may collect through the FPX website, FPX Sourcing, enquiries, subscriptions and our business relationships, why we collect it, how we may use or disclose it, and how you can request access to or correction of your information.</p>
+<p>Where another privacy law applies to a particular individual or activity, including the GDPR where applicable, we will also meet the requirements that apply to us under that law.</p>
+<h2 id="legal-2"><span>2.</span> What information we collect</h2>
+<p>Depending on how you interact with FPX, we may collect:</p><ul><li>your name, business name, role and contact details;</li><li>information you provide in a timber sourcing request, enquiry, account registration, order or other communication;</li><li>subscription preferences and records of consent for marketing communications;</li><li>account, transaction and service information relevant to FPX Sourcing;</li><li>technical information generated when you use our website or platform, such as device, browser, network, security and diagnostic information; and</li><li>information that is reasonably necessary to manage our business relationship, comply with law, protect FPX and its users, or provide our services.</li></ul>
+<p>We do not intentionally request sensitive personal information through our public website unless it is reasonably necessary for a specific purpose.</p>
+<h2 id="legal-3"><span>3.</span> How we collect information</h2>
+<p>We generally collect personal information directly from you when you contact FPX, use a form, subscribe to Saw Point, register for or use FPX Sourcing, place or manage an order, or otherwise communicate with us.</p>
+<p>We may also receive information from your organisation, a person authorised to act for you, a service provider involved in a transaction, or a publicly available business source where collection is lawful and reasonably necessary for our activities.</p>
+<h2 id="legal-4"><span>4.</span> How we use personal information</h2>
+<p>We may use personal information to:</p><ul><li>provide, operate, support and improve the FPX website and FPX Sourcing;</li><li>respond to enquiries and timber sourcing requirements;</li><li>manage accounts, orders, deliveries and business relationships;</li><li>communicate service, operational and account information;</li><li>send marketing or industry communications where we have an appropriate basis to do so;</li><li>protect the security, integrity and availability of our systems and services;</li><li>prevent misuse, investigate incidents and enforce our legal rights;</li><li>comply with legal, regulatory, accounting and tax obligations; and</li><li>create aggregated or de-identified information for business analysis and service improvement.</li></ul>
+<p>If we collect information for a particular stated purpose, we will not use it for an unrelated purpose unless that use is permitted by law.</p>
+<h2 id="legal-5"><span>5.</span> Website enquiries and subscriptions</h2>
+<p>When you use the Contact FPX form, we collect the details you submit, such as your name, company, email address, phone number, enquiry type and message. The form is delivered to the FPX team using an email delivery service.</p>
+<p>When you subscribe to Saw Point, we collect your name and email address and pass those details to the systems used by FPX to manage the subscription and send the publication.</p>
+<p>You do not have to provide information requested by a public website form, but if you do not provide the information marked as required we may be unable to respond to the enquiry or complete the requested service.</p>
+<h2 id="legal-6"><span>6.</span> Cookies and similar technologies</h2>
+<p>Our website may use browser storage, cookies and similar technologies for functions such as security, remembering preferences and recording privacy choices. Our current public website does not intentionally load advertising trackers through FPX website code.</p>
+<p>Where optional analytics or marketing technologies are introduced, we will describe them in our <a href="/cookie-policy">Cookie Policy</a> and make the relevant controls available through <a href="/cookie-settings">Cookie Settings</a>.</p>
+<h2 id="legal-7"><span>7.</span> Service providers and disclosure</h2>
+<p>We may disclose personal information to trusted service providers where reasonably necessary to operate FPX, including providers that host or secure our systems, deliver email, support forms and subscriptions, provide business software, or assist with professional services.</p>
+<p>We may also disclose information where you authorise us to do so, where disclosure is connected with the purpose for which the information was collected, where required or permitted by law, or where reasonably necessary to protect FPX, our users or another person.</p>
+<p>Service providers are expected to handle personal information only for the services they provide to us and subject to appropriate safeguards.</p>
+<h2 id="legal-8"><span>8.</span> Overseas processing</h2>
+<p>Some technology and service providers used by FPX may process or store information outside New Zealand. Where New Zealand Privacy Act requirements apply to an overseas disclosure, FPX will take reasonable steps to ensure the disclosure is permitted and that appropriate privacy safeguards are in place.</p>
+<h2 id="legal-9"><span>9.</span> Storage, security and retention</h2>
+<p>We take reasonable technical and organisational measures to protect personal information against loss, misuse, unauthorised access, modification and disclosure.</p>
+<p>No internet service can guarantee absolute security. You are responsible for keeping account credentials and one-time access codes confidential and for notifying FPX if you believe your account or information has been compromised.</p>
+<p>We retain personal information only for as long as reasonably necessary for the purpose for which it was collected, to manage our relationship with you, and to satisfy legal, accounting, dispute-resolution and other legitimate business requirements. Information that is no longer required will be deleted, anonymised or otherwise securely disposed of where reasonably practicable.</p>
+<h2 id="legal-10"><span>10.</span> Your privacy rights</h2>
+<p>Under the Privacy Act 2020, you may request confirmation of whether FPX holds personal information about you, ask to access that information, and ask us to correct information you believe is wrong.</p>
+<p>We may need to verify your identity before completing a privacy request. In some circumstances the law permits or requires us to withhold information. If that applies, we will explain the basis for our decision where we are permitted to do so.</p>
+<p>Depending on the law applicable to you, you may have additional privacy rights. Contact us if you wish to exercise a privacy right and we will assess the request under the law that applies.</p>
+<h2 id="legal-11"><span>11.</span> Marketing communications</h2>
+<p>FPX may send commercial electronic messages where we have consent or another lawful basis to do so. Marketing emails will identify the sender and include a functional way to unsubscribe.</p>
+<p>You can withdraw from marketing communications at any time using the unsubscribe option in the message or by contacting <a href="mailto:support@fpx.nz">support@fpx.nz</a>. Operational or service messages that are necessary to manage an account, transaction or request may still be sent where appropriate.</p>
+<h2 id="legal-12"><span>12.</span> Privacy breaches</h2>
+<p>If FPX becomes aware of a privacy breach, we will assess and respond to it in accordance with the Privacy Act 2020. Where a breach is notifiable, we will notify the Office of the Privacy Commissioner and affected individuals as required by law.</p>
+<h2 id="legal-13"><span>13.</span> Changes to this policy</h2>
+<p>We may update this Privacy Policy to reflect changes to our services, technology, business practices or legal obligations. The current version will be published on this page with its last-updated date.</p>
+<h2 id="legal-14"><span>14.</span> Contact us</h2>
+<p>For privacy questions, access or correction requests, or concerns about how FPX has handled personal information, contact:</p>
+<p><strong>Privacy Officer<br/>Forest Products Exchange Limited</strong><br/>Email: <a href="mailto:support@fpx.nz">support@fpx.nz</a><br/>Website: <a href="https://www.fpx.nz/contact-us">www.fpx.nz/contact-us</a></p>
+<p>You can also find information about your privacy rights and make a complaint to the Office of the Privacy Commissioner at <a href="https://www.privacy.org.nz" target="_blank" rel="noreferrer">privacy.org.nz</a>.</p>`,
 };

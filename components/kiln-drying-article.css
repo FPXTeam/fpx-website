@@ -1,0 +1,31 @@
+.kda{--kda-line:#DDE5DF;--kda-soft:#F7F9F7;--kda-cream:#F7F4EA}
+.kda-section{scroll-margin-top:100px}
+.kda-benefits{width:min(1120px,calc(100% - 48px));margin:46px auto 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--kda-line)}
+.kda-benefits article{position:relative;min-height:190px;padding:30px 34px 28px 56px;border-bottom:1px solid var(--kda-line)}
+.kda-benefits article:nth-child(odd){border-right:1px solid var(--kda-line)}
+.kda-benefits span{position:absolute;left:0;top:32px;font:800 9px/1 Lato,Arial,sans-serif;letter-spacing:.12em;color:#40973C}
+.kda-benefits h3{margin:0 0 12px;font:700 22px/1.15 Lato,Arial,sans-serif;letter-spacing:-.02em;color:#17372A}
+.kda-benefits p{margin:0;font-size:14px;line-height:1.7;color:#64736C}
+.kda-technical-card,.kda-photo-card{width:min(1120px,calc(100% - 48px));margin:54px auto 0;padding:34px;border:1px solid #E1E7E3;border-radius:18px;background:var(--kda-soft);display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,.45fr);gap:38px;align-items:end}
+.kda-technical-card{width:min(1180px,calc(100% - 48px));grid-template-columns:minmax(0,1.7fr) minmax(250px,.3fr);align-items:center;background:#F4F7F5}
+.kda-technical-card>div,.kda-photo-card>div{min-width:0}
+.kda-technical-card img,.kda-photo-card img{display:block;width:100%;height:auto;max-height:720px;object-fit:contain;border-radius:12px;background:#fff}
+.kda-technical-card figcaption,.kda-photo-card figcaption{margin:0;padding:0;font-size:13px;line-height:1.72;color:#64736C}
+.kda-technical-card figcaption span,.kda-photo-card figcaption span{display:block;margin-bottom:15px;font:800 9px/1 Lato,Arial,sans-serif;letter-spacing:.15em;color:#40973C}
+.kda-technical-card figcaption strong,.kda-photo-card figcaption strong{display:block;margin-bottom:12px;font:700 24px/1.15 Lato,Arial,sans-serif;letter-spacing:-.025em;color:#17372A}
+.kda-technical-card figcaption p,.kda-photo-card figcaption p{margin:0}
+.kda-photo-right{grid-template-columns:minmax(250px,.45fr) minmax(0,1.55fr)}
+.kda-photo-right>div{grid-column:2;grid-row:1}.kda-photo-right figcaption{grid-column:1;grid-row:1}
+.kda-stats{width:min(1120px,calc(100% - 48px));margin:50px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.kda-stats article{min-height:160px;padding:30px;border-radius:16px;background:#40973C;color:#fff;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 18px 36px rgba(42,86,52,.12)}
+.kda-stats strong{font:800 clamp(34px,3.6vw,54px)/1 Montserrat,Arial,sans-serif;letter-spacing:-.055em}.kda-stats span{font:700 11px/1.5 Lato,Arial,sans-serif;color:#E7F1E9}
+.kda-subsection{margin-top:58px!important}.kda-subsection h3{margin:0 0 20px;font-size:31px;line-height:1.05;color:#17372A}.kda-after-figure{margin-top:54px!important}
+.kda-pullquote{width:min(1080px,calc(100% - 48px));margin:58px auto 0;padding:48px 6vw;background:#40973C;color:#fff;font:700 clamp(27px,2.8vw,42px)/1.3 Lato,Arial,sans-serif;letter-spacing:-.03em}
+.kda-study{width:min(1120px,calc(100% - 48px));margin:50px auto 0;border:1px solid var(--kda-line);background:var(--kda-soft)}.kda-study-head{padding:34px 38px;border-bottom:1px solid var(--kda-line)}.kda-study-head span{font:800 9px/1 Lato,Arial,sans-serif;letter-spacing:.15em;color:#40973C}.kda-study-head h3{max-width:800px;margin:14px 0 0;font-size:28px;line-height:1.08;color:#17372A}
+.kda-findings{display:grid;grid-template-columns:repeat(2,1fr)}.kda-findings article{min-height:190px;padding:34px 38px;border-bottom:1px solid var(--kda-line)}.kda-findings article:nth-child(odd){border-right:1px solid var(--kda-line)}.kda-findings strong{display:block;margin-bottom:18px;font:800 clamp(32px,3.2vw,48px)/1 Montserrat,Arial,sans-serif;letter-spacing:-.05em;color:#40973C}.kda-findings p{margin:0;font-size:14px;line-height:1.68;color:#64736C}
+.kda-study-note{margin-top:36px!important;padding:28px 32px;background:var(--kda-cream);border-left:3px solid #A38560}.kda-study-note p{margin:0!important;font-size:14px!important;line-height:1.75!important}
+.kda-comparison{width:min(1120px,calc(100% - 48px));margin:64px auto 0}.kda-comparison h3{margin:0 0 24px;font-size:31px;color:#17372A}.kda-table-wrap{overflow-x:auto;border:1px solid var(--kda-line)}.kda-comparison table{width:100%;min-width:760px;border-collapse:collapse;background:#fff}.kda-comparison th,.kda-comparison td{padding:18px 20px;border-bottom:1px solid var(--kda-line);vertical-align:top;text-align:left;font-size:13px;line-height:1.5;color:#52645B}.kda-comparison thead th{background:#17372A;color:#fff;font:800 10px/1.35 Lato,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}.kda-comparison tbody th{width:24%;font:700 13px/1.5 Lato,Arial,sans-serif;color:#17372A;background:#F7F9F7}
+.kda-sourcing .ria-sourcing-copy h3{margin:35px 0 12px;font-size:clamp(28px,2.8vw,42px);line-height:1.08;color:#fff}.kda-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}.kda-actions a{display:inline-flex!important;align-items:center;gap:9px;margin:0!important;padding:14px 18px;border-radius:999px;background:#40973C;color:#fff;font:700 11px/1 Lato,Arial,sans-serif}.kda-actions a+a{background:transparent;border:1px solid rgba(255,255,255,.35)}
+.kda-conclusion h2{max-width:620px;font-size:clamp(42px,4.7vw,72px)}.kda-closing-quote{margin:38px 0 0;padding:28px 0 0;border-top:1px solid var(--kda-line);font:600 23px/1.5 Lato,Arial,sans-serif;font-style:italic;color:#40973C}
+@media(max-width:1000px){.kda-technical-card,.kda-photo-card,.kda-photo-right{grid-template-columns:1fr;gap:20px;padding:24px}.kda-photo-right>div,.kda-photo-right figcaption{grid-column:1;grid-row:auto}.kda-benefits{grid-template-columns:1fr}.kda-benefits article:nth-child(odd){border-right:0}.kda-stats{grid-template-columns:1fr}.kda-findings{grid-template-columns:1fr}.kda-findings article:nth-child(odd){border-right:0}}
+@media(max-width:700px){.kda-benefits,.kda-stats,.kda-study,.kda-comparison,.kda-pullquote,.kda-technical-card,.kda-photo-card{width:calc(100% - 32px)}.kda-benefits article{padding:26px 20px 24px 44px}.kda-technical-card,.kda-photo-card{padding:16px;border-radius:14px}.kda-stats article{min-height:140px}.kda-study-head,.kda-findings article{padding:26px 22px}.kda-pullquote{padding:34px 24px}.kda-table-wrap{margin-right:-16px}}

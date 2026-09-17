@@ -1,12 +1,26 @@
 import type { Metadata } from "next";
+import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import "../components/revised-pages.css";
 import "../components/inner-refresh.css";
 import "../components/brand-system-2026.css";
 import "../components/source-timber-redesign.css";
+import "../components/premium-clean-sitewide.css";
+import "../components/premium-inner-pages.css";
+import "../components/kiln-drying-article.css";
+import "../components/site-motion.css";
 
-const siteUrl = "https://fpx.nz";
+const cormorant = Cormorant_Garamond({
+  subsets:["latin"],
+  style:["italic"],
+  weight:["500","600"],
+  variable:"--font-accent-serif",
+  display:"swap",
+});
+
+const siteUrl = "https://www.fpx.nz";
 const socialImage = "/images/social/fpx-social-share.jpg";
+const isProduction = process.env.VERCEL_ENV === "production";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -14,6 +28,9 @@ export const metadata: Metadata = {
   description: "FPX helps commercial timber buyers across New Zealand browse available stock, review current offers and source specific timber requirements.",
   applicationName: "FPX",
   alternates: { canonical: "/" },
+  robots: isProduction
+    ? { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } }
+    : { index: false, follow: false, googleBot: { index: false, follow: false, noarchive: true } },
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -38,5 +55,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en-NZ"><body className="antialiased">{children}</body></html>;
+  return <html lang="en-NZ"><body className={`${cormorant.variable} antialiased`}>{children}</body></html>;
 }

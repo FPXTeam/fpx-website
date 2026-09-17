@@ -1,6 +1,6 @@
 "use client";
 import { Shell } from "./site-shell";
-import { useParallax } from "./master-shared";
+import { useParallax, useSiteMotion } from "./master-shared";
 export { MasterHome } from "./master-home";
 import { SourceTimberPage, HowPage } from "./master-sourcing";
 import { ProductsPage, ProductGroupPage, hasProductGroup } from "./master-products";
@@ -9,6 +9,7 @@ import { SawPointPage, ResourcesPage, FAQPage, LegalPage, InsightArticlePage } f
 
 export function MasterInnerPage({slug}:{slug:string}){
   useParallax();
+  useSiteMotion();
   let body:React.ReactNode;
   if(slug==="products")body=<ProductsPage/>;
   else if(hasProductGroup(slug))body=<ProductGroupPage slug={slug}/>;

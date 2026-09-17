@@ -23,7 +23,7 @@ export const termsChunk1 = `<h2 id="legal-1"><span>1.</span> Legally binding</h2
 <p>1. FPX provides the Platform solely as a facilitator of communications, enquiries, inventory management, order workflows, and transactions between Users.</p>
 <p>2. FPX is not a seller of goods, does not take title to goods, and is not a party to any contract for the sale or supply of goods unless expressly stated otherwise in writing.</p>
 <h2 id="legal-6"><span>6.</span> User information</h2>
-<p>6.1 Upon registering to use FPX's products and/or services via the Website and/or the Platform, all Users agree to:</p>
+<p>6.1 Upon registering to use FPX's products or services via the Website and/or the Platform, all Users agree to:</p>
 <p>1. provide true, accurate, current and complete information about themselves as prompted by the Website or Platform (as applicable) (<strong>User Information</strong>); and</p>
 <p>2. promptly notify the Company in writing of any changes to their User Information in order to ensure that it remains true, accurate, current and complete.</p>
 <h2 id="legal-7"><span>7.</span> Responsibility and liability</h2>
