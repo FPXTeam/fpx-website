@@ -5,7 +5,14 @@ import { useMemo, useState } from "react";
 import { Eyebrow } from "./master-shared";
 import sawPointIssues from "../data/saw-point-issues.json";
 
-const issues=sawPointIssues;
+const monthOrder=["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+function issueDateValue(value:string){
+  const upper=value.toUpperCase();
+  const year=Number(upper.match(/\\b\\d{4}\\b/)?.[0]||0);
+  const month=monthOrder.findIndex(name=>upper.includes(name));
+  return year*12+(month>=0?month:0);
+}
+const issues=[...sawPointIssues].sort((a,b)=>issueDateValue(b.date)-issueDateValue(a.date)||Number(b.issue)-Number(a.issue));
 
 export function SawPointPage(){
   const latest = issues[0];

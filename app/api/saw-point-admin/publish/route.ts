@@ -7,6 +7,14 @@ function slugify(value:string){
   return value.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
 }
 
+const monthOrder=["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+function issueDateValue(value:string){
+  const upper=value.toUpperCase();
+  const year=Number(upper.match(/\\b\\d{4}\\b/)?.[0]||0);
+  const month=monthOrder.findIndex(name=>upper.includes(name));
+  return year*12+(month>=0?month:0);
+}
+
 export async function POST(request:Request){
   if(!(await isSawPointAdmin())) return NextResponse.json({error:"Unauthorized"},{status:401});
 
@@ -59,7 +67,7 @@ export async function POST(request:Request){
   const year=date.match(/\b\d{4}\b/)?.[0] || new Date().getFullYear().toString();
   const slug=`issue-${issue}-${slugify(date)}`;
   const next=[{issue,date,year,title,excerpt,linkedinUrl,slug,body:article},...issues]
-    .sort((a,b)=>Number(b.issue)-Number(a.issue));
+    .sort((a,b)=>issueDateValue(String(b.date))-issueDateValue(String(a.date))||Number(b.issue)-Number(a.issue));
 
   const update=await fetch(`https://api.github.com/repos/${owner}/${name}/contents/${path}`,{
     method:"PUT",
