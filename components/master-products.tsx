@@ -66,7 +66,7 @@ export function ProductsPage(){
           <p>{use[1]}</p>
         </article>)}
       </div>
-      <a className="ppr-view-all" href="https://app.fpx.nz/shop">View all categories <Arrow/></a>
+      <a className="ppr-view-all" href="https://app.fpx.nz/stock">View all categories <Arrow/></a>
     </section>
 
     <section className="ppr-close">
@@ -86,7 +86,7 @@ export function ProductGroupPage({slug}:{slug:string}){
   const number=String(["manufacturing","building-construction","outdoor-landscaping","dunnage"].indexOf(slug)+1).padStart(2,"0");
   return <>
     <section className="pg-hero">
-      <div className="pg-hero-copy"><span className="pg-number">{number}</span><Eyebrow>PRODUCT GROUP</Eyebrow><h1>{group.title}</h1><p>{group.description}</p><div className="m-actions"><a href="https://app.fpx.nz/shop" className="m-btn m-btn-primary">Browse current timber <Arrow/></a><a href="https://app.fpx.nz/request-cart" className="m-btn m-btn-ghost">Request a product <Arrow/></a></div></div>
+      <div className="pg-hero-copy"><span className="pg-number">{number}</span><Eyebrow>PRODUCT GROUP</Eyebrow><h1>{group.title}</h1><p>{group.description}</p><div className="m-actions"><a href="https://app.fpx.nz/stock" className="m-btn m-btn-primary">Browse current timber <Arrow/></a><a href="https://app.fpx.nz/request-cart" className="m-btn m-btn-ghost">Request a product <Arrow/></a></div></div>
       <div className="pg-hero-image"><Image src={`/images/${group.hero}`} alt={`${group.title} timber`} width={1800} height={1200} sizes="(max-width: 900px) 100vw, 50vw" priority/></div>
     </section>
 

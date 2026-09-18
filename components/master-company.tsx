@@ -150,7 +150,7 @@ export function CustomersPage(){
           </div>
 
           <div className="poc4-actions">
-            <a href="https://app.fpx.nz/shop">Browse timber <Arrow/></a>
+            <a href="https://app.fpx.nz/stock">Browse timber <Arrow/></a>
             <a href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a>
           </div>
         </div>
@@ -159,7 +159,7 @@ export function CustomersPage(){
 
     <section className="poc2-close">
       <div><Eyebrow>START SOURCING</Eyebrow><h2>Start with the requirement you have.</h2><p>Browse available timber or send FPX the detail you already know.</p></div>
-      <div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/shop">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a></div>
+      <div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/stock">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a></div>
     </section>
   </>;
 }
@@ -265,7 +265,7 @@ export function AboutPage(){
         <p>Browse current timber or send FPX the detail you already know.</p>
       </div>
       <div className="m-actions">
-        <a className="m-btn m-btn-primary" href="https://app.fpx.nz/shop">Browse timber <Arrow/></a>
+        <a className="m-btn m-btn-primary" href="https://app.fpx.nz/stock">Browse timber <Arrow/></a>
         <a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a>
       </div>
     </section>
@@ -326,7 +326,7 @@ export function ContactPage(){
     </div>
 
     <nav className="pct2-routes" aria-label="Ways to start sourcing timber through FPX">
-      <a href="https://app.fpx.nz/shop">
+      <a href="https://app.fpx.nz/stock">
         <span>01</span>
         <div><small>AVAILABLE TIMBER</small><h3>Browse current timber.</h3><p>Start with products that are already available through FPX.</p></div>
         <Arrow/>

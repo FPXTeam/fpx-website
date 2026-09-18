@@ -39,7 +39,7 @@ function RangeStory(){
 
 function PlatformStory(){
   const routes=[
-    ["Browse Stock","Search available timber by category, grade and specification.","https://app.fpx.nz/shop","AVAILABLE TIMBER"],
+    ["Browse Stock","Search available timber by category, grade and specification.","https://app.fpx.nz/stock","AVAILABLE TIMBER"],
     ["View Offers","Review current packet and bulk timber opportunities.","https://app.fpx.nz/offers","CURRENT OPPORTUNITIES"],
     ["Create a Request","Tell FPX what you need and receive suitable sourcing options.","https://app.fpx.nz/request-cart","EXACT REQUIREMENTS"]
   ];
