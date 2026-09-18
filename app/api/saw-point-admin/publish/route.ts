@@ -10,7 +10,7 @@ function slugify(value:string){
 const monthOrder=["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
 function issueDateValue(value:string){
   const upper=value.toUpperCase();
-  const year=Number(upper.match(/\\b\\d{4}\\b/)?.[0]||0);
+  const year=Number(upper.match(/\b\d{4}\b/)?.[0]||0);
   const month=monthOrder.findIndex(name=>upper.includes(name));
   return year*12+(month>=0?month:0);
 }
