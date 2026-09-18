@@ -98,7 +98,7 @@ const faqSchemaItems = [
 ] as const;
 
 const howToSteps = [
-  ["Start where you are","Shop available stock, review current offers or send a specific request. Start with the route that best matches what you know."],
+  ["Start where you are","Browse available stock, review current offers or send a specific request. Start with the route that best matches what you know."],
   ["Share the detail","Add the dimensions, grade, treatment and quantity that matter to the job. Clear inputs make the next step easier."],
   ["Choose what fits","Review the timber options and the information around them, then choose the route that works for your team."],
   ["Keep it moving","FPX keeps the order and delivery path connected so your team can follow the handover through to site."],

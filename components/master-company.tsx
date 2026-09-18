@@ -225,7 +225,7 @@ export function AboutPage(){
       </div>
       <div className="pab3-purpose-grid">
         <article><small>UNDERSTAND</small><h3>Know what you’re looking at.</h3><p>Product groups and applications make the range easier to understand before detailed sourcing begins.</p></article>
-        <article><small>START</small><h3>Choose the right way in.</h3><p>Shop available timber, review offers or send a specific requirement.</p></article>
+        <article><small>START</small><h3>Choose the right way in.</h3><p>Browse available timber, review offers or send a specific requirement.</p></article>
         <article><small>MOVE</small><h3>Keep the requirement moving.</h3><p>Use the platform and FPX team to carry the sourcing detail forward.</p></article>
       </div>
     </section>
