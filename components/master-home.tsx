@@ -7,7 +7,7 @@ import { productGroups, Eyebrow, Arrow, AppButtons, useSiteMotion } from "./mast
 
 function PremiumHero(){
   return <section className="ph-hero">
-    <Image className="ph-hero-bg" src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber stored in a commercial yard" width={1920} height={1080} sizes="100vw" priority/>
+    <Image className="ph-hero-bg" src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber stored in a commercial yard" width={1920} height={1080} sizes="100vw" quality={82} priority fetchPriority="high"/>
     <div className="ph-hero-shade"/>
     <div className="ph-hero-copy">
       <Eyebrow>NEW ZEALAND TIMBER SOURCING</Eyebrow>
@@ -29,7 +29,7 @@ function RangeStory(){
     </div>
     <div className="ph-range-list">
       {productGroups.map((group,i)=><Link href={`/${group[3]}`} className="ph-range-item" key={group[0]}>
-        <div className="ph-range-image"><Image src={`/images/${group[2]}`} alt={`${group[0]} timber product group`} width={1400} height={1000} sizes="(max-width: 800px) 100vw, 45vw"/></div>
+        <div className="ph-range-image"><Image src={`/images/${group[2]}`} alt={`${group[0]} timber products in New Zealand`} width={1400} height={1000} sizes="(max-width: 700px) calc(100vw - 48px), 220px" quality={80}/></div>
         <span>0{i+1}</span>
         <div className="ph-range-copy"><h3>{group[0]}</h3><p>{group[1]}</p><b>Explore <Arrow/></b></div>
       </Link>)}
@@ -74,7 +74,7 @@ function BuyerStory(){
     <div className="m-customers-title"><Eyebrow>OUR CUSTOMERS</Eyebrow><h2>Built for businesses<br/><span className="headline-accent">that buy timber.</span></h2><Link href="/our-customers">Meet our customers <Arrow/></Link></div>
     <div className={`m-customer-stage active-${active+1}`} aria-label="Four New Zealand professionals who buy commercial timber">
       <div className="m-customer-people">{groups.map((g,i)=><button type="button" key={g[0]} className={`m-person-button ${i===active?"active":""}`} onMouseEnter={()=>setActive(i)} onFocus={()=>setActive(i)} onClick={()=>setActive(i)} aria-label={`Show information for ${g[0]}`}>
-        <Image className="m-person" src={`/images/${g[2]}`} alt={`${g[0]} using FPX for commercial timber sourcing`} width={700} height={1000} sizes="(max-width: 700px) 42vw, 22vw"/>
+        <Image className="m-person" src={`/images/${g[2]}`} alt={`${g[0]} using FPX for commercial timber sourcing`} width={700} height={1000} sizes="(max-width: 700px) 42vw, 22vw" quality={80}/>
       </button>)}</div>
       <div className={`m-customer-panel panel-${active+1}`} aria-live="polite"><h3>{groups[active][0]}</h3><p>{groups[active][1]}</p></div>
       <p className="m-customer-instruction"><span className="instruction-hover">Hover to meet our customers</span><span className="instruction-tap">Tap to meet our customers</span></p>
