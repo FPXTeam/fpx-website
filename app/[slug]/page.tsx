@@ -226,7 +226,7 @@ function pageSchema(slug: string) {
     return { "@context":"https://schema.org", "@type":"CollectionPage", name:data.title, description:data.description, url, mainEntity:{"@type":"ItemList","itemListElement":productSchemas[slug].map((name,index)=>({"@type":"ListItem",position:index+1,name}))}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
   }
   if (slug === "saw-point") {
-    return { "@context":"https://schema.org", "@type":"CollectionPage", name:data.title, description:data.description, url, mainEntity:{"@type":"ItemList","itemListElement":sawPointSchemaIssues.map((issue,index)=>({"@type":"ListItem","position":index+1,"name":issue.title||`Saw Point | Issue ${issue.issue}`,"url":issue.linkedinUrl||`${siteUrl}/saw-point/${issue.slug}`}))}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
+    return { "@context":"https://schema.org", "@type":"CollectionPage", name:data.title, description:data.description, url, mainEntity:{"@type":"ItemList","itemListElement":sawPointSchemaIssues.map((issue,index)=>({"@type":"ListItem","position":index+1,"name":issue.title||`Saw Point | Issue ${issue.issue}`,"url":issue.body?`${siteUrl}/saw-point/${issue.slug}`:issue.linkedinUrl}))}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
   }
   if (slug === "about-us") {
     return [
