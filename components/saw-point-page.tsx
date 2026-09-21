@@ -14,6 +14,8 @@ function issueDateValue(value:string){
   return year*12+(month>=0?month:0);
 }
 const issues=[...sawPointIssues].sort((a,b)=>issueDateValue(b.date)-issueDateValue(a.date)||Number(b.issue)-Number(a.issue));
+function sawPointHref(item:(typeof issues)[number]){return item.body?`/saw-point/${item.slug}`:item.linkedinUrl}
+function sawPointExternal(item:(typeof issues)[number]){return item.body?{}:{target:"_blank",rel:"noreferrer"}}
 
 export function SawPointPage(){
   const latest = issues[0];
@@ -81,13 +83,13 @@ export function SawPointPage(){
         <span>{latest.date}</span>
       </div>
 
-      <a className="spx-feature" href={latest.linkedinUrl} target="_blank" rel="noreferrer">
+      <a className="spx-feature" href={sawPointHref(latest)} {...sawPointExternal(latest)}>
         <div className="spx-feature-number">{latest.issue}</div>
         <div className="spx-feature-copy">
           <small>ISSUE {latest.issue}</small>
           <h2>The latest<br/>Saw Point.</h2>
           <p>{latest.excerpt}</p>
-          <span className="spx-read">Read issue on LinkedIn <ExternalLink size={16}/></span>
+          <span className="spx-read">{latest.body?"Read issue on FPX":"Read issue on LinkedIn"} <ExternalLink size={16}/></span>
         </div>
         <div className="spx-feature-side">
           <span>MONTHLY INDUSTRY READ</span>
@@ -140,7 +142,7 @@ export function SawPointPage(){
 
       <div className="spx-archive-list" aria-live="polite">
         {visibleArchive.map(item=>
-          <a href={item.linkedinUrl} target="_blank" rel="noreferrer" key={item.issue}>
+          <a href={sawPointHref(item)} {...sawPointExternal(item)} key={item.issue}>
             <span className="spx-archive-issue">ISSUE {item.issue}</span>
             <div className="spx-archive-copy">
               <small>{item.date}</small>
