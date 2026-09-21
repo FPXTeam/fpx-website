@@ -7,6 +7,7 @@ const organizationSchema = {
   "@type": "Organization",
   "@id": `${siteUrl}/#organization`,
   name: "Forest Products Exchange Limited",
+  legalName: "Forest Products Exchange Limited",
   alternateName: "FPX",
   url: siteUrl,
   logo: `${siteUrl}/images/fpx-logo-horizontal-original.png`,
@@ -15,6 +16,19 @@ const organizationSchema = {
   areaServed: { "@type": "Country", name: "New Zealand" },
   email: "support@fpx.nz",
   telephone: "+64 210 847 3262",
+  identifier: {
+    "@type": "PropertyValue",
+    name: "New Zealand Companies Register company number",
+    value: "8469278",
+  },
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer service",
+    email: "support@fpx.nz",
+    telephone: "+64 210 847 3262",
+    areaServed: "NZ",
+    availableLanguage: "English",
+  },
   sameAs: [
     "https://www.linkedin.com/company/forest-products-exchange",
     "https://www.instagram.com/fpx.nz/",
