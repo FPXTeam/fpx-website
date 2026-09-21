@@ -3,7 +3,6 @@ import Script from "next/script";
 import { GoogleAnalyticsConsent } from "../components/google-analytics-consent";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
-import "../components/revised-pages.css";
 import "../components/brand-system-2026.css";
 import "../components/premium-clean-sitewide.css";
 import "../components/site-motion.css";
