@@ -12,8 +12,15 @@ const organizationSchema = {
   url: siteUrl,
   logo: `${siteUrl}/images/fpx-logo-horizontal-original.png`,
   description:
-    "FPX is a New Zealand timber sourcing platform for commercial timber buyers. Buyers can browse available stock, review current offers or send specific timber requirements.",
+    "FPX is a New Zealand digital timber sourcing service for commercial timber buyers. Buyers can browse available stock, review current offers or send specific timber requirements.",
   areaServed: { "@type": "Country", name: "New Zealand" },
+  knowsAbout: [
+    "Commercial timber sourcing",
+    "New Zealand timber",
+    "Radiata Pine",
+    "Timber processing",
+    "Timber procurement"
+  ],
   email: "support@fpx.nz",
   telephone: "+64 210 847 3262",
   identifier: {
