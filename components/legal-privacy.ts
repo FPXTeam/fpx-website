@@ -1,6 +1,6 @@
 export const privacyPolicy = {
   title: "Privacy Policy",
-  lastUpdated: "16 September 2026",
+  lastUpdated: "21 September 2026",
   toc: [["1","About this policy"],["2","What information we collect"],["3","How we collect information"],["4","How we use personal information"],["5","Website enquiries and subscriptions"],["6","Cookies and similar technologies"],["7","Service providers and disclosure"],["8","Overseas processing"],["9","Storage, security and retention"],["10","Your privacy rights"],["11","Marketing communications"],["12","Privacy breaches"],["13","Changes to this policy"],["14","Contact us"]] as [string,string][],
   html: `<h2 id="legal-1"><span>1.</span> About this policy</h2>
 <p>Forest Products Exchange Limited (company number 8469278) (<strong>FPX</strong>, <strong>we</strong>, <strong>us</strong> or <strong>our</strong>) is committed to handling personal information in accordance with the New Zealand Privacy Act 2020 and the Information Privacy Principles.</p>
@@ -20,10 +20,10 @@ export const privacyPolicy = {
 <p>When you subscribe to Saw Point, we collect your name and email address and pass those details to the systems used by FPX to manage the subscription and send the publication.</p>
 <p>You do not have to provide information requested by a public website form, but if you do not provide the information marked as required we may be unable to respond to the enquiry or complete the requested service.</p>
 <h2 id="legal-6"><span>6.</span> Cookies and similar technologies</h2>
-<p>Our website may use browser storage, cookies and similar technologies for functions such as security, remembering preferences and recording privacy choices. Our current public website does not intentionally load advertising trackers through FPX website code.</p>
-<p>Where optional analytics or marketing technologies are introduced, we will describe them in our <a href="/cookie-policy">Cookie Policy</a> and make the relevant controls available through <a href="/cookie-settings">Cookie Settings</a>.</p>
+<p>Our website may use browser storage, cookies and similar technologies for functions such as security, remembering preferences and recording privacy choices. FPX also uses Google Analytics 4 for optional website analytics when a visitor chooses to enable Analytics through our consent controls.</p>
+<p>When Analytics is enabled, Google Analytics may process website usage and technical information to help FPX understand visits, page use and website performance. Analytics is disabled unless you choose to enable it and can be changed at any time through <a href="/cookie-settings">Cookie Settings</a>. FPX does not intentionally load non-essential advertising trackers through its public website code. See our <a href="/cookie-policy">Cookie Policy</a> for more information.</p>
 <h2 id="legal-7"><span>7.</span> Service providers and disclosure</h2>
-<p>We may disclose personal information to trusted service providers where reasonably necessary to operate FPX, including providers that host or secure our systems, deliver email, support forms and subscriptions, provide business software, or assist with professional services.</p>
+<p>We may disclose or make information available to trusted service providers where reasonably necessary to operate FPX, including providers that host or secure our systems, deliver email, support forms and subscriptions, provide website analytics such as Google Analytics where enabled, provide business software, or assist with professional services.</p>
 <p>We may also disclose information where you authorise us to do so, where disclosure is connected with the purpose for which the information was collected, where required or permitted by law, or where reasonably necessary to protect FPX, our users or another person.</p>
 <p>Service providers are expected to handle personal information only for the services they provide to us and subject to appropriate safeguards.</p>
 <h2 id="legal-8"><span>8.</span> Overseas processing</h2>
