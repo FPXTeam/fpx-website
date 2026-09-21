@@ -4,6 +4,7 @@ import { ExternalLink, Mail, ArrowRight, Search, ChevronLeft, ChevronRight } fro
 import { useMemo, useState } from "react";
 import { Eyebrow } from "./master-shared";
 import sawPointIssues from "../data/saw-point-issues.json";
+import { trackFpxEvent } from "./analytics-events";
 
 const monthOrder=["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
 function issueDateValue(value:string){
@@ -52,7 +53,7 @@ export function SawPointPage(){
       const response=await fetch("/api/saw-point-subscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
       const data=await response.json().catch(()=>({}));
       if(!response.ok)throw new Error(data?.error||"Unable to subscribe right now.");
-      form.reset();setSubscribeStatus("success");setSubscribeMessage("You're on the Saw Point list.");
+      form.reset();trackFpxEvent("saw_point_subscribe",{source:"saw_point_page"});setSubscribeStatus("success");setSubscribeMessage("You're on the Saw Point list.");
     }catch(error){setSubscribeStatus("error");setSubscribeMessage(error instanceof Error?error.message:"Unable to subscribe right now.")}
   }
 
