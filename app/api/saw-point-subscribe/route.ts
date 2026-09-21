@@ -5,6 +5,9 @@ export async function POST(request: Request) {
   const name = String(body.name || "").trim();
   const email = String(body.email || "").trim();
   const website = String(body.website || "").trim();
+  const requestedSource = String(body.source || "").trim();
+  const allowedSources = new Set(["FPX website footer", "Saw Point page"]);
+  const source = allowedSources.has(requestedSource) ? requestedSource : "FPX website footer";
 
   if (website) return NextResponse.json({ ok: true });
   if (!name || !email) {
@@ -26,7 +29,7 @@ export async function POST(request: Request) {
     body: JSON.stringify({
       name,
       email,
-      source: "FPX website footer",
+      source,
       list: "Saw Point"
     })
   });
