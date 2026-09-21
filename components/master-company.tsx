@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Mail, Phone, MapPin, MessageSquareText } from "lucide-react";
 import { Eyebrow, Arrow, Breadcrumbs, PageCTA } from "./master-shared";
+import { trackFpxEvent } from "./analytics-events";
 
 const customerGroups=[
   {title:"Contractors & builders",blurb:"Timber for active jobs, upcoming projects and specific applications.",image:"product-groups/building-construction/building-deck-construction.png",alt:"Timber construction project in New Zealand"},
@@ -291,6 +292,7 @@ export function ContactPage(){
       const data=await response.json().catch(()=>({}));
       if(!response.ok) throw new Error(data?.error||"Unable to send your message.");
       form.reset();
+      trackFpxEvent("contact_submit",{source:"contact_page"});
       setStatus("success");
       setMessage("Thanks — your message has been sent to FPX.");
     }catch(error){
