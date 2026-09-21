@@ -16,7 +16,7 @@ const AppButtons=()=> <div className="m-actions"><a className="m-btn m-btn-prima
 
 function PremiumHero(){
   return <section className="ph-hero">
-    <Image className="ph-hero-bg" src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber stored in a commercial yard" width={1920} height={1080} sizes="100vw" quality={75} priority fetchPriority="high"/>
+    <Image className="ph-hero-bg" src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber stored in a commercial yard" width={1920} height={1080} sizes="100vw" quality={60} priority fetchPriority="high"/>
     <div className="ph-hero-shade"/>
     <div className="ph-hero-copy">
       <Eyebrow>NEW ZEALAND TIMBER SOURCING</Eyebrow>
@@ -38,7 +38,7 @@ function RangeStory(){
     </div>
     <div className="ph-range-list">
       {productGroups.map((group,i)=><Link href={`/${group[3]}`} className="ph-range-item" key={group[0]}>
-        <div className="ph-range-image"><Image src={`/images/${group[2]}`} alt={`${group[0]} timber products in New Zealand`} width={1400} height={1000} sizes="(max-width: 700px) calc(100vw - 48px), 220px" quality={70}/></div>
+        <div className="ph-range-image"><Image src={`/images/${group[2]}`} alt={`${group[0]} timber products in New Zealand`} width={1400} height={1000} sizes="(max-width: 700px) calc(100vw - 48px), 220px" quality={55}/></div>
         <span>0{i+1}</span>
         <div className="ph-range-copy"><h3>{group[0]}</h3><p>{group[1]}</p><b>Explore <Arrow/></b></div>
       </Link>)}
