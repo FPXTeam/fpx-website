@@ -79,5 +79,5 @@ function Closing(){
 }
 
 export function MasterHome(){
-  return <Shell><main className="master-site premium-home"><HomeMotion/><PremiumHero/><RangeStory/><PlatformStory/><BuyerStory/><Closing/></main></Shell>;
+  return <Shell><main id="main-content" className="master-site premium-home"><HomeMotion/><PremiumHero/><RangeStory/><PlatformStory/><BuyerStory/><Closing/></main></Shell>;
 }
