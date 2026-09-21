@@ -28,12 +28,12 @@ const sources = [
   {label:"Kumar, C., Faircloth, A., Leggate, W., and Redman, A. (2022). Impact of continuous drying method on drying quality of southern pine sawn timber. BioResources 17(1), 574–591.",href:"https://bioresources.cnr.ncsu.edu/resources/impact-of-continuous-drying-method-on-drying-quality-of-southern-pine-sawn-timber/"},
   {label:"Leggate, W., Kumar, C., McGavin, R.L., Faircloth, A., and Knackstedt, M. (2021). The effects of drying method on the wood permeability, wettability, treatability, and gluability of southern pine from Australia. BioResources 16(1), 698–720.",href:"https://bioresources.cnr.ncsu.edu/resources/the-effects-of-drying-method-on-the-wood-permeability-wettability-treatability-and-gluability-of-southern-pine-from-australia/"},
   {label:"Rahimi, S., Nasir, V., Avramidis, S., and Sassani, F. (2023). The role of drying schedule and conditioning in moisture uniformity in wood: A machine learning approach. Polymers 15, article 792.",href:"https://www.mdpi.com/2073-4360/15/4/792"},
-  {label:"Andersson, S. (2008). Drying of timber in progressive kilns. Wood Material Science and Engineering 3(1–2)."},
-  {label:"Cown, D.J. (1999). NZ Radiata Pine and Douglas-fir: Suitability for Processing. Forest Research Bulletin No. 216. New Zealand Forest Research Institute."},
+  {label:"Andersson, S. (2008). Drying of timber in progressive kilns. Wood Material Science and Engineering 3(1–2).",href:null},
+  {label:"Cown, D.J. (1999). NZ Radiata Pine and Douglas-fir: Suitability for Processing. Forest Research Bulletin No. 216. New Zealand Forest Research Institute.",href:null},
   {label:"International Plant Protection Convention (IPPC). ISPM 15: Regulation of wood packaging material in international trade.",href:"https://www.ippc.int/en/publications/640/"},
   {label:"NZS 3604:2011. Timber-framed buildings. Standards New Zealand.",href:"https://www.standards.govt.nz/product-download/download/461950/0?formatId=1bd170ba-2514-eb11-a812-000d3a6aa268&mediaTypeId=4af995f7-f243-48a1-aec8-6016b05da360"},
-  {label:"NZS 3631:1988. New Zealand Timber Grading Rules. Standards New Zealand."},
-  {label:"AS/NZS 4787:2001. Timber — Assessment of Drying Quality. Standards Australia / Standards New Zealand."},
+  {label:"NZS 3631:1988. New Zealand Timber Grading Rules. Standards New Zealand.",href:null},
+  {label:"AS/NZS 4787:2001. Timber — Assessment of Drying Quality. Standards Australia / Standards New Zealand.",href:null},
   {label:"Red Stag Timber. Measuring Moisture in Timber.",href:"https://www.redstagtimber.co.nz/products/new-zealand-products/technical-information/timber-briefs/timber-brief-3/"},
 ] as const;
 
