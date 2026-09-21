@@ -53,6 +53,30 @@ export function GoogleAnalyticsConsent(){
   });
  },[enabled,ready,blocked,pathname]);
 
+ useEffect(()=>{
+  if(!enabled||!ready||blocked||!window.gtag)return;
+  const onClick=(event:MouseEvent)=>{
+   const target=event.target as Element|null;
+   const anchor=target?.closest?.('a[href^="https://app.fpx.nz"]') as HTMLAnchorElement|null;
+   if(!anchor)return;
+   let eventName="login_click";
+   try{
+    const url=new URL(anchor.href);
+    if(url.pathname.startsWith("/stock"))eventName="browse_timber_click";
+    else if(url.pathname.startsWith("/request-cart"))eventName="create_request_click";
+    else if(url.pathname.startsWith("/offers"))eventName="view_offers_click";
+    else if(url.pathname.startsWith("/sourcing-sign-up"))eventName="create_account_click";
+   }catch{return}
+   window.gtag?.("event",eventName,{
+    link_url:anchor.href,
+    link_text:(anchor.textContent||"").trim().slice(0,120),
+    page_path:window.location.pathname
+   });
+  };
+  document.addEventListener("click",onClick,true);
+  return()=>document.removeEventListener("click",onClick,true);
+ },[enabled,ready,blocked]);
+
  if(!enabled||blocked)return null;
 
  return <Script
