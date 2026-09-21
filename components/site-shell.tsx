@@ -1,12 +1,11 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { ChevronDown, Menu, X, ArrowUpRight } from "lucide-react";
 import { LinkedInIcon, InstagramIcon, FacebookIcon } from "./social-icons";
-import { useEffect,useState } from "react";
-import { CookieConsent, readFpxConsent } from "./cookie-consent";
-export function Preloader(){const pathname=usePathname();const[done,setDone]=useState(true);useEffect(()=>{if(pathname!=="/")return;if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;if(sessionStorage.getItem("fpx-intro-seen"))return;setDone(false);const t=setTimeout(()=>{if(readFpxConsent()?.preferences)sessionStorage.setItem("fpx-intro-seen","1");setDone(true)},1800);return()=>clearTimeout(t)},[pathname]);const skip=()=>{if(readFpxConsent()?.preferences)sessionStorage.setItem("fpx-intro-seen","1");setDone(true)};return <div className={`preloader ${done?"is-done":""}`} aria-hidden={done}><div className="pre-top"/><div className="pre-bottom"/><div className="pre-logo"><Image src="/images/fpx-logo-x-original.png" alt="" width={92} height={94} sizes="92px" quality={80}/><span>FOREST PRODUCTS EXCHANGE</span></div>{!done&&<button type="button" className="skip-intro" onClick={skip}>Skip intro</button>}</div>}
+import { useState } from "react";
+import { CookieConsent } from "./cookie-consent";
+import { trackFpxEvent } from "./analytics-events";
 export function Header(){const[open,setOpen]=useState(false);return <header className="site-header"><div className="nav-wrap"><Link href="/" className="brand" aria-label="FPX home"><Image src="/images/fpx-logo-horizontal-original.png" alt="" width={160} height={72} sizes="(max-width: 900px) 104px, 116px" quality={80}/></Link><nav className="desktop-nav" aria-label="Primary navigation"><Link href="/fpx-sourcing">FPX Sourcing</Link><Link href="/timber">Timber Range</Link><Link href="/our-customers">Our Customers</Link><div className="drop"><button type="button" aria-haspopup="true">Resources <ChevronDown size={14}/></button><div className="drop-menu"><Link href="/saw-point"><b>Saw Point</b><span>Straight talk on NZ timber.</span></Link><Link href="/industry-insights"><b>FPX Insights</b><span>Guides and practical timber knowledge.</span></Link><Link href="/frequently-asked-questions"><b>FAQ</b><span>Answers about sourcing through FPX.</span></Link></div></div><Link href="/about-us">About Us</Link><Link href="/contact-us">Contact</Link></nav><div className="nav-actions"><a href="https://app.fpx.nz">Login</a><a className="nav-cta" href="https://app.fpx.nz/stock">Browse Timber <ArrowUpRight size={15}/></a></div><button type="button" className="menu-btn" aria-label={open?"Close navigation":"Open navigation"} aria-expanded={open} onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>}</button></div>{open&&<nav className="mobile-nav" aria-label="Mobile navigation"><Link href="/fpx-sourcing">FPX Sourcing</Link><Link href="/timber">Timber Range</Link><Link href="/our-customers">Our Customers</Link><span>Resources</span><Link href="/saw-point">Saw Point</Link><Link href="/industry-insights">FPX Insights</Link><Link href="/frequently-asked-questions">FAQ</Link><Link href="/about-us">About Us</Link><Link href="/contact-us">Contact</Link><div className="mobile-nav-actions"><a href="https://app.fpx.nz" className="mobile-nav-login">Login</a><a href="https://app.fpx.nz/stock" className="mobile-nav-cta">Browse Timber <ArrowUpRight size={15}/></a></div></nav>}</header>}
 export function Footer(){
   const[status,setStatus]=useState<"idle"|"sending"|"success"|"error">("idle");
@@ -26,6 +25,7 @@ export function Footer(){
       const data=await response.json().catch(()=>({}));
       if(!response.ok) throw new Error(data?.error||"Unable to subscribe right now.");
       form.reset();
+      trackFpxEvent("saw_point_subscribe",{source:"footer"});
       setStatus("success");
       setMessage("You're on the Saw Point list.");
     }catch(error){
@@ -49,4 +49,4 @@ export function Footer(){
     <div className="footer-bottom"><span>© 2026 Forest Products Exchange Limited</span><nav aria-label="Legal links"><Link href="/terms-and-conditions">Terms & Conditions</Link><Link href="/privacy-policy">Privacy Policy</Link><Link href="/cookie-policy">Cookie Policy</Link><Link href="/cookie-settings">Cookie Settings</Link></nav></div>
   </footer>
 }
-export function Shell({children}:{children:React.ReactNode}){return <><Preloader/><Header/>{children}<Footer/><CookieConsent/></>}
+export function Shell({children}:{children:React.ReactNode}){return <><Header/>{children}<Footer/><CookieConsent/></>}
