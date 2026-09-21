@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { MasterInnerPage } from "@/components/master-site";
+import sawPointIssues from "../../data/saw-point-issues.json";
 
 const siteUrl = "https://www.fpx.nz";
 const masterPages = [
@@ -96,6 +97,15 @@ const faqSchemaItems = [
   ["How much does FPX cost for buyers?","FPX is free for buyers to use."],
   ["Who can I contact if I need help?","Contact FPX at support@fpx.nz or use the Contact page for timber sourcing questions, platform support or general enquiries."],
 ] as const;
+
+const sawPointMonthOrder=["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+function sawPointIssueDateValue(value:string){
+  const upper=value.toUpperCase();
+  const year=Number(upper.match(/\\b\\d{4}\\b/)?.[0]||0);
+  const month=sawPointMonthOrder.findIndex(name=>upper.includes(name));
+  return year*12+(month>=0?month:0);
+}
+const sawPointSchemaIssues=[...sawPointIssues].sort((a,b)=>sawPointIssueDateValue(b.date)-sawPointIssueDateValue(a.date)||Number(b.issue)-Number(a.issue));
 
 const howToSteps = [
   ["Start where you are","Browse available stock, review current offers or send a specific request. Start with the route that best matches what you know."],
@@ -211,7 +221,7 @@ function pageSchema(slug: string) {
     return { "@context":"https://schema.org", "@type":"CollectionPage", name:data.title, description:data.description, url, mainEntity:{"@type":"ItemList","itemListElement":productSchemas[slug].map((name,index)=>({"@type":"ListItem",position:index+1,name}))}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
   }
   if (slug === "saw-point") {
-    return { "@context":"https://schema.org", "@type":"CollectionPage", name:data.title, description:data.description, url, mainEntity:{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"name":"Saw Point | Issue 002","url":"https://www.linkedin.com/pulse/saw-point-issue-002-september-2026-forest-products-exchange-j04nc"},{"@type":"ListItem","position":2,"name":"Saw Point | Issue 001","url":"https://www.linkedin.com/pulse/saw-point-issue-001-august-2026-forest-products-exchange-rctec"}]}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
+    return { "@context":"https://schema.org", "@type":"CollectionPage", name:data.title, description:data.description, url, mainEntity:{"@type":"ItemList","itemListElement":sawPointSchemaIssues.map((issue,index)=>({"@type":"ListItem","position":index+1,"name":issue.title||`Saw Point | Issue ${issue.issue}`,"url":issue.linkedinUrl||`${siteUrl}/saw-point/${issue.slug}`}))}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
   }
   if (slug === "about-us") {
     return { "@context":"https://schema.org", "@type":"AboutPage", name:data.title, description:data.description, url, about:{"@id":`${siteUrl}/#organization`}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
