@@ -219,7 +219,7 @@ function RadiataPineArticle(){
         <h1>Radiata Pine<br/><span className="headline-accent">Characteristics</span></h1>
         <h2>How Growth and Environment Shape Timber in New Zealand</h2>
         <p>Understanding timber quality begins long before installation: it starts with the tree itself.</p>
-        <div className="ria-meta"><span>BY FPX</span><span>13 MARCH 2026</span><span>6 MIN READ</span></div>
+        <div className="ria-meta"><span>BY FPX</span><span>PUBLISHED 13 MARCH 2026</span><span>UPDATED 21 SEPTEMBER 2026</span><span>6 MIN READ</span></div>
       </div>
       <div className="ria-hero-image">
         <Image src="/images/radiata-pine-growth-rings-hero.png" alt="Close-up of Radiata Pine growth rings" width={1920} height={900} sizes="(max-width: 900px) 100vw, 55vw" priority/>
