@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Script from "next/script";
+import { GoogleAnalyticsConsent } from "../components/google-analytics-consent";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import "../components/revised-pages.css";
@@ -57,5 +59,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en-NZ"><body className={`${cormorant.variable} antialiased`}>{children}</body></html>;
+  return <html lang="en-NZ"><body className={`${cormorant.variable} antialiased`}><Script id="fpx-google-consent-default" strategy="beforeInteractive" dangerouslySetInnerHTML={{__html:`window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};window.gtag("consent","default",{analytics_storage:"denied",ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});`}}/>{children}<GoogleAnalyticsConsent/></body></html>;
 }
