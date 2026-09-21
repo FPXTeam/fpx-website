@@ -19,8 +19,8 @@ const pages = [
   { path:"/the-science-of-kiln-drying", modified:"2026-09-16", changeFrequency:"yearly" as const, priority:.8 },
   { path:"/frequently-asked-questions", modified:"2026-09-18", changeFrequency:"monthly" as const, priority:.7 },
   { path:"/terms-and-conditions", modified:"2026-09-16", changeFrequency:"yearly" as const, priority:.4 },
-  { path:"/privacy-policy", modified:"2026-09-16", changeFrequency:"yearly" as const, priority:.4 },
-  { path:"/cookie-policy", modified:"2026-09-16", changeFrequency:"yearly" as const, priority:.3 },
+  { path:"/privacy-policy", modified:"2026-09-21", changeFrequency:"yearly" as const, priority:.4 },
+  { path:"/cookie-policy", modified:"2026-09-21", changeFrequency:"yearly" as const, priority:.3 },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
