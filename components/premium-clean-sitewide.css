@@ -927,3 +927,56 @@ body .premium-home .ph-hero-scroll{
 @media(max-width:420px){
   .mobile-nav-actions{grid-template-columns:1fr}
 }
+
+
+/* PageSpeed 2026: contrast, footer semantics and mobile target sizing */
+.nav-cta,
+.mobile-nav-cta,
+.footer-saw-point button,
+.cookie-primary{
+  background:#347F32!important;
+  border-color:#347F32!important;
+  color:#fff!important;
+}
+.nav-cta:hover,
+.mobile-nav-cta:hover,
+.footer-saw-point button:hover,
+.cookie-primary:hover{
+  background:#2F6F35!important;
+  border-color:#2F6F35!important;
+}
+.footer-heading{
+  margin:0 0 20px;
+  color:#fff;
+  opacity:.86;
+  font:700 13px/1.2 Lato,Arial,sans-serif;
+  letter-spacing:.02em;
+}
+.footer-saw-point>small{color:#AAB6AF!important}
+.footer-saw-point>small a{
+  color:#D8E0DB!important;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+.footer-bottom{color:#AAB6AF!important}
+.footer-bottom a{color:#D8E0DB!important}
+.cookie-banner-actions>a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+}
+@media(max-width:700px){
+  .footer-bottom>nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px 18px;
+    align-items:center;
+  }
+  .footer-bottom>nav a{
+    display:inline-flex;
+    align-items:center;
+    min-height:44px;
+    padding:8px 0;
+  }
+}
