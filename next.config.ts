@@ -3,9 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   trailingSlash: false,
   images: {
-    // Next 16 defaults to quality 75. FPX uses large photographic hero imagery
-    // and UI screenshots, so keep optimized delivery but raise the baseline.
-    qualities: [90],
+    // Keep FPX photography crisp while avoiding the q=90 payload penalty flagged by Lighthouse.
+    // Individual LCP imagery can opt into 82; content photography uses 80.
+    qualities: [80, 82],
   },
   async redirects() {
     return [
