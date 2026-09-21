@@ -39,6 +39,22 @@ type MasterPage = (typeof masterPages)[number];
 type PageMeta = { title: string; description: string; image?: string; canonical?: string; type?: "article" | "website"; publishedAt?: string; modifiedAt?: string; articleSection?: string };
 const defaultImage = "/images/social/fpx-social-share.jpg";
 
+const articleCitations:Record<string,string[]> = {
+  "timber-growth-rings":[
+    "https://www.sciencedirect.com/science/article/abs/pii/S0378112700004059",
+    "https://teara.govt.nz/en/radiata-pine",
+    "https://link.springer.com/article/10.1186/s40490-015-0053-8",
+    "https://assets-global.website-files.com/5d4797a2a904cdf4df041fd6/5d6738e946f65d180ff176d1_RPBC%20Bulletin%202%20Radiata%20Pine%20Wood%20Density%20200306.pdf"
+  ],
+  "the-science-of-kiln-drying":[
+    "https://bioresources.cnr.ncsu.edu/resources/impact-of-continuous-drying-method-on-drying-quality-of-southern-pine-sawn-timber/",
+    "https://bioresources.cnr.ncsu.edu/resources/the-effects-of-drying-method-on-the-wood-permeability-wettability-treatability-and-gluability-of-southern-pine-from-australia/",
+    "https://www.mdpi.com/2073-4360/15/4/792",
+    "https://www.ippc.int/en/publications/640/",
+    "https://www.redstagtimber.co.nz/products/new-zealand-products/technical-information/timber-briefs/timber-brief-3/"
+  ]
+};
+
 const pageMeta: Record<MasterPage, PageMeta> = {
   timber: { title: "Timber Range for New Zealand Commercial Buyers", description: "Explore FPX timber product groups for manufacturing, building and construction, outdoor and landscaping, and dunnage applications across New Zealand." },
   products: { title: "Timber Range for New Zealand Commercial Buyers", description: "Explore FPX timber product groups for manufacturing, building and construction, outdoor and landscaping, and dunnage applications across New Zealand.", canonical: "/timber" },
@@ -149,6 +165,10 @@ function pageSchema(slug: string) {
       datePublished:data.publishedAt,
       dateModified:data.modifiedAt,
       articleSection:data.articleSection,
+      citation:articleCitations[slug],
+      keywords:slug==="the-science-of-kiln-drying"
+        ? ["Radiata Pine kiln drying","timber moisture content","continuous kiln","conventional kiln","New Zealand timber"]
+        : ["Radiata Pine characteristics","wood density","growth rings","New Zealand timber","Radiata Pine"],
       mainEntityOfPage:{"@type":"WebPage","@id":url},
       publisher:{"@id":`${siteUrl}/#organization`},
       author:{"@type":"Organization","@id":`${siteUrl}/#organization`,"name":"Forest Products Exchange Limited","url":`${siteUrl}/about-us`},
