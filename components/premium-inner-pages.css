@@ -5941,3 +5941,15 @@
   .pst-answer{padding:78px 24px 20px}
   .pst-answer h2{font-size:42px}
 }
+
+
+.pg-related-links{border-top:1px solid var(--pi-line)}
+.pg-related-links a{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:var(--pi-green);
+  font-weight:700;
+  text-decoration:none;
+}
+.pg-related-links a:hover{text-decoration:underline;text-underline-offset:4px}
