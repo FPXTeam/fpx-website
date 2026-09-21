@@ -4,7 +4,7 @@ import { GoogleAnalyticsConsent } from "../components/google-analytics-consent";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import "../components/brand-system-2026.css";
-import "../components/premium-clean-sitewide.css";
+import "../components/premium-home-shared.css";
 import "../components/site-motion.css";
 import "../components/hero-image-quality.css";
 import "../components/app-visuals-hidden.css";
