@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { MasterInnerPage } from "@/components/master-site";
 import sawPointIssues from "../../data/saw-point-issues.json";
+import "../../components/revised-pages.css";
 import "../../components/inner-refresh.css";
 import "../../components/source-timber-redesign.css";
 import "../../components/premium-inner-pages.css";
