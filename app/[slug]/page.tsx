@@ -229,7 +229,11 @@ function pageSchema(slug: string) {
     return { "@context":"https://schema.org", "@type":"CollectionPage", name:data.title, description:data.description, url, mainEntity:{"@type":"ItemList","itemListElement":sawPointSchemaIssues.map((issue,index)=>({"@type":"ListItem","position":index+1,"name":issue.title||`Saw Point | Issue ${issue.issue}`,"url":issue.linkedinUrl||`${siteUrl}/saw-point/${issue.slug}`}))}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
   }
   if (slug === "about-us") {
-    return { "@context":"https://schema.org", "@type":"AboutPage", name:data.title, description:data.description, url, about:{"@id":`${siteUrl}/#organization`}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
+    return [
+      { "@context":"https://schema.org", "@type":"AboutPage", name:data.title, description:data.description, url, about:{"@id":`${siteUrl}/#organization`}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" },
+      { "@context":"https://schema.org", "@type":"Person", "@id":`${siteUrl}/about-us#george-harman`, name:"George Harman", jobTitle:"Director", worksFor:{"@id":`${siteUrl}/#organization`}, url:`${siteUrl}/about-us#george-harman`, knowsAbout:["Commercial timber sourcing","New Zealand timber trade"] },
+      { "@context":"https://schema.org", "@type":"Person", "@id":`${siteUrl}/about-us#gabriela-molloy`, name:"Gabriela Molloy", jobTitle:"General Manager", worksFor:{"@id":`${siteUrl}/#organization`}, url:`${siteUrl}/about-us#gabriela-molloy`, knowsAbout:["FPX operations","Commercial timber sourcing"] }
+    ];
   }
   if (slug === "contact-us") {
     return { "@context":"https://schema.org", "@type":"ContactPage", name:data.title, description:data.description, url, about:{"@id":`${siteUrl}/#organization`}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
@@ -254,6 +258,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const { slug } = await params;
   if (!masterPages.includes(slug as MasterPage)) notFound();
   if (legacyRedirects[slug]) permanentRedirect(legacyRedirects[slug]);
-  const schemas = [breadcrumbSchema(slug), pageSchema(slug)];
+  const pageSchemas = pageSchema(slug);
+  const schemas = [breadcrumbSchema(slug), ...(Array.isArray(pageSchemas)?pageSchemas:[pageSchemas])];
   return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(schemas)}}/><MasterInnerPage slug={contentSlug[slug] ?? slug}/></>;
 }
