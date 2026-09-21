@@ -101,7 +101,7 @@ const faqSchemaItems = [
 const sawPointMonthOrder=["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
 function sawPointIssueDateValue(value:string){
   const upper=value.toUpperCase();
-  const year=Number(upper.match(/\\b\\d{4}\\b/)?.[0]||0);
+  const year=Number(upper.match(/[0-9]{4}/)?.[0]||0);
   const month=sawPointMonthOrder.findIndex(name=>upper.includes(name));
   return year*12+(month>=0?month:0);
 }
