@@ -45,7 +45,7 @@ export function KilnDryingArticle(){
         <h1>The Science of<br/><span className="headline-accent">Kiln Drying</span></h1>
         <h2>Conventional and Continuous Kilns, Moisture Content, and Why It Matters for Radiata Pine</h2>
         <p>Every pack of sawn Radiata Pine in New Zealand starts its journey green, often containing more than 100 per cent moisture relative to its dry weight.</p>
-        <div className="ria-meta"><span>BY FPX</span><span>16 SEPTEMBER 2026</span><span>10 MIN READ</span></div>
+        <div className="ria-meta"><span>BY FPX</span><span>PUBLISHED 16 SEPTEMBER 2026</span><span>UPDATED 21 SEPTEMBER 2026</span><span>10 MIN READ</span></div>
       </div>
       <div className="ria-hero-image">
         <Image src="/images/kiln-drying-cover.png" alt="Stacked Radiata Pine timber inside a kiln drying facility in New Zealand" width={1920} height={1200} sizes="(max-width: 900px) 100vw, 55vw" priority/>
