@@ -22,7 +22,7 @@ export function CustomersPage(){
       focusTitle:"Product fit",
       focusCopy:"Match the timber to the application, specification and timing.",
       image:"fpx-customer-builder.png",
-      alt:"Builder customer",
+      alt:"New Zealand builder sourcing commercial timber",
       pillars:[
         ["Know what fits.","Check product, grade, treatment and key specifications."],
         ["Start the right way.","Browse stock or create a request for a defined requirement."],
@@ -37,7 +37,7 @@ export function CustomersPage(){
       focusTitle:"Specification clarity",
       focusCopy:"Keep every option tied back to the same commercial brief.",
       image:"fpx-customer-procurement.png",
-      alt:"Procurement customer",
+      alt:"Procurement professional sourcing timber for commercial projects",
       pillars:[
         ["Keep the brief consistent.","Bring the important specification into one sourcing requirement."],
         ["Compare like with like.","Review suitable options against the same commercial need."],
@@ -52,7 +52,7 @@ export function CustomersPage(){
       focusTitle:"Commercial fit",
       focusCopy:"Find timber that makes sense for stock needs and customer demand.",
       image:"fpx-customer-merchant.png",
-      alt:"Timber merchant customer",
+      alt:"New Zealand timber merchant sourcing stock",
       pillars:[
         ["See what is available.","Browse current timber and offers quickly."],
         ["Handle repeat needs faster.","Start from known product requirements."],
@@ -67,7 +67,7 @@ export function CustomersPage(){
       focusTitle:"Feedstock fit",
       focusCopy:"Match grade, size and volume to the production requirement.",
       image:"fpx-customer-processor.png",
-      alt:"Wood processor customer",
+      alt:"Wood processor sourcing timber feedstock",
       pillars:[
         ["Define the feedstock.","Set grade, dimensions and volume clearly."],
         ["Separate stock from specific needs.","Browse first, then use Requests for exact requirements."],
@@ -246,8 +246,8 @@ export function AboutPage(){
 
         <div className="pab5-figures" aria-label="George Harman and Gabriela Molloy">
           <div className="pab5-mark">FPX</div>
-          <Image className="pab5-figure pab5-george" src={team[0].image} alt={team[0].name} width={800} height={1200} sizes="(max-width: 700px) 55vw, 28vw"/>
-          <Image className="pab5-figure pab5-gabriela" src={team[1].image} alt={team[1].name} width={800} height={1200} sizes="(max-width: 700px) 55vw, 28vw"/>
+          <Image className="pab5-figure pab5-george" src={team[0].image} alt={`${team[0].name}, ${team[0].role} at FPX`} width={800} height={1200} sizes="(max-width: 700px) 55vw, 28vw"/>
+          <Image className="pab5-figure pab5-gabriela" src={team[1].image} alt={`${team[1].name}, ${team[1].role} at FPX`} width={800} height={1200} sizes="(max-width: 700px) 55vw, 28vw"/>
         </div>
 
         <article className="pab5-bio pab5-bio-right">
