@@ -1,6 +1,14 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+
+function productImageAlt(groupTitle:string,image:string){
+  const subject=(image.split("/").pop()||"timber")
+    .replace(/\.(png|jpe?g|webp|avif)$/i,"")
+    .replace(/^(manufacturing|building|outdoor|dunnage)-/,"")
+    .replace(/-/g," ");
+  return `${groupTitle} timber: ${subject}`;
+}
 import { productGroups, Eyebrow, Arrow, AppButtons } from "./master-shared";
 
 export const productGroupDetails: Record<string,{title:string;description:string;hero:string;gallery:string[];categories:string[];examples?:string[];note:string;}> = {
@@ -97,7 +105,7 @@ export function ProductGroupPage({slug}:{slug:string}){
     </section>
 
     <section className={`pg-gallery ${group.gallery.length===2?"is-two":""}`}>
-      {group.gallery.map((image,i)=><figure key={image}><Image src={`/images/${image}`} alt={`${group.title} timber example ${i+1}`} width={1400} height={1000} sizes="(max-width: 800px) 100vw, 33vw"/></figure>)}
+      {group.gallery.map((image,i)=><figure key={image}><Image src={`/images/${image}`} alt={productImageAlt(group.title,image)} width={1400} height={1000} sizes="(max-width: 800px) 100vw, 33vw"/></figure>)}
     </section>
 
     <section className="pg-catalogue">
