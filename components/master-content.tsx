@@ -205,15 +205,13 @@ function RadiataPineArticle(){
     "Understanding the relationship between the environment and timber characteristics underscores the value of Radiata Pine across the entire supply chain. As management practices and technology continue to evolve, this species will continue to be a vital contributor to New Zealand’s manufacturing, construction, and export industries."
   ];
   const sources=[
-    'Cown, D.J. (1972). "Density of Radiata Pine: Its Variation and Manipulation." New Zealand Institute of Forestry Journal.',
-    'Beets, P.N., et al. (2001). "Wood Density of Radiata Pine: Effect of Nitrogen Supply." Forest Ecology and Management.',
-    '"Radiata Pine." Te Ara – The Encyclopedia of New Zealand.',
-    '"Radiata Pine Characteristics." Kiwi Lumber.',
-    'Palmer, D.J., et al. (2013). "Modelling Variation in Wood Density Within and Among Trees in Stands of New Zealand-Grown Radiata Pine." New Zealand Journal of Forestry Science.',
-    "Kimberley et al. (2015): Modelling variation in wood density",
-    "RPBC Bulletin No. 2: Radiata Pine Wood Density",
-    "Cown, D. J. (1999): NZ Radiata Pine and Douglas-fir: Suitability for Processing"
-  ];
+    {label:'Cown, D.J. (1974). "Wood density of radiata pine: its variation and manipulation." New Zealand Journal of Forestry 19(1), 84–92.'},
+    {label:'Beets, P.N., Gilchrist, K., and Jeffreys, M.P. (2001). "Wood density of radiata pine: effect of nitrogen supply." Forest Ecology and Management 145(3), 173–180.',href:"https://www.sciencedirect.com/science/article/abs/pii/S0378112700004059"},
+    {label:'"Radiata pine." Te Ara – The Encyclopedia of New Zealand.',href:"https://teara.govt.nz/en/radiata-pine"},
+    {label:"Kimberley, M.O., Cown, D.J., McKinley, R.B., Moore, J.R., and Dowling, L.J. (2015). Modelling variation in wood density within and among trees in stands of New Zealand-grown radiata pine. New Zealand Journal of Forestry Science 45, 22.",href:"https://link.springer.com/article/10.1186/s40490-015-0053-8"},
+    {label:"Radiata Pine Breeding Company. Information Bulletin No. 2: Radiata Pine Wood Density.",href:"https://assets-global.website-files.com/5d4797a2a904cdf4df041fd6/5d6738e946f65d180ff176d1_RPBC%20Bulletin%202%20Radiata%20Pine%20Wood%20Density%20200306.pdf"},
+    {label:"Cown, D.J. (1999). New Zealand Pine and Douglas-fir: Suitability for Processing. Forest Research Bulletin No. 216."}
+  ] as const;
   return <article className="ria">
     <header className="ria-hero">
       <div className="ria-hero-copy">
@@ -276,11 +274,11 @@ function RadiataPineArticle(){
       <Eyebrow>SOURCES</Eyebrow>
       <h2>Research and industry references.</h2>
       <p>This article draws on publicly available research and industry resources for accuracy. Key references include:</p>
-      <ol>{sources.map(source=><li key={source}>{source}</li>)}</ol>
+      <ol>{sources.map(source=><li key={source.label}>{source.href?<a href={source.href} target="_blank" rel="noreferrer">{source.label}</a>:source.label}</li>)}</ol>
     </section>
 
     <section className="ria-next">
-      <div><Eyebrow>NEXT IN INDUSTRY INSIGHTS</Eyebrow><h2>The Science of Kiln Drying</h2><p>Conventional and continuous kilns, moisture content, and why it matters for Radiata Pine.</p></div>
+      <div><Eyebrow>NEXT IN INDUSTRY INSIGHTS</Eyebrow><h2>The Science of Kiln Drying</h2><p>Conventional and continuous kilns, moisture content, and why it matters for Radiata Pine.</p><nav className="ria-related" aria-label="Related FPX timber pages"><Link href="/timber">Explore timber range</Link><Link href="/manufacturing">Manufacturing timber</Link><Link href="/fpx-sourcing">FPX Sourcing</Link></nav></div>
       <Link href="/the-science-of-kiln-drying">Read next <Arrow/></Link>
     </section>
   </article>;
