@@ -5953,3 +5953,41 @@
   text-decoration:none;
 }
 .pg-related-links a:hover{text-decoration:underline;text-underline-offset:4px}
+
+
+/* Verifiable research links and article topic-cluster navigation */
+.ria-sources a{
+  color:#315F46;
+  text-decoration:underline;
+  text-decoration-thickness:1px;
+  text-underline-offset:3px;
+}
+.ria-sources a:hover{color:#214735}
+.kda-source-note{
+  margin-top:12px!important;
+  font-size:13px!important;
+  color:#64736C!important;
+}
+.kda-source-note a{
+  color:#315F46;
+  font-weight:700;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.ria-related{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:24px;
+}
+.ria-related a{
+  display:inline-flex;
+  align-items:center;
+  min-height:42px;
+  padding:0 14px;
+  border:1px solid #D6DFD9;
+  border-radius:999px;
+  color:#315F46;
+  background:#fff;
+  font:700 11px Lato,Arial,sans-serif;
+}
