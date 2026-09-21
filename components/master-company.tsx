@@ -239,7 +239,7 @@ export function AboutPage(){
       </div>
 
       <div className="pab5-team-stage">
-        <article className="pab5-bio pab5-bio-left">
+        <article id="george-harman" className="pab5-bio pab5-bio-left">
           <small>{team[0].role}</small>
           <h3>{team[0].name}</h3>
           <p>{team[0].copy}</p>
@@ -251,7 +251,7 @@ export function AboutPage(){
           <Image className="pab5-figure pab5-gabriela" src={team[1].image} alt={`${team[1].name}, ${team[1].role} at FPX`} width={800} height={1200} sizes="(max-width: 700px) 55vw, 28vw"/>
         </div>
 
-        <article className="pab5-bio pab5-bio-right">
+        <article id="gabriela-molloy" className="pab5-bio pab5-bio-right">
           <small>{team[1].role}</small>
           <h3>{team[1].name}</h3>
           <p>{team[1].copy}</p>
