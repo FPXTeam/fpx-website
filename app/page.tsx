@@ -1,4 +1,4 @@
-import { MasterHome } from "@/components/master-site";
+import { MasterHome } from "@/components/master-home";
 
 const siteUrl = "https://www.fpx.nz";
 
