@@ -92,6 +92,28 @@ export function ProductGroupPage({slug}:{slug:string}){
   const group=productGroupDetails[slug];
   const audience=slug==="manufacturing"?"wood processors and timber manufacturers":slug==="building-construction"?"builders, contractors and commercial project teams":slug==="outdoor-landscaping"?"fencing, landscaping, retaining and outdoor construction buyers":"freight, shipping and industrial transport teams";
   const number=String(["manufacturing","building-construction","outdoor-landscaping","dunnage"].indexOf(slug)+1).padStart(2,"0");
+  const relatedGuidance:Record<string,[string,string,string][]> = {
+    "manufacturing":[
+      ["RADIATA PINE","How growth and environment shape Radiata Pine","/timber-growth-rings"],
+      ["KILN DRYING","Moisture content and kiln-drying methods","/the-science-of-kiln-drying"],
+      ["SOURCING","How to source a specific timber requirement","/fpx-sourcing"]
+    ],
+    "building-construction":[
+      ["KILN DRYING","Moisture content and kiln-drying methods","/the-science-of-kiln-drying"],
+      ["RADIATA PINE","Understand Radiata Pine characteristics","/timber-growth-rings"],
+      ["SOURCING","How FPX timber sourcing works","/how-fpx-works"]
+    ],
+    "outdoor-landscaping":[
+      ["RADIATA PINE","Understand Radiata Pine characteristics","/timber-growth-rings"],
+      ["SOURCING","How to source timber through FPX","/fpx-sourcing"],
+      ["QUESTIONS","Answers about requests, offers and orders","/frequently-asked-questions"]
+    ],
+    "dunnage":[
+      ["SOURCING","How to source a specific dunnage requirement","/fpx-sourcing"],
+      ["QUESTIONS","Answers about FPX sourcing and requests","/frequently-asked-questions"],
+      ["TIMBER RANGE","Explore all FPX timber product groups","/timber"]
+    ]
+  };
   return <>
     <section className="pg-hero">
       <div className="pg-hero-copy"><span className="pg-number">{number}</span><Eyebrow>PRODUCT GROUP</Eyebrow><h1>{group.title}</h1><p>{group.description}</p><div className="m-actions"><a href="https://app.fpx.nz/stock" className="m-btn m-btn-primary">Browse current timber <Arrow/></a><a href="https://app.fpx.nz/request-cart" className="m-btn m-btn-ghost">Request a product <Arrow/></a></div></div>
@@ -114,6 +136,10 @@ export function ProductGroupPage({slug}:{slug:string}){
     </section>
 
     {group.examples&&<section className="pg-examples"><div><Eyebrow>{slug==="manufacturing"?"EXAMPLES ACROSS THE RANGE":"TYPICAL APPLICATIONS"}</Eyebrow><h2>{slug==="manufacturing"?"Breadth without the specification overload.":"Built around practical transport needs."}</h2></div><div>{group.examples.map(item=><span key={item}>{item}</span>)}</div></section>}
+
+    <section className="pg-summary pg-related-links" aria-label="Related timber guidance">
+      {relatedGuidance[slug].map(([label,title,href])=><article key={href}><small>{label}</small><p><Link href={href}>{title} <Arrow/></Link></p></article>)}
+    </section>
 
     <section className="pg-close"><div><Eyebrow>MOVE INTO FPX</Eyebrow><h2>Need the grade, size or specification?</h2><p>Use the website to understand the range. Use FPX to work with current products, stock, offers and detailed specifications.</p></div><AppButtons/></section>
   </>;
