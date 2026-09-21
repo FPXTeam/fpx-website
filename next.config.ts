@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     // Keep FPX photography crisp while avoiding the q=90 payload penalty flagged by Lighthouse.
     // Individual LCP imagery can opt into 82; content photography uses 80.
-    qualities: [80, 82],
+    qualities: [70, 75, 80],
   },
   async redirects() {
     return [
