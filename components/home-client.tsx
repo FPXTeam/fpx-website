@@ -13,7 +13,7 @@ export function HomeMotion(){
     const root=document.querySelector<HTMLElement>(".premium-home");
     if(!root)return;
     const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const targets=Array.from(root.querySelectorAll<HTMLElement>(":scope > section, .ph-range-item"))
+    const targets=Array.from(root.querySelectorAll<HTMLElement>(":scope > section:not(.ph-hero), .ph-range-item"))
       .filter((el,index,self)=>self.indexOf(el)===index);
     root.classList.add("site-motion-ready");
     targets.forEach((el,index)=>{
