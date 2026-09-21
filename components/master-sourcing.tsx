@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { Eyebrow, Arrow, AppButtons } from "./master-shared";
 
 const requestSteps=[
@@ -63,6 +64,13 @@ export function SourceTimberPage(){return <>
       <p>Start with what you know. Send a specific request, browse available timber or review current offers. FPX gives each requirement a clear starting point.</p>
       <AppButtons/>
     </div>
+  </section>
+
+  <section className="pst-answer" aria-labelledby="what-is-fpx-sourcing">
+    <Eyebrow>WHAT IS FPX SOURCING?</Eyebrow>
+    <h2 id="what-is-fpx-sourcing">A digital timber sourcing service for commercial buyers in New Zealand.</h2>
+    <p>FPX Sourcing gives commercial timber buyers one place to browse available timber, review current offers or send a specific timber requirement. The digital service is supported by practical timber sourcing expertise behind the platform.</p>
+    <nav aria-label="Learn more about FPX Sourcing"><Link href="/how-fpx-works">How FPX works</Link><Link href="/timber">Explore the timber range</Link><Link href="/frequently-asked-questions">Read sourcing FAQs</Link></nav>
   </section>
 
   <section className="pst-intro">
@@ -140,5 +148,5 @@ export function SourceTimberPage(){return <>
 export function HowPage(){const steps=[["01","Start where you are","Browse available stock, review current offers or send a specific request. Start with the route that best matches what you know."],["02","Share the detail","Add the dimensions, grade, treatment and quantity that matter to the job. Clear inputs make the next step easier."],["03","Choose what fits","Review the timber options and the information around them, then choose the route that works for your team."],["04","Keep it moving","FPX keeps the order and delivery path connected so your team can follow the handover through to site."]];return <>
 <section className="phw-hero phw-hero-no-app"><div><Eyebrow>HOW FPX WORKS</Eyebrow><h1>From requirement<br/><span className="headline-accent">to delivery.</span></h1><p>Start with the information you already have. FPX keeps the sourcing steps connected from the first requirement through to delivery.</p><div className="phw-route-tags" aria-label="Ways to start with FPX"><span>Browse stock</span><span>Review offers</span><span>Create a request</span></div></div></section>
 <section className="phw-flow"><header><Eyebrow>THE PROCESS</Eyebrow><h2>Four clear stages.</h2><p>The detail changes by job. The shape of the process stays simple.</p></header><div>{steps.map(([num,title,copy])=><article key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></article>)}</div></section>
-<section className="phw-close"><div><Eyebrow>START WHERE IT MAKES SENSE</Eyebrow><h2>Browse, enquire or request.</h2><p>Choose the route that best matches what you know about the job today.</p></div><AppButtons/></section>
+<section className="phw-close"><div><Eyebrow>START WHERE IT MAKES SENSE</Eyebrow><h2>Browse, enquire or request.</h2><p>Choose the route that best matches what you know about the job today.</p><nav className="phw-related" aria-label="Related FPX sourcing information"><Link href="/fpx-sourcing">FPX Sourcing</Link><Link href="/timber">Timber Range</Link><Link href="/frequently-asked-questions">Sourcing FAQ</Link></nav></div><AppButtons/></section>
 </>}
