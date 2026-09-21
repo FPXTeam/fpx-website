@@ -1020,3 +1020,19 @@ body .premium-home .ph-hero-scroll{
     box-shadow:0 18px 35px rgba(4,14,14,.08);
   }
 }
+
+
+.skip-link{
+  position:fixed;
+  left:16px;
+  top:10px;
+  z-index:10000;
+  transform:translateY(-150%);
+  padding:11px 14px;
+  border-radius:6px;
+  background:#040E0E;
+  color:#fff;
+  font:700 13px Lato,Arial,sans-serif;
+  transition:transform .15s ease;
+}
+.skip-link:focus{transform:translateY(0)}
