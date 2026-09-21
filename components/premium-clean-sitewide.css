@@ -980,3 +980,9 @@ body .premium-home .ph-hero-scroll{
     padding:8px 0;
   }
 }
+
+
+/* Shared footer social controls retained after inner CSS was route-scoped */
+.footer-social{display:flex!important;flex-direction:row!important;gap:10px;margin-top:18px}
+.footer-social a{width:42px;height:42px;border:1px solid #ffffff20;border-radius:50%;display:grid!important;place-items:center;padding:0!important}
+.footer-social svg{width:17px;height:17px}
