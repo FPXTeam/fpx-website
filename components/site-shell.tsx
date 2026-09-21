@@ -58,4 +58,4 @@ export function Footer(){
   </footer>;
 }
 
-export function Shell({children}:{children:React.ReactNode}){return <><Header/>{children}<Footer/><CookieConsent/></>}
+export function Shell({children}:{children:React.ReactNode}){return <><a className="skip-link" href="#main-content">Skip to main content</a><Header/>{children}<Footer/><CookieConsent/></>}
