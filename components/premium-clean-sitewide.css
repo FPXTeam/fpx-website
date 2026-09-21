@@ -986,3 +986,37 @@ body .premium-home .ph-hero-scroll{
 .footer-social{display:flex!important;flex-direction:row!important;gap:10px;margin-top:18px}
 .footer-social a{width:42px;height:42px;border:1px solid #ffffff20;border-radius:50%;display:grid!important;place-items:center;padding:0!important}
 .footer-social svg{width:17px;height:17px}
+
+
+/* Native mobile navigation: no client hydration required */
+.mobile-nav-details{display:none;margin-left:auto}
+.mobile-nav-details summary{
+  list-style:none;
+  cursor:pointer;
+  color:#040E0E;
+  width:44px;
+  height:44px;
+  align-items:center;
+  justify-content:center;
+}
+.mobile-nav-details summary::-webkit-details-marker{display:none}
+.mobile-menu-close{display:none}
+.mobile-nav-details[open] .mobile-menu-open{display:none}
+.mobile-nav-details[open] .mobile-menu-close{display:inline-flex}
+.mobile-nav-details .mobile-nav{display:none!important}
+.mobile-nav-details[open] .mobile-nav{display:flex!important}
+@media(max-width:900px){
+  .mobile-nav-details{display:block}
+  .mobile-nav-details summary{display:flex}
+  .mobile-nav-details .mobile-nav{
+    position:absolute;
+    top:100%;
+    left:0;
+    right:0;
+    z-index:60;
+    padding:14px 24px 24px;
+    background:#fff;
+    border-top:1px solid #eee;
+    box-shadow:0 18px 35px rgba(4,14,14,.08);
+  }
+}
