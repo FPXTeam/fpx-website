@@ -1,13 +1,22 @@
-"use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import { Shell } from "./site-shell";
-import { productGroups, Eyebrow, Arrow, AppButtons, useSiteMotion } from "./master-shared";
+import { BuyerStory, HomeMotion } from "./home-client";
+
+const productGroups = [
+  ["Manufacturing","Timber feedstock for wood processors and timber manufacturers to remanufacture into finished products.","product-groups/manufacturing/manufacturing-warehouse-bundles.png","manufacturing"],
+  ["Building & Construction","Timber products for structural, building, finishing and specialist construction applications.","product-groups/building-construction/building-roof-framing.png","building-construction"],
+  ["Outdoor & Landscaping","Treated and purpose-made timber for landscaping, fencing, retaining and outdoor construction.","product-groups/outdoor-landscaping/outdoor-slat-fence.png","outdoor-landscaping"],
+  ["Dunnage","Timber dunnage for freight, shipping, load support and industrial transport applications.","product-groups/dunnage/dunnage-stamped-stack.png","dunnage"],
+] as const;
+
+const Eyebrow=({children}:{children:React.ReactNode})=><p className="m-eyebrow">{children}</p>;
+const Arrow=()=> <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>;
+const AppButtons=()=> <div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/stock">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a></div>;
 
 function PremiumHero(){
   return <section className="ph-hero">
-    <Image className="ph-hero-bg" src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber stored in a commercial yard" width={1920} height={1080} sizes="100vw" quality={82} priority fetchPriority="high"/>
+    <Image className="ph-hero-bg" src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber stored in a commercial yard" width={1920} height={1080} sizes="100vw" quality={75} priority fetchPriority="high"/>
     <div className="ph-hero-shade"/>
     <div className="ph-hero-copy">
       <Eyebrow>NEW ZEALAND TIMBER SOURCING</Eyebrow>
@@ -16,7 +25,7 @@ function PremiumHero(){
       <AppButtons/>
     </div>
     <div className="ph-hero-scroll">SCROLL TO EXPLORE</div>
-  </section>
+  </section>;
 }
 
 function RangeStory(){
@@ -29,12 +38,12 @@ function RangeStory(){
     </div>
     <div className="ph-range-list">
       {productGroups.map((group,i)=><Link href={`/${group[3]}`} className="ph-range-item" key={group[0]}>
-        <div className="ph-range-image"><Image src={`/images/${group[2]}`} alt={`${group[0]} timber products in New Zealand`} width={1400} height={1000} sizes="(max-width: 700px) calc(100vw - 48px), 220px" quality={80}/></div>
+        <div className="ph-range-image"><Image src={`/images/${group[2]}`} alt={`${group[0]} timber products in New Zealand`} width={1400} height={1000} sizes="(max-width: 700px) calc(100vw - 48px), 220px" quality={70}/></div>
         <span>0{i+1}</span>
         <div className="ph-range-copy"><h3>{group[0]}</h3><p>{group[1]}</p><b>Explore <Arrow/></b></div>
       </Link>)}
     </div>
-  </section>
+  </section>;
 }
 
 function PlatformStory(){
@@ -42,7 +51,7 @@ function PlatformStory(){
     ["Browse Stock","Search available timber by category, grade and specification.","https://app.fpx.nz/stock","AVAILABLE TIMBER"],
     ["View Offers","Review current packet and bulk timber opportunities.","https://app.fpx.nz/offers","CURRENT OPPORTUNITIES"],
     ["Create a Request","Tell FPX what you need and receive suitable sourcing options.","https://app.fpx.nz/request-cart","EXACT REQUIREMENTS"]
-  ];
+  ] as const;
   return <section className="ph-platform ph-platform-routes-only">
     <div className="ph-platform-head">
       <Eyebrow>FPX SOURCING</Eyebrow>
@@ -59,34 +68,16 @@ function PlatformStory(){
         <b>Start here <Arrow/></b>
       </a>)}
     </div>
-  </section>
-}
-
-function BuyerStory(){
-  const [active,setActive]=useState(0);
-  const groups=[
-    ["Builders & Contractors","Project-specific timber without the sourcing runaround.","fpx-customer-builder.png"],
-    ["Procurement Teams","Clear timber options for planned purchasing and ongoing requirements.","fpx-customer-procurement.png"],
-    ["Timber Merchants","Additional stock, current offers and support for specific customer demand.","fpx-customer-merchant.png"],
-    ["Wood Processors","Timber sourcing aligned with production specifications and required volumes.","fpx-customer-processor.png"]
-  ];
-  return <section className="m-customers ph-customers-returned">
-    <div className="m-customers-title"><Eyebrow>OUR CUSTOMERS</Eyebrow><h2>Built for businesses<br/><span className="headline-accent">that buy timber.</span></h2><Link href="/our-customers">Meet our customers <Arrow/></Link></div>
-    <div className={`m-customer-stage active-${active+1}`} aria-label="Four New Zealand professionals who buy commercial timber">
-      <div className="m-customer-people">{groups.map((g,i)=><button type="button" key={g[0]} className={`m-person-button ${i===active?"active":""}`} onMouseEnter={()=>setActive(i)} onFocus={()=>setActive(i)} onClick={()=>setActive(i)} aria-label={`Show information for ${g[0]}`}>
-        <Image className="m-person" src={`/images/${g[2]}`} alt={`${g[0]} using FPX for commercial timber sourcing`} width={700} height={1000} sizes="(max-width: 700px) 42vw, 22vw" quality={80}/>
-      </button>)}</div>
-      <div className={`m-customer-panel panel-${active+1}`} aria-live="polite"><h3>{groups[active][0]}</h3><p>{groups[active][1]}</p></div>
-      <p className="m-customer-instruction"><span className="instruction-hover">Hover to meet our customers</span><span className="instruction-tap">Tap to meet our customers</span></p>
-    </div>
-  </section>
+  </section>;
 }
 
 function Closing(){
   return <section className="ph-close">
     <div><Eyebrow>START WITH FPX</Eyebrow><h2>Find the timber.<br/><span className="headline-accent">Move with clarity.</span></h2><p>Browse available timber or send FPX the requirement you already have.</p></div>
     <AppButtons/>
-  </section>
+  </section>;
 }
 
-export function MasterHome(){useSiteMotion();return <Shell><main className="master-site premium-home"><PremiumHero/><RangeStory/><PlatformStory/><BuyerStory/><Closing/></main></Shell>}
+export function MasterHome(){
+  return <Shell><main className="master-site premium-home"><HomeMotion/><PremiumHero/><RangeStory/><PlatformStory/><BuyerStory/><Closing/></main></Shell>;
+}
