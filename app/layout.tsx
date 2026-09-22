@@ -24,7 +24,7 @@ const isProduction = process.env.VERCEL_ENV === "production";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: "FPX | New Zealand Timber Sourcing", template: "%s | FPX" },
-  description: "FPX helps commercial timber buyers across New Zealand browse available stock, review current offers and source specific timber requirements.",
+  description: "FPX helps commercial timber buyers across New Zealand explore current timber supply, review offers and submit timber requirements before creating an account.",
   applicationName: "FPX",
   alternates: { canonical: "/" },
   robots: isProduction
@@ -43,12 +43,12 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website", locale: "en_NZ", url: siteUrl, siteName: "FPX | Forest Products Exchange",
     title: "FPX | New Zealand Timber Sourcing",
-    description: "FPX helps commercial timber buyers across New Zealand browse available stock, review current offers and source specific timber requirements.",
+    description: "FPX helps commercial timber buyers across New Zealand explore current timber supply, review offers and submit timber requirements before creating an account.",
     images: [{ url: socialImage, width: 1200, height: 630, alt: "FPX Forest Products Exchange, New Zealand timber sourcing" }],
   },
   twitter: {
     card: "summary_large_image", title: "FPX | New Zealand Timber Sourcing",
-    description: "FPX helps commercial timber buyers across New Zealand browse available stock, review current offers and source specific timber requirements.",
+    description: "FPX helps commercial timber buyers across New Zealand explore current timber supply, review offers and submit timber requirements before creating an account.",
     images: [socialImage],
   },
 };
