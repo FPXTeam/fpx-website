@@ -12,7 +12,7 @@ const organizationSchema = {
   url: siteUrl,
   logo: `${siteUrl}/images/fpx-logo-horizontal-original.png`,
   description:
-    "FPX is a New Zealand digital timber sourcing service for commercial timber buyers. Buyers can browse available stock, review current offers or send specific timber requirements.",
+    "FPX is a New Zealand digital timber sourcing service for commercial timber buyers. Explore FPX Sourcing lets visitors browse current timber supply, review offers and submit specific timber requirements before creating an account.",
   areaServed: { "@type": "Country", name: "New Zealand" },
   knowsAbout: [
     "Commercial timber sourcing",
