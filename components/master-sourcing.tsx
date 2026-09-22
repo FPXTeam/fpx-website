@@ -10,9 +10,9 @@ const requestSteps=[
   ["04","Place order","Confirm what works for the job."]
 ];
 const shopSteps=[
-  ["01","Add to cart","Choose one or more available products."],
-  ["02","Order now","Review and confirm the order."],
-  ["03","Delivered to site","The order moves through to delivery."]
+  ["01","Explore supply","Browse current timber and product information."],
+  ["02","Review fit","Check the detail and decide whether it suits the requirement."],
+  ["03","Continue in FPX","Active customers can move into the full ordering experience."]
 ];
 const offerSteps=[
   ["01","Enquire","Send an enquiry on the offer."],
@@ -45,7 +45,7 @@ function SourceStory(){return <section className="m-source-story-premium">
     <p>You do not need to learn the whole platform before you begin. Choose the route that matches the job, then FPX carries the detail forward.</p>
   </div>
   <SourceFeature index="01" eyebrow="REQUESTS" title="You know what you need." copy="Send a specific timber requirement and let FPX help source suitable options." items={[{title:"From our catalogue",copy:"Add a catalogue product to your Request List when it is not currently available."},{title:"Custom request",copy:"Send the specification, quantity and requirements when the job needs something more specific."}]} cta="Go to Request List" href="https://app.fpx.nz/explore-fpx-sourcing?request=1" steps={requestSteps} label="REQUEST PATH"/>
-  <SourceFeature index="02" eyebrow="STOCK - ORDER DIRECT" title="See what’s available now." copy="Browse current timber, choose what fits and move directly into the order process." items={[{title:"Available stock",copy:"Browse timber that is currently available through FPX."},{title:"Specials",copy:"Review discounted single-packet or multi-packet opportunities when available."}]} cta="Browse stock" href="https://app.fpx.nz/explore-fpx-sourcing" steps={shopSteps} label="STOCK PATH" reverse/>
+  <SourceFeature index="02" eyebrow="EXPLORE SUPPLY" title="See what’s available now." copy="Browse current timber and product information without creating an account. Active FPX customers can continue into the full ordering experience." items={[{title:"Public exploration",copy:"Browse current timber supply and inspect product information through Explore FPX Sourcing."},{title:"Full customer access",copy:"Sign in or request FPX access for customer-specific pricing, commercial quantities, orders and account tools."}]} cta="Browse timber" href="https://app.fpx.nz/explore-fpx-sourcing" steps={shopSteps} label="SUPPLY PATH" reverse/>
   <SourceFeature index="03" eyebrow="OFFERS - ENQUIRE" title="Spot an opportunity." copy="Explore current offers and enquire when an opportunity suits your requirement." items={[{title:"Current offers",copy:"Review current timber opportunities, then enquire so FPX can respond for your volumes and requirements."}]} cta="View offers & enquire" href="https://app.fpx.nz/explore-fpx-sourcing?view=offers" steps={offerSteps} label="OFFER PATH"/>
 </section>}
 
@@ -61,7 +61,7 @@ export function SourceTimberPage(){return <>
     <div className="pst-hero-copy">
       <Eyebrow>FPX SOURCING</Eyebrow>
       <h1>Source timber with<br/><span className="headline-accent">a clear way in.</span></h1>
-      <p>Start with what you know. Send a specific request, browse available timber or review current offers. FPX gives each requirement a clear starting point.</p>
+      <p>Start with what you know. Explore available timber, review current offers or build a specific request before creating an account. FPX gives each requirement a clear starting point.</p>
       <AppButtons/>
     </div>
   </section>
@@ -71,6 +71,13 @@ export function SourceTimberPage(){return <>
     <h2 id="what-is-fpx-sourcing">A digital timber sourcing service for commercial buyers in New Zealand.</h2>
     <p>FPX Sourcing gives commercial timber buyers one place to browse available timber, review current offers or send a specific timber requirement. The digital service is supported by practical timber sourcing expertise behind the platform.</p>
     <nav aria-label="Learn more about FPX Sourcing"><Link href="/how-fpx-works">How FPX works</Link><Link href="/timber">Explore the timber range</Link><Link href="/frequently-asked-questions">Read sourcing FAQs</Link></nav>
+  </section>
+
+  <section className="pst-answer">
+    <Eyebrow>EXPLORE BEFORE YOU SIGN UP</Eyebrow>
+    <h2>See how FPX works before creating an account.</h2>
+    <p>Visitors can browse current timber supply, search the wider product catalogue, view current offers, inspect product information, build a timber requirement and submit a request without an FPX account. Customer-specific pricing, exact commercial quantities, orders and account tools remain part of the full customer experience.</p>
+    <nav aria-label="FPX access options"><a href="https://app.fpx.nz/explore-fpx-sourcing">Explore FPX Sourcing</a><a href="https://app.fpx.nz/sourcing-sign-up">Get FPX Access</a><a href="https://app.fpx.nz">Login</a></nav>
   </section>
 
   <section className="pst-intro">
@@ -106,19 +113,19 @@ export function SourceTimberPage(){return <>
     <article id="source-stock" className="pst-route is-reverse">
       <div className="pst-route-copy">
         <span className="pst-route-number">02</span>
-        <Eyebrow>STOCK / ORDER DIRECT</Eyebrow>
+        <Eyebrow>EXPLORE SUPPLY</Eyebrow>
         <h2>See what’s available now.</h2>
-        <p>Browse current timber, choose what fits and move directly into the order process.</p>
+        <p>Browse current timber and product information without creating an account. Active FPX customers can continue into the full ordering experience.</p>
         <div className="pst-route-points">
-          <div><h3>Available stock</h3><p>Browse timber that is currently available through FPX.</p></div>
-          <div><h3>Specials</h3><p>Review discounted single-packet or multi-packet opportunities when available.</p></div>
+          <div><h3>Public exploration</h3><p>Browse current timber supply and inspect product information through Explore FPX Sourcing.</p></div>
+          <div><h3>Full customer access</h3><p>Sign in or request FPX access for customer-specific pricing, commercial quantities, orders and account tools.</p></div>
         </div>
       </div>
       <details className="pst-route-path">
-        <summary><span>STOCK PATH</span><small>3 steps</small><b aria-hidden="true">+</b></summary>
+        <summary><span>SUPPLY PATH</span><small>3 steps</small><b aria-hidden="true">+</b></summary>
         <div>{shopSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></div>)}</div>
       </details>
-      <a className="pst-route-cta" href="https://app.fpx.nz/explore-fpx-sourcing">Browse stock <Arrow/></a>
+      <a className="pst-route-cta" href="https://app.fpx.nz/explore-fpx-sourcing">Browse timber <Arrow/></a>
     </article>
 
     <article id="source-offers" className="pst-route">
@@ -140,13 +147,13 @@ export function SourceTimberPage(){return <>
   </section>
 
   <section className="pst-close">
-    <div><Eyebrow>ONE PLACE TO START</Eyebrow><h2>Different ways to buy.<br/><span className="headline-accent">One sourcing service.</span></h2><p>FPX brings requests, available timber and current offers together for commercial timber buyers across New Zealand.</p></div>
+    <div><Eyebrow>ONE PLACE TO START</Eyebrow><h2>Explore first.<br/><span className="headline-accent">Go further when you’re ready.</span></h2><p>Start with public FPX Sourcing to explore timber, offers and requests. Sign in or request access when you need the full customer experience.</p></div>
     <AppButtons/>
   </section>
 </>}
 
-export function HowPage(){const steps=[["01","Start where you are","Browse available stock, review current offers or send a specific request. Start with the route that best matches what you know."],["02","Share the detail","Add the dimensions, grade, treatment and quantity that matter to the job. Clear inputs make the next step easier."],["03","Choose what fits","Review the timber options and the information around them, then choose the route that works for your team."],["04","Keep it moving","FPX keeps the order and delivery path connected so your team can follow the handover through to site."]];return <>
-<section className="phw-hero phw-hero-no-app"><div><Eyebrow>HOW FPX WORKS</Eyebrow><h1>From requirement<br/><span className="headline-accent">to delivery.</span></h1><p>Start with the information you already have. FPX keeps the sourcing steps connected from the first requirement through to delivery.</p><div className="phw-route-tags" aria-label="Ways to start with FPX"><span>Browse stock</span><span>Review offers</span><span>Create a request</span></div></div></section>
+export function HowPage(){const steps=[["01","Start where you are","Explore current timber supply, review offers or submit a specific request without creating an account. Start with the route that best matches what you know."],["02","Share the detail","Add the dimensions, grade, treatment and quantity that matter to the job. Clear inputs make the next step easier."],["03","Choose what fits","Review the timber options and the information around them, then choose the route that works for your team."],["04","Keep it moving","FPX keeps the order and delivery path connected so your team can follow the handover through to site."]];return <>
+<section className="phw-hero phw-hero-no-app"><div><Eyebrow>HOW FPX WORKS</Eyebrow><h1>From requirement<br/><span className="headline-accent">to delivery.</span></h1><p>Start by exploring FPX without creating an account. Browse timber, review offers or build a request, then move into the full customer experience when you are ready.</p><div className="phw-route-tags" aria-label="Ways to start with FPX"><span>Browse timber</span><span>Review offers</span><span>Create a request</span></div></div></section>
 <section className="phw-flow"><header><Eyebrow>THE PROCESS</Eyebrow><h2>Four clear stages.</h2><p>The detail changes by job. The shape of the process stays simple.</p></header><div>{steps.map(([num,title,copy])=><article key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></article>)}</div></section>
 <section className="phw-close"><div><Eyebrow>START WHERE IT MAKES SENSE</Eyebrow><h2>Browse, enquire or request.</h2><p>Choose the route that best matches what you know about the job today.</p><nav className="phw-related" aria-label="Related FPX sourcing information"><Link href="/fpx-sourcing">FPX Sourcing</Link><Link href="/timber">Timber Range</Link><Link href="/frequently-asked-questions">Sourcing FAQ</Link></nav></div><AppButtons/></section>
 </>}

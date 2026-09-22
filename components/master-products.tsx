@@ -33,7 +33,7 @@ export function ProductsPage(){
       <div className="ppr-hero-copy">
         <Eyebrow>OUR TIMBER RANGE</Eyebrow>
         <h1>Timber for the work<br/><span className="headline-accent">New Zealand does.</span></h1>
-        <p>Explore the main FPX product groups, understand where they fit, then move into FPX for current stock, offers and detailed specifications.</p>
+        <p>Explore the main FPX product groups, understand where they fit, then use Explore FPX Sourcing to browse current supply, offers and product information without creating an account.</p>
       </div>
     </section>
 
@@ -79,9 +79,9 @@ export function ProductsPage(){
 
     <section className="ppr-close">
       <div>
-        <Eyebrow>FULL PRODUCT DETAIL LIVES IN FPX</Eyebrow>
+        <Eyebrow>EXPLORE PRODUCT DETAIL IN FPX</Eyebrow>
         <h2>Know the group?<br/><span className="headline-accent">Move into the detail.</span></h2>
-        <p>Browse current timber, review offers or send FPX the requirement you already have.</p>
+        <p>Explore current timber, review offers or submit the requirement you already have. You can start without creating an account.</p>
       </div>
       <AppButtons/>
     </section>
@@ -123,7 +123,7 @@ export function ProductGroupPage({slug}:{slug:string}){
     <section className="pg-summary">
       <article><small>WHAT IT IS</small><p>{group.description}</p></article>
       <article><small>WHO IT IS FOR</small><p>FPX supplies this product group for {audience} across New Zealand.</p></article>
-      <article><small>HOW TO SOURCE IT</small><p>Browse current timber in FPX or send a product request with the specifications and quantity you need.</p></article>
+      <article><small>HOW TO SOURCE IT</small><p>Explore current timber in FPX or submit a product request with the specifications and quantity you need. No account is required to start.</p></article>
     </section>
 
     <section className={`pg-gallery ${group.gallery.length===2?"is-two":""}`}>
@@ -141,7 +141,7 @@ export function ProductGroupPage({slug}:{slug:string}){
       {relatedGuidance[slug].map(([label,title,href])=><article key={href}><small>{label}</small><p><Link href={href}>{title} <Arrow/></Link></p></article>)}
     </section>
 
-    <section className="pg-close"><div><Eyebrow>MOVE INTO FPX</Eyebrow><h2>Need the grade, size or specification?</h2><p>Use the website to understand the range. Use FPX to work with current products, stock, offers and detailed specifications.</p></div><AppButtons/></section>
+    <section className="pg-close"><div><Eyebrow>EXPLORE IN FPX</Eyebrow><h2>Need the grade, size or specification?</h2><p>Use the website to understand the range, then use Explore FPX Sourcing to browse supply, offers and product information. Sign in or request access when you need the full customer experience.</p></div><AppButtons/></section>
   </>;
 }
 

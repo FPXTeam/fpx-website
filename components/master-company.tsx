@@ -26,7 +26,7 @@ export function CustomersPage(){
       alt:"New Zealand builder sourcing commercial timber",
       pillars:[
         ["Know what fits.","Check product, grade, treatment and key specifications."],
-        ["Start the right way.","Browse stock or create a request for a defined requirement."],
+        ["Start the right way.","Explore timber or create a request for a defined requirement."],
         ["Keep timing clear.","Keep quantity and delivery timing aligned with the job."]
       ]
     },
@@ -55,7 +55,7 @@ export function CustomersPage(){
       image:"fpx-customer-merchant.png",
       alt:"New Zealand timber merchant sourcing stock",
       pillars:[
-        ["See what is available.","Browse current timber and offers quickly."],
+        ["See what is available.","Explore current timber and offers quickly."],
         ["Handle repeat needs faster.","Start from known product requirements."],
         ["Keep alternatives open.","Use Requests when the exact product is not visible."]
       ]

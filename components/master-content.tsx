@@ -78,9 +78,20 @@ export function ResourcesPage(){
 }
 
 const faqGroups=[
-  {title:"Getting started",items:[["What is FPX Sourcing?","FPX Sourcing is a digital timber sourcing service for commercial timber buyers in New Zealand. Buyers can browse available stock, review current offers or send FPX a specific timber requirement."],["Who is FPX for?","FPX is built for commercial timber buyers including contractors, builders, procurement teams, timber merchants and wood processors across New Zealand."],["How do I start sourcing timber through FPX?","Start by browsing available timber, reviewing current offers or creating a request. Choose the route that best matches how specific your requirement already is."]]},
-  {title:"Products and requests",items:[["What if I cannot find the timber I need?","Create a request with the dimensions, grade, treatment, quantity and other requirements you know. FPX will review the requirement and source suitable options."],["What information should I include in a timber request?","Include the product or application, dimensions, grade, treatment, quantity and required timing where known. Clear specifications help FPX identify suitable options."],["What are FPX Offers?","Offers are current timber opportunities that buyers can review and enquire about. Pricing can then be provided based on the buyer’s volumes and requirements."]]},
-  {title:"Orders and account",items:[["Can I manage orders through FPX?","Yes. FPX brings order information, deliveries and previously ordered products together in the buyer account."],["Can I reorder timber I have bought before?","Previously ordered products can be used as a starting point for repeat requirements, reducing the need to rebuild the same request from scratch."],["How much does FPX cost for buyers?","FPX is free for buyers to use."]]},
+  {title:"Getting started",items:[
+    ["What is FPX Sourcing?","FPX Sourcing is a digital timber sourcing service for commercial timber buyers in New Zealand. Explore FPX Sourcing lets visitors browse current timber supply, search the wider catalogue, review offers and submit a timber request before creating an account."],
+    ["Do I need an FPX account to explore timber?","No. You can use Explore FPX Sourcing to browse current timber supply, search the wider product catalogue, view current offers, inspect product information and submit a timber request without an account."],
+    ["Who is FPX for?","FPX is built for commercial timber buyers including contractors, builders, procurement teams, timber merchants and wood processors across New Zealand."],
+    ["How do I start sourcing timber through FPX?","Start with Explore FPX Sourcing. Browse timber, review current offers or build a request, then sign in or request FPX access when you need the full customer experience."]
+  ]},
+  {title:"Products and requests",items:[["What if I cannot find the timber I need?","Create a request with the dimensions, grade, treatment, quantity and other requirements you know. You can submit the requirement through Explore FPX Sourcing without creating an account."],["What information should I include in a timber request?","Include the product or application, dimensions, grade, treatment, quantity and required timing where known. Clear specifications help FPX identify suitable options."],["What are FPX Offers?","Offers are current timber opportunities that buyers can review and enquire about. Explore FPX Sourcing lets visitors view current offers before they have an FPX account."]]},
+  {title:"Orders and account",items:[
+    ["What is the difference between Explore FPX Sourcing and full FPX access?","Explore FPX Sourcing is the public experience. It lets visitors explore supply, search the catalogue, review offers and submit requirements. Full FPX access is for approved customers and includes customer-specific pricing, commercial quantities, orders and account tools."],
+    ["What does Get FPX Access do?","Get FPX Access starts the sign-up process for the full FPX customer experience. Existing FPX customers can use Login to return directly to their account."],
+    ["Can I manage orders through FPX?","Yes. Approved FPX customers can manage order information, deliveries and previously ordered products through their buyer account."],
+    ["Can I reorder timber I have bought before?","Previously ordered products can be used as a starting point for repeat requirements, reducing the need to rebuild the same request from scratch."],
+    ["How much does FPX cost for buyers?","FPX is free for buyers to use."]
+  ]},
   {title:"Support",items:[["Who can I contact if I need help?","Contact FPX at support@fpx.nz or use the Contact page for timber sourcing questions, platform support or general enquiries."]]}
 ];
 export function FAQPage(){
@@ -91,7 +102,7 @@ export function FAQPage(){
     requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"}));
   }
   return <>
-    <section className="pfq-hero"><div><Eyebrow>FREQUENTLY ASKED QUESTIONS</Eyebrow><h1>Straight answers.<br/><span className="headline-accent">No clutter.</span></h1><p>Everything you need to know about sourcing timber through FPX, from browsing products to requests, orders and support.</p></div><aside><small>CAN&apos;T FIND IT?</small><h2>Ask the FPX team.</h2><p>Send us your requirement and we will point you in the right direction.</p><Link href="/contact-us">Contact FPX <Arrow/></Link></aside></section>
+    <section className="pfq-hero"><div><Eyebrow>FREQUENTLY ASKED QUESTIONS</Eyebrow><h1>Straight answers.<br/><span className="headline-accent">No clutter.</span></h1><p>Everything you need to know about exploring FPX, submitting requests, getting full customer access, orders and support.</p></div><aside><small>CAN&apos;T FIND IT?</small><h2>Ask the FPX team.</h2><p>Send us your requirement and we will point you in the right direction.</p><Link href="/contact-us">Contact FPX <Arrow/></Link></aside></section>
     <section className="pfq-main pfq-main-all">
       <nav aria-label="FAQ topics">{faqGroups.map((group,i)=><button key={group.title} type="button" className={active===group.title?"active":""} onClick={()=>goTo(group.title)}><span>0{i+1}</span>{group.title}</button>)}</nav>
       <div className="pfq-all-topics">{faqGroups.map(group=>{
