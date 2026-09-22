@@ -5895,6 +5895,111 @@
 }
 
 
+/* FPX Sourcing hierarchy: one answer-first section + compact access panel */
+.pst-positioning{
+  max-width:1220px;
+  margin:0 auto;
+  padding:110px 7vw 100px;
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);
+  gap:72px;
+  align-items:start;
+  background:#fff;
+}
+.pst-positioning-main h2{
+  max-width:760px;
+  margin:10px 0 0;
+  font-size:clamp(42px,4.5vw,70px);
+  line-height:.97;
+  letter-spacing:-.045em;
+}
+.pst-positioning-main>p:not(.m-eyebrow){
+  max-width:700px;
+  margin:24px 0 0;
+  font-size:16px;
+  line-height:1.8;
+  color:var(--pi-muted);
+}
+.pst-positioning-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:28px;
+}
+.pst-positioning-links a{
+  display:inline-flex;
+  align-items:center;
+  min-height:42px;
+  padding:0 15px;
+  border:1px solid var(--pi-line);
+  border-radius:999px;
+  color:var(--pi-green);
+  font:700 11px/1 Lato,Arial,sans-serif;
+}
+.pst-access-panel{
+  padding:34px;
+  border:1px solid #DDE5DF;
+  border-radius:18px;
+  background:#F7F9F7;
+}
+.pst-access-kicker{
+  display:block;
+  color:var(--pi-green);
+  font:700 9px/1 Lato,Arial,sans-serif;
+  letter-spacing:.14em;
+}
+.pst-access-panel h3{
+  margin:16px 0 0;
+  font-size:clamp(30px,3vw,44px);
+  line-height:1;
+  letter-spacing:-.035em;
+}
+.pst-access-panel p{
+  margin:18px 0 0;
+  color:var(--pi-muted);
+  font-size:14px;
+  line-height:1.72;
+}
+.pst-access-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px 14px;
+  margin-top:26px;
+}
+.pst-access-actions a{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  min-height:42px;
+  color:var(--pi-green);
+  font:700 11px/1 Lato,Arial,sans-serif;
+}
+.pst-access-actions .is-primary{
+  padding:0 16px;
+  border-radius:999px;
+  background:var(--pi-green);
+  color:#fff;
+}
+.pst-intro{
+  border-top:1px solid var(--pi-line);
+}
+@media(max-width:900px){
+  .pst-positioning{
+    grid-template-columns:1fr;
+    gap:42px;
+  }
+  .pst-access-panel{max-width:700px}
+}
+@media(max-width:700px){
+  .pst-positioning{
+    padding:76px 24px 70px;
+    gap:34px;
+  }
+  .pst-positioning-main h2{font-size:40px}
+  .pst-access-panel{padding:26px 22px}
+  .pst-access-actions{align-items:flex-start;flex-direction:column}
+}
+
 /* AEO answer-first blocks and contextual internal links */
 .pst-answer{
   max-width:1180px;
