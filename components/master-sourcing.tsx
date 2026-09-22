@@ -69,19 +69,14 @@ export function SourceTimberPage(){return <>
   <section className="pst-positioning" aria-labelledby="what-is-fpx-sourcing">
     <div className="pst-positioning-main">
       <Eyebrow>WHAT IS FPX SOURCING?</Eyebrow>
-      <h2 id="what-is-fpx-sourcing">A digital timber sourcing service for commercial buyers in New Zealand.</h2>
-      <p>FPX Sourcing gives commercial timber buyers one place to browse available timber, review current offers or send a specific timber requirement. The digital service is supported by practical timber sourcing expertise behind the platform.</p>
-      <nav className="pst-positioning-links" aria-label="Learn more about FPX Sourcing"><Link href="/how-fpx-works">How FPX works</Link><Link href="/timber">Explore the timber range</Link><Link href="/frequently-asked-questions">Read sourcing FAQs</Link></nav>
+      <h2 id="what-is-fpx-sourcing">A clearer way to source commercial timber.</h2>
+      <p>FPX Sourcing is a digital timber sourcing service for commercial buyers in New Zealand. Browse current timber, review offers or send a specific requirement, with practical timber sourcing expertise behind the platform.</p>
     </div>
-    <aside className="pst-access-panel" aria-label="Explore FPX before signing up">
+    <aside className="pst-access-note" aria-label="Explore FPX before signing up">
       <span className="pst-access-kicker">EXPLORE BEFORE YOU SIGN UP</span>
-      <h3>Start without an account.</h3>
-      <p>Browse current timber supply, search the wider catalogue, view offers and submit a requirement first. Customer-specific pricing, commercial quantities, orders and account tools remain part of the full customer experience.</p>
-      <div className="pst-access-actions">
-        <a className="is-primary" href="https://app.fpx.nz/explore-fpx-sourcing">Explore FPX Sourcing <Arrow/></a>
-        <a href="https://app.fpx.nz/sourcing-sign-up">Get FPX Access</a>
-        <a href="https://app.fpx.nz">Login</a>
-      </div>
+      <h3>No account needed to start.</h3>
+      <p>Explore timber, offers and requests first. Full customer access adds customer-specific pricing, commercial quantities, orders and account tools.</p>
+      <a className="pst-access-primary" href="https://app.fpx.nz/explore-fpx-sourcing">Explore FPX Sourcing <Arrow/></a>
     </aside>
   </section>
 
