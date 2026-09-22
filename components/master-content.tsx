@@ -94,6 +94,51 @@ const faqGroups=[
   ]},
   {title:"Support",items:[["Who can I contact if I need help?","Contact FPX at support@fpx.nz or use the Contact page for timber sourcing questions, platform support or general enquiries."]]}
 ];
+
+const faqAnswerLinks:Record<string,{label:string;href:string;external?:boolean}[]>={
+  "What is FPX Sourcing?":[
+    {label:"Explore FPX Sourcing",href:"https://app.fpx.nz/explore-fpx-sourcing",external:true},
+    {label:"How FPX works",href:"/how-fpx-works"}
+  ],
+  "Do I need an FPX account to explore timber?":[
+    {label:"Explore without an account",href:"https://app.fpx.nz/explore-fpx-sourcing",external:true}
+  ],
+  "Who is FPX for?":[
+    {label:"See who uses FPX",href:"/our-customers"}
+  ],
+  "How do I start sourcing timber through FPX?":[
+    {label:"Explore FPX Sourcing",href:"https://app.fpx.nz/explore-fpx-sourcing",external:true},
+    {label:"Get FPX Access",href:"https://app.fpx.nz/sourcing-sign-up",external:true}
+  ],
+  "What if I cannot find the timber I need?":[
+    {label:"Create a Request",href:"https://app.fpx.nz/explore-fpx-sourcing?request=1",external:true}
+  ],
+  "What information should I include in a timber request?":[
+    {label:"Explore the timber range",href:"/timber"},
+    {label:"Create a Request",href:"https://app.fpx.nz/explore-fpx-sourcing?request=1",external:true}
+  ],
+  "What are FPX Offers?":[
+    {label:"View current offers",href:"https://app.fpx.nz/explore-fpx-sourcing?view=offers",external:true}
+  ],
+  "What is the difference between Explore FPX Sourcing and full FPX access?":[
+    {label:"Explore FPX Sourcing",href:"https://app.fpx.nz/explore-fpx-sourcing",external:true},
+    {label:"Get FPX Access",href:"https://app.fpx.nz/sourcing-sign-up",external:true}
+  ],
+  "What does Get FPX Access do?":[
+    {label:"Get FPX Access",href:"https://app.fpx.nz/sourcing-sign-up",external:true},
+    {label:"Login",href:"https://app.fpx.nz",external:true}
+  ],
+  "Can I manage orders through FPX?":[
+    {label:"Login to FPX",href:"https://app.fpx.nz",external:true}
+  ],
+  "Can I reorder timber I have bought before?":[
+    {label:"Login to FPX",href:"https://app.fpx.nz",external:true}
+  ],
+  "Who can I contact if I need help?":[
+    {label:"Contact FPX",href:"/contact-us"}
+  ]
+};
+
 export function FAQPage(){
   const [active,setActive]=useState("Getting started");
   function goTo(title:string){
@@ -107,7 +152,10 @@ export function FAQPage(){
       <nav aria-label="FAQ topics">{faqGroups.map((group,i)=><button key={group.title} type="button" className={active===group.title?"active":""} onClick={()=>goTo(group.title)}><span>0{i+1}</span>{group.title}</button>)}</nav>
       <div className="pfq-all-topics">{faqGroups.map(group=>{
         const id="faq-"+group.title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
-        return <section className="pfq-topic" id={id} key={group.title}><small>FAQ TOPIC</small><h2>{group.title}</h2>{group.items.map(([question,answer],i)=><details key={question} open={group.title==="Getting started"&&i===0}><summary><span>{String(i+1).padStart(2,"0")}</span><b>{question}</b><ChevronDown/></summary><p>{answer}</p></details>)}</section>
+        return <section className="pfq-topic" id={id} key={group.title}><small>FAQ TOPIC</small><h2>{group.title}</h2>{group.items.map(([question,answer],i)=>{
+          const links=faqAnswerLinks[question]||[];
+          return <details key={question} open={group.title==="Getting started"&&i===0}><summary><span>{String(i+1).padStart(2,"0")}</span><b>{question}</b><ChevronDown/></summary><div className="pfq-answer"><p>{answer}</p>{links.length>0&&<nav aria-label={`Related links for ${question}`}>{links.map(link=>link.external?<a key={link.label} href={link.href}>{link.label} <Arrow/></a>:<Link key={link.label} href={link.href}>{link.label} <Arrow/></Link>)}</nav>}</div></details>
+        })}</section>
       })}</div>
     </section>
   </>;
