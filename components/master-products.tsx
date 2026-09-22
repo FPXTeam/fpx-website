@@ -19,10 +19,10 @@ export const productGroupDetails: Record<string,{title:string;description:string
 };
 
 const endUses=[
-  ["Fencing","Palings · Posts · Rails · Fence Capping · Pegs","product-groups/outdoor-landscaping/outdoor-townhouse-fence.png","https://app.fpx.nz/categories-products?recordId=recooQcbCktBh8rJA"],
-  ["Retaining","Posts · Retaining Boards · Sleepers · Squares & Beams","product-groups/outdoor-landscaping/outdoor-steps.png","https://app.fpx.nz/categories-products?recordId=recRkQGH44OakERvd"],
-  ["Decking","Decking Boards · Balustrade Timber · Posts · Rails","product-groups/building-construction/building-deck-construction.png","https://app.fpx.nz/categories-products?recordId=recR0Rtm3bul50Clo"],
-  ["Commercial projects","Bridges · Boardwalks · Specialist outdoor structures","product-groups/outdoor-landscaping/outdoor-boardwalk.png","https://app.fpx.nz/categories-products?recordId=recnOUIy2AOU7E1LE"]
+  ["Fencing","Palings · Posts · Rails · Fence Capping · Pegs","product-groups/outdoor-landscaping/outdoor-townhouse-fence.png","https://app.fpx.nz/guest-fpx-sourcing-copy?search=Fencing"],
+  ["Retaining","Posts · Retaining Boards · Sleepers · Squares & Beams","product-groups/outdoor-landscaping/outdoor-steps.png","https://app.fpx.nz/guest-fpx-sourcing-copy?search=Retaining"],
+  ["Decking","Decking Boards · Balustrade Timber · Posts · Rails","product-groups/building-construction/building-deck-construction.png","https://app.fpx.nz/guest-fpx-sourcing-copy?search=Decking"],
+  ["Commercial projects","Bridges · Boardwalks · Specialist outdoor structures","product-groups/outdoor-landscaping/outdoor-boardwalk.png","https://app.fpx.nz/guest-fpx-sourcing-copy?search=Commercial%20projects"]
 ];
 
 export function ProductsPage(){
@@ -74,7 +74,7 @@ export function ProductsPage(){
           <p>{use[1]}</p>
         </article>)}
       </div>
-      <a className="ppr-view-all" href="https://app.fpx.nz/stock">View all categories <Arrow/></a>
+      <a className="ppr-view-all" href="https://app.fpx.nz/guest-fpx-sourcing-copy">View all categories <Arrow/></a>
     </section>
 
     <section className="ppr-close">
@@ -116,7 +116,7 @@ export function ProductGroupPage({slug}:{slug:string}){
   };
   return <>
     <section className="pg-hero">
-      <div className="pg-hero-copy"><span className="pg-number">{number}</span><Eyebrow>PRODUCT GROUP</Eyebrow><h1>{group.title}</h1><p>{group.description}</p><div className="m-actions"><a href="https://app.fpx.nz/stock" className="m-btn m-btn-primary">Browse current timber <Arrow/></a><a href="https://app.fpx.nz/request-cart" className="m-btn m-btn-ghost">Request a product <Arrow/></a></div></div>
+      <div className="pg-hero-copy"><span className="pg-number">{number}</span><Eyebrow>PRODUCT GROUP</Eyebrow><h1>{group.title}</h1><p>{group.description}</p><div className="m-actions"><a href="https://app.fpx.nz/guest-fpx-sourcing-copy" className="m-btn m-btn-primary">Browse current timber <Arrow/></a><a href="https://app.fpx.nz/guest-fpx-sourcing-copy?request=1" className="m-btn m-btn-ghost">Request a product <Arrow/></a></div></div>
       <div className="pg-hero-image"><Image src={`/images/${group.hero}`} alt={`${group.title} timber`} width={1800} height={1200} sizes="(max-width: 900px) 100vw, 50vw" priority/></div>
     </section>
 
