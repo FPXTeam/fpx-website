@@ -62,7 +62,12 @@ export function GoogleAnalyticsConsent(){
    let eventName="login_click";
    try{
     const url=new URL(anchor.href);
-    if(url.pathname.startsWith("/stock"))eventName="browse_timber_click";
+    if(url.pathname.startsWith("/explore-fpx-sourcing")){
+      if(url.searchParams.get("request")==="1")eventName="create_request_click";
+      else if(url.searchParams.get("view")==="offers")eventName="view_offers_click";
+      else eventName="browse_timber_click";
+    }
+    else if(url.pathname.startsWith("/stock"))eventName="browse_timber_click";
     else if(url.pathname.startsWith("/request-cart"))eventName="create_request_click";
     else if(url.pathname.startsWith("/offers"))eventName="view_offers_click";
     else if(url.pathname.startsWith("/sourcing-sign-up"))eventName="create_account_click";

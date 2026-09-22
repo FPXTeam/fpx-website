@@ -151,8 +151,8 @@ export function CustomersPage(){
           </div>
 
           <div className="poc4-actions">
-            <a href="https://app.fpx.nz/stock">Browse timber <Arrow/></a>
-            <a href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a>
+            <a href="https://app.fpx.nz/explore-fpx-sourcing">Browse timber <Arrow/></a>
+            <a href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Create a request <Arrow/></a>
           </div>
         </div>
       </div>
@@ -160,7 +160,7 @@ export function CustomersPage(){
 
     <section className="poc2-close">
       <div><Eyebrow>START SOURCING</Eyebrow><h2>Start with the requirement you have.</h2><p>Browse available timber or send FPX the detail you already know.</p></div>
-      <div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/stock">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a></div>
+      <div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/explore-fpx-sourcing">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Create a request <Arrow/></a></div>
     </section>
   </>;
 }
@@ -266,8 +266,8 @@ export function AboutPage(){
         <p>Browse current timber or send FPX the detail you already know.</p>
       </div>
       <div className="m-actions">
-        <a className="m-btn m-btn-primary" href="https://app.fpx.nz/stock">Browse timber <Arrow/></a>
-        <a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a>
+        <a className="m-btn m-btn-primary" href="https://app.fpx.nz/explore-fpx-sourcing">Browse timber <Arrow/></a>
+        <a className="m-btn m-btn-ghost" href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Create a request <Arrow/></a>
       </div>
     </section>
   </>;
@@ -328,17 +328,17 @@ export function ContactPage(){
     </div>
 
     <nav className="pct2-routes" aria-label="Ways to start sourcing timber through FPX">
-      <a href="https://app.fpx.nz/stock">
+      <a href="https://app.fpx.nz/explore-fpx-sourcing">
         <span>01</span>
         <div><small>AVAILABLE TIMBER</small><h3>Browse current timber.</h3><p>Start with products that are already available through FPX.</p></div>
         <Arrow/>
       </a>
-      <a href="https://app.fpx.nz/request-cart">
+      <a href="https://app.fpx.nz/explore-fpx-sourcing?request=1">
         <span>02</span>
         <div><small>SPECIFIC REQUIREMENT</small><h3>Create a timber request.</h3><p>Send the specification and quantity when you already know what the job needs.</p></div>
         <Arrow/>
       </a>
-      <a href="https://app.fpx.nz/offers">
+      <a href="https://app.fpx.nz/explore-fpx-sourcing?view=offers">
         <span>03</span>
         <div><small>CURRENT OPPORTUNITIES</small><h3>Review current offers.</h3><p>See whether a current FPX opportunity suits the requirement.</p></div>
         <Arrow/>

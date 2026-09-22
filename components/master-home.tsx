@@ -12,7 +12,7 @@ const productGroups = [
 
 const Eyebrow=({children}:{children:React.ReactNode})=><p className="m-eyebrow">{children}</p>;
 const Arrow=()=> <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>;
-const AppButtons=()=> <div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/stock">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/request-cart">Create a request <Arrow/></a></div>;
+const AppButtons=()=> <div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/explore-fpx-sourcing">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Create a request <Arrow/></a></div>;
 
 function PremiumHero(){
   return <section className="ph-hero">
@@ -48,9 +48,9 @@ function RangeStory(){
 
 function PlatformStory(){
   const routes=[
-    ["Browse Stock","Search available timber by category, grade and specification.","https://app.fpx.nz/stock","AVAILABLE TIMBER"],
-    ["View Offers","Review current packet and bulk timber opportunities.","https://app.fpx.nz/offers","CURRENT OPPORTUNITIES"],
-    ["Create a Request","Tell FPX what you need and receive suitable sourcing options.","https://app.fpx.nz/request-cart","EXACT REQUIREMENTS"]
+    ["Browse Stock","Search available timber by category, grade and specification.","https://app.fpx.nz/explore-fpx-sourcing","AVAILABLE TIMBER"],
+    ["View Offers","Review current packet and bulk timber opportunities.","https://app.fpx.nz/explore-fpx-sourcing?view=offers","CURRENT OPPORTUNITIES"],
+    ["Create a Request","Tell FPX what you need and receive suitable sourcing options.","https://app.fpx.nz/explore-fpx-sourcing?request=1","EXACT REQUIREMENTS"]
   ] as const;
   return <section className="ph-platform ph-platform-routes-only">
     <div className="ph-platform-head">

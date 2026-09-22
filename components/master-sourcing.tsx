@@ -44,9 +44,9 @@ function SourceStory(){return <section className="m-source-story-premium">
     <h2>Start with what you know.</h2>
     <p>You do not need to learn the whole platform before you begin. Choose the route that matches the job, then FPX carries the detail forward.</p>
   </div>
-  <SourceFeature index="01" eyebrow="REQUESTS" title="You know what you need." copy="Send a specific timber requirement and let FPX help source suitable options." items={[{title:"From our catalogue",copy:"Add a catalogue product to your Request List when it is not currently available."},{title:"Custom request",copy:"Send the specification, quantity and requirements when the job needs something more specific."}]} cta="Go to Request List" href="https://app.fpx.nz/request-cart" steps={requestSteps} label="REQUEST PATH"/>
-  <SourceFeature index="02" eyebrow="STOCK - ORDER DIRECT" title="See what’s available now." copy="Browse current timber, choose what fits and move directly into the order process." items={[{title:"Available stock",copy:"Browse timber that is currently available through FPX."},{title:"Specials",copy:"Review discounted single-packet or multi-packet opportunities when available."}]} cta="Browse stock" href="https://app.fpx.nz/stock" steps={shopSteps} label="STOCK PATH" reverse/>
-  <SourceFeature index="03" eyebrow="OFFERS - ENQUIRE" title="Spot an opportunity." copy="Explore current offers and enquire when an opportunity suits your requirement." items={[{title:"Current offers",copy:"Review current timber opportunities, then enquire so FPX can respond for your volumes and requirements."}]} cta="View offers & enquire" href="https://app.fpx.nz/offers" steps={offerSteps} label="OFFER PATH"/>
+  <SourceFeature index="01" eyebrow="REQUESTS" title="You know what you need." copy="Send a specific timber requirement and let FPX help source suitable options." items={[{title:"From our catalogue",copy:"Add a catalogue product to your Request List when it is not currently available."},{title:"Custom request",copy:"Send the specification, quantity and requirements when the job needs something more specific."}]} cta="Go to Request List" href="https://app.fpx.nz/explore-fpx-sourcing?request=1" steps={requestSteps} label="REQUEST PATH"/>
+  <SourceFeature index="02" eyebrow="STOCK - ORDER DIRECT" title="See what’s available now." copy="Browse current timber, choose what fits and move directly into the order process." items={[{title:"Available stock",copy:"Browse timber that is currently available through FPX."},{title:"Specials",copy:"Review discounted single-packet or multi-packet opportunities when available."}]} cta="Browse stock" href="https://app.fpx.nz/explore-fpx-sourcing" steps={shopSteps} label="STOCK PATH" reverse/>
+  <SourceFeature index="03" eyebrow="OFFERS - ENQUIRE" title="Spot an opportunity." copy="Explore current offers and enquire when an opportunity suits your requirement." items={[{title:"Current offers",copy:"Review current timber opportunities, then enquire so FPX can respond for your volumes and requirements."}]} cta="View offers & enquire" href="https://app.fpx.nz/explore-fpx-sourcing?view=offers" steps={offerSteps} label="OFFER PATH"/>
 </section>}
 
 function SourceClosing(){return <section className="m-source-closing-premium">
@@ -100,7 +100,7 @@ export function SourceTimberPage(){return <>
         <summary><span>REQUEST PATH</span><small>4 steps</small><b aria-hidden="true">+</b></summary>
         <div>{requestSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></div>)}</div>
       </details>
-      <a className="pst-route-cta" href="https://app.fpx.nz/request-cart">Go to Request List <Arrow/></a>
+      <a className="pst-route-cta" href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Go to Request List <Arrow/></a>
     </article>
 
     <article id="source-stock" className="pst-route is-reverse">
@@ -118,7 +118,7 @@ export function SourceTimberPage(){return <>
         <summary><span>STOCK PATH</span><small>3 steps</small><b aria-hidden="true">+</b></summary>
         <div>{shopSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></div>)}</div>
       </details>
-      <a className="pst-route-cta" href="https://app.fpx.nz/stock">Browse stock <Arrow/></a>
+      <a className="pst-route-cta" href="https://app.fpx.nz/explore-fpx-sourcing">Browse stock <Arrow/></a>
     </article>
 
     <article id="source-offers" className="pst-route">
@@ -135,7 +135,7 @@ export function SourceTimberPage(){return <>
         <summary><span>OFFER PATH</span><small>3 steps</small><b aria-hidden="true">+</b></summary>
         <div>{offerSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></div>)}</div>
       </details>
-      <a className="pst-route-cta" href="https://app.fpx.nz/offers">View offers & enquire <Arrow/></a>
+      <a className="pst-route-cta" href="https://app.fpx.nz/explore-fpx-sourcing?view=offers">View offers & enquire <Arrow/></a>
     </article>
   </section>
 
