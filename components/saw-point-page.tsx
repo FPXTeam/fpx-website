@@ -307,11 +307,15 @@ export function SawPointPage(){
       .spx-archive-status{display:flex;justify-content:flex-end;padding:15px 0 10px}
       .spx-archive-status span{font:600 10px/1 Lato,Arial,sans-serif;letter-spacing:.06em;color:#758956}
       .spx-archive-list{border-top:1px solid rgba(4,14,14,.16)}
-      .spx-archive-list>a{min-height:118px;display:grid;grid-template-columns:105px minmax(0,1fr) auto;gap:28px;align-items:center;padding:20px 4px;border-bottom:1px solid rgba(4,14,14,.16);color:#040E0E;text-decoration:none;transition:padding .2s ease,background .2s ease}
+      .spx-archive{overflow-x:clip}
+      .spx-archive>header,.spx-archive-tools,.spx-archive-list,.spx-archive-list>a,.spx-archive-copy{min-width:0}
+      .spx-archive-tools{max-width:100%}
+      .spx-year-filters{min-width:0;max-width:100%}
+      .spx-archive-list>a{min-height:118px;display:grid;grid-template-columns:92px minmax(0,1fr) 96px;gap:22px;align-items:center;padding:20px 4px;border-bottom:1px solid rgba(4,14,14,.16);color:#040E0E;text-decoration:none;transition:padding .2s ease,background .2s ease}
       .spx-archive-list>a:hover{padding-left:14px;padding-right:14px;background:rgba(255,255,255,.58)}
       .spx-archive-issue{font:700 10px/1 Lato,Arial,sans-serif;letter-spacing:.12em;color:#40973C}
       .spx-archive-copy small{display:block;font:700 9px/1 Lato,Arial,sans-serif;letter-spacing:.13em;color:#758956}
-      .spx-archive-list h3{margin:7px 0 5px;font-size:clamp(20px,1.8vw,28px);line-height:1.05;letter-spacing:-.025em}
+      .spx-archive-list h3{margin:7px 0 5px;font-size:clamp(20px,1.8vw,28px);line-height:1.05;letter-spacing:-.025em;overflow-wrap:anywhere}
       .spx-archive-list p{margin:0;max-width:780px;color:#64736C;font-size:12px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
       .spx-archive-link{display:flex;align-items:center;gap:7px;white-space:nowrap;font:700 10px/1 Lato,Arial,sans-serif}
       .spx-archive-empty{min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;border-bottom:1px solid rgba(4,14,14,.16);color:#040E0E}
@@ -337,6 +341,12 @@ export function SawPointPage(){
       .spx-form button{width:100%;min-height:56px;margin-top:20px;border:0;display:flex;align-items:center;justify-content:center;gap:10px;background:#40973C;color:#fff;font:700 12px/1 Lato,Arial,sans-serif;cursor:pointer;opacity:1}
       .spx-form>small{display:block;margin-top:13px;color:#758956;font-size:10px;line-height:1.5}
 
+      @media(max-width:1180px){
+        .spx-archive-tools{grid-template-columns:minmax(0,1fr) auto}
+        .spx-archive-search{grid-column:1/-1}
+        .spx-year-filters{grid-column:1}
+        .spx-per-page{grid-column:2}
+      }
       @media(max-width:1000px){
         .spx-hero{min-height:680px}
         .spx-hero:before{background:linear-gradient(90deg,rgba(247,249,246,1) 0%,rgba(247,249,246,1) 48%,rgba(247,249,246,.94) 56%,rgba(247,249,246,.58) 66%,rgba(247,249,246,0) 82%)}
