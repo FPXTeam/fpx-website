@@ -62,7 +62,7 @@ export function GoogleAnalyticsConsent(){
    let eventName="login_click";
    try{
     const url=new URL(anchor.href);
-    if(url.pathname.startsWith("/guest-fpx-sourcing-copy")){
+    if(url.pathname.startsWith("/explore-fpx-sourcing")){
       if(url.searchParams.get("request")==="1")eventName="create_request_click";
       else if(url.searchParams.get("view")==="offers")eventName="view_offers_click";
       else eventName="browse_timber_click";
