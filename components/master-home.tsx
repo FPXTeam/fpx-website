@@ -21,7 +21,7 @@ function PremiumHero(){
     <div className="ph-hero-copy">
       <Eyebrow>NEW ZEALAND TIMBER SOURCING</Eyebrow>
       <h1>Timber sourcing,<br/><span className="headline-accent">made clearer.</span></h1>
-      <p>Browse available timber, review current offers or send FPX a specific requirement. One clear starting point for commercial timber sourcing across New Zealand.</p>
+      <p>Explore available timber, review current offers or send FPX a specific requirement before creating an account. One clear starting point for commercial timber sourcing across New Zealand.</p>
       <AppButtons/>
     </div>
     <div className="ph-hero-scroll">SCROLL TO EXPLORE</div>
@@ -33,7 +33,7 @@ function RangeStory(){
     <div className="ph-range-intro">
       <Eyebrow>THE FPX TIMBER RANGE</Eyebrow>
       <h2>Start with the<br/><span className="headline-accent">right product group.</span></h2>
-      <p>Explore the range at a high level first. Then move into FPX for current stock, offers and detailed specifications.</p>
+      <p>Explore the range at a high level first. Then use FPX to explore current supply, offers and product information.</p>
       <Link href="/timber">Explore the full timber range <Arrow/></Link>
     </div>
     <div className="ph-range-list">
@@ -48,7 +48,7 @@ function RangeStory(){
 
 function PlatformStory(){
   const routes=[
-    ["Browse Stock","Search available timber by category, grade and specification.","https://app.fpx.nz/explore-fpx-sourcing","AVAILABLE TIMBER"],
+    ["Browse Timber","Search current timber supply by category, grade and specification.","https://app.fpx.nz/explore-fpx-sourcing","AVAILABLE TIMBER"],
     ["View Offers","Review current packet and bulk timber opportunities.","https://app.fpx.nz/explore-fpx-sourcing?view=offers","CURRENT OPPORTUNITIES"],
     ["Create a Request","Tell FPX what you need and receive suitable sourcing options.","https://app.fpx.nz/explore-fpx-sourcing?request=1","EXACT REQUIREMENTS"]
   ] as const;
@@ -56,7 +56,7 @@ function PlatformStory(){
     <div className="ph-platform-head">
       <Eyebrow>FPX SOURCING</Eyebrow>
       <h2>Three ways in.<br/><span className="headline-accent">One place to start.</span></h2>
-      <p>You do not need to learn the whole platform before you begin. Start with the route that matches the job.</p>
+      <p>Explore FPX Sourcing without creating an account. Browse current supply, view offers or build a timber request, then sign in or request access when you need the full customer experience.</p>
       <Link href="/fpx-sourcing">See how FPX sourcing works <Arrow/></Link>
     </div>
     <div className="fpx-route-showcase" aria-label="Ways to source timber through FPX">
@@ -65,7 +65,7 @@ function PlatformStory(){
         <small>{route[3]}</small>
         <h3>{route[0]}</h3>
         <p>{route[1]}</p>
-        <b>Start here <Arrow/></b>
+        <b>Explore in FPX <Arrow/></b>
       </a>)}
     </div>
   </section>;
@@ -73,7 +73,7 @@ function PlatformStory(){
 
 function Closing(){
   return <section className="ph-close">
-    <div><Eyebrow>START WITH FPX</Eyebrow><h2>Find the timber.<br/><span className="headline-accent">Move with clarity.</span></h2><p>Browse available timber or send FPX the requirement you already have.</p></div>
+    <div><Eyebrow>START WITH FPX</Eyebrow><h2>Find the timber.<br/><span className="headline-accent">Move with clarity.</span></h2><p>Explore current timber and submit a requirement without creating an account. Sign in or request FPX access when you need the full customer experience.</p></div>
     <AppButtons/>
   </section>;
 }
