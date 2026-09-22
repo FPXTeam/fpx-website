@@ -49,7 +49,7 @@ export function Footer(){
         <p>A clearer, supported way to source New Zealand timber.</p>
         <nav className="footer-social" aria-label="FPX social profiles"><a href="https://www.linkedin.com/company/forest-products-exchange" target="_blank" rel="noreferrer" aria-label="FPX on LinkedIn"><LinkedInIcon/></a><a href="https://www.instagram.com/fpx.nz/" target="_blank" rel="noreferrer" aria-label="FPX on Instagram"><InstagramIcon/></a><a href="https://www.facebook.com/people/Forest-Products-Exchange/61583101360304/" target="_blank" rel="noreferrer" aria-label="FPX on Facebook"><FacebookIcon/></a></nav>
       </div>
-      <div><p className="footer-heading">SOURCING</p><Link href="/fpx-sourcing">FPX Sourcing</Link><Link href="/timber">Timber Range</Link><a href="https://app.fpx.nz/guest-fpx-sourcing-copy?view=offers">View Offers</a><a href="https://app.fpx.nz/guest-fpx-sourcing-copy?request=1">Create a Request</a></div>
+      <div><p className="footer-heading">SOURCING</p><Link href="/fpx-sourcing">FPX Sourcing</Link><Link href="/timber">Timber Range</Link><a href="https://app.fpx.nz/explore-fpx-sourcing?view=offers">View Offers</a><a href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Create a Request</a></div>
       <div><p className="footer-heading">INSIGHTS</p><Link href="/saw-point">Saw Point</Link><Link href="/industry-insights">FPX Insights</Link><Link href="/frequently-asked-questions">FAQ</Link><Link href="/our-customers">Our Customers</Link></div>
       <div><p className="footer-heading">COMPANY</p><Link href="/about-us">About Us</Link><Link href="/contact-us">Contact</Link></div>
     </div>
