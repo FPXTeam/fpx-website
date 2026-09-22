@@ -3139,6 +3139,15 @@
   display:none!important;
 }
 
+/* Keep the active customer label clear of the carousel controls */
+.poc4-card img{
+  height:calc(100% - 34px);
+}
+.poc4-card>b{
+  bottom:2px;
+  z-index:9;
+}
+
 
 /* Match Our Customers hero framing to Timber Range and Source Timber */
 .poc2-hero{
