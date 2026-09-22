@@ -529,12 +529,28 @@
 .pfq-topic details[open] summary svg{transform:rotate(180deg)}
 .pfq-topic details p{
   max-width:780px;
-  padding:0 52px 24px 64px;
+  padding:0 52px 18px 64px;
   margin:0;
   font-size:14px;
   line-height:1.78;
   color:var(--pi-muted);
 }
+.pfq-answer nav{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 18px;
+  padding:0 52px 26px 64px;
+}
+.pfq-answer nav a{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  color:var(--pi-green);
+  font:700 11px/1.3 Lato,Arial,sans-serif;
+  text-decoration:none;
+}
+.pfq-answer nav a:hover{text-decoration:underline;text-underline-offset:4px}
+.pfq-answer nav svg{width:13px;height:13px}
 
 /* Existing How FPX Works, Contact, Legal and insight articles refined */
 .m-how-page-flow{padding:120px 7vw!important;background:#fff!important}
@@ -608,7 +624,8 @@
   .pfq-topic h2{font-size:40px}
   .pfq-topic summary{min-height:70px;grid-template-columns:30px minmax(0,1fr) 20px;padding:0}
   .pfq-topic summary b{font-size:15px}
-  .pfq-topic details p{padding:0 0 22px 44px}
+  .pfq-topic details p{padding:0 0 16px 44px}
+  .pfq-answer nav{padding:0 0 24px 44px}
   .m-contact-shell{padding-left:24px!important;padding-right:24px!important}
   .pp-close,.pg-close,.pc-close,.pa-close,.phw-close{grid-template-columns:1fr;padding:90px 24px}
 }
