@@ -593,22 +593,46 @@ export function LeadJourneyLab(){
     if(e.button!==0)return;
     const target=e.target as HTMLElement;
     if(target.closest(".ljl-node,.ljl-zoom-controls,.ljl-line-hit,button,select,input,textarea"))return;
-    const wrap=wrapRef.current;if(!wrap)return;
-    e.preventDefault();
-    setContextMenu(null);
+    const wrap=wrapRef.current,canvas=canvasRef.current;if(!wrap||!canvas)return;
+    e.preventDefault();setContextMenu(null);
+    if(selectMode||e.shiftKey){
+      const rect=canvas.getBoundingClientRect();
+      const x=Math.max(0,(e.clientX-rect.left)/zoom),y=Math.max(0,(e.clientY-rect.top)/zoom);
+      selectRef.current={startX:x,startY:y,additive:e.shiftKey};
+      if(!e.shiftKey)setSelectedCardIds([]);
+      setSelectionBox({x,y,w:0,h:0});
+      e.currentTarget.setPointerCapture(e.pointerId);
+      return;
+    }
     panRef.current={startX:e.clientX,startY:e.clientY,scrollLeft:wrap.scrollLeft,scrollTop:wrap.scrollTop};
     setPanning(true);
     e.currentTarget.setPointerCapture(e.pointerId);
   }
   function movePan(e:React.PointerEvent<HTMLDivElement>){
+    const canvas=canvasRef.current;
+    if(selectRef.current&&canvas){
+      const rect=canvas.getBoundingClientRect();
+      const x=(e.clientX-rect.left)/zoom,y=(e.clientY-rect.top)/zoom;
+      const sx=selectRef.current.startX,sy=selectRef.current.startY;
+      const box={x:Math.min(sx,x),y:Math.min(sy,y),w:Math.abs(x-sx),h:Math.abs(y-sy)};
+      setSelectionBox(box);
+      const hit=visibleCards.filter(card=>card.x<box.x+box.w&&card.x+nodeW>box.x&&card.y<box.y+box.h&&card.y+nodeH>box.y).map(card=>card.id);
+      setSelectedCardIds(prev=>selectRef.current?.additive?Array.from(new Set([...prev,...hit])):hit);
+      return;
+    }
     const pan=panRef.current,wrap=wrapRef.current;if(!pan||!wrap)return;
     wrap.scrollLeft=pan.scrollLeft-(e.clientX-pan.startX);
     wrap.scrollTop=pan.scrollTop-(e.clientY-pan.startY);
   }
   function endPan(e:React.PointerEvent<HTMLDivElement>){
+    if(selectRef.current){
+      selectRef.current=null;setSelectionBox(null);
+      if(selectedCardIds.length)setBulkMode(true);
+      try{e.currentTarget.releasePointerCapture(e.pointerId)}catch{}
+      return;
+    }
     if(!panRef.current)return;
-    panRef.current=null;
-    setPanning(false);
+    panRef.current=null;setPanning(false);
     try{e.currentTarget.releasePointerCapture(e.pointerId)}catch{}
   }
   function wheelZoom(e:React.WheelEvent<HTMLDivElement>){
@@ -629,7 +653,7 @@ export function LeadJourneyLab(){
     });
   }
 
-  async function autoAlign(cardsOverride?:Card[]){
+  async function autoAlign(cardsOverride?:Card[],direction:"horizontal"|"vertical"=layoutDirection){
     const cards=cardsOverride?.length?cardsOverride:visibleCards;
     const before=currentLayout(cards);
     const chosenIds=new Set(cards.map(c=>c.id));
@@ -660,21 +684,22 @@ export function LeadJourneyLab(){
     const groups=new Map<number,Card[]>();
     for(const card of cards){const d=depth.get(card.id)||0;groups.set(d,[...(groups.get(d)||[]),card])}
     const maxCount=Math.max(...Array.from(groups.values()).map(g=>g.length),1);
-    const gap=70,center=Math.max(650,(maxCount*(nodeW+gap))/2+100);
     const moved:Card[]=[];
-    if(isMainView&&mainJourneyId){
+    if(direction==="horizontal"){
+      const centerY=Math.max(430,(maxCount*(nodeH+58))/2+70);
       Array.from(groups.entries()).sort((a,b)=>a[0]-b[0]).forEach(([d,column])=>{
         column.sort((a,b)=>a.y-b.y||a.title.localeCompare(b.title));
-        const colHeight=column.length*nodeH+(column.length-1)*55;
-        const startY=Math.max(70,330-colHeight/2);
-        column.forEach((card,i)=>moved.push({...card,x:80+d*300,y:Math.round(startY+i*(nodeH+55))}));
+        const colHeight=column.length*nodeH+(column.length-1)*58;
+        const startY=Math.max(55,centerY-colHeight/2);
+        column.forEach((card,i)=>moved.push({...card,x:70+d*330,y:Math.round(startY+i*(nodeH+58))}));
       });
     }else{
+      const gap=72,centerX=Math.max(700,(maxCount*(nodeW+gap))/2+100);
       Array.from(groups.entries()).sort((a,b)=>a[0]-b[0]).forEach(([d,row])=>{
-        row.sort((a,b)=>a.title.localeCompare(b.title));
+        row.sort((a,b)=>a.x-b.x||a.title.localeCompare(b.title));
         const rowWidth=row.length*nodeW+(row.length-1)*gap;
-        const start=center-rowWidth/2;
-        row.forEach((card,i)=>moved.push({...card,x:Math.round(start+i*(nodeW+gap)),y:70+d*220}));
+        const startX=Math.max(55,centerX-rowWidth/2);
+        row.forEach((card,i)=>moved.push({...card,x:Math.round(startX+i*(nodeW+gap)),y:70+d*220}));
       });
     }
     const map=new Map(moved.map(c=>[c.id,c] as const));
