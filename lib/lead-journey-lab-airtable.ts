@@ -102,6 +102,29 @@ export async function updateJourney(id:string,input:any){
   if(input.active!==undefined)fields[JF.active]=Boolean(input.active);
   return airtable(JOURNEYS_TABLE,{method:"PATCH",body:JSON.stringify({records:[{id,fields}],typecast:true})});
 }
+export async function deleteJourney(id:string){
+  const data=await getJourneyLabData();
+
+  for(const connection of data.connections.filter(c=>c.journeyIds.includes(id))){
+    const remaining=connection.journeyIds.filter(journeyId=>journeyId!==id);
+    if(remaining.length)await updateConnection(connection.id,{journeyIds:remaining});
+    else await deleteConnection(connection.id);
+  }
+
+  for(const card of data.cards.filter(c=>c.journeyIds.includes(id))){
+    const remaining=card.journeyIds.filter(journeyId=>journeyId!==id);
+    if(remaining.length)await updateJourneyCard(card.id,{journeyIds:remaining});
+    else await deleteJourneyCard(card.id);
+  }
+
+  for(const definition of data.library.filter(card=>card.applicableJourneyIds.includes(id))){
+    await updateLibraryCard(definition.id,{
+      applicableJourneyIds:definition.applicableJourneyIds.filter(journeyId=>journeyId!==id)
+    });
+  }
+
+  return airtable(`${JOURNEYS_TABLE}/${id}`,{method:"DELETE"});
+}
 
 function libraryFields(input:any){
   const fields:any={};

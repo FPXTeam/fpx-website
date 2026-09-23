@@ -287,6 +287,41 @@ export function LeadJourneyLab(){
     return cardId;
   }
 
+  async function deleteActiveJourney(){
+    if(activeJourneyId==="all")return;
+    const journey=board.journeys.find(j=>j.id===activeJourneyId);
+    if(!journey)return;
+    if(!confirm(`Delete “${journey.name}”? This removes that journey's map cards and connections, but keeps Master Cards in the Card Library.`))return;
+
+    setSaving(true);setError("");
+    try{
+      if(!board.configured){
+        const id=journey.id;
+        mutateLocal(d=>({
+          ...d,
+          journeys:d.journeys.filter(j=>j.id!==id),
+          cards:d.cards.flatMap(card=>{
+            if(!card.journeyIds.includes(id))return [card];
+            const remaining=card.journeyIds.filter(journeyId=>journeyId!==id);
+            return remaining.length?[{...card,journeyIds:remaining}]:[];
+          }),
+          connections:d.connections.flatMap(connection=>{
+            if(!connection.journeyIds.includes(id))return [connection];
+            const remaining=connection.journeyIds.filter(journeyId=>journeyId!==id);
+            return remaining.length?[{...connection,journeyIds:remaining}]:[];
+          }),
+          library:d.library.map(card=>({...card,applicableJourneyIds:card.applicableJourneyIds.filter(journeyId=>journeyId!==id)}))
+        }));
+      }else{
+        await request("DELETE",{action:"deleteJourney",id:journey.id});
+      }
+      setActiveJourneyId("all");
+      setSelectedCardId(null);
+      setSelectedConnectionId(null);
+    }catch(e){setError(e instanceof Error?e.message:"Unable to delete journey.")}
+    finally{setSaving(false)}
+  }
+
   async function createJourney(name:string,description:string){
     setSaving(true);setError("");
     try{
@@ -519,6 +554,7 @@ export function LeadJourneyLab(){
       <div className="ljl-top-actions">
         <button onClick={()=>setLibraryOpen(true)}><BookOpen size={14}/> Card Library</button>
         <button onClick={()=>setAddingJourney(true)}><Plus size={14}/> Journey</button>
+        {activeJourneyId!=="all"&&<button onClick={deleteActiveJourney} disabled={saving}><Trash2 size={14}/> Delete Journey</button>}
         <button onClick={()=>setAdding({x:520,y:180})}><Plus size={14}/> Add Card</button>
         <button onClick={autoAlign}><WandSparkles size={14}/> Auto Align</button>
         <button onClick={fitView}><Maximize2 size={14}/> Fit</button>

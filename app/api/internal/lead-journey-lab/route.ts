@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { passwordMatches } from "../../../../lib/lead-journey-lab-auth";
 import {
-  bulkMoveCards,createConnection,createJourney,createJourneyCard,createLibraryCard,deleteConnection,deleteJourneyCard,
+  bulkMoveCards,createConnection,createJourney,createJourneyCard,createLibraryCard,deleteConnection,deleteJourney,deleteJourneyCard,
   getJourneyLabData,updateConnection,updateJourney,updateJourneyCard,updateLibraryCard
 } from "../../../../lib/lead-journey-lab-airtable";
 
@@ -80,6 +80,7 @@ export async function DELETE(request:Request){
   try{
     if(body.action==="deleteConnection")await deleteConnection(String(body.id));
     else if(body.action==="deleteCard")await deleteJourneyCard(String(body.id));
+    else if(body.action==="deleteJourney")await deleteJourney(String(body.id));
     else return NextResponse.json({error:"Unknown delete action."},{status:400});
     return NextResponse.json(await getJourneyLabData());
   }catch(error){return fail(error,"Unable to delete item.")}
