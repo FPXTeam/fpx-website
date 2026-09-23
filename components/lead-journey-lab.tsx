@@ -708,24 +708,39 @@ export function LeadJourneyLab(){
     const connections=visibleConnections.filter(c=>chosenIds.has(c.fromId)&&chosenIds.has(c.toId));
     if(!cards.length)return;
     const ids=new Set(cards.map(c=>c.id));
+    const rawChildren=new Map<string,string[]>();
+    for(const c of connections){
+      if(!ids.has(c.fromId)||!ids.has(c.toId))continue;
+      rawChildren.set(c.fromId,[...(rawChildren.get(c.fromId)||[]),c.toId]);
+    }
+    const visiting=new Set<string>(),visited=new Set<string>(),backEdges=new Set<string>();
+    const edgeKey=(a:string,b:string)=>a+"|"+b;
+    function walk(id:string){
+      visiting.add(id);visited.add(id);
+      for(const child of rawChildren.get(id)||[]){
+        if(visiting.has(child)){backEdges.add(edgeKey(id,child));continue}
+        if(!visited.has(child))walk(child);
+      }
+      visiting.delete(id);
+    }
+    cards.forEach(c=>{if(!visited.has(c.id))walk(c.id)});
     const incoming=new Map(cards.map(c=>[c.id,0] as const));
     const children=new Map<string,string[]>();
     for(const c of connections){
-      if(!ids.has(c.fromId)||!ids.has(c.toId))continue;
+      if(!ids.has(c.fromId)||!ids.has(c.toId)||backEdges.has(edgeKey(c.fromId,c.toId)))continue;
       incoming.set(c.toId,(incoming.get(c.toId)||0)+1);
       children.set(c.fromId,[...(children.get(c.fromId)||[]),c.toId]);
     }
     const depth=new Map<string,number>();
     const queue=cards.filter(c=>(incoming.get(c.id)||0)===0).map(c=>c.id);
-    if(!queue.length&&cards[0])queue.push(cards[0].id);
     queue.forEach(id=>depth.set(id,0));
     let guard=0;
     while(queue.length&&guard++<Math.max(20,cards.length*4)){
       const id=queue.shift()!,d=depth.get(id)||0;
       for(const child of children.get(id)||[]){
-        if(depth.has(child))continue;
-        depth.set(child,d+1);
-        queue.push(child);
+        depth.set(child,Math.max(depth.get(child)||0,d+1));
+        incoming.set(child,(incoming.get(child)||1)-1);
+        if((incoming.get(child)||0)===0)queue.push(child);
       }
     }
     cards.forEach(c=>{if(!depth.has(c.id))depth.set(c.id,0)});
