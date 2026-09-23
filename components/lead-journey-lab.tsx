@@ -546,7 +546,8 @@ function AddCardModal({board,activeJourneyId,initial,onClose,onUseLibrary,onCrea
   const [mode,setMode]=useState<"library"|"new">("library");
   const [libraryId,setLibraryId]=useState(board.library[0]?.id||"");
   const [title,setTitle]=useState(board.library[0]?.name||"");
-  const [journeyIds,setJourneyIds]=useState<string[]>(activeJourneyId==="all"?[board.journeys[0]?.id].filter(Boolean):[activeJourneyId]);
+  const defaultJourneyIds:string[]=activeJourneyId==="all"?(board.journeys[0]?.id?[board.journeys[0].id]:[]):[activeJourneyId];
+  const [journeyIds,setJourneyIds]=useState<string[]>(defaultJourneyIds);
   const [name,setName]=useState(""),[category,setCategory]=useState("Action"),[tool,setTool]=useState("None"),[use,setUse]=useState(""),[action,setAction]=useState("");
   function toggleJourney(id:string){setJourneyIds(v=>v.includes(id)?v.filter(x=>x!==id):[...v,id])}
   return <div className="ljl-modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><div className="ljl-modal">
