@@ -141,6 +141,8 @@ export function LeadJourneyLab(){
   const wrapRef=useRef<HTMLDivElement|null>(null);
   const canvasRef=useRef<HTMLDivElement|null>(null);
   const dragRef=useRef<{id:string;dx:number;dy:number;moved:boolean}|null>(null);
+  const panRef=useRef<{startX:number;startY:number;scrollLeft:number;scrollTop:number}|null>(null);
+  const [panning,setPanning]=useState(false);
 
   const journeys=useMemo(()=>board.journeys.filter(j=>j.active).sort((a,b)=>a.order-b.order),[board.journeys]);
   const libById=useMemo(()=>new Map(board.library.map(x=>[x.id,x] as const)),[board.library]);
@@ -348,6 +350,46 @@ export function LeadJourneyLab(){
     try{await request("PATCH",{action:"updateCard",id:card.id,x:card.x,y:card.y})}catch(e){setError(e instanceof Error?e.message:"Unable to save card position.")}
   }
 
+  function startPan(e:React.PointerEvent<HTMLDivElement>){
+    if(e.button!==0)return;
+    const target=e.target as HTMLElement;
+    if(target.closest(".ljl-node,.ljl-zoom-controls,.ljl-line-hit,button,select,input,textarea"))return;
+    const wrap=wrapRef.current;if(!wrap)return;
+    e.preventDefault();
+    setContextMenu(null);
+    panRef.current={startX:e.clientX,startY:e.clientY,scrollLeft:wrap.scrollLeft,scrollTop:wrap.scrollTop};
+    setPanning(true);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  }
+  function movePan(e:React.PointerEvent<HTMLDivElement>){
+    const pan=panRef.current,wrap=wrapRef.current;if(!pan||!wrap)return;
+    wrap.scrollLeft=pan.scrollLeft-(e.clientX-pan.startX);
+    wrap.scrollTop=pan.scrollTop-(e.clientY-pan.startY);
+  }
+  function endPan(e:React.PointerEvent<HTMLDivElement>){
+    if(!panRef.current)return;
+    panRef.current=null;
+    setPanning(false);
+    try{e.currentTarget.releasePointerCapture(e.pointerId)}catch{}
+  }
+  function wheelZoom(e:React.WheelEvent<HTMLDivElement>){
+    e.preventDefault();
+    const wrap=wrapRef.current;if(!wrap)return;
+    const rect=wrap.getBoundingClientRect();
+    const pointerX=e.clientX-rect.left;
+    const pointerY=e.clientY-rect.top;
+    const worldX=(wrap.scrollLeft+pointerX)/zoom;
+    const worldY=(wrap.scrollTop+pointerY)/zoom;
+    const direction=e.deltaY>0?-1:1;
+    const next=Math.max(.4,Math.min(1.5,Math.round((zoom+direction*.1)*100)/100));
+    if(next===zoom)return;
+    setZoom(next);
+    requestAnimationFrame(()=>{
+      wrap.scrollLeft=Math.max(0,worldX*next-pointerX);
+      wrap.scrollTop=Math.max(0,worldY*next-pointerY);
+    });
+  }
+
   async function autoAlign(){
     const cards=visibleCards,connections=visibleConnections;
     if(!cards.length)return;
@@ -475,7 +517,9 @@ export function LeadJourneyLab(){
     {connectingFromId&&<div className="ljl-connect-mode">Connecting from <strong>{cardById.get(connectingFromId)?.title}</strong>. Click the top connector on the destination card. <button onClick={()=>setConnectingFromId(null)}>Cancel</button></div>}
 
     <section className="ljl-workspace">
-      <div ref={wrapRef} className="ljl-canvas-wrap" onContextMenu={canvasContext}>
+      <div ref={wrapRef} className={"ljl-canvas-wrap "+(panning?"is-panning":"")}
+        onContextMenu={canvasContext} onPointerDown={startPan} onPointerMove={movePan}
+        onPointerUp={endPan} onPointerCancel={endPan} onWheel={wheelZoom}>
         <div className="ljl-zoom-controls" onClick={e=>e.stopPropagation()}>
           <button onClick={()=>setZoom(z=>Math.max(.4,Math.round((z-.1)*100)/100))}><Minus size={15}/></button>
           <span>{Math.round(zoom*100)}%</span>
