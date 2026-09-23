@@ -14,12 +14,13 @@ const JF={
 const CF={
   title:"fldTZw5ZxJwTLSUsZ",notes:"fldyoNMq2nfoRtYpj",comments:"fldN01OoPVu6wLB2O",
   order:"fldUbg7Zc8a8rL2W8",x:"fldHOK01a4GClLdDy",y:"fldd51zLuP0kpLM81",
-  journey:"fld7D6MCcepbVccze",library:"fldNKY9rbfF0ksfJT"
+  journey:"fld7D6MCcepbVccze",library:"fldNKY9rbfF0ksfJT",
+  sequenceId:"fldaEGh2HyVhrP4PM",sequenceName:"fldIZIdOYNPSEGvNT",sequenceStep:"fldRMAzyfFwzkGdBT"
 } as const;
 const LF={
   name:"fldsIQpP0q8B0ovAc",category:"fldk8rrrD2GBU8MiC",tool:"fldk8HqwHGVix9W8N",
   use:"fldjJma8AnOWORKJ4",action:"fld6tGJOJq6bACvc0",automated:"fldNXm2lkBUm4637T",
-  automationTool:"fldtj3DqwwQzdSaZt",assignedPerson:"fldekExx7LZuhfnoQ",campaignName:"fldbGbTqoGkNvZTzN",
+  automationTool:"fldtj3DqwwQzdSaZt",execution:"fldoUMvXmzWh9k4Mj",assignedPerson:"fldekExx7LZuhfnoQ",campaignName:"fldbGbTqoGkNvZTzN",
   subject:"fldHHAvFN2lpvRt7K",templateName:"fld0Py25FHr00nQWH",messagePurpose:"fld7i7fhPftgjQXnJ",
   timing:"fldB1f036jAgXMt5c",leadStatus:"fldNWEf7sSt4ChpIi",workshopStatus:"fld134QjRkl0fF6iQ",
   workshopAnswer:"fld8Eto4esvZ0y8Vw",notes:"flduBE9ecTbGhwxYJ",active:"fldVkdrb1OjCC16VH",global:"fldxsxqYkRpa9NhTo",
@@ -60,12 +61,12 @@ function now(){return new Date().toISOString()}
 
 export type LabJourney={id:string;name:string;description:string;order:number;active:boolean;group:string;archived:boolean;template:boolean};
 export type LabLibraryCard={
-  id:string;name:string;category:string;tool:string;use:string;action:string;automated:string;automationTool:string;
+  id:string;name:string;category:string;tool:string;use:string;action:string;automated:string;automationTool:string;execution:string;
   assignedPerson:string;campaignName:string;subject:string;templateName:string;messagePurpose:string;timing:string;
   leadStatus:string;workshopStatus:string;workshopAnswer:string;notes:string;active:boolean;global:boolean;
   suggestedNextIds:string[];suggestedParentIds:string[];applicableJourneyIds:string[];
 };
-export type LabCard={id:string;title:string;notes:string;comments:string;order:number;x:number;y:number;journeyIds:string[];libraryId:string};
+export type LabCard={id:string;title:string;notes:string;comments:string;order:number;x:number;y:number;journeyIds:string[];libraryId:string;sequenceId:string;sequenceName:string;sequenceStep:number};
 export type LabConnection={id:string;name:string;fromId:string;toId:string;journeyIds:string[];label:string;order:number;active:boolean};
 
 export async function getJourneyLabData(){
@@ -84,7 +85,7 @@ export async function getJourneyLabData(){
   const library:LabLibraryCard[]=l.records.map((r:any)=>({
     id:r.id,name:val(r,LF.name,"Untitled card"),category:selectName(val(r,LF.category),"Action"),tool:selectName(val(r,LF.tool),"None"),
     use:val(r,LF.use),action:val(r,LF.action),automated:selectName(val(r,LF.automated),"No"),automationTool:selectName(val(r,LF.automationTool),"None"),
-    assignedPerson:val(r,LF.assignedPerson),campaignName:val(r,LF.campaignName),subject:val(r,LF.subject),templateName:val(r,LF.templateName),
+    execution:selectName(val(r,LF.execution),"Manual"),assignedPerson:val(r,LF.assignedPerson),campaignName:val(r,LF.campaignName),subject:val(r,LF.subject),templateName:val(r,LF.templateName),
     messagePurpose:val(r,LF.messagePurpose),timing:val(r,LF.timing),leadStatus:selectName(val(r,LF.leadStatus),"Not Applicable"),
     workshopStatus:selectName(val(r,LF.workshopStatus),"Draft"),workshopAnswer:val(r,LF.workshopAnswer),notes:val(r,LF.notes),active:val(r,LF.active,true)!==false,
     global:Boolean(val(r,LF.global,false)),suggestedNextIds:links(val(r,LF.suggestedNext,[])),suggestedParentIds:links(val(r,LF.suggestedParent,[])),
@@ -93,7 +94,8 @@ export async function getJourneyLabData(){
   const cards:LabCard[]=c.records.map((r:any)=>({
     id:r.id,title:val(r,CF.title,"Untitled card"),notes:val(r,CF.notes),comments:val(r,CF.comments),
     order:Number(val(r,CF.order,0)),x:Number(val(r,CF.x,100)),y:Number(val(r,CF.y,100)),
-    journeyIds:links(val(r,CF.journey,[])),libraryId:links(val(r,CF.library,[]))[0]||""
+    journeyIds:links(val(r,CF.journey,[])),libraryId:links(val(r,CF.library,[]))[0]||"",
+    sequenceId:val(r,CF.sequenceId),sequenceName:val(r,CF.sequenceName),sequenceStep:Number(val(r,CF.sequenceStep,0))
   }));
   const connections:LabConnection[]=x.records.map((r:any)=>({
     id:r.id,name:val(r,XF.name,"Connection"),fromId:links(val(r,XF.from,[]))[0]||"",toId:links(val(r,XF.to,[]))[0]||"",
@@ -140,7 +142,7 @@ export async function deleteJourney(id:string){
 function libraryFields(input:any){
   const fields:any={};const map:any={
     name:LF.name,category:LF.category,tool:LF.tool,use:LF.use,action:LF.action,automated:LF.automated,
-    automationTool:LF.automationTool,assignedPerson:LF.assignedPerson,campaignName:LF.campaignName,subject:LF.subject,
+    automationTool:LF.automationTool,execution:LF.execution,assignedPerson:LF.assignedPerson,campaignName:LF.campaignName,subject:LF.subject,
     templateName:LF.templateName,messagePurpose:LF.messagePurpose,timing:LF.timing,leadStatus:LF.leadStatus,
     workshopStatus:LF.workshopStatus,workshopAnswer:LF.workshopAnswer,notes:LF.notes,active:LF.active,global:LF.global,
     suggestedNextIds:LF.suggestedNext,suggestedParentIds:LF.suggestedParent,applicableJourneyIds:LF.applicableJourneys
@@ -188,7 +190,10 @@ export async function createJourneyCard(input:any){
     [CF.x]:Number(input.x??100),
     [CF.y]:Number(input.y??100),
     [CF.journey]:Array.isArray(input.journeyIds)?input.journeyIds:[],
-    [CF.library]:input.libraryId?[input.libraryId]:[]
+    [CF.library]:input.libraryId?[input.libraryId]:[],
+    [CF.sequenceId]:input.sequenceId||"",
+    [CF.sequenceName]:input.sequenceName||"",
+    [CF.sequenceStep]:Number(input.sequenceStep||0)
   };
   return airtable(CARDS_TABLE,{method:"POST",body:JSON.stringify({records:[{fields}],typecast:true})});
 }
@@ -202,6 +207,9 @@ export async function updateJourneyCard(id:string,input:any){
   if(input.y!==undefined)fields[CF.y]=Number(input.y);
   if(input.journeyIds!==undefined)fields[CF.journey]=input.journeyIds;
   if(input.libraryId!==undefined)fields[CF.library]=input.libraryId?[input.libraryId]:[];
+  if(input.sequenceId!==undefined)fields[CF.sequenceId]=input.sequenceId||"";
+  if(input.sequenceName!==undefined)fields[CF.sequenceName]=input.sequenceName||"";
+  if(input.sequenceStep!==undefined)fields[CF.sequenceStep]=Number(input.sequenceStep||0);
   return airtable(CARDS_TABLE,{method:"PATCH",body:JSON.stringify({records:[{id,fields}],typecast:true})});
 }
 export async function bulkMoveCards(items:any[]){
