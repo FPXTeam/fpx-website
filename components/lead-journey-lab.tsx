@@ -942,19 +942,27 @@ function JourneyModal({saving,board,onClose,onSave}:any){
 }
 
 function AddCardModal({board,activeJourneyId,initial,onClose,onUseLibrary,onCreate,saving}:any){
+  const availableJourneys=board.journeys.filter((j:any)=>j.active&&!j.archived&&!j.template);
   const [mode,setMode]=useState<"library"|"new">("library");
   const [libraryId,setLibraryId]=useState(board.library[0]?.id||"");
   const [title,setTitle]=useState(board.library[0]?.name||"");
-  const defaultJourneyIds:string[]=activeJourneyId==="all"?(board.journeys[0]?.id?[board.journeys[0].id]:[]):[activeJourneyId];
+  const defaultJourneyIds:string[]=activeJourneyId==="all"?(availableJourneys[0]?.id?[availableJourneys[0].id]:[]):[activeJourneyId];
   const [journeyIds,setJourneyIds]=useState<string[]>(defaultJourneyIds);
+  const [journeyQuery,setJourneyQuery]=useState("");
+  const [global,setGlobal]=useState(false);
   const [name,setName]=useState(""),[category,setCategory]=useState("Action"),[tool,setTool]=useState("None"),[use,setUse]=useState(""),[action,setAction]=useState("");
+  const filteredJourneys=availableJourneys.filter((j:any)=>!journeyQuery||(`${j.name} ${j.group||""}`).toLowerCase().includes(journeyQuery.toLowerCase()));
   function toggleJourney(id:string){setJourneyIds(v=>v.includes(id)?v.filter(x=>x!==id):[...v,id])}
+  function chooseLibrary(id:string){
+    setLibraryId(id);const def=board.library.find((x:any)=>x.id===id);setTitle(def?.name||"");
+    if(def?.global)setJourneyIds(availableJourneys.map((j:any)=>j.id));
+  }
   return <div className="ljl-modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><div className="ljl-modal">
     <header><div><span>ADD CARD</span><h2>{initial.parentId?"Add next card":"Add card"}</h2></div><button onClick={onClose}><X/></button></header>
     <div className="ljl-mode-tabs"><button className={mode==="library"?"active":""} onClick={()=>setMode("library")}>From Card Library</button><button className={mode==="new"?"active":""} onClick={()=>setMode("new")}>New master card</button></div>
     <div className="ljl-form">
       {mode==="library"?<>
-        <label>Card Library<select value={libraryId} onChange={e=>{setLibraryId(e.target.value);setTitle(board.library.find((x:any)=>x.id===e.target.value)?.name||"")}}>{board.library.filter((x:any)=>x.active).sort((a:any,b:any)=>a.category.localeCompare(b.category)||a.name.localeCompare(b.name)).map((x:any)=><option key={x.id} value={x.id}>{x.category} · {x.name}{x.tool!=="None"?" · "+x.tool:""}</option>)}</select></label>
+        <label>Card Library<select value={libraryId} onChange={e=>chooseLibrary(e.target.value)}>{board.library.filter((x:any)=>x.active).sort((a:any,b:any)=>a.category.localeCompare(b.category)||a.name.localeCompare(b.name)).map((x:any)=><option key={x.id} value={x.id}>{x.category} · {x.name}{x.tool!=="None"?" · "+x.tool:""}{x.global?" · GLOBAL":""}</option>)}</select></label>
         <label>Card title<input value={title} onChange={e=>setTitle(e.target.value)}/></label>
       </>:<>
         <label>Master card name<input value={name} onChange={e=>{setName(e.target.value);setTitle(e.target.value)}} placeholder="e.g. Follow-up call"/></label>
@@ -962,10 +970,18 @@ function AddCardModal({board,activeJourneyId,initial,onClose,onUseLibrary,onCrea
         <label>Tool<select value={tool} onChange={e=>setTool(e.target.value)}>{["None","FPX App","Website Form","Airtable","Brevo","Call","Text","Outlook","LinkedIn","Facebook","Instagram","Make"].map(x=><option key={x}>{x}</option>)}</select></label>
         <label>Use / Purpose<input value={use} onChange={e=>setUse(e.target.value)}/></label>
         <label>Tool Action<input value={action} onChange={e=>setAction(e.target.value)}/></label>
+        <label className="ljl-checkline"><input type="checkbox" checked={global} onChange={e=>{setGlobal(e.target.checked);if(e.target.checked)setJourneyIds(availableJourneys.map((j:any)=>j.id))}}/> Global card — all current and future journeys</label>
       </>}
-      <div className="ljl-journey-checks"><span>Journey</span><div>{board.journeys.filter((j:any)=>j.active).map((j:any)=><label key={j.id}><input type="checkbox" checked={journeyIds.includes(j.id)} onChange={()=>toggleJourney(j.id)}/>{j.name}</label>)}</div></div>
+      <div className="ljl-journey-picker">
+        <div className="ljl-picker-head"><span>Journeys</span><div><button type="button" onClick={()=>setJourneyIds(availableJourneys.map((j:any)=>j.id))}>Select All</button><button type="button" onClick={()=>setJourneyIds([])}>Clear All</button></div></div>
+        <input value={journeyQuery} onChange={e=>setJourneyQuery(e.target.value)} placeholder="Search journeys…"/>
+        <div className="ljl-journey-checks">{filteredJourneys.map((j:any)=><label key={j.id}><input type="checkbox" checked={journeyIds.includes(j.id)} disabled={global} onChange={()=>toggleJourney(j.id)}/><span>{j.name}<small>{j.group||"Other"}</small></span></label>)}</div>
+      </div>
     </div>
-    <footer><button className="secondary" onClick={onClose}>Cancel</button>{mode==="library"?<button className="primary" disabled={saving||!libraryId||!title||!journeyIds.length} onClick={()=>onUseLibrary(libraryId,title,journeyIds)}>{saving?"Saving…":"Add card"}</button>:<button className="primary" disabled={saving||!name||!journeyIds.length} onClick={()=>onCreate({name,category,tool,use,action,automated:"No",automationTool:"None",assignedPerson:"",campaignName:"",subject:"",templateName:"",messagePurpose:"",timing:"",leadStatus:"Not Applicable",workshopStatus:"Draft",notes:"",active:true,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:journeyIds},title||name,journeyIds)}>{saving?"Saving…":"Create & add"}</button>}</footer>
+    <footer><button className="secondary" onClick={onClose}>Cancel</button>{mode==="library"
+      ?<button className="primary" disabled={saving||!libraryId||!title||!journeyIds.length} onClick={()=>onUseLibrary(libraryId,title,journeyIds)}>{saving?"Saving…":"Add card"}</button>
+      :<button className="primary" disabled={saving||!name||!journeyIds.length} onClick={()=>onCreate({name,category,tool,use,action,automated:"No",automationTool:"None",assignedPerson:"",campaignName:"",subject:"",templateName:"",messagePurpose:"",timing:"",leadStatus:"Not Applicable",workshopStatus:"Draft",notes:"",active:true,global,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:journeyIds},title||name,journeyIds)}>{saving?"Saving…":"Create & add"}</button>}
+    </footer>
   </div></div>;
 }
 
@@ -985,7 +1001,10 @@ function LibraryModal({board,onClose,onEdit}:any){
 
 function LibraryEditor({def,board,saving,onClose,onSave}:{def:LibraryCard|null;board:Board;saving:boolean;onClose:()=>void;onSave:(d:LibraryCard)=>void}){
   const [draft,setDraft]=useState<LibraryCard>(def||emptyLibrary("",""));
+  const [journeyQuery,setJourneyQuery]=useState("");
   if(!def)return null;
+  const availableJourneys=board.journeys.filter(j=>j.active&&!j.archived&&!j.template);
+  const filteredJourneys=availableJourneys.filter(j=>!journeyQuery||(`${j.name} ${j.group||""}`).toLowerCase().includes(journeyQuery.toLowerCase()));
   const set=(key:keyof LibraryCard,value:any)=>setDraft(d=>({...d,[key]:value}));
   const toggle=(key:"applicableJourneyIds"|"suggestedNextIds"|"suggestedParentIds",id:string)=>set(key,draft[key].includes(id)?draft[key].filter(x=>x!==id):[...draft[key],id]);
   return <div className="ljl-modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><div className="ljl-editor-modal">
@@ -1007,10 +1026,83 @@ function LibraryEditor({def,board,saving,onClose,onSave}:{def:LibraryCard|null;b
       <label>Template Name<input value={draft.templateName} onChange={e=>set("templateName",e.target.value)}/></label>
       <label className="wide">Message Purpose<textarea rows={3} value={draft.messagePurpose} onChange={e=>set("messagePurpose",e.target.value)}/></label>
       <label className="wide">Notes<textarea rows={3} value={draft.notes} onChange={e=>set("notes",e.target.value)}/></label>
-      <div className="wide ljl-editor-multis"><span>Applicable Journeys</span><div>{board.journeys.filter(j=>j.active).map(j=><label key={j.id}><input type="checkbox" checked={draft.applicableJourneyIds.includes(j.id)} onChange={()=>toggle("applicableJourneyIds",j.id)}/>{j.name}</label>)}</div></div>
+      <label className="wide ljl-checkline"><input type="checkbox" checked={Boolean(draft.global)} onChange={e=>{set("global",e.target.checked);if(e.target.checked)set("applicableJourneyIds",availableJourneys.map(j=>j.id))}}/> Global card — apply to all current and future journeys</label>
+      <div className="wide ljl-journey-picker">
+        <div className="ljl-picker-head"><span>Applicable Journeys</span><div><button type="button" onClick={()=>set("applicableJourneyIds",availableJourneys.map(j=>j.id))}>Select All</button><button type="button" onClick={()=>set("applicableJourneyIds",[])}>Clear All</button></div></div>
+        <input value={journeyQuery} onChange={e=>setJourneyQuery(e.target.value)} placeholder="Search journeys…"/>
+        <div className="ljl-journey-checks">{filteredJourneys.map(j=><label key={j.id}><input type="checkbox" disabled={Boolean(draft.global)} checked={draft.applicableJourneyIds.includes(j.id)} onChange={()=>toggle("applicableJourneyIds",j.id)}/><span>{j.name}<small>{j.group||"Other"}</small></span></label>)}</div>
+      </div>
       <label className="wide">Suggested Next<select multiple value={draft.suggestedNextIds} onChange={e=>set("suggestedNextIds",Array.from(e.currentTarget.selectedOptions).map(o=>o.value))}>{board.library.filter(x=>x.id!==draft.id).map(x=><option value={x.id} key={x.id}>{x.category} · {x.name}</option>)}</select></label>
       <label className="wide">Suggested Parent<select multiple value={draft.suggestedParentIds} onChange={e=>set("suggestedParentIds",Array.from(e.currentTarget.selectedOptions).map(o=>o.value))}>{board.library.filter(x=>x.id!==draft.id).map(x=><option value={x.id} key={x.id}>{x.category} · {x.name}</option>)}</select></label>
     </div>
     <footer><button className="secondary" onClick={onClose}>Cancel</button><button className="primary" disabled={saving||!draft.name.trim()} onClick={()=>onSave(draft)}>{saving?"Saving…":"Save master card"}</button></footer>
+  </div></div>;
+}
+
+function BulkBar({count,journeys,onAssign,onDelete,onAlign,onFit,onClear,onExit}:any){
+  const [journeyId,setJourneyId]=useState("");
+  return <div className="ljl-bulkbar"><strong>{count} selected</strong><select value={journeyId} onChange={e=>setJourneyId(e.target.value)}><option value="">Assign to journey…</option>{journeys.map((j:any)=><option key={j.id} value={j.id}>{j.name}</option>)}</select><button disabled={!count||!journeyId} onClick={()=>onAssign(journeyId)}>Assign</button><button disabled={!count} onClick={onAlign}><WandSparkles size={13}/> Align</button><button disabled={!count} onClick={onFit}><Maximize2 size={13}/> Fit</button><button disabled={!count} className="danger" onClick={onDelete}><Trash2 size={13}/> Delete</button><button onClick={onClear}>Clear</button><button onClick={onExit}><X size={13}/> Exit</button></div>;
+}
+
+function MiniMap({cards,width,height}:any){
+  if(!cards.length)return null;
+  const scale=Math.min(180/Math.max(width,1),120/Math.max(height,1));
+  return <div className="ljl-minimap" aria-label="Journey mini-map"><svg width={190} height={130} viewBox="0 0 190 130"><rect x="0" y="0" width="190" height="130" rx="8" fill="white"/>{cards.map((card:any)=><rect key={card.id} x={card.x*scale+5} y={card.y*scale+5} width={Math.max(8,nodeW*scale)} height={Math.max(5,nodeH*scale)} rx="2" fill="#b8c7bd" stroke="#758956"/>)}</svg></div>;
+}
+
+function JourneyManagerModal({board,activeJourneyId,onOpen,onDuplicate,onArchive,onTemplate,onDelete,onClose}:any){
+  const [query,setQuery]=useState(""),[group,setGroup]=useState("All"),[showArchived,setShowArchived]=useState(false);
+  const groups=["All",...Array.from(new Set(board.journeys.map((j:any)=>j.group||"Other"))).sort()] as string[];
+  const items=board.journeys.filter((j:any)=>(showArchived||!j.archived)&&(group==="All"||(j.group||"Other")===group)&&(!query||(`${j.name} ${j.description} ${j.group||""}`).toLowerCase().includes(query.toLowerCase())));
+  return <div className="ljl-modal-backdrop"><div className="ljl-library-modal">
+    <header><div><span>JOURNEYS</span><h2>Journey Manager</h2></div><button onClick={onClose}><X/></button></header>
+    <div className="ljl-library-tools"><label><Search size={14}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search journeys"/></label><select value={group} onChange={e=>setGroup(e.target.value)}>{groups.map(g=><option key={g}>{g}</option>)}</select></div>
+    <div className="ljl-manager-options"><label><input type="checkbox" checked={showArchived} onChange={e=>setShowArchived(e.target.checked)}/> Show archived</label></div>
+    <div className="ljl-journey-list">{items.map((j:any)=><article key={j.id} className={j.id===activeJourneyId?"active":""}><div><span>{j.group||"Other"}{j.template?" · TEMPLATE":""}{j.archived?" · ARCHIVED":""}</span><strong>{j.name}</strong><p>{j.description||"No description"}</p></div><div className="ljl-row-actions"><button onClick={()=>onOpen(j.id)}>Open</button><button onClick={()=>onDuplicate(j)}><Copy size={12}/> Duplicate</button><button onClick={()=>onArchive(j,!j.archived)}><Archive size={12}/> {j.archived?"Restore":"Archive"}</button><button onClick={()=>onTemplate(j,!j.template)}><Boxes size={12}/> {j.template?"Remove Template":"Make Template"}</button><button className="danger" onClick={()=>onDelete(j)}><Trash2 size={12}/> Delete</button></div></article>)}</div>
+  </div></div>;
+}
+
+function WorkspaceToolsModal({board,miniMap,setMiniMap,hideAgreed,setHideAgreed,toolFilter,setToolFilter,assignedFilter,setAssignedFilter,statusFilter,setStatusFilter,bulkMode,setBulkMode,onFit,onFitSelected,onExportSvg,onPrint,onChangeLog,onPresentation,onClose}:any){
+  const tools=["All",...Array.from(new Set(board.library.map((d:any)=>d.tool||"None"))).sort()] as string[];
+  const people=["All",...Array.from(new Set(board.library.map((d:any)=>d.assignedPerson||"Unassigned"))).sort()] as string[];
+  return <div className="ljl-modal-backdrop"><div className="ljl-modal">
+    <header><div><span>WORKSPACE</span><h2>Tools & View</h2></div><button onClick={onClose}><X/></button></header>
+    <div className="ljl-form">
+      <label>Tool filter<select value={toolFilter} onChange={e=>setToolFilter(e.target.value)}>{tools.map(x=><option key={x}>{x}</option>)}</select></label>
+      <label>Assigned person<select value={assignedFilter} onChange={e=>setAssignedFilter(e.target.value)}>{people.map(x=><option key={x}>{x}</option>)}</select></label>
+      <label>Workshop status<select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}>{["All","Draft","Needs Discussion","Agreed"].map(x=><option key={x}>{x}</option>)}</select></label>
+      <label className="ljl-checkline"><input type="checkbox" checked={hideAgreed} onChange={e=>setHideAgreed(e.target.checked)}/> Hide Agreed cards</label>
+      <label className="ljl-checkline"><input type="checkbox" checked={miniMap} onChange={e=>setMiniMap(e.target.checked)}/> Show mini-map</label>
+      <label className="ljl-checkline"><input type="checkbox" checked={bulkMode} onChange={e=>setBulkMode(e.target.checked)}/> Multi-select cards</label>
+      <div className="ljl-tool-grid"><button onClick={onFit}><Maximize2 size={13}/> Fit All</button><button onClick={onFitSelected}><Maximize2 size={13}/> Fit Selected</button><button onClick={onExportSvg}><Download size={13}/> Export SVG</button><button onClick={onPrint}><FileDown size={13}/> Print / PDF</button><button onClick={onChangeLog}><History size={13}/> Change Log</button><button onClick={onPresentation}><Presentation size={13}/> Presentation Mode</button></div>
+    </div>
+  </div></div>;
+}
+
+function VersionHistoryModal({snapshots,onSave,onRestore,onDelete,onClose}:any){
+  return <div className="ljl-modal-backdrop"><div className="ljl-library-modal">
+    <header><div><span>VERSION HISTORY</span><h2>Snapshots</h2></div><button onClick={onClose}><X/></button></header>
+    <div className="ljl-history-head"><button className="primary" onClick={onSave}><Save size={13}/> Save snapshot</button><p>Snapshots preserve the current card layout. Restore safely re-applies positions to cards that still exist.</p></div>
+    <div className="ljl-history-list">{snapshots.length?snapshots.map((s:any)=><article key={s.id}><div><strong>{s.name}</strong><span>{s.createdAt?new Date(s.createdAt).toLocaleString():""} · {s.createdBy||"Shared user"}</span></div><div><button onClick={()=>onRestore(s)}>Restore layout</button><button className="danger" onClick={()=>onDelete(s)}><Trash2 size={12}/></button></div></article>):<p className="muted">No snapshots yet.</p>}</div>
+  </div></div>;
+}
+
+function ChangeLogModal({changes,onClose}:any){
+  return <div className="ljl-modal-backdrop"><div className="ljl-library-modal">
+    <header><div><span>CHANGE LOG</span><h2>Recent changes</h2></div><button onClick={onClose}><X/></button></header>
+    <div className="ljl-change-list">{changes.length?changes.map((x:any)=><article key={x.id}><div><strong>{x.action} {x.itemType}</strong><span>{x.itemName}</span></div><div><span>{x.changedBy||"Shared user"}</span><small>{x.changedAt?new Date(x.changedAt).toLocaleString():""}</small></div></article>):<p className="muted">No logged changes yet.</p>}</div>
+  </div></div>;
+}
+
+function MergeJourneyModal({board,sourceCardId,currentJourneyId,onMerge,onClose,saving}:any){
+  const [targetJourneyId,setTargetJourneyId]=useState("");
+  const [targetCardId,setTargetCardId]=useState("");
+  const [query,setQuery]=useState("");
+  const journeys=board.journeys.filter((j:any)=>j.active&&!j.archived&&!j.template&&j.id!==currentJourneyId&&(!query||j.name.toLowerCase().includes(query.toLowerCase())));
+  const cards=targetJourneyId?board.cards.filter((c:any)=>c.journeyIds.includes(targetJourneyId)):[];
+  return <div className="ljl-modal-backdrop"><div className="ljl-modal">
+    <header><div><span>MERGE JOURNEY</span><h2>Connect to existing journey</h2></div><button onClick={onClose}><X/></button></header>
+    <div className="ljl-form"><label>Find journey<input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search journey"/></label><label>Target journey<select value={targetJourneyId} onChange={e=>{setTargetJourneyId(e.target.value);setTargetCardId("")}}><option value="">Choose journey…</option>{journeys.map((j:any)=><option key={j.id} value={j.id}>{j.name}</option>)}</select></label><label>Connect into card<select value={targetCardId} onChange={e=>setTargetCardId(e.target.value)}><option value="">Choose card…</option>{cards.map((card:any)=><option key={card.id} value={card.id}>{card.title}</option>)}</select></label><p className="muted">The selected existing card becomes the merge point. Its master definition is not duplicated.</p></div>
+    <footer><button className="secondary" onClick={onClose}>Cancel</button><button className="primary" disabled={saving||!targetJourneyId||!targetCardId} onClick={()=>onMerge(targetJourneyId,targetCardId)}>{saving?"Connecting…":"Connect journeys"}</button></footer>
   </div></div>;
 }
