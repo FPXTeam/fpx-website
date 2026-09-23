@@ -860,6 +860,12 @@ export function LeadJourneyLab(){
     const rect=canvasRef.current?.getBoundingClientRect(); if(!rect)return;
     setSelectedCardId(card.id);setSelectedConnectionId(null);setContextMenu(null);
     if(presentationMode)return;
+    const collapsedGroup=card.sequenceId?collapsedMap.get(card.sequenceId):null;
+    if(collapsedGroup&&collapsedGroup.cards[0]?.id===card.id&&!selectMode&&!bulkMode){
+      const group=collapsedGroup.cards.map(c=>({id:c.id,x:c.x,y:c.y}));
+      dragRef.current={id:card.id,dx:0,dy:0,moved:false,before:currentLayout(collapsedGroup.cards),group,startX:e.clientX,startY:e.clientY};
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);return;
+    }
     if(selectMode){
       setSelectedCardIds(ids=>ids.includes(card.id)?ids.filter(id=>id!==card.id):[...ids,card.id]);
       setBulkMode(true);return;
@@ -1253,12 +1259,19 @@ export function LeadJourneyLab(){
         <div className="ljl-canvas-scale" style={{width:width*zoom,height:height*zoom}}>
           <div ref={canvasRef} className="ljl-canvas" style={{width,height,transform:`scale(${zoom})`}}
             onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}>
+            {sequenceGroups.filter(group=>!collapsedSequences.includes(group.id)&&group.cards.length>1).map(group=>{
+              const minX=Math.min(...group.cards.map(c=>c.x))-22,minY=Math.min(...group.cards.map(c=>c.y))-42;
+              const maxX=Math.max(...group.cards.map(c=>c.x+nodeW))+22,maxY=Math.max(...group.cards.map(c=>c.y+nodeH))+22;
+              return <div key={group.id} className={"ljl-sequence-group tone-"+sequenceTone(group.name)} style={{left:minX,top:minY,width:maxX-minX,height:maxY-minY}}>
+                <div className="ljl-sequence-group-label"><strong>{group.name}</strong><span>{group.cards.length} steps</span><button onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setCollapsedSequences(ids=>[...ids,group.id])}}>Collapse</button></div>
+              </div>;
+            })}
             <svg className="ljl-lines" width={width} height={height}>
               <defs><marker id="lab-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z"/></marker></defs>
               {visibleConnections.map((connection,index)=>{
                 const route=routedConnection(connection,index);if(!route)return null;
                 return <g key={connection.id} className={selectedConnectionId===connection.id?"is-selected":""}>
-                  <path className="ljl-line-hit" d={route.d} onClick={e=>{e.stopPropagation();setSelectedConnectionId(connection.id);setSelectedCardId(null)}}/>
+                  <path className="ljl-line-hit" d={route.d} onClick={e=>{e.stopPropagation();if(connection.id.startsWith("virtual-"))return;setSelectedConnectionId(connection.id);setSelectedCardId(null)}}/>
                   <path className="ljl-line-shadow" d={route.d}/>
                   <path className="ljl-line" d={route.d} markerEnd="url(#lab-arrow)"/>
                   {connection.label&&<text x={route.mx} y={route.my-7}>{connection.label}</text>}
@@ -1269,19 +1282,30 @@ export function LeadJourneyLab(){
 
             {visibleCards.map(card=>{
               const def=libById.get(card.libraryId);
-              return <article key={card.id} className={"ljl-node "+(def?.category==="Wait"?"is-wait ":"")+(def?.workshopStatus==="Needs Discussion"?"needs-discussion ":"")+(selectedCardId===card.id?"is-selected ":"")+(selectedCardIds.includes(card.id)?"is-bulk-selected":"")}
+              const collapsedGroup=card.sequenceId?collapsedMap.get(card.sequenceId):null;
+              const isSummary=Boolean(collapsedGroup&&collapsedGroup.cards[0]?.id===card.id);
+              const displayTitle=isSummary?collapsedGroup!.name:card.title;
+              const displayCategory=isSummary?"Sequence":(def?.category||"Card");
+              const classes=["ljl-node","cat-"+cssToken(def?.category||"card"),"exec-"+cssToken(def?.execution||"manual"),
+                def?.category==="Wait"?"is-wait":"",def?.workshopStatus==="Needs Discussion"?"needs-discussion":"",
+                isSummary?"is-sequence-summary tone-"+sequenceTone(collapsedGroup!.name):"",
+                selectedCardId===card.id?"is-selected":"",selectedCardIds.includes(card.id)?"is-bulk-selected":""].filter(Boolean).join(" ");
+              return <article key={card.id} className={classes}
                 style={{left:card.x,top:card.y}} onPointerDown={e=>startDrag(e,card)}
                 onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}
                 onContextMenu={e=>cardContext(e,card)}>
                 {!presentationMode&&<button className={"ljl-handle input "+(layoutDirection==="horizontal"?"horizontal":"vertical")} title="Connect to this card" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();connectHandle(card.id)}}/>}
-                <div className="ljl-node-top"><span>{def?.category||"Card"}</span>{bulkMode?<CheckSquare size={15}/>:<GripVertical size={15}/>}</div>
-                <h2>{card.title}</h2>
+                <div className="ljl-node-top"><span>{displayCategory}</span>{isSummary?<button className="ljl-sequence-expand" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setCollapsedSequences(ids=>ids.filter(id=>id!==card.sequenceId))}}>Expand</button>:(bulkMode?<CheckSquare size={15}/>:<GripVertical size={15}/>)}</div>
+                <h2>{displayTitle}</h2>
                 <div className="ljl-node-meta">
-                  {def?.tool&&def.tool!=="None"&&<span>{def.tool}</span>}
-                  {def?.assignedPerson&&<span>{def.assignedPerson}</span>}
-                  {def?.workshopStatus&&<span>{def.workshopStatus}</span>}
+                  {isSummary?<><span>{collapsedGroup!.cards.length} steps</span><span>Collapsed</span></>:<>
+                    {def?.tool&&def.tool!=="None"&&<span>{def.tool}</span>}
+                    {def?.execution&&<span className={"execution "+cssToken(def.execution)}>{def.execution}</span>}
+                    {def?.assignedPerson&&<span>{def.assignedPerson}</span>}
+                    {def?.workshopStatus&&<span>{def.workshopStatus}</span>}
+                  </>}
                 </div>
-                {!presentationMode&&!bulkMode&&<div className="ljl-node-actions">
+                {!presentationMode&&!bulkMode&&!isSummary&&<div className="ljl-node-actions">
                   <button onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setAdding({x:card.x,y:card.y+220,parentId:card.id})}}><Plus size={13}/> Next</button>
                   <button onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setSelectedCardId(card.id);setSelectedConnectionId(null)}}><Edit3 size={13}/></button>
                 </div>}
