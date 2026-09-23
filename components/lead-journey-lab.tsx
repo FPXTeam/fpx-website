@@ -173,30 +173,41 @@ export function LeadJourneyLab(){
 
   async function createCardFromLibrary(libraryId:string,title:string,journeyIds:string[],x:number,y:number,parentId?:string){
     const before=new Set(board.cards.map(c=>c.id));
-    let newId="";
     if(!board.configured){
-      newId="c-"+Date.now();
-      mutateLocal(d=>({...d,cards:[...d.cards,{id:newId,title,notes:"",order:Date.now(),x,y,journeyIds,libraryId}]}));
-    }else{
-      const next=await request("POST",{action:"createCardFromLibrary",libraryId,title,journeyIds,x,y,order:Date.now()});
-      newId=next.cards.find((c:Card)=>!before.has(c.id))?.id||"";
+      const newId="c-"+Date.now();
+      const parent=parentId?board.cards.find(c=>c.id===parentId):null;
+      mutateLocal(d=>{
+        const nextCards=[...d.cards,{id:newId,title,notes:"",order:Date.now(),x,y,journeyIds,libraryId}];
+        const nextConnections=parentId?[...d.connections,{id:"x-"+Date.now(),name:`${parent?.title||"Card"} → ${title}`,fromId:parentId,toId:newId,journeyIds,label:"",order:Date.now(),active:true}]:d.connections;
+        return {...d,cards:nextCards,connections:nextConnections};
+      });
+      return newId;
     }
-    if(parentId&&newId)await createConnection(parentId,newId);
+    const next=await request("POST",{action:"createCardFromLibrary",libraryId,title,journeyIds,x,y,order:Date.now()});
+    const newId=next.cards.find((card:Card)=>!before.has(card.id))?.id||"";
+    if(parentId&&newId){
+      const parent=next.cards.find((card:Card)=>card.id===parentId);
+      await request("POST",{action:"createConnection",name:`${parent?.title||"Card"} → ${title}`,fromId:parentId,toId:newId,journeyIds,label:""});
+    }
     return newId;
   }
 
   async function createNewCard(library:Partial<LibraryCard>&{name:string},title:string,journeyIds:string[],x:number,y:number,parentId?:string){
     if(!board.configured){
-      const libId="l-"+Date.now(),cardId="c-"+Date.now();
-      const def:{[K in keyof LibraryCard]:LibraryCard[K]}={...emptyLibrary(libId,library.name),...library,id:libId} as LibraryCard;
-      mutateLocal(d=>({...d,library:[...d.library,def],cards:[...d.cards,{id:cardId,title,notes:"",order:Date.now(),x,y,journeyIds,libraryId:libId}]}));
-      if(parentId)await createConnection(parentId,cardId);
+      const stamp=Date.now(),libId="l-"+stamp,cardId="c-"+stamp;
+      const def={...emptyLibrary(libId,library.name),...library,id:libId} as LibraryCard;
+      const parent=parentId?board.cards.find(c=>c.id===parentId):null;
+      mutateLocal(d=>({...d,library:[...d.library,def],cards:[...d.cards,{id:cardId,title,notes:"",order:stamp,x,y,journeyIds,libraryId:libId}],
+        connections:parentId?[...d.connections,{id:"x-"+stamp,name:`${parent?.title||"Card"} → ${title}`,fromId:parentId,toId:cardId,journeyIds,label:"",order:stamp,active:true}]:d.connections}));
       return cardId;
     }
     const before=new Set(board.cards.map(c=>c.id));
     const next=await request("POST",{action:"createNewCard",title,journeyIds,x,y,order:Date.now(),library});
-    const cardId=next.cards.find((c:Card)=>!before.has(c.id))?.id||"";
-    if(parentId&&cardId)await createConnection(parentId,cardId);
+    const cardId=next.cards.find((card:Card)=>!before.has(card.id))?.id||"";
+    if(parentId&&cardId){
+      const parent=next.cards.find((card:Card)=>card.id===parentId);
+      await request("POST",{action:"createConnection",name:`${parent?.title||"Card"} → ${title}`,fromId:parentId,toId:cardId,journeyIds,label:""});
+    }
     return cardId;
   }
 
@@ -424,7 +435,7 @@ export function LeadJourneyLab(){
       </div>
 
       <aside className="ljl-inspector">
-        {selectedConnection?<ConnectionInspector connection={selectedConnection} cards={visibleCards}
+        {selectedConnection?<ConnectionInspector key={selectedConnection.id} connection={selectedConnection} cards={visibleCards}
           onSave={updateConnection} onDisconnect={()=>deleteConnection(selectedConnection.id)}/>:
         selectedCard&&selectedDef?<CardInspector card={selectedCard} def={selectedDef} incoming={incoming} outgoing={outgoing}
           cardById={cardById} suggestedParents={suggestedParents} suggestedNext={suggestedNext}
@@ -447,7 +458,7 @@ export function LeadJourneyLab(){
       saving={saving}/>}
 
     {libraryOpen&&<LibraryModal board={board} onClose={()=>setLibraryOpen(false)} onEdit={id=>setEditingLibraryId(id)}/>}
-    {editingLibraryId&&<LibraryEditor def={libById.get(editingLibraryId)||null} board={board} saving={saving}
+    {editingLibraryId&&<LibraryEditor key={editingLibraryId} def={libById.get(editingLibraryId)||null} board={board} saving={saving}
       onClose={()=>setEditingLibraryId(null)} onSave={saveLibrary}/>}
   </main>;
 }
