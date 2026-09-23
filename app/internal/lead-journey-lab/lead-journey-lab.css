@@ -47,3 +47,12 @@
 
 .ljl-node.is-wait{border-style:dashed;background:#f6f8f5}
 .ljl-node.is-wait .ljl-node-top span{letter-spacing:.12em}
+
+/* Layout, selection and workshop resolution */
+.ljl-top-actions button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.ljl-selection-box{position:absolute;border:1.5px solid var(--green);background:rgba(83,195,150,.12);border-radius:6px;pointer-events:none;z-index:8}
+.ljl-resolution{background:#f4faf5}
+.ljl-resolve-button{margin-top:8px;min-height:32px;border:0;background:var(--green);color:#fff;border-radius:7px;padding:0 10px;display:inline-flex;align-items:center;gap:6px;font-size:8px;font-weight:800;cursor:pointer}
+.ljl-resolve-button:disabled{opacity:.45;cursor:not-allowed}
+.ljl-node{z-index:10}
+.ljl-lines{z-index:2}
