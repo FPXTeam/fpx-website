@@ -3,7 +3,7 @@
 
 import { useMemo,useRef,useState } from "react";
 import {
-  ArrowRight,BookOpen,Edit3,GripVertical,Layers,Link2,Lock,LogOut,Maximize2,
+  ArrowRight,BookOpen,Copy,Edit3,GripVertical,Layers,Link2,Lock,LogOut,Maximize2,
   Minus,Plus,RefreshCw,RotateCcw,Search,Trash2,Unlink,WandSparkles,X
 } from "lucide-react";
 
@@ -316,6 +316,21 @@ export function LeadJourneyLab(){
     finally{setSaving(false)}
   }
 
+  async function duplicateCard(card:Card){
+    setSaving(true);setError("");
+    try{
+      const id=await createCardFromLibrary(
+        card.libraryId,
+        card.title,
+        [...card.journeyIds],
+        card.x+40,
+        card.y+40
+      );
+      if(id)setSelectedCardId(id);
+    }catch(e){setError(e instanceof Error?e.message:"Unable to duplicate card.")}
+    finally{setSaving(false)}
+  }
+
   async function removeCard(card:Card){
     if(!confirm(`Delete “${card.title}” from the journey map?`))return;
     const related=board.connections.filter(c=>c.fromId===card.id||c.toId===card.id);
@@ -578,7 +593,7 @@ export function LeadJourneyLab(){
           cardById={cardById} suggestedParents={suggestedParents} suggestedNext={suggestedNext}
           onEditAll={()=>setEditingLibraryId(selectedDef.id)} onDisconnect={deleteConnection}
           onConnectParent={(parent)=>createConnection(parent.id,selectedCard.id)} onAddSuggestion={addSuggested}
-          onDelete={()=>removeCard(selectedCard)}/>:
+          onDuplicate={()=>duplicateCard(selectedCard)} onDelete={()=>removeCard(selectedCard)}/>:
         <div className="ljl-empty"><Link2 size={19}/><strong>Select a card or connection</strong><p>Card details, suggestions and connection controls will appear here.</p></div>}
       </aside>
     </section>
@@ -587,6 +602,7 @@ export function LeadJourneyLab(){
       onClose={()=>setContextMenu(null)}
       onAdd={()=>{const parent=contextMenu.cardId;setAdding({x:parent?(cardById.get(parent)?.x||contextMenu.canvasX):contextMenu.canvasX,y:parent?(cardById.get(parent)?.y||contextMenu.canvasY)+220:contextMenu.canvasY,parentId:parent});setContextMenu(null)}}
       onEdit={()=>{const c=contextMenu.cardId?cardById.get(contextMenu.cardId):null;if(c?.libraryId)setEditingLibraryId(c.libraryId);setContextMenu(null)}}
+      onDuplicate={()=>{const c=contextMenu.cardId?cardById.get(contextMenu.cardId):null;if(c)duplicateCard(c);setContextMenu(null)}}
       onAutoAlign={()=>{setContextMenu(null);autoAlign()}} onFit={()=>{setContextMenu(null);fitView()}}/>}
 
     {addingJourney&&<JourneyModal saving={saving} onClose={()=>setAddingJourney(false)} onSave={createJourney}/>}
@@ -601,7 +617,7 @@ export function LeadJourneyLab(){
   </main>;
 }
 
-function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,suggestedNext,onEditAll,onDisconnect,onConnectParent,onAddSuggestion,onDelete}:any){
+function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,suggestedNext,onEditAll,onDisconnect,onConnectParent,onAddSuggestion,onDuplicate,onDelete}:any){
   return <div className="ljl-inspector-inner">
     <div className="ljl-inspector-title"><span>{def.category}</span><h2>{card.title}</h2><small>{def.tool!=="None"?def.tool:"No tool"}</small></div>
     <section className="ljl-detail-grid">
@@ -624,7 +640,7 @@ function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,sug
     {(def.campaignName||def.subject||def.templateName||def.messagePurpose)&&<section><h3>Communication</h3>
       <div className="ljl-detail-list"><p><b>Campaign:</b> {def.campaignName||"—"}</p><p><b>Subject:</b> {def.subject||"—"}</p><p><b>Template:</b> {def.templateName||"—"}</p><p><b>Purpose:</b> {def.messagePurpose||"—"}</p></div>
     </section>}
-    <section className="ljl-inspector-actions"><button onClick={onEditAll}><Edit3 size={13}/> Edit master card</button><button className="danger" onClick={onDelete}><Trash2 size={13}/> Delete from map</button></section>
+    <section className="ljl-inspector-actions"><button onClick={onDuplicate}><Copy size={13}/> Duplicate card</button><button onClick={onEditAll}><Edit3 size={13}/> Edit master card</button><button className="danger" onClick={onDelete}><Trash2 size={13}/> Delete from map</button></section>
   </div>;
 }
 
@@ -641,9 +657,10 @@ function ConnectionInspector({connection,cards,onSave,onDisconnect}:any){
   </div>;
 }
 
-function ContextMenu({menu,card,onClose,onAdd,onEdit,onAutoAlign,onFit}:any){
+function ContextMenu({menu,card,onClose,onAdd,onEdit,onDuplicate,onAutoAlign,onFit}:any){
   return <div className="ljl-context" style={{left:menu.x,top:menu.y}} onClick={e=>e.stopPropagation()}>
     <button onClick={onAdd}><Plus size={14}/>{card?"Add next card":"Add card here"}</button>
+    {card&&<button onClick={onDuplicate}><Copy size={14}/> Duplicate card</button>}
     {card&&<button onClick={onEdit}><Edit3 size={14}/> Edit master card</button>}
     <hr/><button onClick={onAutoAlign}><WandSparkles size={14}/> Auto Align</button><button onClick={onFit}><Maximize2 size={14}/> Fit to screen</button>
     <button onClick={onClose}><X size={14}/> Close</button>
