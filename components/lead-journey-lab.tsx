@@ -818,6 +818,12 @@ export function LeadJourneyLab(){
         cross.set(card.id,current*.45+target*.55);
       });
     });
+    levels.forEach(d=>{
+      const layer=groups.get(d)||[];
+      const desired=new Map<string,number>();
+      layer.forEach(card=>desired.set(card.id,cross.get(card.id)||originalCross(card)+crossSize/2));
+      resolveLayer(layer,desired);
+    });
     const moved:Card[]=[];
     for(const card of cards){
       const d=depth.get(card.id)||0;
