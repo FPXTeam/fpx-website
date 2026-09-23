@@ -1078,7 +1078,7 @@ function AddCardModal({board,activeJourneyId,mainJourneyId,initial,onClose,onUse
     </div>
     <footer><button className="secondary" onClick={onClose}>Cancel</button>{mode==="library"
       ?<button className="primary" disabled={saving||!libraryId||!title||!journeyIds.length} onClick={()=>onUseLibrary(libraryId,title,journeyIds)}>{saving?"Saving…":"Add card"}</button>
-      :<button className="primary" disabled={saving||!name||!journeyIds.length} onClick={()=>onCreate({name,category,tool,use,action,automated:"No",automationTool:"None",assignedPerson:"",campaignName:"",subject:"",templateName:"",messagePurpose:"",timing:"",leadStatus:"Not Applicable",workshopStatus:"Draft",notes:"",active:true,global,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:journeyIds},title||name,journeyIds)}>{saving?"Saving…":"Create & add"}</button>}
+      :<button className="primary" disabled={saving||!name||!journeyIds.length} onClick={()=>onCreate({name,category,tool,use,action,automated:"No",automationTool:"None",assignedPerson:"",campaignName:"",subject:"",templateName:"",messagePurpose:"",timing:"",leadStatus:"Not Applicable",workshopStatus:"Draft",workshopAnswer:"",notes:"",active:true,global,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:journeyIds},title||name,journeyIds)}>{saving?"Saving…":"Create & add"}</button>}
     </footer>
   </div></div>;
 }
@@ -1119,6 +1119,7 @@ function LibraryEditor({def,board,saving,onClose,onSave}:{def:LibraryCard|null;b
       <label>Timing<input value={draft.timing} onChange={e=>set("timing",e.target.value)} placeholder="e.g. Wait 3 days"/></label>
       <label>Lead Status<select value={draft.leadStatus} onChange={e=>set("leadStatus",e.target.value)}>{["Converted","Pending Activation","Invited","Pending Invite","New Lead","Pending Contact Details","DNC","Not Applicable"].map(x=><option key={x}>{x}</option>)}</select></label>
       <label>Workshop Status<select value={draft.workshopStatus} onChange={e=>set("workshopStatus",e.target.value)}>{["Draft","Needs Discussion","Agreed"].map(x=><option key={x}>{x}</option>)}</select></label>
+      <label className="wide">Workshop Answer / Final Decision<textarea rows={3} value={draft.workshopAnswer||""} onChange={e=>set("workshopAnswer",e.target.value)} placeholder="Final agreed answer. Use comments for discussion."/></label>
       <label>Campaign Name<input value={draft.campaignName} onChange={e=>set("campaignName",e.target.value)}/></label>
       <label>Subject<input value={draft.subject} onChange={e=>set("subject",e.target.value)}/></label>
       <label>Template Name<input value={draft.templateName} onChange={e=>set("templateName",e.target.value)}/></label>
