@@ -12,7 +12,8 @@ const LF={
   automationTool:"fldtj3DqwwQzdSaZt",assignedPerson:"fldekExx7LZuhfnoQ",campaignName:"fldbGbTqoGkNvZTzN",
   subject:"fldHHAvFN2lpvRt7K",templateName:"fld0Py25FHr00nQWH",messagePurpose:"fld7i7fhPftgjQXnJ",
   timing:"fldB1f036jAgXMt5c",leadStatus:"fldNWEf7sSt4ChpIi",workshopStatus:"fld134QjRkl0fF6iQ",
-  notes:"flduBE9ecTbGhwxYJ",active:"fldVkdrb1OjCC16VH"
+  notes:"flduBE9ecTbGhwxYJ",active:"fldVkdrb1OjCC16VH",
+  suggestedNext:"fldObxiWfVZnqtj0F",suggestedParent:"fld2u1vmpFdO87LVD",applicableJourneys:"fldyuRZmv4uDz2MxI"
 } as const;
 const XF={name:"fldT88PLhxFPLYwuM",from:"fld8tQx20OGXVsbKb",to:"flddUhwF3te7HbuJv",journey:"fldvgjq2BEcPzWrr8",label:"fldrvSdOTRBb1f6yi",order:"fldlk5mXijEwEqYc9",active:"fldaINUQmCwevzvdZ"} as const;
 
@@ -42,6 +43,7 @@ export type LabLibraryCard={
   id:string;name:string;category:string;tool:string;use:string;action:string;automated:string;automationTool:string;
   assignedPerson:string;campaignName:string;subject:string;templateName:string;messagePurpose:string;timing:string;
   leadStatus:string;workshopStatus:string;notes:string;active:boolean;
+  suggestedNextIds:string[];suggestedParentIds:string[];applicableJourneyIds:string[];
 };
 export type LabCard={id:string;title:string;notes:string;order:number;x:number;y:number;journeyIds:string[];libraryId:string};
 export type LabConnection={id:string;name:string;fromId:string;toId:string;journeyIds:string[];label:string;order:number;active:boolean};
@@ -62,7 +64,9 @@ export async function getJourneyLabData(){
     use:val(r,LF.use),action:val(r,LF.action),automated:val(r,LF.automated,"No"),automationTool:val(r,LF.automationTool,"None"),
     assignedPerson:val(r,LF.assignedPerson),campaignName:val(r,LF.campaignName),subject:val(r,LF.subject),templateName:val(r,LF.templateName),
     messagePurpose:val(r,LF.messagePurpose),timing:val(r,LF.timing),leadStatus:val(r,LF.leadStatus,"Not Applicable"),
-    workshopStatus:val(r,LF.workshopStatus,"Draft"),notes:val(r,LF.notes),active:val(r,LF.active,true)!==false
+    workshopStatus:val(r,LF.workshopStatus,"Draft"),notes:val(r,LF.notes),active:val(r,LF.active,true)!==false,
+    suggestedNextIds:links(val(r,LF.suggestedNext,[])),suggestedParentIds:links(val(r,LF.suggestedParent,[])),
+    applicableJourneyIds:links(val(r,LF.applicableJourneys,[]))
   }));
   const cards:LabCard[]=c.records.map((r:any)=>({
     id:r.id,title:val(r,CF.title,"Untitled card"),notes:val(r,CF.notes),order:Number(val(r,CF.order,0)),
@@ -100,9 +104,14 @@ function libraryFields(input:any){
     name:LF.name,category:LF.category,tool:LF.tool,use:LF.use,action:LF.action,automated:LF.automated,
     automationTool:LF.automationTool,assignedPerson:LF.assignedPerson,campaignName:LF.campaignName,subject:LF.subject,
     templateName:LF.templateName,messagePurpose:LF.messagePurpose,timing:LF.timing,leadStatus:LF.leadStatus,
-    workshopStatus:LF.workshopStatus,notes:LF.notes,active:LF.active
+    workshopStatus:LF.workshopStatus,notes:LF.notes,active:LF.active,
+    suggestedNextIds:LF.suggestedNext,suggestedParentIds:LF.suggestedParent,applicableJourneyIds:LF.applicableJourneys
   };
-  for(const [key,id] of Object.entries(map))if(input[key]!==undefined)fields[id as string]=input[key];
+  for(const [key,id] of Object.entries(map)){
+    if(input[key]===undefined)continue;
+    const value=input[key];
+    fields[id as string]=(key.endsWith("Ids")&&Array.isArray(value))?value:value;
+  }
   return fields;
 }
 export async function createLibraryCard(input:any){
