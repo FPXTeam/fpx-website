@@ -3,18 +3,19 @@
 
 import { useMemo,useRef,useState } from "react";
 import {
-  ArrowRight,BookOpen,Copy,Edit3,GripVertical,Layers,Link2,Lock,LogOut,Maximize2,
-  Minus,Plus,RefreshCw,RotateCcw,Search,Trash2,Unlink,WandSparkles,X
+  Archive,ArrowRight,BookOpen,Boxes,CheckSquare,Copy,Download,Edit3,Eye,EyeOff,FileDown,Filter,
+  GitMerge,GripVertical,History,Layers,Link2,Lock,LogOut,Maximize2,MessageSquare,Minus,Plus,
+  Presentation,Redo2,RefreshCw,RotateCcw,Save,Search,Trash2,Undo2,Unlink,Users,WandSparkles,X
 } from "lucide-react";
 
-type Journey={id:string;name:string;description:string;order:number;active:boolean};
+type Journey={id:string;name:string;description:string;order:number;active:boolean;group?:string;archived?:boolean;template?:boolean};
 type LibraryCard={
   id:string;name:string;category:string;tool:string;use:string;action:string;automated:string;automationTool:string;
   assignedPerson:string;campaignName:string;subject:string;templateName:string;messagePurpose:string;timing:string;
   leadStatus:string;workshopStatus:string;notes:string;active:boolean;suggestedNextIds:string[];suggestedParentIds:string[];
-  applicableJourneyIds:string[];
+  applicableJourneyIds:string[];global?:boolean;
 };
-type Card={id:string;title:string;notes:string;order:number;x:number;y:number;journeyIds:string[];libraryId:string};
+type Card={id:string;title:string;notes:string;comments?:string;order:number;x:number;y:number;journeyIds:string[];libraryId:string};
 type Connection={id:string;name:string;fromId:string;toId:string;journeyIds:string[];label:string;order:number;active:boolean};
 type Board={configured:boolean;journeys:Journey[];library:LibraryCard[];cards:Card[];connections:Connection[]};
 
@@ -24,7 +25,7 @@ const nodeW=250,nodeH=128;
 function emptyLibrary(id:string,name:string):LibraryCard{
   return {id,name,category:"Action",tool:"None",use:"",action:"",automated:"No",automationTool:"None",assignedPerson:"",
     campaignName:"",subject:"",templateName:"",messagePurpose:"",timing:"",leadStatus:"Not Applicable",workshopStatus:"Draft",
-    notes:"",active:true,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:[]};
+    notes:"",active:true,global:false,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:[]};
 }
 function fallbackBoard():Board{
   const journeys:Journey[]=[
@@ -143,15 +144,47 @@ export function LeadJourneyLab(){
   const dragRef=useRef<{id:string;dx:number;dy:number;moved:boolean}|null>(null);
   const panRef=useRef<{startX:number;startY:number;scrollLeft:number;scrollTop:number}|null>(null);
   const [panning,setPanning]=useState(false);
+  const [displayName,setDisplayName]=useState("");
+  const [journeyManagerOpen,setJourneyManagerOpen]=useState(false);
+  const [toolsOpen,setToolsOpen]=useState(false);
+  const [historyOpen,setHistoryOpen]=useState(false);
+  const [changeLogOpen,setChangeLogOpen]=useState(false);
+  const [mergeCardId,setMergeCardId]=useState<string|null>(null);
+  const [presentationMode,setPresentationMode]=useState(false);
+  const [miniMap,setMiniMap]=useState(true);
+  const [hideAgreed,setHideAgreed]=useState(false);
+  const [toolFilter,setToolFilter]=useState("All");
+  const [assignedFilter,setAssignedFilter]=useState("All");
+  const [statusFilter,setStatusFilter]=useState("All");
+  const [bulkMode,setBulkMode]=useState(false);
+  const [selectedCardIds,setSelectedCardIds]=useState<string[]>([]);
+  const [snapshots,setSnapshots]=useState<any[]>([]);
+  const [changeLog,setChangeLog]=useState<any[]>([]);
+  const [layoutUndo,setLayoutUndo]=useState<any[][]>([]);
+  const [layoutRedo,setLayoutRedo]=useState<any[][]>([]);
 
-  const journeys=useMemo(()=>board.journeys.filter(j=>j.active).sort((a,b)=>a.order-b.order),[board.journeys]);
+  const journeys=useMemo(()=>board.journeys.filter(j=>j.active&&!j.archived&&!j.template).sort((a,b)=>a.order-b.order),[board.journeys]);
+  const journeyGroups=useMemo(()=>Array.from(new Set(board.journeys.filter(j=>j.active&&!j.archived).map(j=>j.group||"Other"))).sort(),[board.journeys]);
   const libById=useMemo(()=>new Map(board.library.map(x=>[x.id,x] as const)),[board.library]);
   const cardById=useMemo(()=>new Map(board.cards.map(x=>[x.id,x] as const)),[board.cards]);
 
-  const visibleCards=useMemo(()=>board.cards.filter(card=>
+  const baseVisibleCards=useMemo(()=>board.cards.filter(card=>
     activeJourneyId==="all"||card.journeyIds.includes(activeJourneyId)
   ),[board.cards,activeJourneyId]);
+  const visibleCards=useMemo(()=>baseVisibleCards.filter(card=>{
+    const def=libById.get(card.libraryId);
+    if(hideAgreed&&def?.workshopStatus==="Agreed")return false;
+    if(toolFilter!=="All"&&(def?.tool||"None")!==toolFilter)return false;
+    if(assignedFilter!=="All"&&(def?.assignedPerson||"Unassigned")!==assignedFilter)return false;
+    if(statusFilter!=="All"&&(def?.workshopStatus||"Draft")!==statusFilter)return false;
+    return true;
+  }),[baseVisibleCards,libById,hideAgreed,toolFilter,assignedFilter,statusFilter]);
   const visibleCardIds=useMemo(()=>new Set(visibleCards.map(c=>c.id)),[visibleCards]);
+  const completion=useMemo(()=>{
+    const total=baseVisibleCards.length;
+    const agreed=baseVisibleCards.filter(card=>libById.get(card.libraryId)?.workshopStatus==="Agreed").length;
+    return {agreed,total};
+  },[baseVisibleCards,libById]);
   const visibleConnections=useMemo(()=>board.connections.filter(c=>c.active&&visibleCardIds.has(c.fromId)&&visibleCardIds.has(c.toId)&&(
     activeJourneyId==="all"||c.journeyIds.includes(activeJourneyId)
   )),[board.connections,visibleCardIds,activeJourneyId]);
@@ -179,7 +212,7 @@ export function LeadJourneyLab(){
 
   async function request(method:string,body?:any){
     const response=await fetch("/api/internal/lead-journey-lab",{
-      method,headers:{"Content-Type":"application/json","X-Lead-Journey-Password":password},
+      method,headers:{"Content-Type":"application/json","X-Lead-Journey-Password":password,"X-Lead-Journey-User":displayName||"Shared user"},
       body:body?JSON.stringify(body):undefined
     });
     const data=await response.json().catch(()=>({}));
@@ -193,10 +226,11 @@ export function LeadJourneyLab(){
   async function unlock(e:React.FormEvent){
     e.preventDefault();setAuthError("");setLoading(true);
     try{
-      const response=await fetch("/api/internal/lead-journey-lab",{headers:{"X-Lead-Journey-Password":password}});
+      const response=await fetch("/api/internal/lead-journey-lab",{headers:{"X-Lead-Journey-Password":password,"X-Lead-Journey-User":displayName||"Shared user"}});
       const data=await response.json().catch(()=>({}));
       if(!response.ok){setAuthError(data.error||"Incorrect password.");return}
       setBoard(data.configured===false?loadLocal():data);
+      try{localStorage.setItem("fpx-ljl-user",displayName||"Shared user")}catch{}
       setUnlocked(true);
     }finally{setLoading(false)}
   }
@@ -537,7 +571,9 @@ export function LeadJourneyLab(){
   if(!unlocked)return <main className="ljl-lock"><div className="ljl-lock-card">
     <div className="ljl-mark">FPX <span>INTERNAL</span></div><div className="ljl-lock-icon"><Lock size={22}/></div>
     <h1>Lead Journey Lab</h1>
-    <form onSubmit={unlock}><label>Password<input autoFocus type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Enter password"/></label>
+    <form onSubmit={unlock}>
+      <label>Your name<input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Gabriel / George / Gabriela"/></label>
+      <label>Password<input autoFocus type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Enter password"/></label>
       {authError&&<small className="ljl-error">{authError}</small>}
       <button disabled={loading}>{loading?"Checking…":<>Open <ArrowRight size={16}/></>}</button></form>
   </div></main>;
