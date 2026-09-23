@@ -42,6 +42,17 @@ async function airtable(path:string,init?:RequestInit){
   if(!response.ok)throw new Error(data?.error?.message||data?.error?.type||"Airtable request failed.");
   return data;
 }
+async function airtableAll(path:string){
+  const records:any[]=[];
+  let offset="";
+  do{
+    const join=path.includes("?")?"&":"?";
+    const page=await airtable(offset?`${path}${join}offset=${encodeURIComponent(offset)}`:path);
+    records.push(...(page.records||[]));
+    offset=page.offset||"";
+  }while(offset);
+  return {records};
+}
 function links(value:any){return Array.isArray(value)?value.map((v:any)=>typeof v==="string"?v:v?.id).filter(Boolean):[]}
 function selectName(value:any,fallback=""){return typeof value==="string"?value:(value?.name||fallback)}
 function val(record:any,id:string,fallback:any=""){return record?.fields?.[id]??fallback}
@@ -60,10 +71,10 @@ export type LabConnection={id:string;name:string;fromId:string;toId:string;journ
 export async function getJourneyLabData(){
   if(!token())return {configured:false,journeys:[],library:[],cards:[],connections:[]};
   const [j,c,l,x]=await Promise.all([
-    airtable(`${JOURNEYS_TABLE}?pageSize=100&sort%5B0%5D%5Bfield%5D=Order&sort%5B0%5D%5Bdirection%5D=asc`),
-    airtable(`${CARDS_TABLE}?pageSize=100&sort%5B0%5D%5Bfield%5D=Sort%20Order&sort%5B0%5D%5Bdirection%5D=asc`),
-    airtable(`${LIBRARY_TABLE}?pageSize=100`),
-    airtable(`${CONNECTIONS_TABLE}?pageSize=100&sort%5B0%5D%5Bfield%5D=Order&sort%5B0%5D%5Bdirection%5D=asc`)
+    airtableAll(`${JOURNEYS_TABLE}?pageSize=100&sort%5B0%5D%5Bfield%5D=Order&sort%5B0%5D%5Bdirection%5D=asc`),
+    airtableAll(`${CARDS_TABLE}?pageSize=100&sort%5B0%5D%5Bfield%5D=Sort%20Order&sort%5B0%5D%5Bdirection%5D=asc`),
+    airtableAll(`${LIBRARY_TABLE}?pageSize=100`),
+    airtableAll(`${CONNECTIONS_TABLE}?pageSize=100&sort%5B0%5D%5Bfield%5D=Order&sort%5B0%5D%5Bdirection%5D=asc`)
   ]);
   const journeys:LabJourney[]=j.records.map((r:any)=>({
     id:r.id,name:val(r,JF.name,"Untitled journey"),description:val(r,JF.description),order:Number(val(r,JF.order,0)),
