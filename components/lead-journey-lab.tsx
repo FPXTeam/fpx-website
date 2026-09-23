@@ -202,6 +202,8 @@ function fallbackBoard():Board{
   return {configured:false,journeys,library,cards,connections};
 }
 function norm(v:string){return v.trim().toLowerCase()}
+function cssToken(v:string){return (v||"card").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+function sequenceTone(name:string){return SEQUENCE_TEMPLATES.find(t=>t.name===name)?.tone||"sage"}
 
 export function LeadJourneyLab(){
   const [unlocked,setUnlocked]=useState(false);
