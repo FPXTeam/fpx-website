@@ -1,7 +1,7 @@
 import { scryptSync, timingSafeEqual } from "node:crypto";
 
-const PASSWORD_SALT = "7PIqvgwtxLbvTLFBP+FDHw==";
-const PASSWORD_VERIFIER = "mR5m0cEeJlzWHZaRJlkXveVJ9I6wCDTGklUb9JCRJII=";
+const PASSWORD_SALT = "xFxn8Fgvli0jJ4qaT0mZUQ==";
+const PASSWORD_VERIFIER = "Qi++6K3h1Y2LbUIc1WaHWLezwrdjUMUneY1nz+DlBoY=";
 
 export function passwordMatches(input:string){
   if(!input)return false;
