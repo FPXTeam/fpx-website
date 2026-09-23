@@ -876,22 +876,12 @@ export function LeadJourneyLab(){
             onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}>
             <svg className="ljl-lines" width={width} height={height}>
               <defs><marker id="lab-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z"/></marker></defs>
-              {visibleConnections.map(connection=>{
-                const from=cardById.get(connection.fromId),to=cardById.get(connection.toId);if(!from||!to)return null;
-                const horizontal=Math.abs(to.x-from.x)>Math.abs(to.y-from.y);
-                const x1=horizontal?(to.x>=from.x?from.x+nodeW:from.x):(from.x+nodeW/2);
-                const y1=horizontal?(from.y+nodeH/2):(to.y>=from.y?from.y+nodeH:from.y);
-                const x2=horizontal?(to.x>=from.x?to.x:to.x+nodeW):(to.x+nodeW/2);
-                const y2=horizontal?(to.y+nodeH/2):(to.y>=from.y?to.y:to.y+nodeH);
-                const bend=horizontal?Math.max(55,Math.abs(x2-x1)/2):Math.max(55,Math.abs(y2-y1)/2);
-                const d=horizontal
-                  ?`M ${x1} ${y1} C ${x1+(x2>=x1?bend:-bend)} ${y1}, ${x2-(x2>=x1?bend:-bend)} ${y2}, ${x2} ${y2}`
-                  :`M ${x1} ${y1} C ${x1} ${y1+(y2>=y1?bend:-bend)}, ${x2} ${y2-(y2>=y1?bend:-bend)}, ${x2} ${y2}`;
-                const mx=(x1+x2)/2,my=(y1+y2)/2;
+              {visibleConnections.map((connection,index)=>{
+                const route=routedConnection(connection,index);if(!route)return null;
                 return <g key={connection.id} className={selectedConnectionId===connection.id?"is-selected":""}>
-                  <path className="ljl-line-hit" d={d} onClick={e=>{e.stopPropagation();setSelectedConnectionId(connection.id);setSelectedCardId(null)}}/>
-                  <path className="ljl-line" d={d} markerEnd="url(#lab-arrow)"/>
-                  {connection.label&&<text x={mx} y={my-7}>{connection.label}</text>}
+                  <path className="ljl-line-hit" d={route.d} onClick={e=>{e.stopPropagation();setSelectedConnectionId(connection.id);setSelectedCardId(null)}}/>
+                  <path className="ljl-line" d={route.d} markerEnd="url(#lab-arrow)"/>
+                  {connection.label&&<text x={route.mx} y={route.my-7}>{connection.label}</text>}
                 </g>;
               })}
             </svg>
