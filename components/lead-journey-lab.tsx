@@ -439,10 +439,8 @@ export function LeadJourneyLab(){
                 <h2>{card.title}</h2>
                 <div className="ljl-node-meta">
                   {def?.tool&&def.tool!=="None"&&<span>{def.tool}</span>}
-                  {def?.automated&&<span>Automated: {def.automated}</span>}
-                  {def?.timing&&<span>{def.timing}</span>}
+                  {def?.workshopStatus&&<span>{def.workshopStatus}</span>}
                 </div>
-                {def?.use&&<p>{def.use}</p>}
                 <div className="ljl-node-actions">
                   <button onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setAdding({x:card.x,y:card.y+220,parentId:card.id})}}><Plus size={13}/> Next</button>
                   <button onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setSelectedCardId(card.id);setSelectedConnectionId(null)}}><Edit3 size={13}/></button>
