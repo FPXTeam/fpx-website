@@ -599,6 +599,10 @@ export function LeadJourneyLab(){
     const rect=canvasRef.current?.getBoundingClientRect(); if(!rect)return;
     setSelectedCardId(card.id);setSelectedConnectionId(null);setContextMenu(null);
     if(presentationMode)return;
+    if(selectMode){
+      setSelectedCardIds(ids=>ids.includes(card.id)?ids.filter(id=>id!==card.id):[...ids,card.id]);
+      setBulkMode(true);return;
+    }
     if(bulkMode){
       if(!selectedCardIds.includes(card.id)){setSelectedCardIds(ids=>[...ids,card.id]);return}
       const group=board.cards.filter(c=>selectedCardIds.includes(c.id)).map(c=>({id:c.id,x:c.x,y:c.y}));
@@ -881,7 +885,7 @@ export function LeadJourneyLab(){
     {selectMode&&!presentationMode&&<div className="ljl-select-hint"><strong>Box Select:</strong> drag across cards. Click Select again to return to normal pan. You can also hold Shift + drag at any time.</div>}
 
     <section className="ljl-workspace">
-      <div ref={wrapRef} className={"ljl-canvas-wrap "+(panning?"is-panning":"")}
+      <div ref={wrapRef} className={"ljl-canvas-wrap "+(panning?"is-panning ":"")+(selectMode?"is-selecting":"")}
         onContextMenu={canvasContext} onPointerDown={startPan} onPointerMove={movePan}
         onPointerUp={endPan} onPointerCancel={endPan} onWheel={wheelZoom}>
         <div className="ljl-zoom-controls" onClick={e=>e.stopPropagation()}>
