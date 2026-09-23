@@ -1,32 +1,12 @@
-import { createHash, timingSafeEqual } from "node:crypto";
-import { cookies } from "next/headers";
+import { scryptSync, timingSafeEqual } from "node:crypto";
 
-export const LAB_COOKIE = "fpx_lead_journey_lab";
-
-function configuredPassword(){
-  return process.env.LEAD_JOURNEY_LAB_PASSWORD?.trim() || "";
-}
-
-export function labIsConfigured(){
-  return configuredPassword().length >= 8;
-}
-
-export function accessToken(){
-  const password=configuredPassword();
-  if(!password)return "";
-  return createHash("sha256").update("FPX_LEAD_JOURNEY_LAB:"+password).digest("hex");
-}
+const PASSWORD_SALT = "Em8ucXUNLxeotacBNIrUFw==";
+const PASSWORD_VERIFIER = "Bu2oq/on+rKKzIQLDk3cjv5OIYa+nNKC0sVZ3rY3MI4=";
 
 export function passwordMatches(input:string){
-  const expected=configuredPassword();
-  if(!expected || !input)return false;
-  const a=Buffer.from(createHash("sha256").update(input).digest("hex"));
-  const b=Buffer.from(createHash("sha256").update(expected).digest("hex"));
-  return a.length===b.length && timingSafeEqual(a,b);
-}
-
-export async function hasLabAccess(){
-  if(!labIsConfigured())return false;
-  const store=await cookies();
-  return store.get(LAB_COOKIE)?.value===accessToken();
+  if(!input)return false;
+  const salt=Buffer.from(PASSWORD_SALT,"base64");
+  const expected=Buffer.from(PASSWORD_VERIFIER,"base64");
+  const actual=scryptSync(input,salt,32,{N:16384,r:8,p:1});
+  return actual.length===expected.length && timingSafeEqual(actual,expected);
 }
