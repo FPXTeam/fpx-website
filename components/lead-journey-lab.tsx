@@ -549,7 +549,9 @@ export function LeadJourneyLab(){
             {visibleCards.map(card=>{
               const def=libById.get(card.libraryId);
               return <article key={card.id} className={"ljl-node "+(selectedCardId===card.id?"is-selected":"")}
-                style={{left:card.x,top:card.y}} onPointerDown={e=>startDrag(e,card)} onContextMenu={e=>cardContext(e,card)}>
+                style={{left:card.x,top:card.y}} onPointerDown={e=>startDrag(e,card)}
+                onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}
+                onContextMenu={e=>cardContext(e,card)}>
                 <button className="ljl-handle input" title="Connect to this card" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();connectHandle(card.id)}}/>
                 <div className="ljl-node-top"><span>{def?.category||"Card"}</span><GripVertical size={15}/></div>
                 <h2>{card.title}</h2>

@@ -27,7 +27,11 @@ function headers(){
   return {Authorization:`Bearer ${value}`,"Content-Type":"application/json"};
 }
 async function airtable(path:string,init?:RequestInit){
-  const response=await fetch(`https://api.airtable.com/v0/${BASE_ID}/${path}`,{
+  const method=(init?.method||"GET").toUpperCase();
+  const requestPath=method==="GET"
+    ? `${path}${path.includes("?")?"&":"?"}returnFieldsByFieldId=true`
+    : path;
+  const response=await fetch(`https://api.airtable.com/v0/${BASE_ID}/${requestPath}`,{
     ...init,
     headers:{...headers(),...(init?.headers||{})},
     cache:"no-store",
