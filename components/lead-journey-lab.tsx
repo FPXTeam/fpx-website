@@ -59,6 +59,7 @@ export function LeadJourneyLab(){
   const [libraryOpen,setLibraryOpen]=useState(false);
   const [editingLibraryId,setEditingLibraryId]=useState<string|null>(null);
   const [adding,setAdding]=useState<{x:number;y:number;parentId?:string}|null>(null);
+  const [addingJourney,setAddingJourney]=useState(false);
   const [contextMenu,setContextMenu]=useState<{x:number;y:number;canvasX:number;canvasY:number;cardId?:string}|null>(null);
   const [zoom,setZoom]=useState(.8);
   const [loading,setLoading]=useState(false);
@@ -211,6 +212,24 @@ export function LeadJourneyLab(){
     return cardId;
   }
 
+  async function createJourney(name:string,description:string){
+    setSaving(true);setError("");
+    try{
+      if(!board.configured){
+        const id="j-"+Date.now();
+        mutateLocal(d=>({...d,journeys:[...d.journeys,{id,name,description,order:Date.now(),active:true}]}));
+        setActiveJourneyId(id);
+      }else{
+        const before=new Set(board.journeys.map(j=>j.id));
+        const next=await request("POST",{action:"createJourney",name,description,order:Date.now()});
+        const id=next.journeys.find((j:Journey)=>!before.has(j.id))?.id;
+        if(id)setActiveJourneyId(id);
+      }
+      setAddingJourney(false);
+    }catch(e){setError(e instanceof Error?e.message:"Unable to create journey.")}
+    finally{setSaving(false)}
+  }
+
   async function saveLibrary(def:LibraryCard){
     setSaving(true);setError("");
     try{
@@ -271,7 +290,8 @@ export function LeadJourneyLab(){
     const queue=cards.filter(c=>(incoming.get(c.id)||0)===0).map(c=>c.id);
     if(!queue.length&&cards[0])queue.push(cards[0].id);
     queue.forEach(id=>depth.set(id,0));
-    while(queue.length){
+    let guard=0;
+    while(queue.length&&guard++<Math.max(20,cards.length*cards.length*2)){
       const id=queue.shift()!,d=depth.get(id)||0;
       for(const child of children.get(id)||[]){
         const next=Math.max(depth.get(child)||0,d+1);
@@ -298,7 +318,6 @@ export function LeadJourneyLab(){
       try{await request("PATCH",{action:"bulkMove",cards:moved.map(c=>({id:c.id,x:c.x,y:c.y}))})}
       catch(e){setError(e instanceof Error?e.message:"Unable to save alignment.")}
     }
-    setTimeout(fitView,30);
   }
 
   function fitView(){
@@ -369,6 +388,7 @@ export function LeadJourneyLab(){
       </div>
       <div className="ljl-top-actions">
         <button onClick={()=>setLibraryOpen(true)}><BookOpen size={14}/> Card Library</button>
+        <button onClick={()=>setAddingJourney(true)}><Plus size={14}/> Journey</button>
         <button onClick={()=>setAdding({x:520,y:180})}><Plus size={14}/> Add Card</button>
         <button onClick={autoAlign}><WandSparkles size={14}/> Auto Align</button>
         <button onClick={fitView}><Maximize2 size={14}/> Fit</button>
@@ -452,6 +472,7 @@ export function LeadJourneyLab(){
       onEdit={()=>{const c=contextMenu.cardId?cardById.get(contextMenu.cardId):null;if(c?.libraryId)setEditingLibraryId(c.libraryId);setContextMenu(null)}}
       onAutoAlign={()=>{setContextMenu(null);autoAlign()}} onFit={()=>{setContextMenu(null);fitView()}}/>}
 
+    {addingJourney&&<JourneyModal saving={saving} onClose={()=>setAddingJourney(false)} onSave={createJourney}/>}
     {adding&&<AddCardModal board={board} activeJourneyId={activeJourneyId} initial={adding} onClose={()=>setAdding(null)}
       onUseLibrary={async(libId,title,journeyIds)=>{setSaving(true);try{const id=await createCardFromLibrary(libId,title,journeyIds,adding.x,adding.y,adding.parentId);if(id)setSelectedCardId(id);setAdding(null)}finally{setSaving(false)}}}
       onCreate={async(def,title,journeyIds)=>{setSaving(true);try{const id=await createNewCard(def,title,journeyIds,adding.x,adding.y,adding.parentId);if(id)setSelectedCardId(id);setAdding(null)}finally{setSaving(false)}}}
@@ -510,6 +531,15 @@ function ContextMenu({menu,card,onClose,onAdd,onEdit,onAutoAlign,onFit}:any){
     <hr/><button onClick={onAutoAlign}><WandSparkles size={14}/> Auto Align</button><button onClick={onFit}><Maximize2 size={14}/> Fit to screen</button>
     <button onClick={onClose}><X size={14}/> Close</button>
   </div>;
+}
+
+function JourneyModal({saving,onClose,onSave}:{saving:boolean;onClose:()=>void;onSave:(name:string,description:string)=>void}){
+  const [name,setName]=useState(""),[description,setDescription]=useState("");
+  return <div className="ljl-modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><div className="ljl-modal">
+    <header><div><span>NEW JOURNEY</span><h2>Add journey</h2></div><button onClick={onClose}><X/></button></header>
+    <div className="ljl-form"><label>Journey name<input autoFocus value={name} onChange={e=>setName(e.target.value)} placeholder="e.g. Customer Journey"/></label><label>Description<textarea rows={3} value={description} onChange={e=>setDescription(e.target.value)}/></label></div>
+    <footer><button className="secondary" onClick={onClose}>Cancel</button><button className="primary" disabled={saving||!name.trim()} onClick={()=>onSave(name.trim(),description.trim())}>{saving?"Saving…":"Add journey"}</button></footer>
+  </div></div>;
 }
 
 function AddCardModal({board,activeJourneyId,initial,onClose,onUseLibrary,onCreate,saving}:any){
