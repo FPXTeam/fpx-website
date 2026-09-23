@@ -926,6 +926,7 @@ export function LeadJourneyLab(){
           onEditAll={()=>setEditingLibraryId(selectedDef.id)} onDisconnect={deleteConnection}
           onConnectParent={(parent)=>createConnection(parent.id,selectedCard.id)} onAddSuggestion={addSuggested}
           onComments={(comments:string)=>saveCardComments(selectedCard,comments)}
+          onResolve={(answer:string)=>saveLibrary({...selectedDef,workshopAnswer:answer.trim(),workshopStatus:"Agreed"})}
           onMerge={()=>activeJourneyId!=="all"&&setMergeCardId(selectedCard.id)}
           canMerge={activeJourneyId!=="all"} onDuplicate={()=>duplicateCard(selectedCard)} onDelete={()=>removeCard(selectedCard)}/>:
         <div className="ljl-empty"><Link2 size={19}/><strong>Select a card or connection</strong><p>Card details, suggestions and connection controls will appear here.</p></div>}
@@ -968,8 +969,9 @@ export function LeadJourneyLab(){
   </main>;
 }
 
-function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,suggestedNext,onEditAll,onDisconnect,onConnectParent,onAddSuggestion,onComments,onMerge,canMerge,onDuplicate,onDelete}:any){
+function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,suggestedNext,onEditAll,onDisconnect,onConnectParent,onAddSuggestion,onComments,onResolve,onMerge,canMerge,onDuplicate,onDelete}:any){
   const [comments,setComments]=useState(card.comments||"");
+  const [answer,setAnswer]=useState(def.workshopAnswer||"");
   return <div className="ljl-inspector-inner">
     <div className="ljl-inspector-title"><span>{def.category}</span><h2>{card.title}</h2><small>{def.tool!=="None"?def.tool:"No tool"}</small></div>
     <section className="ljl-detail-grid">
@@ -990,6 +992,7 @@ function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,sug
       {suggestedNext.length?suggestedNext.map((d:any,i:number)=><div className="ljl-suggestion-row" key={d.id}><div><span>Suggested card</span><strong>{d.name}</strong><small>{d.tool!=="None"?d.tool:""}</small></div><button onClick={()=>onAddSuggestion(d,i)}>Add</button></div>):<p className="muted">No suggestions set for this card.</p>}
     </div></section>
     {(def.notes||card.notes)&&<section className="ljl-card-notes"><h3>{def.workshopStatus==="Needs Discussion"?"Workshop question / note":"Notes"}</h3>{def.notes&&<p>{def.notes}</p>}{card.notes&&<p>{card.notes}</p>}</section>}
+    {(def.workshopStatus==="Needs Discussion"||def.workshopAnswer)&&<section className="ljl-resolution"><h3>Agreed answer / decision</h3><textarea className="ljl-comments" rows={4} value={answer} onChange={e=>setAnswer(e.target.value)} placeholder="Enter the final agreed answer here…"/><button className="ljl-resolve-button" disabled={!answer.trim()} onClick={()=>onResolve(answer)}><Save size={12}/> {def.workshopStatus==="Needs Discussion"?"Save answer & mark Agreed":"Update agreed answer"}</button><p className="muted">Use Workshop Comments for discussion. Put the final decision here.</p></section>}
     <section><h3>Workshop comments</h3><textarea className="ljl-comments" rows={4} value={comments} onChange={e=>setComments(e.target.value)} placeholder="Notes, decisions, questions…"/><button className="ljl-small-save" onClick={()=>onComments(comments)}><Save size={12}/> Save comments</button></section>
     {(def.campaignName||def.subject||def.templateName||def.messagePurpose)&&<section><h3>Communication</h3>
       <div className="ljl-detail-list"><p><b>Campaign:</b> {def.campaignName||"—"}</p><p><b>Subject:</b> {def.subject||"—"}</p><p><b>Template:</b> {def.templateName||"—"}</p><p><b>Purpose:</b> {def.messagePurpose||"—"}</p></div>
