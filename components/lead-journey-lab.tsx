@@ -888,7 +888,7 @@ export function LeadJourneyLab(){
       onFit={fitSelected} onClear={()=>setSelectedCardIds([])} onExit={()=>{setBulkMode(false);setSelectedCardIds([])}}/>}
     {!board.configured&&<div className="ljl-storage-note">Preview storage only. Connect the Airtable token in Vercel before the three-person shared workshop.</div>}
     {error&&<div className="ljl-banner ljl-error">{error}</div>}
-    {connectingFromId&&<div className="ljl-connect-mode">Connecting from <strong>{cardById.get(connectingFromId)?.title}</strong>. Click the top connector on the destination card. <button onClick={()=>setConnectingFromId(null)}>Cancel</button></div>}
+    {connectingFromId&&<div className="ljl-connect-mode">Connecting from <strong>{cardById.get(connectingFromId)?.title}</strong>. Click the destination connector on the next card. <button onClick={()=>setConnectingFromId(null)}>Cancel</button></div>}
     {selectMode&&!presentationMode&&<div className="ljl-select-hint"><strong>Box Select:</strong> drag across cards. Click Select again to return to normal pan. You can also hold Shift + drag at any time.</div>}
 
     <section className="ljl-workspace">
@@ -925,7 +925,7 @@ export function LeadJourneyLab(){
                 style={{left:card.x,top:card.y}} onPointerDown={e=>startDrag(e,card)}
                 onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}
                 onContextMenu={e=>cardContext(e,card)}>
-                {!presentationMode&&<button className="ljl-handle input" title="Connect to this card" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();connectHandle(card.id)}}/>}
+                {!presentationMode&&<button className={"ljl-handle input "+(layoutDirection==="horizontal"?"horizontal":"vertical")} title="Connect to this card" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();connectHandle(card.id)}}/>}
                 <div className="ljl-node-top"><span>{def?.category||"Card"}</span>{bulkMode?<CheckSquare size={15}/>:<GripVertical size={15}/>}</div>
                 <h2>{card.title}</h2>
                 <div className="ljl-node-meta">
@@ -937,7 +937,7 @@ export function LeadJourneyLab(){
                   <button onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setAdding({x:card.x,y:card.y+220,parentId:card.id})}}><Plus size={13}/> Next</button>
                   <button onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setSelectedCardId(card.id);setSelectedConnectionId(null)}}><Edit3 size={13}/></button>
                 </div>}
-                {!presentationMode&&<button className={"ljl-handle output "+(connectingFromId===card.id?"active":"")} title="Start connection"
+                {!presentationMode&&<button className={"ljl-handle output "+(layoutDirection==="horizontal"?"horizontal ":"vertical ")+(connectingFromId===card.id?"active":"")} title="Start connection"
                   onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setConnectingFromId(connectingFromId===card.id?null:card.id)}}/>}
               </article>;
             })}
