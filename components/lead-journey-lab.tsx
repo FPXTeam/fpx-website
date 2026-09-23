@@ -222,6 +222,9 @@ export function LeadJourneyLab(){
     if(!from||!to)return null;
     const outs=outgoingMap.get(from.id)||[connection],ins=incomingMap.get(to.id)||[connection];
     const oi=Math.max(0,outs.findIndex(c=>c.id===connection.id)),ii=Math.max(0,ins.findIndex(c=>c.id===connection.id));
+    const obstacles=visibleCards.filter(c=>c.id!==from.id&&c.id!==to.id);
+    const hitsH=(y:number,a:number,b:number)=>{const lo=Math.min(a,b),hi=Math.max(a,b);return obstacles.some(c=>y>c.y-14&&y<c.y+nodeH+14&&hi>c.x-14&&lo<c.x+nodeW+14)};
+    const hitsV=(x:number,a:number,b:number)=>{const lo=Math.min(a,b),hi=Math.max(a,b);return obstacles.some(c=>x>c.x-14&&x<c.x+nodeW+14&&hi>c.y-14&&lo<c.y+nodeH+14)};
     if(layoutDirection==="horizontal"){
       const forward=to.x>=from.x;
       const x1=forward?from.x+nodeW:from.x,x2=forward?to.x:to.x+nodeW;
@@ -229,8 +232,10 @@ export function LeadJourneyLab(){
       const adjacent=forward&&(to.x-from.x)<=440;
       if(adjacent){
         const lane=(x1+x2)/2+(oi-(outs.length-1)/2)*10;
-        const d="M "+x1+" "+y1+" L "+lane+" "+y1+" L "+lane+" "+y2+" L "+x2+" "+y2;
-        return {d,mx:lane,my:(y1+y2)/2};
+        if(!hitsH(y1,x1,lane)&&!hitsV(lane,y1,y2)&&!hitsH(y2,lane,x2)){
+          const d="M "+x1+" "+y1+" L "+lane+" "+y1+" L "+lane+" "+y2+" L "+x2+" "+y2;
+          return {d,mx:lane,my:(y1+y2)/2};
+        }
       }
       const laneY=Math.max(...visibleCards.map(c=>c.y+nodeH))+70+(index%14)*16;
       const sx=x1+(forward?36:-36),tx=x2+(forward?-36:36);
@@ -243,8 +248,10 @@ export function LeadJourneyLab(){
     const adjacent=forward&&(to.y-from.y)<=310;
     if(adjacent){
       const lane=(y1+y2)/2+(oi-(outs.length-1)/2)*9;
-      const d="M "+x1+" "+y1+" L "+x1+" "+lane+" L "+x2+" "+lane+" L "+x2+" "+y2;
-      return {d,mx:(x1+x2)/2,my:lane};
+      if(!hitsV(x1,y1,lane)&&!hitsH(lane,x1,x2)&&!hitsV(x2,lane,y2)){
+        const d="M "+x1+" "+y1+" L "+x1+" "+lane+" L "+x2+" "+lane+" L "+x2+" "+y2;
+        return {d,mx:(x1+x2)/2,my:lane};
+      }
     }
     const laneX=Math.max(...visibleCards.map(c=>c.x+nodeW))+70+(index%14)*16;
     const sy=y1+(forward?34:-34),ty=y2+(forward?-34:34);
