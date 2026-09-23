@@ -1193,11 +1193,17 @@ export function LeadJourneyLab(){
     <header className="ljl-topbar">
       <div className="ljl-top-left"><div className="ljl-mark">FPX <span>INTERNAL</span></div><strong>Lead Journey Lab</strong></div>
       <div className="ljl-view-switcher">
-        <button className={activeJourneyId==="all"?"active":""} onClick={()=>{setActiveJourneyId("all");setSelectedCardId(null);setSelectedConnectionId(null)}}><Layers size={14}/> Main View</button>
-        <select value={activeJourneyId==="all"?"":activeJourneyId} onChange={e=>{setActiveJourneyId(e.target.value||"all");setSelectedCardId(null);setSelectedConnectionId(null)}}>
+        <button className={activeJourneyId==="all"?"active":""} onClick={()=>{setActiveJourneyId("all");setSourceFocus("all");setSelectedCardId(null);setSelectedConnectionId(null)}}><Layers size={14}/> Main View</button>
+        <select value={activeJourneyId==="all"?"":activeJourneyId} onChange={e=>{setActiveJourneyId(e.target.value||"all");setSourceFocus("all");setSelectedCardId(null);setSelectedConnectionId(null)}}>
           <option value="">Choose Sub View</option>
           {journeyGroups.map(group=><optgroup key={group} label={group}>{subJourneys.filter(j=>(j.group||"Other")===group).map(j=><option key={j.id} value={j.id}>{j.name}</option>)}</optgroup>)}
         </select>
+        {isMainView&&<select className="ljl-source-focus" value={sourceFocus} onChange={e=>{setSourceFocus(e.target.value as any);setSelectedCardId(null);setSelectedConnectionId(null)}}>
+          <option value="all">All Sources</option>
+          <option value="we-search">We Search</option>
+          <option value="they-find-us">They Find Us</option>
+          <option value="word-of-mouth">Word of Mouth</option>
+        </select>}
         <span className="ljl-progress">{completion.agreed}/{completion.total} agreed{completion.questions?" · "+completion.questions+" questions":""}</span>
       </div>
       <div className="ljl-top-actions">
@@ -1209,6 +1215,7 @@ export function LeadJourneyLab(){
           <button onClick={()=>setJourneyManagerOpen(true)}><Users size={14}/> Journeys</button>
           <button onClick={()=>setAddingJourney(true)}><Plus size={14}/> Journey</button>
           <button onClick={()=>setAdding({x:520,y:180})}><Plus size={14}/> Add Card</button>
+          <button onClick={()=>setSequencePicker({x:520,y:180})}><Boxes size={14}/> Sequence</button>
           <button className={layoutDirection==="horizontal"?"active":""} onClick={()=>{setLayoutDirection("horizontal");autoAlign(undefined,"horizontal")}} title="Arrange the current journey left to right">Horizontal</button>
           <button className={layoutDirection==="vertical"?"active":""} onClick={()=>{setLayoutDirection("vertical");autoAlign(undefined,"vertical")}} title="Arrange the current journey top to bottom">Vertical</button>
           <button className={selectMode?"active":""} onClick={()=>setSelectMode(v=>!v)} title="Box Select: drag across cards. Shift + drag also selects without changing modes."><CheckSquare size={14}/> Select</button>
