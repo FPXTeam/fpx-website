@@ -194,9 +194,15 @@ export async function updateJourneyCard(id:string,input:any){
   return airtable(CARDS_TABLE,{method:"PATCH",body:JSON.stringify({records:[{id,fields}],typecast:true})});
 }
 export async function bulkMoveCards(items:any[]){
-  const records=items.slice(0,50).map(item=>({id:String(item.id),fields:{[CF.x]:Number(item.x),[CF.y]:Number(item.y)}}));
+  const records=items.map(item=>({id:String(item.id),fields:{[CF.x]:Number(item.x),[CF.y]:Number(item.y)}}));
   if(!records.length)return {records:[]};
-  return airtable(CARDS_TABLE,{method:"PATCH",body:JSON.stringify({records,typecast:true})});
+  const updated:any[]=[];
+  for(let i=0;i<records.length;i+=10){
+    const batch=records.slice(i,i+10);
+    const result=await airtable(CARDS_TABLE,{method:"PATCH",body:JSON.stringify({records:batch,typecast:true})});
+    updated.push(...(result.records||[]));
+  }
+  return {records:updated};
 }
 export async function bulkAssignCards(ids:string[],journeyId:string){
   const data=await getJourneyLabData();
