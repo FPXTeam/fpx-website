@@ -62,3 +62,8 @@
 .ljl-select-hint{margin:10px 18px 0;padding:9px 12px;border-radius:8px;background:#eef6ef;border:1px solid #c5ddc8;color:#315f38;font-size:9px;line-height:1.45}
 
 .ljl-canvas-wrap.is-selecting{cursor:crosshair}
+
+.ljl-handle.input.horizontal{left:-7px;top:calc(50% - 7px)}
+.ljl-handle.output.horizontal{left:auto;right:-7px;top:calc(50% - 7px);bottom:auto}
+.ljl-handle.input.vertical{left:calc(50% - 7px);top:-7px}
+.ljl-handle.output.vertical{left:calc(50% - 7px);right:auto;top:auto;bottom:-7px}
