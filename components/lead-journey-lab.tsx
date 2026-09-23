@@ -644,11 +644,12 @@ export function LeadJourneyLab(){
     if(!queue.length&&cards[0])queue.push(cards[0].id);
     queue.forEach(id=>depth.set(id,0));
     let guard=0;
-    while(queue.length&&guard++<Math.max(20,cards.length*cards.length*2)){
+    while(queue.length&&guard++<Math.max(20,cards.length*4)){
       const id=queue.shift()!,d=depth.get(id)||0;
       for(const child of children.get(id)||[]){
-        const next=Math.max(depth.get(child)||0,d+1);
-        if(next!==(depth.get(child)||0)||!depth.has(child)){depth.set(child,next);queue.push(child)}
+        if(depth.has(child))continue;
+        depth.set(child,d+1);
+        queue.push(child);
       }
     }
     cards.forEach(c=>{if(!depth.has(c.id))depth.set(c.id,0)});
@@ -821,7 +822,7 @@ export function LeadJourneyLab(){
 
             {visibleCards.map(card=>{
               const def=libById.get(card.libraryId);
-              return <article key={card.id} className={"ljl-node "+(def?.workshopStatus==="Needs Discussion"?"needs-discussion ":"")+(selectedCardId===card.id?"is-selected ":"")+(selectedCardIds.includes(card.id)?"is-bulk-selected":"")}
+              return <article key={card.id} className={"ljl-node "+(def?.category==="Wait"?"is-wait ":"")+(def?.workshopStatus==="Needs Discussion"?"needs-discussion ":"")+(selectedCardId===card.id?"is-selected ":"")+(selectedCardIds.includes(card.id)?"is-bulk-selected":"")}
                 style={{left:card.x,top:card.y}} onPointerDown={e=>startDrag(e,card)}
                 onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}
                 onContextMenu={e=>cardContext(e,card)}>
@@ -989,7 +990,7 @@ function AddCardModal({board,activeJourneyId,mainJourneyId,initial,onClose,onUse
         <label>Card title<input value={title} onChange={e=>setTitle(e.target.value)}/></label>
       </>:<>
         <label>Master card name<input value={name} onChange={e=>{setName(e.target.value);setTitle(e.target.value)}} placeholder="e.g. Follow-up call"/></label>
-        <label>Category<select value={category} onChange={e=>setCategory(e.target.value)}>{["Source","Capture","Communication","CRM","Decision","Nurture","Action","Outcome","Customer Handoff"].map(x=><option key={x}>{x}</option>)}</select></label>
+        <label>Category<select value={category} onChange={e=>setCategory(e.target.value)}>{["Source","Capture","Communication","CRM","Decision","Nurture","Wait","Action","Outcome","Customer Handoff"].map(x=><option key={x}>{x}</option>)}</select></label>
         <label>Tool<select value={tool} onChange={e=>setTool(e.target.value)}>{["None","FPX App","Website Form","Airtable","Brevo","Call","Text","Outlook","LinkedIn","Facebook","Instagram","Make"].map(x=><option key={x}>{x}</option>)}</select></label>
         <label>Use / Purpose<input value={use} onChange={e=>setUse(e.target.value)}/></label>
         <label>Tool Action<input value={action} onChange={e=>setAction(e.target.value)}/></label>
@@ -1034,7 +1035,7 @@ function LibraryEditor({def,board,saving,onClose,onSave}:{def:LibraryCard|null;b
     <header><div><span>MASTER CARD</span><h2>{draft.name}</h2><p>Changes here update every journey using this card.</p></div><button onClick={onClose}><X/></button></header>
     <div className="ljl-editor-grid">
       <label>Card Name<input value={draft.name} onChange={e=>set("name",e.target.value)}/></label>
-      <label>Category<select value={draft.category} onChange={e=>set("category",e.target.value)}>{["Source","Capture","Communication","CRM","Decision","Nurture","Action","Outcome","Customer Handoff"].map(x=><option key={x}>{x}</option>)}</select></label>
+      <label>Category<select value={draft.category} onChange={e=>set("category",e.target.value)}>{["Source","Capture","Communication","CRM","Decision","Nurture","Wait","Action","Outcome","Customer Handoff"].map(x=><option key={x}>{x}</option>)}</select></label>
       <label>Tool<select value={draft.tool} onChange={e=>set("tool",e.target.value)}>{["None","FPX App","Website Form","Airtable","Brevo","Call","Text","Outlook","LinkedIn","Facebook","Instagram","Make"].map(x=><option key={x}>{x}</option>)}</select></label>
       <label>Use / Purpose<input value={draft.use} onChange={e=>set("use",e.target.value)}/></label>
       <label>Tool Action<input value={draft.action} onChange={e=>set("action",e.target.value)}/></label>
