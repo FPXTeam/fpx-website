@@ -303,15 +303,32 @@ export function LeadJourneyLab(){
     return collapsedMap.get(card.sequenceId)!.cards[0]?.id===card.id;
   }),[filteredCards,collapsedMap]);
   const visibleCardIds=useMemo(()=>new Set(visibleCards.map(c=>c.id)),[visibleCards]);
+  const filteredCardIds=useMemo(()=>new Set(filteredCards.map(c=>c.id)),[filteredCards]);
   const completion=useMemo(()=>{
     const total=baseVisibleCards.length;
     const agreed=baseVisibleCards.filter(card=>libById.get(card.libraryId)?.workshopStatus==="Agreed").length;
     const questions=baseVisibleCards.filter(card=>libById.get(card.libraryId)?.workshopStatus==="Needs Discussion").length;
     return {agreed,total,questions};
   },[baseVisibleCards,libById]);
-  const visibleConnections=useMemo(()=>board.connections.filter(c=>c.active&&visibleCardIds.has(c.fromId)&&visibleCardIds.has(c.toId)&&(
-    currentJourneyId?c.journeyIds.includes(currentJourneyId):(activeJourneyId==="all"||c.journeyIds.includes(activeJourneyId))
-  )),[board.connections,visibleCardIds,activeJourneyId,currentJourneyId]);
+  const visibleConnections=useMemo(()=>{
+    const raw=board.connections.filter(c=>c.active&&filteredCardIds.has(c.fromId)&&filteredCardIds.has(c.toId)&&(
+      currentJourneyId?c.journeyIds.includes(currentJourneyId):(activeJourneyId==="all"||c.journeyIds.includes(activeJourneyId))
+    ));
+    const seen=new Set<string>(),out:Connection[]=[];
+    for(const connection of raw){
+      const fromCard=cardById.get(connection.fromId),toCard=cardById.get(connection.toId);
+      const fromGroup=fromCard?.sequenceId?collapsedMap.get(fromCard.sequenceId):null;
+      const toGroup=toCard?.sequenceId?collapsedMap.get(toCard.sequenceId):null;
+      const fromId=fromGroup?.cards[0]?.id||connection.fromId;
+      const toId=toGroup?.cards[0]?.id||connection.toId;
+      if(fromId===toId)continue;
+      const key=fromId+"|"+toId+"|"+(connection.label||"");
+      if(seen.has(key))continue;seen.add(key);
+      const virtual=fromId!==connection.fromId||toId!==connection.toId;
+      out.push({...connection,id:virtual?"virtual-"+connection.id:connection.id,fromId,toId,name:virtual?"Collapsed sequence connection":connection.name});
+    }
+    return out;
+  },[board.connections,filteredCardIds,activeJourneyId,currentJourneyId,cardById,collapsedMap]);
   const outgoingMap=useMemo(()=>{
     const map=new Map<string,Connection[]>();
     visibleConnections.forEach(c=>map.set(c.fromId,[...(map.get(c.fromId)||[]),c]));
