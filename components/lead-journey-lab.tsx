@@ -552,19 +552,19 @@ export function LeadJourneyLab(){
     }else await request("POST",{action:"createConnection",name:`${from.title} → ${to.title}`,fromId,toId,journeyIds:finalJourneys,label});
   }
 
-  async function createCardFromLibrary(libraryId:string,title:string,journeyIds:string[],x:number,y:number,parentId?:string){
+  async function createCardFromLibrary(libraryId:string,title:string,journeyIds:string[],x:number,y:number,parentId?:string,sequence?:{id:string;name:string;step:number}){
     const before=new Set(board.cards.map(c=>c.id));
     if(!board.configured){
       const newId="c-"+Date.now();
       const parent=parentId?board.cards.find(c=>c.id===parentId):null;
       mutateLocal(d=>{
-        const nextCards=[...d.cards,{id:newId,title,notes:"",order:Date.now(),x,y,journeyIds,libraryId}];
+        const nextCards=[...d.cards,{id:newId,title,notes:"",order:Date.now(),x,y,journeyIds,libraryId,sequenceId:sequence?.id||"",sequenceName:sequence?.name||"",sequenceStep:sequence?.step||0}];
         const nextConnections=parentId?[...d.connections,{id:"x-"+Date.now(),name:`${parent?.title||"Card"} → ${title}`,fromId:parentId,toId:newId,journeyIds,label:"",order:Date.now(),active:true}]:d.connections;
         return {...d,cards:nextCards,connections:nextConnections};
       });
       return newId;
     }
-    const next=await request("POST",{action:"createCardFromLibrary",libraryId,title,journeyIds,x,y,order:Date.now()});
+    const next=await request("POST",{action:"createCardFromLibrary",libraryId,title,journeyIds,x,y,order:Date.now(),sequenceId:sequence?.id||"",sequenceName:sequence?.name||"",sequenceStep:sequence?.step||0});
     const newId=next.cards.find((card:Card)=>!before.has(card.id))?.id||"";
     if(parentId&&newId){
       const parent=next.cards.find((card:Card)=>card.id===parentId);
@@ -573,23 +573,88 @@ export function LeadJourneyLab(){
     return newId;
   }
 
-  async function createNewCard(library:Partial<LibraryCard>&{name:string},title:string,journeyIds:string[],x:number,y:number,parentId?:string){
+  async function createNewCard(library:Partial<LibraryCard>&{name:string},title:string,journeyIds:string[],x:number,y:number,parentId?:string,sequence?:{id:string;name:string;step:number}){
     if(!board.configured){
       const stamp=Date.now(),libId="l-"+stamp,cardId="c-"+stamp;
       const def={...emptyLibrary(libId,library.name),...library,id:libId} as LibraryCard;
       const parent=parentId?board.cards.find(c=>c.id===parentId):null;
-      mutateLocal(d=>({...d,library:[...d.library,def],cards:[...d.cards,{id:cardId,title,notes:"",order:stamp,x,y,journeyIds,libraryId:libId}],
+      mutateLocal(d=>({...d,library:[...d.library,def],cards:[...d.cards,{id:cardId,title,notes:"",order:stamp,x,y,journeyIds,libraryId:libId,sequenceId:sequence?.id||"",sequenceName:sequence?.name||"",sequenceStep:sequence?.step||0}],
         connections:parentId?[...d.connections,{id:"x-"+stamp,name:`${parent?.title||"Card"} → ${title}`,fromId:parentId,toId:cardId,journeyIds,label:"",order:stamp,active:true}]:d.connections}));
       return cardId;
     }
     const before=new Set(board.cards.map(c=>c.id));
-    const next=await request("POST",{action:"createNewCard",title,journeyIds,x,y,order:Date.now(),library});
+    const next=await request("POST",{action:"createNewCard",title,journeyIds,x,y,order:Date.now(),sequenceId:sequence?.id||"",sequenceName:sequence?.name||"",sequenceStep:sequence?.step||0,library});
     const cardId=next.cards.find((card:Card)=>!before.has(card.id))?.id||"";
     if(parentId&&cardId){
       const parent=next.cards.find((card:Card)=>card.id===parentId);
       await request("POST",{action:"createConnection",name:`${parent?.title||"Card"} → ${title}`,fromId:parentId,toId:cardId,journeyIds,label:""});
     }
     return cardId;
+  }
+
+  async function insertSequence(template:SequenceTemplate){
+    if(!sequencePicker)return;
+    const journeyId=currentJourneyId||mainJourneyId;
+    if(!journeyId){setError("Choose a journey before adding a sequence.");return}
+    const sequenceId="seq-"+template.id+"-"+Date.now();
+    const journeyIds=[journeyId];
+    const originX=Math.max(40,sequencePicker.x),originY=Math.max(40,sequencePicker.y);
+    setSaving(true);setError("");
+    try{
+      if(!board.configured){
+        const stamp=Date.now();
+        const newLibraries:LibraryCard[]=[];
+        const newCards:Card[]=[];
+        template.steps.forEach((step,index)=>{
+          const libId="l-"+stamp+"-"+index,cardId="c-"+stamp+"-"+index;
+          const def={...emptyLibrary(libId,step.name),name:step.name,category:step.category,tool:step.tool||"None",execution:step.execution,
+            automated:step.execution==="Automated"?"Yes":step.execution==="Can be automated"?"To Decide":"No",automationTool:"None",
+            assignedPerson:step.assigned||"",timing:step.timing||"",use:step.use||"",action:step.action||"",notes:step.notes||"",
+            workshopStatus:step.workshopStatus||"Draft",leadStatus:step.leadStatus||"Not Applicable",applicableJourneyIds:journeyIds} as LibraryCard;
+          newLibraries.push(def);
+          newCards.push({id:cardId,title:step.name,notes:"",order:stamp+index,x:layoutDirection==="horizontal"?originX+index*320:originX,
+            y:layoutDirection==="vertical"?originY+index*195:originY,journeyIds,libraryId:libId,sequenceId,sequenceName:template.name,sequenceStep:index+1});
+        });
+        const edges=template.edges||template.steps.slice(1).map((_,i)=>[i,i+1,""] as [number,number,string]);
+        const newConnections:Connection[]=edges.map((edge,index)=>({id:"x-"+stamp+"-"+index,name:newCards[edge[0]].title+" → "+newCards[edge[1]].title,
+          fromId:newCards[edge[0]].id,toId:newCards[edge[1]].id,journeyIds,label:edge[2]||"",order:stamp+index,active:true}));
+        if(sequencePicker.parentId&&newCards[0])newConnections.unshift({id:"x-"+stamp+"-parent",name:"Sequence entry",fromId:sequencePicker.parentId,toId:newCards[0].id,journeyIds,label:"",order:stamp-1,active:true});
+        mutateLocal(d=>({...d,library:[...d.library,...newLibraries],cards:[...d.cards,...newCards],connections:[...d.connections,...newConnections]}));
+        setSelectedCardId(newCards[0]?.id||null);setSequencePicker(null);return;
+      }
+      let working=board;
+      const createdIds:string[]=[];
+      for(let index=0;index<template.steps.length;index++){
+        const step=template.steps[index];
+        const before=new Set(working.cards.map(c=>c.id));
+        const existing=working.library.find(d=>norm(d.name)===norm(step.name));
+        const x=layoutDirection==="horizontal"?originX+index*320:originX;
+        const y=layoutDirection==="vertical"?originY+index*195:originY;
+        if(existing){
+          working=await request("POST",{action:"createCardFromLibrary",libraryId:existing.id,title:step.name,journeyIds,x,y,order:Date.now()+index,
+            sequenceId,sequenceName:template.name,sequenceStep:index+1});
+        }else{
+          const library={name:step.name,category:step.category,tool:step.tool||"None",use:step.use||"",action:step.action||"",execution:step.execution,
+            automated:step.execution==="Automated"?"Yes":step.execution==="Can be automated"?"To Decide":"No",automationTool:"None",
+            assignedPerson:step.assigned||"",campaignName:"",subject:"",templateName:"",messagePurpose:"",timing:step.timing||"",
+            leadStatus:step.leadStatus||"Not Applicable",workshopStatus:step.workshopStatus||"Draft",workshopAnswer:"",notes:step.notes||"",
+            active:true,global:false,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:journeyIds};
+          working=await request("POST",{action:"createNewCard",title:step.name,journeyIds,x,y,order:Date.now()+index,sequenceId,sequenceName:template.name,sequenceStep:index+1,library});
+        }
+        const made=working.cards.find(c=>!before.has(c.id));
+        if(!made)throw new Error("Unable to create sequence step: "+step.name);
+        createdIds.push(made.id);
+      }
+      const edges=template.edges||template.steps.slice(1).map((_,i)=>[i,i+1,""] as [number,number,string]);
+      if(sequencePicker.parentId&&createdIds[0])working=await request("POST",{action:"createConnection",name:"Sequence entry",fromId:sequencePicker.parentId,toId:createdIds[0],journeyIds,label:""});
+      for(const edge of edges){
+        if(!createdIds[edge[0]]||!createdIds[edge[1]])continue;
+        working=await request("POST",{action:"createConnection",name:template.steps[edge[0]].name+" → "+template.steps[edge[1]].name,
+          fromId:createdIds[edge[0]],toId:createdIds[edge[1]],journeyIds,label:edge[2]||""});
+      }
+      setSelectedCardId(createdIds[0]||null);setSequencePicker(null);
+    }catch(e){setError(e instanceof Error?e.message:"Unable to add sequence.")}
+    finally{setSaving(false)}
   }
 
   async function deleteJourney(journey:Journey){
