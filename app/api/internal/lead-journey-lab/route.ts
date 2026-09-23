@@ -1,22 +1,22 @@
 import { NextResponse } from "next/server";
-import { hasLabAccess } from "../../../../lib/lead-journey-lab-auth";
+import { passwordMatches } from "../../../../lib/lead-journey-lab-auth";
 import {
   createJourneyCard,createJourneyStage,deleteJourneyCard,getJourneyBoard,
   updateJourneyCard,updateJourneyStage
 } from "../../../../lib/lead-journey-lab-airtable";
 
-async function guard(){
-  return await hasLabAccess();
+function guard(request:Request){
+  return passwordMatches(request.headers.get("x-lead-journey-password")||"");
 }
 
-export async function GET(){
-  if(!(await guard()))return NextResponse.json({error:"Unauthorized"},{status:401});
+export async function GET(request:Request){
+  if(!guard(request))return NextResponse.json({error:"Unauthorized"},{status:401});
   try{return NextResponse.json(await getJourneyBoard())}
   catch(error){return NextResponse.json({error:error instanceof Error?error.message:"Unable to load board."},{status:500})}
 }
 
 export async function POST(request:Request){
-  if(!(await guard()))return NextResponse.json({error:"Unauthorized"},{status:401});
+  if(!guard(request))return NextResponse.json({error:"Unauthorized"},{status:401});
   const body=await request.json().catch(()=>({}));
   try{
     if(body.kind==="stage")await createJourneyStage(body);
@@ -26,7 +26,7 @@ export async function POST(request:Request){
 }
 
 export async function PATCH(request:Request){
-  if(!(await guard()))return NextResponse.json({error:"Unauthorized"},{status:401});
+  if(!guard(request))return NextResponse.json({error:"Unauthorized"},{status:401});
   const body=await request.json().catch(()=>({}));
   try{
     if(body.kind==="stage")await updateJourneyStage(String(body.id),body);
@@ -36,7 +36,7 @@ export async function PATCH(request:Request){
 }
 
 export async function DELETE(request:Request){
-  if(!(await guard()))return NextResponse.json({error:"Unauthorized"},{status:401});
+  if(!guard(request))return NextResponse.json({error:"Unauthorized"},{status:401});
   const body=await request.json().catch(()=>({}));
   try{
     if(body.kind!=="card")return NextResponse.json({error:"Only cards can be deleted in this first version."},{status:400});
