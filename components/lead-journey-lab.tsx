@@ -70,8 +70,8 @@ export function LeadJourneyLab(){
   const dragRef=useRef<{id:string;dx:number;dy:number;moved:boolean}|null>(null);
 
   const journeys=useMemo(()=>board.journeys.filter(j=>j.active).sort((a,b)=>a.order-b.order),[board.journeys]);
-  const libById=useMemo(()=>new Map(board.library.map(x=>[x.id,x])),[board.library]);
-  const cardById=useMemo(()=>new Map(board.cards.map(x=>[x.id,x])),[board.cards]);
+  const libById=useMemo(()=>new Map(board.library.map(x=>[x.id,x] as const)),[board.library]);
+  const cardById=useMemo(()=>new Map(board.cards.map(x=>[x.id,x] as const)),[board.cards]);
 
   const visibleCards=useMemo(()=>board.cards.filter(card=>
     activeJourneyId==="all"||card.journeyIds.includes(activeJourneyId)
@@ -279,7 +279,7 @@ export function LeadJourneyLab(){
     const cards=visibleCards,connections=visibleConnections;
     if(!cards.length)return;
     const ids=new Set(cards.map(c=>c.id));
-    const incoming=new Map(cards.map(c=>[c.id,0]));
+    const incoming=new Map(cards.map(c=>[c.id,0] as const));
     const children=new Map<string,string[]>();
     for(const c of connections){
       if(!ids.has(c.fromId)||!ids.has(c.toId))continue;
@@ -310,7 +310,7 @@ export function LeadJourneyLab(){
       const start=center-rowWidth/2;
       row.forEach((card,i)=>moved.push({...card,x:Math.round(start+i*(nodeW+gap)),y:70+d*220}));
     });
-    const map=new Map(moved.map(c=>[c.id,c]));
+    const map=new Map(moved.map(c=>[c.id,c] as const));
     setBoard(prev=>({...prev,cards:prev.cards.map(c=>map.get(c.id)||c)}));
     if(!board.configured){
       const next={...board,cards:board.cards.map(c=>map.get(c.id)||c)};localSave(next);
