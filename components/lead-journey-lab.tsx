@@ -777,21 +777,48 @@ export function LeadJourneyLab(){
     const cross=new Map<string,number>();
     const crossSize=direction==="horizontal"?nodeH:nodeW;
     const crossGap=direction==="horizontal"?62:78;
+    const branchGap=direction==="horizontal"?150:170;
     const originalCross=(card:Card)=>direction==="horizontal"?card.y:card.x;
+    const cardLookup=new Map(cards.map(c=>[c.id,c] as const));
+    const segmentRoot=new Map<string,string>();
+    levels.forEach(d=>{
+      for(const card of groups.get(d)||[]){
+        const ps=(parents.get(card.id)||[]).filter(id=>depth.has(id));
+        if(d===0||ps.length!==1)segmentRoot.set(card.id,card.id);
+        else segmentRoot.set(card.id,segmentRoot.get(ps[0])||ps[0]);
+      }
+    });
+    const rootOrder=new Map<string,number>();
+    Array.from(new Set(Array.from(segmentRoot.values()))).sort((a,b)=>{
+      const ca=cardLookup.get(a),cb=cardLookup.get(b);
+      return (ca?originalCross(ca):0)-(cb?originalCross(cb):0)||(ca?.order||0)-(cb?.order||0);
+    }).forEach((id,i)=>rootOrder.set(id,i));
     const siblingOffset=(id:string,parentId:string)=>{
       const siblings=(children.get(parentId)||[]).filter(child=>depth.get(child)===depth.get(id));
       const index=Math.max(0,siblings.indexOf(id));
       return (index-(siblings.length-1)/2)*(crossSize+crossGap);
     };
     const resolveLayer=(layer:Card[],desired:Map<string,number>)=>{
-      const ordered=[...layer].sort((a,b)=>(desired.get(a.id)||0)-(desired.get(b.id)||0)||originalCross(a)-originalCross(b)||a.order-b.order);
+      const ordered=[...layer].sort((a,b)=>{
+        const ra=segmentRoot.get(a.id)||a.id,rb=segmentRoot.get(b.id)||b.id;
+        const group=(rootOrder.get(ra)||0)-(rootOrder.get(rb)||0);
+        if(group!==0)return group;
+        return (desired.get(a.id)||0)-(desired.get(b.id)||0)||originalCross(a)-originalCross(b)||a.order-b.order;
+      });
       const starts:number[]=[];
       for(let i=0;i<ordered.length;i++){
         const want=(desired.get(ordered[i].id)||0)-crossSize/2;
-        starts[i]=i===0?want:Math.max(want,starts[i-1]+crossSize+crossGap);
+        if(i===0)starts[i]=want;
+        else{
+          const sameBranch=(segmentRoot.get(ordered[i-1].id)||ordered[i-1].id)===(segmentRoot.get(ordered[i].id)||ordered[i].id);
+          const gap=sameBranch?crossGap:branchGap;
+          starts[i]=Math.max(want,starts[i-1]+crossSize+gap);
+        }
       }
       for(let i=starts.length-2;i>=0;i--){
-        const maxStart=starts[i+1]-crossSize-crossGap;
+        const sameBranch=(segmentRoot.get(ordered[i].id)||ordered[i].id)===(segmentRoot.get(ordered[i+1].id)||ordered[i+1].id);
+        const gap=sameBranch?crossGap:branchGap;
+        const maxStart=starts[i+1]-crossSize-gap;
         starts[i]=Math.min(starts[i],maxStart);
       }
       if(starts.length){
