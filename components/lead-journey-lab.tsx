@@ -141,7 +141,7 @@ export function LeadJourneyLab(){
   const [error,setError]=useState("");
   const wrapRef=useRef<HTMLDivElement|null>(null);
   const canvasRef=useRef<HTMLDivElement|null>(null);
-  const dragRef=useRef<{id:string;dx:number;dy:number;moved:boolean}|null>(null);
+  const dragRef=useRef<{id:string;dx:number;dy:number;moved:boolean;before?:any[]}|null>(null);
   const panRef=useRef<{startX:number;startY:number;scrollLeft:number;scrollTop:number}|null>(null);
   const [panning,setPanning]=useState(false);
   const [displayName,setDisplayName]=useState("");
@@ -221,6 +221,38 @@ export function LeadJourneyLab(){
     const next:Board=data.configured===false?loadLocal():data;
     setBoard(next);
     return next;
+  }
+
+  async function rawRequest(path:string,method="GET",body?:any){
+    const response=await fetch("/api/internal/lead-journey-lab"+path,{
+      method,headers:{"Content-Type":"application/json","X-Lead-Journey-Password":password,"X-Lead-Journey-User":displayName||"Shared user"},
+      body:body?JSON.stringify(body):undefined
+    });
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(data.error||"Request failed.");
+    return data;
+  }
+
+  function currentLayout(cards=baseVisibleCards){
+    return cards.map(card=>({id:card.id,x:card.x,y:card.y}));
+  }
+  async function applyLayout(layout:any[],pushRedo=false){
+    const map=new Map(layout.map(item=>[item.id,item] as const));
+    const previous=currentLayout(board.cards.filter(card=>map.has(card.id)));
+    setBoard(prev=>({...prev,cards:prev.cards.map(card=>map.has(card.id)?{...card,x:map.get(card.id)!.x,y:map.get(card.id)!.y}:card)}));
+    if(board.configured)await request("PATCH",{action:"bulkMove",cards:layout});
+    if(pushRedo)setLayoutRedo(stack=>[...stack,previous]);
+  }
+  async function undoLayout(){
+    const previous=layoutUndo.at(-1);if(!previous)return;
+    setLayoutUndo(stack=>stack.slice(0,-1));
+    await applyLayout(previous,true);
+  }
+  async function redoLayout(){
+    const next=layoutRedo.at(-1);if(!next)return;
+    const current=currentLayout(board.cards.filter(card=>next.some((x:any)=>x.id===card.id)));
+    setLayoutRedo(stack=>stack.slice(0,-1));setLayoutUndo(stack=>[...stack,current]);
+    await applyLayout(next,false);
   }
 
   async function unlock(e:React.FormEvent){
@@ -356,22 +388,43 @@ export function LeadJourneyLab(){
     finally{setSaving(false)}
   }
 
-  async function createJourney(name:string,description:string){
+  async function createJourney(name:string,description:string,group="Other",templateSourceId=""){
     setSaving(true);setError("");
     try{
-      if(!board.configured){
+      if(templateSourceId&&board.configured){
+        const before=new Set(board.journeys.map(j=>j.id));
+        const next=await request("POST",{action:"duplicateJourney",sourceId:templateSourceId,name,group});
+        const id=next.journeys.find((j:Journey)=>!before.has(j.id))?.id;
+        if(id)setActiveJourneyId(id);
+      }else if(!board.configured){
         const id="j-"+Date.now();
-        mutateLocal(d=>({...d,journeys:[...d.journeys,{id,name,description,order:Date.now(),active:true}]}));
+        mutateLocal(d=>({...d,journeys:[...d.journeys,{id,name,description,order:Date.now(),active:true,group,archived:false,template:false}]}));
         setActiveJourneyId(id);
       }else{
         const before=new Set(board.journeys.map(j=>j.id));
-        const next=await request("POST",{action:"createJourney",name,description,order:Date.now()});
+        const next=await request("POST",{action:"createJourney",name,description,group,order:Date.now()});
         const id=next.journeys.find((j:Journey)=>!before.has(j.id))?.id;
         if(id)setActiveJourneyId(id);
       }
       setAddingJourney(false);
     }catch(e){setError(e instanceof Error?e.message:"Unable to create journey.")}
     finally{setSaving(false)}
+  }
+
+  async function duplicateJourney(journey:Journey){
+    const name=prompt("Duplicate journey as:",journey.name+" Copy");if(!name)return;
+    setSaving(true);setError("");
+    try{await request("POST",{action:"duplicateJourney",sourceId:journey.id,name,group:journey.group||"Other"});setJourneyManagerOpen(false)}
+    catch(e){setError(e instanceof Error?e.message:"Unable to duplicate journey.")}
+    finally{setSaving(false)}
+  }
+  async function setJourneyArchived(journey:Journey,archived:boolean){
+    try{await request("PATCH",{action:"updateJourney",id:journey.id,name:journey.name,archived})}
+    catch(e){setError(e instanceof Error?e.message:"Unable to archive journey.")}
+  }
+  async function setJourneyTemplate(journey:Journey,template:boolean){
+    try{await request("PATCH",{action:"updateJourney",id:journey.id,name:journey.name,template})}
+    catch(e){setError(e instanceof Error?e.message:"Unable to update journey template.")}
   }
 
   async function saveLibrary(def:LibraryCard){
@@ -400,6 +453,80 @@ export function LeadJourneyLab(){
     finally{setSaving(false)}
   }
 
+  async function saveCardComments(card:Card,comments:string){
+    try{await updateCard(card.id,{comments})}catch(e){setError(e instanceof Error?e.message:"Unable to save comments.")}
+  }
+
+  async function mergeToJourney(sourceCard:Card,targetJourneyId:string,targetCardId:string){
+    if(activeJourneyId==="all")return;
+    setSaving(true);setError("");
+    try{
+      await request("POST",{action:"mergeJourney",sourceCardId:sourceCard.id,targetCardId,currentJourneyId:activeJourneyId,targetJourneyId,itemName:sourceCard.title});
+      setMergeCardId(null);
+    }catch(e){setError(e instanceof Error?e.message:"Unable to connect journeys.")}
+    finally{setSaving(false)}
+  }
+
+  async function bulkAssign(journeyId:string){
+    if(!selectedCardIds.length||!journeyId)return;
+    try{await request("PATCH",{action:"bulkAssign",ids:selectedCardIds,journeyId});setSelectedCardIds([])}
+    catch(e){setError(e instanceof Error?e.message:"Unable to assign cards.")}
+  }
+  async function bulkDelete(){
+    if(!selectedCardIds.length||!confirm(`Delete ${selectedCardIds.length} selected cards?`))return;
+    try{await request("DELETE",{action:"deleteCards",ids:selectedCardIds});setSelectedCardIds([])}
+    catch(e){setError(e instanceof Error?e.message:"Unable to delete selected cards.")}
+  }
+
+  async function loadSnapshots(){
+    try{const data=await rawRequest("?section=snapshots");setSnapshots(data.snapshots||[]);setHistoryOpen(true)}
+    catch(e){setError(e instanceof Error?e.message:"Unable to load snapshots.")}
+  }
+  async function saveSnapshot(){
+    const name=prompt("Snapshot name:",activeJourneyId==="all"?"Main View Snapshot":(board.journeys.find(j=>j.id===activeJourneyId)?.name||"Journey")+" Snapshot");
+    if(!name)return;
+    const snapshot={journeyId:activeJourneyId,cards:baseVisibleCards.map(c=>({id:c.id,x:c.x,y:c.y})),connections:visibleConnections.map(c=>({id:c.id,fromId:c.fromId,toId:c.toId,label:c.label}))};
+    try{await request("POST",{action:"createSnapshot",name,journeyId:activeJourneyId==="all"?"":activeJourneyId,snapshot});await loadSnapshots()}
+    catch(e){setError(e instanceof Error?e.message:"Unable to save snapshot.")}
+  }
+  async function restoreSnapshot(snapshot:any){
+    if(!confirm("Restore this snapshot's card layout?"))return;
+    try{await request("PATCH",{action:"restoreSnapshot",id:snapshot.id,name:snapshot.name});setHistoryOpen(false)}
+    catch(e){setError(e instanceof Error?e.message:"Unable to restore snapshot.")}
+  }
+  async function removeSnapshot(snapshot:any){
+    if(!confirm(`Delete snapshot “${snapshot.name}”?`))return;
+    try{await request("DELETE",{action:"deleteSnapshot",id:snapshot.id,itemName:snapshot.name});await loadSnapshots()}
+    catch(e){setError(e instanceof Error?e.message:"Unable to delete snapshot.")}
+  }
+  async function loadChangeLog(){
+    try{const data=await rawRequest("?section=changes");setChangeLog(data.changes||[]);setChangeLogOpen(true)}
+    catch(e){setError(e instanceof Error?e.message:"Unable to load change log.")}
+  }
+
+  function fitSelected(){
+    const ids=selectedCardIds.length?selectedCardIds:(selectedCardId?[selectedCardId]:[]);
+    const cards=visibleCards.filter(c=>ids.includes(c.id));if(!cards.length){fitView();return}
+    const wrap=wrapRef.current;if(!wrap)return;
+    const minX=Math.min(...cards.map(c=>c.x)),minY=Math.min(...cards.map(c=>c.y));
+    const maxX=Math.max(...cards.map(c=>c.x+nodeW)),maxY=Math.max(...cards.map(c=>c.y+nodeH));
+    const next=Math.max(.5,Math.min(1.4,(wrap.clientWidth-100)/(maxX-minX+100),(wrap.clientHeight-100)/(maxY-minY+100)));
+    setZoom(next);requestAnimationFrame(()=>wrap.scrollTo({left:Math.max(0,minX*next-50),top:Math.max(0,minY*next-50),behavior:"smooth"}));
+  }
+
+  function exportSvg(){
+    const cards=visibleCards;if(!cards.length)return;
+    const maxX=Math.max(...cards.map(c=>c.x+nodeW))+60,maxY=Math.max(...cards.map(c=>c.y+nodeH))+60;
+    const esc=(s:string)=>s.replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]||m));
+    const lines=visibleConnections.map(conn=>{
+      const a=cardById.get(conn.fromId),b=cardById.get(conn.toId);if(!a||!b)return "";
+      return `<line x1="${a.x+nodeW/2}" y1="${a.y+nodeH}" x2="${b.x+nodeW/2}" y2="${b.y}" stroke="#8fa096" stroke-width="2"/>`;
+    }).join("");
+    const nodes=cards.map(card=>`<g><rect x="${card.x}" y="${card.y}" width="${nodeW}" height="${nodeH}" rx="10" fill="white" stroke="#cfd8d2"/><text x="${card.x+14}" y="${card.y+35}" font-family="Arial" font-size="16" fill="#040E0E">${esc(card.title)}</text></g>`).join("");
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${maxX}" height="${maxY}" viewBox="0 0 ${maxX} ${maxY}"><rect width="100%" height="100%" fill="#f8faf8"/>${lines}${nodes}</svg>`;
+    const url=URL.createObjectURL(new Blob([svg],{type:"image/svg+xml"}));const a=document.createElement("a");a.href=url;a.download="fpx-lead-journey.svg";a.click();URL.revokeObjectURL(url);
+  }
+
   async function removeCard(card:Card){
     if(!confirm(`Delete “${card.title}” from the journey map?`))return;
     const related=board.connections.filter(c=>c.fromId===card.id||c.toId===card.id);
@@ -416,7 +543,11 @@ export function LeadJourneyLab(){
     if((e.target as HTMLElement).closest("button"))return;
     const rect=canvasRef.current?.getBoundingClientRect(); if(!rect)return;
     setSelectedCardId(card.id);setSelectedConnectionId(null);setContextMenu(null);
-    dragRef.current={id:card.id,dx:(e.clientX-rect.left)/zoom-card.x,dy:(e.clientY-rect.top)/zoom-card.y,moved:false};
+    if(presentationMode)return;
+    if(bulkMode||e.shiftKey){
+      setSelectedCardIds(ids=>ids.includes(card.id)?ids.filter(id=>id!==card.id):[...ids,card.id]);return;
+    }
+    dragRef.current={id:card.id,dx:(e.clientX-rect.left)/zoom-card.x,dy:(e.clientY-rect.top)/zoom-card.y,moved:false,before:currentLayout([card])};
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   }
   function dragMove(e:React.PointerEvent){
@@ -430,6 +561,7 @@ export function LeadJourneyLab(){
   async function endDrag(){
     const drag=dragRef.current;dragRef.current=null;if(!drag?.moved)return;
     const card=board.cards.find(c=>c.id===drag.id);if(!card)return;
+    if(drag.before?.length){setLayoutUndo(stack=>[...stack,drag.before!]);setLayoutRedo([])}
     if(!board.configured){localSave(board);return}
     try{await request("PATCH",{action:"updateCard",id:card.id,x:card.x,y:card.y})}catch(e){setError(e instanceof Error?e.message:"Unable to save card position.")}
   }
@@ -474,8 +606,11 @@ export function LeadJourneyLab(){
     });
   }
 
-  async function autoAlign(){
-    const cards=visibleCards,connections=visibleConnections;
+  async function autoAlign(cardsOverride?:Card[]){
+    const cards=cardsOverride?.length?cardsOverride:visibleCards;
+    const before=currentLayout(cards);
+    const chosenIds=new Set(cards.map(c=>c.id));
+    const connections=visibleConnections.filter(c=>chosenIds.has(c.fromId)&&chosenIds.has(c.toId));
     if(!cards.length)return;
     const ids=new Set(cards.map(c=>c.id));
     const incoming=new Map(cards.map(c=>[c.id,0] as const));
@@ -510,6 +645,7 @@ export function LeadJourneyLab(){
       row.forEach((card,i)=>moved.push({...card,x:Math.round(start+i*(nodeW+gap)),y:70+d*220}));
     });
     const map=new Map(moved.map(c=>[c.id,c] as const));
+    setLayoutUndo(stack=>[...stack,before]);setLayoutRedo([]);
     setBoard(prev=>({...prev,cards:prev.cards.map(c=>map.get(c.id)||c)}));
     if(!board.configured){
       const next={...board,cards:board.cards.map(c=>map.get(c.id)||c)};localSave(next);
