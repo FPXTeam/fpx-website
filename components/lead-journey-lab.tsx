@@ -164,13 +164,18 @@ export function LeadJourneyLab(){
   const [layoutRedo,setLayoutRedo]=useState<any[][]>([]);
 
   const journeys=useMemo(()=>board.journeys.filter(j=>j.active&&!j.archived&&!j.template).sort((a,b)=>a.order-b.order),[board.journeys]);
-  const journeyGroups=useMemo(()=>Array.from(new Set(board.journeys.filter(j=>j.active&&!j.archived).map(j=>j.group||"Other"))).sort(),[board.journeys]);
+  const mainJourney=useMemo(()=>journeys.find(j=>j.name==="FPX Sourcing - Main Lead Journey")||null,[journeys]);
+  const mainJourneyId=mainJourney?.id||"";
+  const subJourneys=useMemo(()=>journeys.filter(j=>j.id!==mainJourneyId),[journeys,mainJourneyId]);
+  const journeyGroups=useMemo(()=>Array.from(new Set(subJourneys.map(j=>j.group||"Other"))).sort(),[subJourneys]);
   const libById=useMemo(()=>new Map(board.library.map(x=>[x.id,x] as const)),[board.library]);
   const cardById=useMemo(()=>new Map(board.cards.map(x=>[x.id,x] as const)),[board.cards]);
+  const isMainView=activeJourneyId==="all";
+  const currentJourneyId=isMainView?mainJourneyId:activeJourneyId;
 
   const baseVisibleCards=useMemo(()=>board.cards.filter(card=>
-    activeJourneyId==="all"||card.journeyIds.includes(activeJourneyId)
-  ),[board.cards,activeJourneyId]);
+    currentJourneyId?card.journeyIds.includes(currentJourneyId):(activeJourneyId==="all"||card.journeyIds.includes(activeJourneyId))
+  ),[board.cards,activeJourneyId,currentJourneyId]);
   const visibleCards=useMemo(()=>baseVisibleCards.filter(card=>{
     const def=libById.get(card.libraryId);
     if(hideAgreed&&def?.workshopStatus==="Agreed")return false;
@@ -183,11 +188,12 @@ export function LeadJourneyLab(){
   const completion=useMemo(()=>{
     const total=baseVisibleCards.length;
     const agreed=baseVisibleCards.filter(card=>libById.get(card.libraryId)?.workshopStatus==="Agreed").length;
-    return {agreed,total};
+    const questions=baseVisibleCards.filter(card=>libById.get(card.libraryId)?.workshopStatus==="Needs Discussion").length;
+    return {agreed,total,questions};
   },[baseVisibleCards,libById]);
   const visibleConnections=useMemo(()=>board.connections.filter(c=>c.active&&visibleCardIds.has(c.fromId)&&visibleCardIds.has(c.toId)&&(
-    activeJourneyId==="all"||c.journeyIds.includes(activeJourneyId)
-  )),[board.connections,visibleCardIds,activeJourneyId]);
+    currentJourneyId?c.journeyIds.includes(currentJourneyId):(activeJourneyId==="all"||c.journeyIds.includes(activeJourneyId))
+  )),[board.connections,visibleCardIds,activeJourneyId,currentJourneyId]);
 
   const selectedCard=selectedCardId?cardById.get(selectedCardId)||null:null;
   const selectedConnection=selectedConnectionId?board.connections.find(c=>c.id===selectedConnectionId)||null:null;
@@ -303,9 +309,9 @@ export function LeadJourneyLab(){
     if(exists)return;
     const from=cardById.get(fromId),to=cardById.get(toId);
     if(!from||!to)return;
-    const journeyIds=activeJourneyId==="all"
-      ? Array.from(new Set(from.journeyIds.filter(id=>to.journeyIds.includes(id))))
-      : [activeJourneyId];
+    const journeyIds=currentJourneyId
+      ? [currentJourneyId]
+      : Array.from(new Set(from.journeyIds.filter(id=>to.journeyIds.includes(id))));
     const finalJourneys=journeyIds.length?journeyIds:(activeJourneyId==="all"?journeys.map(j=>j.id):[activeJourneyId]);
     if(!board.configured){
       const id="x-"+Date.now();
@@ -483,8 +489,8 @@ export function LeadJourneyLab(){
   async function saveSnapshot(){
     const name=prompt("Snapshot name:",activeJourneyId==="all"?"Main View Snapshot":(board.journeys.find(j=>j.id===activeJourneyId)?.name||"Journey")+" Snapshot");
     if(!name)return;
-    const snapshot={journeyId:activeJourneyId,cards:baseVisibleCards.map(c=>({id:c.id,x:c.x,y:c.y})),connections:visibleConnections.map(c=>({id:c.id,fromId:c.fromId,toId:c.toId,label:c.label}))};
-    try{await request("POST",{action:"createSnapshot",name,journeyId:activeJourneyId==="all"?"":activeJourneyId,snapshot});await loadSnapshots()}
+    const snapshot={journeyId:currentJourneyId,cards:baseVisibleCards.map(c=>({id:c.id,x:c.x,y:c.y})),connections:visibleConnections.map(c=>({id:c.id,fromId:c.fromId,toId:c.toId,label:c.label}))};
+    try{await request("POST",{action:"createSnapshot",name,journeyId:currentJourneyId,snapshot});await loadSnapshots()}
     catch(e){setError(e instanceof Error?e.message:"Unable to save snapshot.")}
   }
   async function restoreSnapshot(snapshot:any){
@@ -610,7 +616,7 @@ export function LeadJourneyLab(){
     const worldX=(wrap.scrollLeft+pointerX)/zoom;
     const worldY=(wrap.scrollTop+pointerY)/zoom;
     const direction=e.deltaY>0?-1:1;
-    const next=Math.max(.4,Math.min(1.5,Math.round((zoom+direction*.1)*100)/100));
+    const next=Math.max(.25,Math.min(1.5,Math.round((zoom+direction*.1)*100)/100));
     if(next===zoom)return;
     setZoom(next);
     requestAnimationFrame(()=>{
@@ -673,7 +679,7 @@ export function LeadJourneyLab(){
     const minX=Math.min(...visibleCards.map(c=>c.x)),minY=Math.min(...visibleCards.map(c=>c.y));
     const maxX=Math.max(...visibleCards.map(c=>c.x+nodeW)),maxY=Math.max(...visibleCards.map(c=>c.y+nodeH));
     const availableW=Math.max(320,wrap.clientWidth-80),availableH=Math.max(320,wrap.clientHeight-80);
-    const next=Math.max(.4,Math.min(1.35,availableW/(maxX-minX),availableH/(maxY-minY)));
+    const next=Math.max(.25,Math.min(1.35,availableW/(maxX-minX),availableH/(maxY-minY)));
     setZoom(Math.round(next*100)/100);
     requestAnimationFrame(()=>{wrap.scrollTo({left:Math.max(0,minX*next-40),top:Math.max(0,minY*next-40),behavior:"smooth"})});
   }
@@ -773,7 +779,7 @@ export function LeadJourneyLab(){
         onContextMenu={canvasContext} onPointerDown={startPan} onPointerMove={movePan}
         onPointerUp={endPan} onPointerCancel={endPan} onWheel={wheelZoom}>
         <div className="ljl-zoom-controls" onClick={e=>e.stopPropagation()}>
-          <button onClick={()=>setZoom(z=>Math.max(.4,Math.round((z-.1)*100)/100))}><Minus size={15}/></button>
+          <button onClick={()=>setZoom(z=>Math.max(.25,Math.round((z-.1)*100)/100))}><Minus size={15}/></button>
           <span>{Math.round(zoom*100)}%</span>
           <button onClick={()=>setZoom(z=>Math.min(1.5,Math.round((z+.1)*100)/100))}><Plus size={15}/></button>
           <button onClick={()=>setZoom(.8)} title="Reset zoom"><RotateCcw size={14}/></button>
