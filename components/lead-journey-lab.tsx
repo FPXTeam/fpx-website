@@ -141,7 +141,7 @@ export function LeadJourneyLab(){
   const [error,setError]=useState("");
   const wrapRef=useRef<HTMLDivElement|null>(null);
   const canvasRef=useRef<HTMLDivElement|null>(null);
-  const dragRef=useRef<{id:string;dx:number;dy:number;moved:boolean;before?:any[]}|null>(null);
+  const dragRef=useRef<{id:string;dx:number;dy:number;moved:boolean;before?:any[];group?:{id:string;x:number;y:number}[];startX?:number;startY?:number}|null>(null);
   const panRef=useRef<{startX:number;startY:number;scrollLeft:number;scrollTop:number}|null>(null);
   const [panning,setPanning]=useState(false);
   const [displayName,setDisplayName]=useState("");
@@ -353,12 +353,8 @@ export function LeadJourneyLab(){
     return cardId;
   }
 
-  async function deleteActiveJourney(){
-    if(activeJourneyId==="all")return;
-    const journey=board.journeys.find(j=>j.id===activeJourneyId);
-    if(!journey)return;
+  async function deleteJourney(journey:Journey){
     if(!confirm(`Delete “${journey.name}”? This removes that journey's map cards and connections, but keeps Master Cards in the Card Library.`))return;
-
     setSaving(true);setError("");
     try{
       if(!board.configured){
@@ -379,13 +375,15 @@ export function LeadJourneyLab(){
           library:d.library.map(card=>({...card,applicableJourneyIds:card.applicableJourneyIds.filter(journeyId=>journeyId!==id)}))
         }));
       }else{
-        await request("DELETE",{action:"deleteJourney",id:journey.id});
+        await request("DELETE",{action:"deleteJourney",id:journey.id,itemName:journey.name});
       }
-      setActiveJourneyId("all");
-      setSelectedCardId(null);
-      setSelectedConnectionId(null);
+      if(activeJourneyId===journey.id)setActiveJourneyId("all");
+      setSelectedCardId(null);setSelectedConnectionId(null);
     }catch(e){setError(e instanceof Error?e.message:"Unable to delete journey.")}
     finally{setSaving(false)}
+  }
+  async function deleteActiveJourney(){
+    const journey=board.journeys.find(j=>j.id===activeJourneyId);if(journey)await deleteJourney(journey);
   }
 
   async function createJourney(name:string,description:string,group="Other",templateSourceId=""){
@@ -544,14 +542,24 @@ export function LeadJourneyLab(){
     const rect=canvasRef.current?.getBoundingClientRect(); if(!rect)return;
     setSelectedCardId(card.id);setSelectedConnectionId(null);setContextMenu(null);
     if(presentationMode)return;
-    if(bulkMode||e.shiftKey){
-      setSelectedCardIds(ids=>ids.includes(card.id)?ids.filter(id=>id!==card.id):[...ids,card.id]);return;
+    if(bulkMode){
+      if(!selectedCardIds.includes(card.id)){setSelectedCardIds(ids=>[...ids,card.id]);return}
+      const group=board.cards.filter(c=>selectedCardIds.includes(c.id)).map(c=>({id:c.id,x:c.x,y:c.y}));
+      dragRef.current={id:card.id,dx:0,dy:0,moved:false,before:currentLayout(board.cards.filter(c=>selectedCardIds.includes(c.id))),group,startX:e.clientX,startY:e.clientY};
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);return;
     }
+    if(e.shiftKey){setSelectedCardIds(ids=>ids.includes(card.id)?ids.filter(id=>id!==card.id):[...ids,card.id]);return}
     dragRef.current={id:card.id,dx:(e.clientX-rect.left)/zoom-card.x,dy:(e.clientY-rect.top)/zoom-card.y,moved:false,before:currentLayout([card])};
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   }
   function dragMove(e:React.PointerEvent){
     const drag=dragRef.current,rect=canvasRef.current?.getBoundingClientRect();if(!drag||!rect)return;
+    if(drag.group?.length){
+      const dx=(e.clientX-(drag.startX||e.clientX))/zoom,dy=(e.clientY-(drag.startY||e.clientY))/zoom;
+      if(Math.abs(dx)>2||Math.abs(dy)>2)drag.moved=true;
+      const map=new Map(drag.group.map(g=>[g.id,{x:Math.max(20,Math.round(g.x+dx)),y:Math.max(20,Math.round(g.y+dy))}] as const));
+      setBoard(prev=>({...prev,cards:prev.cards.map(card=>map.has(card.id)?{...card,...map.get(card.id)!}:card)}));return;
+    }
     const x=Math.max(20,Math.round((e.clientX-rect.left)/zoom-drag.dx));
     const y=Math.max(20,Math.round((e.clientY-rect.top)/zoom-drag.dy));
     const current=board.cards.find(c=>c.id===drag.id);
@@ -563,7 +571,12 @@ export function LeadJourneyLab(){
     const card=board.cards.find(c=>c.id===drag.id);if(!card)return;
     if(drag.before?.length){setLayoutUndo(stack=>[...stack,drag.before!]);setLayoutRedo([])}
     if(!board.configured){localSave(board);return}
-    try{await request("PATCH",{action:"updateCard",id:card.id,x:card.x,y:card.y})}catch(e){setError(e instanceof Error?e.message:"Unable to save card position.")}
+    try{
+      if(drag.group?.length){
+        const ids=new Set(drag.group.map(g=>g.id));
+        await request("PATCH",{action:"bulkMove",cards:board.cards.filter(c=>ids.has(c.id)).map(c=>({id:c.id,x:c.x,y:c.y}))});
+      }else await request("PATCH",{action:"updateCard",id:card.id,x:card.x,y:card.y});
+    }catch(e){setError(e instanceof Error?e.message:"Unable to save card position.")}
   }
 
   function startPan(e:React.PointerEvent<HTMLDivElement>){
@@ -836,7 +849,7 @@ export function LeadJourneyLab(){
     {journeyManagerOpen&&<JourneyManagerModal board={board} activeJourneyId={activeJourneyId}
       onOpen={id=>{setActiveJourneyId(id);setJourneyManagerOpen(false)}}
       onDuplicate={duplicateJourney} onArchive={setJourneyArchived} onTemplate={setJourneyTemplate}
-      onDelete={async(journey)=>{setActiveJourneyId(journey.id);setJourneyManagerOpen(false);setTimeout(deleteActiveJourney,0)}} onClose={()=>setJourneyManagerOpen(false)}/>}
+      onDelete={async(journey)=>{setJourneyManagerOpen(false);await deleteJourney(journey)}} onClose={()=>setJourneyManagerOpen(false)}/>}
     {toolsOpen&&<WorkspaceToolsModal board={board} miniMap={miniMap} setMiniMap={setMiniMap}
       hideAgreed={hideAgreed} setHideAgreed={setHideAgreed} toolFilter={toolFilter} setToolFilter={setToolFilter}
       assignedFilter={assignedFilter} setAssignedFilter={setAssignedFilter} statusFilter={statusFilter} setStatusFilter={setStatusFilter}
@@ -861,7 +874,8 @@ export function LeadJourneyLab(){
   </main>;
 }
 
-function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,suggestedNext,onEditAll,onDisconnect,onConnectParent,onAddSuggestion,onDuplicate,onDelete}:any){
+function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,suggestedNext,onEditAll,onDisconnect,onConnectParent,onAddSuggestion,onComments,onMerge,canMerge,onDuplicate,onDelete}:any){
+  const [comments,setComments]=useState(card.comments||"");
   return <div className="ljl-inspector-inner">
     <div className="ljl-inspector-title"><span>{def.category}</span><h2>{card.title}</h2><small>{def.tool!=="None"?def.tool:"No tool"}</small></div>
     <section className="ljl-detail-grid">
@@ -881,10 +895,11 @@ function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,sug
     <section><h3>What happens next?</h3><div className="ljl-suggestion-list">
       {suggestedNext.length?suggestedNext.map((d:any,i:number)=><div className="ljl-suggestion-row" key={d.id}><div><span>Suggested card</span><strong>{d.name}</strong><small>{d.tool!=="None"?d.tool:""}</small></div><button onClick={()=>onAddSuggestion(d,i)}>Add</button></div>):<p className="muted">No suggestions set for this card.</p>}
     </div></section>
+    <section><h3>Workshop comments</h3><textarea className="ljl-comments" rows={4} value={comments} onChange={e=>setComments(e.target.value)} placeholder="Notes, decisions, questions…"/><button className="ljl-small-save" onClick={()=>onComments(comments)}><Save size={12}/> Save comments</button></section>
     {(def.campaignName||def.subject||def.templateName||def.messagePurpose)&&<section><h3>Communication</h3>
       <div className="ljl-detail-list"><p><b>Campaign:</b> {def.campaignName||"—"}</p><p><b>Subject:</b> {def.subject||"—"}</p><p><b>Template:</b> {def.templateName||"—"}</p><p><b>Purpose:</b> {def.messagePurpose||"—"}</p></div>
     </section>}
-    <section className="ljl-inspector-actions"><button onClick={onDuplicate}><Copy size={13}/> Duplicate card</button><button onClick={onEditAll}><Edit3 size={13}/> Edit master card</button><button className="danger" onClick={onDelete}><Trash2 size={13}/> Delete from map</button></section>
+    <section className="ljl-inspector-actions">{canMerge&&<button onClick={onMerge}><GitMerge size={13}/> Connect to journey</button>}<button onClick={onDuplicate}><Copy size={13}/> Duplicate card</button><button onClick={onEditAll}><Edit3 size={13}/> Edit master card</button><button className="danger" onClick={onDelete}><Trash2 size={13}/> Delete from map</button></section>
   </div>;
 }
 
@@ -911,12 +926,18 @@ function ContextMenu({menu,card,onClose,onAdd,onEdit,onDuplicate,onAutoAlign,onF
   </div>;
 }
 
-function JourneyModal({saving,onClose,onSave}:{saving:boolean;onClose:()=>void;onSave:(name:string,description:string)=>void}){
-  const [name,setName]=useState(""),[description,setDescription]=useState("");
+function JourneyModal({saving,board,onClose,onSave}:any){
+  const [name,setName]=useState(""),[description,setDescription]=useState(""),[group,setGroup]=useState("Lead"),[templateId,setTemplateId]=useState("");
+  const templates=board.journeys.filter((j:any)=>j.template&&!j.archived);
   return <div className="ljl-modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><div className="ljl-modal">
     <header><div><span>NEW JOURNEY</span><h2>Add journey</h2></div><button onClick={onClose}><X/></button></header>
-    <div className="ljl-form"><label>Journey name<input autoFocus value={name} onChange={e=>setName(e.target.value)} placeholder="e.g. Customer Journey"/></label><label>Description<textarea rows={3} value={description} onChange={e=>setDescription(e.target.value)}/></label></div>
-    <footer><button className="secondary" onClick={onClose}>Cancel</button><button className="primary" disabled={saving||!name.trim()} onClick={()=>onSave(name.trim(),description.trim())}>{saving?"Saving…":"Add journey"}</button></footer>
+    <div className="ljl-form">
+      <label>Journey name<input autoFocus value={name} onChange={e=>setName(e.target.value)} placeholder="e.g. Customer Journey"/></label>
+      <label>Group<select value={group} onChange={e=>setGroup(e.target.value)}>{["Lead","Customer","Reactivation","Supplier","Other"].map(x=><option key={x}>{x}</option>)}</select></label>
+      <label>Start from template<select value={templateId} onChange={e=>setTemplateId(e.target.value)}><option value="">Blank journey</option>{templates.map((j:any)=><option key={j.id} value={j.id}>{j.name}</option>)}</select></label>
+      <label>Description<textarea rows={3} value={description} onChange={e=>setDescription(e.target.value)}/></label>
+    </div>
+    <footer><button className="secondary" onClick={onClose}>Cancel</button><button className="primary" disabled={saving||!name.trim()} onClick={()=>onSave(name.trim(),description.trim(),group,templateId)}>{saving?"Saving…":"Add journey"}</button></footer>
   </div></div>;
 }
 
