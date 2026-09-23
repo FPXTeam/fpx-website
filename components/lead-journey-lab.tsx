@@ -737,10 +737,12 @@ export function LeadJourneyLab(){
     cards.forEach(c=>{if(!visited.has(c.id))walk(c.id)});
     const incoming=new Map(cards.map(c=>[c.id,0] as const));
     const children=new Map<string,string[]>();
+    const parents=new Map<string,string[]>();
     for(const c of connections){
       if(!ids.has(c.fromId)||!ids.has(c.toId)||backEdges.has(edgeKey(c.fromId,c.toId)))continue;
       incoming.set(c.toId,(incoming.get(c.toId)||0)+1);
       children.set(c.fromId,[...(children.get(c.fromId)||[]),c.toId]);
+      parents.set(c.toId,[...(parents.get(c.toId)||[]),c.fromId]);
     }
     const depth=new Map<string,number>();
     const queue=cards.filter(c=>(incoming.get(c.id)||0)===0).map(c=>c.id);
@@ -757,24 +759,73 @@ export function LeadJourneyLab(){
     cards.forEach(c=>{if(!depth.has(c.id))depth.set(c.id,0)});
     const groups=new Map<number,Card[]>();
     for(const card of cards){const d=depth.get(card.id)||0;groups.set(d,[...(groups.get(d)||[]),card])}
-    const maxCount=Math.max(...Array.from(groups.values()).map(g=>g.length),1);
+    const levels=Array.from(groups.keys()).sort((a,b)=>a-b);
+    const cross=new Map<string,number>();
+    const crossSize=direction==="horizontal"?nodeH:nodeW;
+    const crossGap=direction==="horizontal"?62:78;
+    const originalCross=(card:Card)=>direction==="horizontal"?card.y:card.x;
+    const siblingOffset=(id:string,parentId:string)=>{
+      const siblings=(children.get(parentId)||[]).filter(child=>depth.get(child)===depth.get(id));
+      const index=Math.max(0,siblings.indexOf(id));
+      return (index-(siblings.length-1)/2)*(crossSize+crossGap);
+    };
+    const resolveLayer=(layer:Card[],desired:Map<string,number>)=>{
+      const ordered=[...layer].sort((a,b)=>(desired.get(a.id)||0)-(desired.get(b.id)||0)||originalCross(a)-originalCross(b)||a.order-b.order);
+      const starts:number[]=[];
+      for(let i=0;i<ordered.length;i++){
+        const want=(desired.get(ordered[i].id)||0)-crossSize/2;
+        starts[i]=i===0?want:Math.max(want,starts[i-1]+crossSize+crossGap);
+      }
+      for(let i=starts.length-2;i>=0;i--){
+        const maxStart=starts[i+1]-crossSize-crossGap;
+        starts[i]=Math.min(starts[i],maxStart);
+      }
+      if(starts.length){
+        const min=Math.min(...starts);
+        if(min<55){const shift=55-min;for(let i=0;i<starts.length;i++)starts[i]+=shift}
+      }
+      ordered.forEach((card,i)=>cross.set(card.id,starts[i]+crossSize/2));
+    };
+    levels.forEach((d,levelIndex)=>{
+      const layer=groups.get(d)||[];
+      const desired=new Map<string,number>();
+      if(levelIndex===0){
+        const ordered=[...layer].sort((a,b)=>originalCross(a)-originalCross(b)||a.order-b.order);
+        const total=ordered.length*crossSize+Math.max(0,ordered.length-1)*crossGap;
+        const start=Math.max(55,700-total/2);
+        ordered.forEach((card,i)=>desired.set(card.id,start+i*(crossSize+crossGap)+crossSize/2));
+      }else{
+        layer.forEach(card=>{
+          const ps=(parents.get(card.id)||[]).filter(id=>cross.has(id));
+          if(ps.length>1){
+            desired.set(card.id,ps.reduce((sum,id)=>sum+(cross.get(id)||0),0)/ps.length);
+          }else if(ps.length===1){
+            const parentId=ps[0];
+            desired.set(card.id,(cross.get(parentId)||700)+siblingOffset(card.id,parentId));
+          }else desired.set(card.id,originalCross(card)+crossSize/2);
+        });
+      }
+      resolveLayer(layer,desired);
+    });
+    // One light backward pass keeps parent cards centred over their actual branch span.
+    [...levels].reverse().forEach(d=>{
+      const layer=groups.get(d)||[];
+      layer.forEach(card=>{
+        const cs=(children.get(card.id)||[]).filter(id=>cross.has(id));
+        if(!cs.length)return;
+        const target=cs.reduce((sum,id)=>sum+(cross.get(id)||0),0)/cs.length;
+        const current=cross.get(card.id)||target;
+        cross.set(card.id,current*.45+target*.55);
+      });
+    });
     const moved:Card[]=[];
-    if(direction==="horizontal"){
-      const centerY=Math.max(430,(maxCount*(nodeH+58))/2+70);
-      Array.from(groups.entries()).sort((a,b)=>a[0]-b[0]).forEach(([d,column])=>{
-        column.sort((a,b)=>a.y-b.y||a.title.localeCompare(b.title));
-        const colHeight=column.length*nodeH+(column.length-1)*58;
-        const startY=Math.max(55,centerY-colHeight/2);
-        column.forEach((card,i)=>moved.push({...card,x:70+d*330,y:Math.round(startY+i*(nodeH+58))}));
-      });
-    }else{
-      const gap=72,centerX=Math.max(700,(maxCount*(nodeW+gap))/2+100);
-      Array.from(groups.entries()).sort((a,b)=>a[0]-b[0]).forEach(([d,row])=>{
-        row.sort((a,b)=>a.x-b.x||a.title.localeCompare(b.title));
-        const rowWidth=row.length*nodeW+(row.length-1)*gap;
-        const startX=Math.max(55,centerX-rowWidth/2);
-        row.forEach((card,i)=>moved.push({...card,x:Math.round(startX+i*(nodeW+gap)),y:70+d*220}));
-      });
+    for(const card of cards){
+      const d=depth.get(card.id)||0;
+      if(direction==="horizontal"){
+        moved.push({...card,x:70+d*340,y:Math.round((cross.get(card.id)||nodeH/2)-nodeH/2)});
+      }else{
+        moved.push({...card,x:Math.round((cross.get(card.id)||nodeW/2)-nodeW/2),y:70+d*235});
+      }
     }
     const map=new Map(moved.map(c=>[c.id,c] as const));
     setLayoutUndo(stack=>[...stack,before]);setLayoutRedo([]);
