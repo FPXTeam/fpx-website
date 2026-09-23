@@ -217,6 +217,9 @@ export function LeadJourneyLab(){
   const [adding,setAdding]=useState<{x:number;y:number;parentId?:string}|null>(null);
   const [addingJourney,setAddingJourney]=useState(false);
   const [contextMenu,setContextMenu]=useState<{x:number;y:number;canvasX:number;canvasY:number;cardId?:string}|null>(null);
+  const [sequencePicker,setSequencePicker]=useState<{x:number;y:number;parentId?:string}|null>(null);
+  const [sourceFocus,setSourceFocus]=useState<"all"|"we-search"|"they-find-us"|"word-of-mouth">("all");
+  const [collapsedSequences,setCollapsedSequences]=useState<string[]>([]);
   const [zoom,setZoom]=useState(.8);
   const [loading,setLoading]=useState(false);
   const [saving,setSaving]=useState(false);
@@ -259,10 +262,24 @@ export function LeadJourneyLab(){
   const isMainView=activeJourneyId==="all";
   const currentJourneyId=isMainView?mainJourneyId:activeJourneyId;
 
-  const baseVisibleCards=useMemo(()=>board.cards.filter(card=>
+  const journeyCards=useMemo(()=>board.cards.filter(card=>
     currentJourneyId?card.journeyIds.includes(currentJourneyId):(activeJourneyId==="all"||card.journeyIds.includes(activeJourneyId))
   ),[board.cards,activeJourneyId,currentJourneyId]);
-  const visibleCards=useMemo(()=>baseVisibleCards.filter(card=>{
+  const sourceScopedIds=useMemo(()=>{
+    if(!isMainView||sourceFocus==="all"||!mainJourneyId)return null;
+    const title=sourceFocus==="we-search"?"WE SEARCH":sourceFocus==="they-find-us"?"THEY FIND US":"WORD OF MOUTH";
+    const root=journeyCards.find(card=>card.title.trim().toUpperCase()===title);
+    if(!root)return null;
+    const ids=new Set([root.id]),queue=[root.id];
+    const connections=board.connections.filter(c=>c.active&&c.journeyIds.includes(mainJourneyId));
+    while(queue.length){
+      const id=queue.shift()!;
+      connections.filter(c=>c.fromId===id).forEach(c=>{if(!ids.has(c.toId)){ids.add(c.toId);queue.push(c.toId)}});
+    }
+    return ids;
+  },[isMainView,sourceFocus,mainJourneyId,journeyCards,board.connections]);
+  const baseVisibleCards=useMemo(()=>journeyCards.filter(card=>!sourceScopedIds||sourceScopedIds.has(card.id)),[journeyCards,sourceScopedIds]);
+  const filteredCards=useMemo(()=>baseVisibleCards.filter(card=>{
     const def=libById.get(card.libraryId);
     if(hideAgreed&&def?.workshopStatus==="Agreed")return false;
     if(toolFilter!=="All"&&(def?.tool||"None")!==toolFilter)return false;
@@ -270,6 +287,21 @@ export function LeadJourneyLab(){
     if(statusFilter!=="All"&&(def?.workshopStatus||"Draft")!==statusFilter)return false;
     return true;
   }),[baseVisibleCards,libById,hideAgreed,toolFilter,assignedFilter,statusFilter]);
+  const sequenceGroups=useMemo(()=>{
+    const map=new Map<string,{id:string;name:string;cards:Card[]}>();
+    filteredCards.forEach(card=>{
+      if(!card.sequenceId)return;
+      const group=map.get(card.sequenceId)||{id:card.sequenceId,name:card.sequenceName||"Sequence",cards:[]};
+      group.cards.push(card);map.set(card.sequenceId,group);
+    });
+    map.forEach(group=>group.cards.sort((a,b)=>(a.sequenceStep||0)-(b.sequenceStep||0)||a.order-b.order));
+    return Array.from(map.values());
+  },[filteredCards]);
+  const collapsedMap=useMemo(()=>new Map(sequenceGroups.filter(g=>collapsedSequences.includes(g.id)).map(g=>[g.id,g] as const)),[sequenceGroups,collapsedSequences]);
+  const visibleCards=useMemo(()=>filteredCards.filter(card=>{
+    if(!card.sequenceId||!collapsedMap.has(card.sequenceId))return true;
+    return collapsedMap.get(card.sequenceId)!.cards[0]?.id===card.id;
+  }),[filteredCards,collapsedMap]);
   const visibleCardIds=useMemo(()=>new Set(visibleCards.map(c=>c.id)),[visibleCards]);
   const completion=useMemo(()=>{
     const total=baseVisibleCards.length;
