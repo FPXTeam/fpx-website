@@ -237,7 +237,14 @@ export function LeadJourneyLab(){
           return {d,mx:lane,my:(y1+y2)/2};
         }
       }
-      const laneY=Math.max(...visibleCards.map(c=>c.y+nodeH))+70+(index%14)*16;
+      const minX=Math.min(x1,x2),maxX=Math.max(x1,x2);
+      const local=obstacles.filter(c=>c.x<maxX+20&&c.x+nodeW>minX-20);
+      const localBottom=Math.max(y1,y2,...local.map(c=>c.y+nodeH));
+      const localTop=Math.min(y1,y2,...local.map(c=>c.y));
+      const below=localBottom+48+(oi+ii)*8;
+      const above=Math.max(28,localTop-48-(oi+ii)*8);
+      const targetY=(y1+y2)/2;
+      const laneY=Math.abs(targetY-above)<Math.abs(below-targetY)?above:below;
       const sx=x1+(forward?36:-36),tx=x2+(forward?-36:36);
       const d="M "+x1+" "+y1+" L "+sx+" "+y1+" L "+sx+" "+laneY+" L "+tx+" "+laneY+" L "+tx+" "+y2+" L "+x2+" "+y2;
       return {d,mx:(sx+tx)/2,my:laneY};
@@ -253,7 +260,14 @@ export function LeadJourneyLab(){
         return {d,mx:(x1+x2)/2,my:lane};
       }
     }
-    const laneX=Math.max(...visibleCards.map(c=>c.x+nodeW))+70+(index%14)*16;
+    const minY=Math.min(y1,y2),maxY=Math.max(y1,y2);
+    const local=obstacles.filter(c=>c.y<maxY+20&&c.y+nodeH>minY-20);
+    const localRight=Math.max(x1,x2,...local.map(c=>c.x+nodeW));
+    const localLeft=Math.min(x1,x2,...local.map(c=>c.x));
+    const right=localRight+48+(oi+ii)*8;
+    const left=Math.max(28,localLeft-48-(oi+ii)*8);
+    const targetX=(x1+x2)/2;
+    const laneX=Math.abs(targetX-left)<Math.abs(right-targetX)?left:right;
     const sy=y1+(forward?34:-34),ty=y2+(forward?-34:34);
     const d="M "+x1+" "+y1+" L "+x1+" "+sy+" L "+laneX+" "+sy+" L "+laneX+" "+ty+" L "+x2+" "+ty+" L "+x2+" "+y2;
     return {d,mx:laneX,my:(sy+ty)/2};
