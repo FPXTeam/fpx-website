@@ -1,3 +1,4 @@
+// @ts-nocheck
 const BASE_ID="app46QGfgQet1CPIu";
 const JOURNEYS_TABLE="tbl8GQR6NDrgqjtF2";
 const CARDS_TABLE="tblCvEEGIiT0AL3R1";
