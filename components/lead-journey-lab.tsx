@@ -10,20 +10,102 @@ import {
 
 type Journey={id:string;name:string;description:string;order:number;active:boolean;group?:string;archived?:boolean;template?:boolean};
 type LibraryCard={
-  id:string;name:string;category:string;tool:string;use:string;action:string;automated:string;automationTool:string;
+  id:string;name:string;category:string;tool:string;use:string;action:string;automated:string;automationTool:string;execution:string;
   assignedPerson:string;campaignName:string;subject:string;templateName:string;messagePurpose:string;timing:string;
   leadStatus:string;workshopStatus:string;workshopAnswer:string;notes:string;active:boolean;suggestedNextIds:string[];suggestedParentIds:string[];
   applicableJourneyIds:string[];global?:boolean;
 };
-type Card={id:string;title:string;notes:string;comments?:string;order:number;x:number;y:number;journeyIds:string[];libraryId:string};
+type Card={id:string;title:string;notes:string;comments?:string;order:number;x:number;y:number;journeyIds:string[];libraryId:string;sequenceId?:string;sequenceName?:string;sequenceStep?:number};
 type Connection={id:string;name:string;fromId:string;toId:string;journeyIds:string[];label:string;order:number;active:boolean};
 type Board={configured:boolean;journeys:Journey[];library:LibraryCard[];cards:Card[];connections:Connection[]};
 
 const LOCAL_KEY="fpx-lead-journey-lab-v4";
 const nodeW=250,nodeH=128;
 
+type SequenceStep={name:string;category:string;tool?:string;execution:"Automated"|"Can be automated"|"Manual";assigned?:string;timing?:string;use?:string;action?:string;notes?:string;workshopStatus?:"Draft"|"Needs Discussion"|"Agreed";leadStatus?:string};
+type SequenceTemplate={id:string;name:string;description:string;tone:string;steps:SequenceStep[];edges?:Array<[number,number,string?]>};
+
+const SEQUENCE_TEMPLATES:SequenceTemplate[]=[
+  {id:"new-lead-nurture",name:"New Lead Nurture",description:"Initial prospect follow-up from first email through Day 30 and the final lead outcome.",tone:"sage",steps:[
+    {name:"Lead Nurture Begins",category:"Nurture",tool:"Brevo",execution:"Can be automated",assigned:"Gabriel + Account Owner",use:"Start the agreed new-lead follow-up sequence.",action:"Start nurture sequence"},
+    {name:"Initial Contact Email · Day 1",category:"Nurture",tool:"Brevo",execution:"Can be automated",assigned:"Gabriel",timing:"Day 1",action:"Send initial contact email"},
+    {name:"WAIT 4 DAYS → DAY 5",category:"Wait",execution:"Can be automated",assigned:"System",timing:"4 days"},
+    {name:"Responded / Converted?",category:"Decision",execution:"Manual",assigned:"Account Owner",use:"Exit the sequence immediately when the lead responds or converts."},
+    {name:"Follow-Up Contact Email · Day 5",category:"Nurture",tool:"Brevo",execution:"Can be automated",assigned:"Gabriel",timing:"Day 5"},
+    {name:"WAIT 9 DAYS → DAY 14",category:"Wait",execution:"Can be automated",assigned:"System",timing:"9 days"},
+    {name:"Manual Call / Personal Follow-Up · Day 14",category:"Communication",tool:"Call",execution:"Manual",assigned:"George / Gabriela",timing:"Day 14"},
+    {name:"Responded / Converted? · Day 14",category:"Decision",execution:"Manual",assigned:"Account Owner"},
+    {name:"WAIT 16 DAYS → DAY 30",category:"Wait",execution:"Can be automated",assigned:"System",timing:"16 days"},
+    {name:"Follow-Up Email · Day 30",category:"Nurture",tool:"Brevo",execution:"Can be automated",assigned:"Gabriel",timing:"Day 30"},
+    {name:"Lead Outcome?",category:"Decision",execution:"Manual",assigned:"George / Gabriela",notes:"Three outcomes only: Converted, Lost, Not Now / Nurture."}
+  ],edges:[[0,1],[1,2],[2,3],[3,4,"No"],[4,5],[5,6],[6,7],[7,8,"No"],[8,9],[9,10]]},
+  {id:"invite-not-activated",name:"Invite / Not Activated",description:"Follow-up sequence for an invited user who has not activated the FPX account.",tone:"mint",steps:[
+    {name:"Invite Sent",category:"Action",tool:"FPX App",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"WAIT 3 DAYS",category:"Wait",execution:"Can be automated",assigned:"System",timing:"3 days"},
+    {name:"Account Activated?",category:"Decision",execution:"Can be automated",assigned:"System"},
+    {name:"Activation Reminder Email",category:"Nurture",tool:"Brevo",execution:"Can be automated",assigned:"Gabriel"},
+    {name:"WAIT 4 DAYS",category:"Wait",execution:"Can be automated",assigned:"System",timing:"4 days"},
+    {name:"Account Activated? · Day 7",category:"Decision",execution:"Can be automated",assigned:"System"},
+    {name:"Personal Activation Follow-Up · Day 7",category:"Communication",tool:"Call",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"WAIT 7 DAYS",category:"Wait",execution:"Can be automated",assigned:"System",timing:"7 days"},
+    {name:"Activation Outcome",category:"Decision",execution:"Manual",assigned:"George / Gabriela",notes:"Activated / Not Now / Lost."}
+  ],edges:[[0,1],[1,2],[2,3,"No"],[3,4],[4,5],[5,6,"No"],[6,7],[7,8]]},
+  {id:"activated-onboarding",name:"Activated User / Onboarding",description:"Post-activation welcome, personal discovery, requirement capture and first meaningful action.",tone:"olive",steps:[
+    {name:"User Activated",category:"Outcome",tool:"FPX App",execution:"Manual",assigned:"System / FPX"},
+    {name:"Welcome / Activation Email",category:"Nurture",tool:"Brevo",execution:"Can be automated",assigned:"Gabriel",timing:"Immediately after activation",notes:"No automation is currently in place."},
+    {name:"WAIT [TBC] DAYS → PERSONAL FOLLOW-UP",category:"Wait",execution:"Can be automated",assigned:"System",timing:"TBC",workshopStatus:"Needs Discussion"},
+    {name:"Personal Welcome / Discovery",category:"Communication",tool:"Call",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"Requirements Captured?",category:"Decision",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"First Meaningful FPX Action",category:"Outcome",tool:"FPX App",execution:"Manual",assigned:"Customer / FPX"},
+    {name:"ONBOARDED",category:"Outcome",tool:"Airtable",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"WAIT [TBC] DAYS → REQUIREMENTS FOLLOW-UP",category:"Wait",execution:"Can be automated",assigned:"System",timing:"TBC",workshopStatus:"Needs Discussion"},
+    {name:"Requirements Follow-Up",category:"Communication",tool:"Call",execution:"Manual",assigned:"George / Gabriela"}
+  ],edges:[[0,1],[1,2],[2,3],[3,4],[4,5,"Yes"],[5,6],[4,7,"No"],[7,8],[8,4]]},
+  {id:"abandoned-request",name:"Abandoned Request",description:"Recover a timber Request that was started but not submitted.",tone:"sand",steps:[
+    {name:"Request Started",category:"Capture",tool:"FPX App",execution:"Manual",assigned:"Customer"},
+    {name:"WAIT 24 HOURS",category:"Wait",execution:"Can be automated",assigned:"System",timing:"24 hours"},
+    {name:"Request Submitted?",category:"Decision",execution:"Can be automated",assigned:"System"},
+    {name:"Request Reminder",category:"Nurture",tool:"Brevo",execution:"Can be automated",assigned:"Gabriel"},
+    {name:"WAIT 2 BUSINESS DAYS",category:"Wait",execution:"Can be automated",assigned:"System",timing:"2 business days"},
+    {name:"Request Submitted? · Follow-Up",category:"Decision",execution:"Can be automated",assigned:"System"},
+    {name:"Known / Valuable Account?",category:"Decision",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"Personal Request Follow-Up",category:"Communication",tool:"Call",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"Move to Nurture",category:"Nurture",tool:"Airtable",execution:"Manual",assigned:"Account Owner"}
+  ],edges:[[0,1],[1,2],[2,3,"No"],[3,4],[4,5],[5,6,"No"],[6,7,"Yes"],[6,8,"No"]]},
+  {id:"dormant-account",name:"No Activity / No Order",description:"Re-engage a viable account after an agreed period without meaningful activity or orders.",tone:"mist",steps:[
+    {name:"No Meaningful Activity / Order · [TBC]",category:"Decision",tool:"Airtable",execution:"Can be automated",assigned:"System",timing:"TBC",workshopStatus:"Needs Discussion"},
+    {name:"Relevant Re-Engagement Email",category:"Nurture",tool:"Brevo",execution:"Can be automated",assigned:"Gabriel"},
+    {name:"WAIT [TBC] DAYS",category:"Wait",execution:"Can be automated",assigned:"System",timing:"TBC",workshopStatus:"Needs Discussion"},
+    {name:"Activity Resumed?",category:"Decision",execution:"Can be automated",assigned:"System"},
+    {name:"Personal Account Check-In",category:"Communication",tool:"Call",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"Current Requirement?",category:"Decision",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"Return to Opportunity",category:"Action",tool:"Airtable",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"Continue Nurture / Inactive",category:"Nurture",tool:"Airtable",execution:"Manual",assigned:"Account Owner"}
+  ],edges:[[0,1],[1,2],[2,3],[3,4,"No"],[4,5],[5,6,"Yes"],[5,7,"No"]]},
+  {id:"quote-follow-up",name:"Quote Follow-Up",description:"Human-led follow-up after a quote is issued until an outcome is recorded.",tone:"amber",steps:[
+    {name:"Quote Issued",category:"Action",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"WAIT 2 BUSINESS DAYS",category:"Wait",execution:"Can be automated",assigned:"System",timing:"2 business days"},
+    {name:"Personal Quote Follow-Up",category:"Communication",tool:"Call",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"Quote Decision?",category:"Decision",execution:"Manual",assigned:"George / Gabriela",notes:"Won / Lost / Open."},
+    {name:"WAIT 5 DAYS",category:"Wait",execution:"Can be automated",assigned:"System",timing:"5 days"},
+    {name:"Second Quote Follow-Up",category:"Communication",tool:"Call",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"Final Quote Outcome",category:"Decision",execution:"Manual",assigned:"George / Gabriela",notes:"Won / Lost / Not Now."}
+  ],edges:[[0,1],[1,2],[2,3],[3,4,"Open"],[4,5],[5,6]]},
+  {id:"first-order-reorder",name:"First Order / Reorder",description:"Post-first-order follow-up that learns reorder frequency and creates the next relevant buying opportunity.",tone:"forest",steps:[
+    {name:"First Order Completed",category:"Outcome",tool:"Airtable",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"Thank You / Order Follow-Up",category:"Nurture",tool:"Brevo",execution:"Can be automated",assigned:"Gabriel"},
+    {name:"Capture Additional Requirements",category:"CRM",tool:"Airtable",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"Expected Reorder Frequency",category:"CRM",tool:"Airtable",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"WAIT UNTIL EXPECTED REORDER WINDOW",category:"Wait",execution:"Can be automated",assigned:"System"},
+    {name:"Reorder / Requirement Check",category:"Communication",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"Requirement?",category:"Decision",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"Create Opportunity",category:"Action",tool:"Airtable",execution:"Manual",assigned:"George / Gabriela"},
+    {name:"Continue Account Development",category:"Customer Handoff",execution:"Manual",assigned:"George / Gabriela"}
+  ],edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7,"Yes"],[6,8,"No"]]}
+];
+
 function emptyLibrary(id:string,name:string):LibraryCard{
-  return {id,name,category:"Action",tool:"None",use:"",action:"",automated:"No",automationTool:"None",assignedPerson:"",
+  return {id,name,category:"Action",tool:"None",use:"",action:"",automated:"No",automationTool:"None",execution:"Manual",assignedPerson:"",
     campaignName:"",subject:"",templateName:"",messagePurpose:"",timing:"",leadStatus:"Not Applicable",workshopStatus:"Draft",
     workshopAnswer:"",notes:"",active:true,global:false,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:[]};
 }
