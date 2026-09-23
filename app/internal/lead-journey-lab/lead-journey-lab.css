@@ -56,3 +56,7 @@
 .ljl-resolve-button:disabled{opacity:.45;cursor:not-allowed}
 .ljl-node{z-index:10}
 .ljl-lines{z-index:2}
+
+.ljl-line-shadow{fill:none;stroke:#f8faf8;stroke-width:6;pointer-events:none;stroke-linejoin:round;stroke-linecap:round}
+.ljl-line{stroke-linejoin:round;stroke-linecap:round}
+.ljl-select-hint{margin:10px 18px 0;padding:9px 12px;border-radius:8px;background:#eef6ef;border:1px solid #c5ddc8;color:#315f38;font-size:9px;line-height:1.45}
