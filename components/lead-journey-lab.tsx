@@ -666,12 +666,14 @@ export function LeadJourneyLab(){
   }
 
   function canvasContext(e:React.MouseEvent){
+    if(presentationMode)return;
     if((e.target as HTMLElement).closest(".ljl-node"))return;
     e.preventDefault();
     const rect=canvasRef.current?.getBoundingClientRect();if(!rect)return;
     setContextMenu({x:e.clientX,y:e.clientY,canvasX:(e.clientX-rect.left)/zoom,canvasY:(e.clientY-rect.top)/zoom});
   }
   function cardContext(e:React.MouseEvent,card:Card){
+    if(presentationMode)return;
     e.preventDefault();e.stopPropagation();setSelectedCardId(card.id);setSelectedConnectionId(null);
     setContextMenu({x:e.clientX,y:e.clientY,canvasX:card.x,canvasY:card.y,cardId:card.id});
   }
@@ -714,27 +716,41 @@ export function LeadJourneyLab(){
       <button disabled={loading}>{loading?"Checking…":<>Open <ArrowRight size={16}/></>}</button></form>
   </div></main>;
 
-  return <main className="ljl" onClick={()=>setContextMenu(null)}>
+  return <main className={"ljl "+(presentationMode?"is-presentation":"")} onClick={()=>setContextMenu(null)}>
     <header className="ljl-topbar">
       <div className="ljl-top-left"><div className="ljl-mark">FPX <span>INTERNAL</span></div><strong>Lead Journey Lab</strong></div>
       <div className="ljl-view-switcher">
         <button className={activeJourneyId==="all"?"active":""} onClick={()=>{setActiveJourneyId("all");setSelectedCardId(null);setSelectedConnectionId(null)}}><Layers size={14}/> Main View</button>
         <select value={activeJourneyId==="all"?"":activeJourneyId} onChange={e=>{setActiveJourneyId(e.target.value||"all");setSelectedCardId(null);setSelectedConnectionId(null)}}>
-          <option value="">Choose Sub View</option>{journeys.map(j=><option key={j.id} value={j.id}>{j.name}</option>)}
+          <option value="">Choose Sub View</option>
+          {journeyGroups.map(group=><optgroup key={group} label={group}>{journeys.filter(j=>(j.group||"Other")===group).map(j=><option key={j.id} value={j.id}>{j.name}</option>)}</optgroup>)}
         </select>
+        <span className="ljl-progress">{completion.agreed}/{completion.total} agreed</span>
       </div>
       <div className="ljl-top-actions">
-        <button onClick={()=>setLibraryOpen(true)}><BookOpen size={14}/> Card Library</button>
-        <button onClick={()=>setAddingJourney(true)}><Plus size={14}/> Journey</button>
-        {activeJourneyId!=="all"&&<button onClick={deleteActiveJourney} disabled={saving}><Trash2 size={14}/> Delete Journey</button>}
-        <button onClick={()=>setAdding({x:520,y:180})}><Plus size={14}/> Add Card</button>
-        <button onClick={autoAlign}><WandSparkles size={14}/> Auto Align</button>
-        <button onClick={fitView}><Maximize2 size={14}/> Fit</button>
-        <button onClick={refresh} disabled={loading}><RefreshCw size={14}/></button>
-        <button onClick={lock}><LogOut size={14}/></button>
+        {presentationMode?<>
+          <button onClick={()=>setPresentationMode(false)}><EyeOff size={14}/> Exit Presentation</button>
+          <button onClick={fitView}><Maximize2 size={14}/> Fit</button>
+        </>:<>
+          <button onClick={()=>setLibraryOpen(true)}><BookOpen size={14}/> Card Library</button>
+          <button onClick={()=>setJourneyManagerOpen(true)}><Users size={14}/> Journeys</button>
+          <button onClick={()=>setAddingJourney(true)}><Plus size={14}/> Journey</button>
+          <button onClick={()=>setAdding({x:520,y:180})}><Plus size={14}/> Add Card</button>
+          <button disabled={!layoutUndo.length} onClick={undoLayout} title="Undo last layout move"><Undo2 size={14}/></button>
+          <button disabled={!layoutRedo.length} onClick={redoLayout} title="Redo layout move"><Redo2 size={14}/></button>
+          <button onClick={()=>setToolsOpen(true)}><Filter size={14}/> Tools</button>
+          <button onClick={loadSnapshots}><History size={14}/> History</button>
+          <button onClick={()=>setPresentationMode(true)}><Presentation size={14}/> Present</button>
+          <button onClick={refresh} disabled={loading}><RefreshCw size={14}/></button>
+          <button onClick={lock}><LogOut size={14}/></button>
+        </>}
       </div>
     </header>
 
+    {bulkMode&&!presentationMode&&<BulkBar count={selectedCardIds.length} journeys={journeys}
+      onAssign={bulkAssign} onDelete={bulkDelete}
+      onAlign={()=>autoAlign(visibleCards.filter(card=>selectedCardIds.includes(card.id)))}
+      onFit={fitSelected} onClear={()=>setSelectedCardIds([])} onExit={()=>{setBulkMode(false);setSelectedCardIds([])}}/>}
     {!board.configured&&<div className="ljl-storage-note">Preview storage only. Connect the Airtable token in Vercel before the three-person shared workshop.</div>}
     {error&&<div className="ljl-banner ljl-error">{error}</div>}
     {connectingFromId&&<div className="ljl-connect-mode">Connecting from <strong>{cardById.get(connectingFromId)?.title}</strong>. Click the top connector on the destination card. <button onClick={()=>setConnectingFromId(null)}>Cancel</button></div>}
@@ -771,39 +787,42 @@ export function LeadJourneyLab(){
 
             {visibleCards.map(card=>{
               const def=libById.get(card.libraryId);
-              return <article key={card.id} className={"ljl-node "+(selectedCardId===card.id?"is-selected":"")}
+              return <article key={card.id} className={"ljl-node "+(selectedCardId===card.id?"is-selected ":"")+(selectedCardIds.includes(card.id)?"is-bulk-selected":"")}
                 style={{left:card.x,top:card.y}} onPointerDown={e=>startDrag(e,card)}
                 onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}
                 onContextMenu={e=>cardContext(e,card)}>
-                <button className="ljl-handle input" title="Connect to this card" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();connectHandle(card.id)}}/>
-                <div className="ljl-node-top"><span>{def?.category||"Card"}</span><GripVertical size={15}/></div>
+                {!presentationMode&&<button className="ljl-handle input" title="Connect to this card" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();connectHandle(card.id)}}/>}
+                <div className="ljl-node-top"><span>{def?.category||"Card"}</span>{bulkMode?<CheckSquare size={15}/>:<GripVertical size={15}/>}</div>
                 <h2>{card.title}</h2>
                 <div className="ljl-node-meta">
                   {def?.tool&&def.tool!=="None"&&<span>{def.tool}</span>}
                   {def?.workshopStatus&&<span>{def.workshopStatus}</span>}
                 </div>
-                <div className="ljl-node-actions">
+                {!presentationMode&&!bulkMode&&<div className="ljl-node-actions">
                   <button onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setAdding({x:card.x,y:card.y+220,parentId:card.id})}}><Plus size={13}/> Next</button>
                   <button onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setSelectedCardId(card.id);setSelectedConnectionId(null)}}><Edit3 size={13}/></button>
-                </div>
-                <button className={"ljl-handle output "+(connectingFromId===card.id?"active":"")} title="Start connection"
-                  onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setConnectingFromId(connectingFromId===card.id?null:card.id)}}/>
+                </div>}
+                {!presentationMode&&<button className={"ljl-handle output "+(connectingFromId===card.id?"active":"")} title="Start connection"
+                  onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setConnectingFromId(connectingFromId===card.id?null:card.id)}}/>}
               </article>;
             })}
           </div>
         </div>
+        {miniMap&&<MiniMap cards={visibleCards} width={width} height={height}/>}
       </div>
 
-      <aside className="ljl-inspector">
+      {!presentationMode&&<aside className="ljl-inspector">
         {selectedConnection?<ConnectionInspector key={selectedConnection.id} connection={selectedConnection} cards={visibleCards}
           onSave={updateConnection} onDisconnect={()=>deleteConnection(selectedConnection.id)}/>:
         selectedCard&&selectedDef?<CardInspector card={selectedCard} def={selectedDef} incoming={incoming} outgoing={outgoing}
           cardById={cardById} suggestedParents={suggestedParents} suggestedNext={suggestedNext}
           onEditAll={()=>setEditingLibraryId(selectedDef.id)} onDisconnect={deleteConnection}
           onConnectParent={(parent)=>createConnection(parent.id,selectedCard.id)} onAddSuggestion={addSuggested}
-          onDuplicate={()=>duplicateCard(selectedCard)} onDelete={()=>removeCard(selectedCard)}/>:
+          onComments={(comments:string)=>saveCardComments(selectedCard,comments)}
+          onMerge={()=>activeJourneyId!=="all"&&setMergeCardId(selectedCard.id)}
+          canMerge={activeJourneyId!=="all"} onDuplicate={()=>duplicateCard(selectedCard)} onDelete={()=>removeCard(selectedCard)}/>:
         <div className="ljl-empty"><Link2 size={19}/><strong>Select a card or connection</strong><p>Card details, suggestions and connection controls will appear here.</p></div>}
-      </aside>
+      </aside>}
     </section>
 
     {contextMenu&&<ContextMenu menu={contextMenu} card={contextMenu.cardId?cardById.get(contextMenu.cardId)||null:null}
@@ -813,7 +832,24 @@ export function LeadJourneyLab(){
       onDuplicate={()=>{const c=contextMenu.cardId?cardById.get(contextMenu.cardId):null;if(c)duplicateCard(c);setContextMenu(null)}}
       onAutoAlign={()=>{setContextMenu(null);autoAlign()}} onFit={()=>{setContextMenu(null);fitView()}}/>}
 
-    {addingJourney&&<JourneyModal saving={saving} onClose={()=>setAddingJourney(false)} onSave={createJourney}/>}
+    {addingJourney&&<JourneyModal saving={saving} board={board} onClose={()=>setAddingJourney(false)} onSave={createJourney}/>}
+    {journeyManagerOpen&&<JourneyManagerModal board={board} activeJourneyId={activeJourneyId}
+      onOpen={id=>{setActiveJourneyId(id);setJourneyManagerOpen(false)}}
+      onDuplicate={duplicateJourney} onArchive={setJourneyArchived} onTemplate={setJourneyTemplate}
+      onDelete={async(journey)=>{setActiveJourneyId(journey.id);setJourneyManagerOpen(false);setTimeout(deleteActiveJourney,0)}} onClose={()=>setJourneyManagerOpen(false)}/>}
+    {toolsOpen&&<WorkspaceToolsModal board={board} miniMap={miniMap} setMiniMap={setMiniMap}
+      hideAgreed={hideAgreed} setHideAgreed={setHideAgreed} toolFilter={toolFilter} setToolFilter={setToolFilter}
+      assignedFilter={assignedFilter} setAssignedFilter={setAssignedFilter} statusFilter={statusFilter} setStatusFilter={setStatusFilter}
+      bulkMode={bulkMode} setBulkMode={setBulkMode} onFit={fitView} onFitSelected={fitSelected}
+      onExportSvg={exportSvg} onPrint={()=>window.print()} onChangeLog={loadChangeLog}
+      onPresentation={()=>{setToolsOpen(false);setPresentationMode(true)}} onClose={()=>setToolsOpen(false)}/>}
+    {historyOpen&&<VersionHistoryModal snapshots={snapshots} onSave={saveSnapshot} onRestore={restoreSnapshot}
+      onDelete={removeSnapshot} onClose={()=>setHistoryOpen(false)}/>}
+    {changeLogOpen&&<ChangeLogModal changes={changeLog} onClose={()=>setChangeLogOpen(false)}/>}
+    {mergeCardId&&<MergeJourneyModal board={board} sourceCardId={mergeCardId} currentJourneyId={activeJourneyId}
+      onMerge={(targetJourneyId,targetCardId)=>{const source=cardById.get(mergeCardId);if(source)mergeToJourney(source,targetJourneyId,targetCardId)}}
+      onClose={()=>setMergeCardId(null)} saving={saving}/>}
+
     {adding&&<AddCardModal board={board} activeJourneyId={activeJourneyId} initial={adding} onClose={()=>setAdding(null)}
       onUseLibrary={async(libId,title,journeyIds)=>{setSaving(true);try{const id=await createCardFromLibrary(libId,title,journeyIds,adding.x,adding.y,adding.parentId);if(id)setSelectedCardId(id);setAdding(null)}finally{setSaving(false)}}}
       onCreate={async(def,title,journeyIds)=>{setSaving(true);try{const id=await createNewCard(def,title,journeyIds,adding.x,adding.y,adding.parentId);if(id)setSelectedCardId(id);setAdding(null)}finally{setSaving(false)}}}
