@@ -44,3 +44,6 @@
 .ljl-node.needs-discussion .ljl-node-meta span:last-child{background:#fff4df;color:#745f30}
 .ljl-card-notes{background:#fffaf1}
 .ljl-card-notes p{margin:0;color:#5f625f;font-size:10px;line-height:1.55;white-space:pre-wrap}
+
+.ljl-node.is-wait{border-style:dashed;background:#f6f8f5}
+.ljl-node.is-wait .ljl-node-top span{letter-spacing:.12em}
