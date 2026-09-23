@@ -657,12 +657,21 @@ export function LeadJourneyLab(){
     const maxCount=Math.max(...Array.from(groups.values()).map(g=>g.length),1);
     const gap=70,center=Math.max(650,(maxCount*(nodeW+gap))/2+100);
     const moved:Card[]=[];
-    Array.from(groups.entries()).sort((a,b)=>a[0]-b[0]).forEach(([d,row])=>{
-      row.sort((a,b)=>a.title.localeCompare(b.title));
-      const rowWidth=row.length*nodeW+(row.length-1)*gap;
-      const start=center-rowWidth/2;
-      row.forEach((card,i)=>moved.push({...card,x:Math.round(start+i*(nodeW+gap)),y:70+d*220}));
-    });
+    if(isMainView&&mainJourneyId){
+      Array.from(groups.entries()).sort((a,b)=>a[0]-b[0]).forEach(([d,column])=>{
+        column.sort((a,b)=>a.y-b.y||a.title.localeCompare(b.title));
+        const colHeight=column.length*nodeH+(column.length-1)*55;
+        const startY=Math.max(70,330-colHeight/2);
+        column.forEach((card,i)=>moved.push({...card,x:80+d*300,y:Math.round(startY+i*(nodeH+55))}));
+      });
+    }else{
+      Array.from(groups.entries()).sort((a,b)=>a[0]-b[0]).forEach(([d,row])=>{
+        row.sort((a,b)=>a.title.localeCompare(b.title));
+        const rowWidth=row.length*nodeW+(row.length-1)*gap;
+        const start=center-rowWidth/2;
+        row.forEach((card,i)=>moved.push({...card,x:Math.round(start+i*(nodeW+gap)),y:70+d*220}));
+      });
+    }
     const map=new Map(moved.map(c=>[c.id,c] as const));
     setLayoutUndo(stack=>[...stack,before]);setLayoutRedo([]);
     setBoard(prev=>({...prev,cards:prev.cards.map(c=>map.get(c.id)||c)}));
@@ -742,9 +751,9 @@ export function LeadJourneyLab(){
         <button className={activeJourneyId==="all"?"active":""} onClick={()=>{setActiveJourneyId("all");setSelectedCardId(null);setSelectedConnectionId(null)}}><Layers size={14}/> Main View</button>
         <select value={activeJourneyId==="all"?"":activeJourneyId} onChange={e=>{setActiveJourneyId(e.target.value||"all");setSelectedCardId(null);setSelectedConnectionId(null)}}>
           <option value="">Choose Sub View</option>
-          {journeyGroups.map(group=><optgroup key={group} label={group}>{journeys.filter(j=>(j.group||"Other")===group).map(j=><option key={j.id} value={j.id}>{j.name}</option>)}</optgroup>)}
+          {journeyGroups.map(group=><optgroup key={group} label={group}>{subJourneys.filter(j=>(j.group||"Other")===group).map(j=><option key={j.id} value={j.id}>{j.name}</option>)}</optgroup>)}
         </select>
-        <span className="ljl-progress">{completion.agreed}/{completion.total} agreed</span>
+        <span className="ljl-progress">{completion.agreed}/{completion.total} agreed{completion.questions?" · "+completion.questions+" questions":""}</span>
       </div>
       <div className="ljl-top-actions">
         {presentationMode?<>
@@ -806,7 +815,7 @@ export function LeadJourneyLab(){
 
             {visibleCards.map(card=>{
               const def=libById.get(card.libraryId);
-              return <article key={card.id} className={"ljl-node "+(selectedCardId===card.id?"is-selected ":"")+(selectedCardIds.includes(card.id)?"is-bulk-selected":"")}
+              return <article key={card.id} className={"ljl-node "+(def?.workshopStatus==="Needs Discussion"?"needs-discussion ":"")+(selectedCardId===card.id?"is-selected ":"")+(selectedCardIds.includes(card.id)?"is-bulk-selected":"")}
                 style={{left:card.x,top:card.y}} onPointerDown={e=>startDrag(e,card)}
                 onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}
                 onContextMenu={e=>cardContext(e,card)}>
@@ -815,6 +824,7 @@ export function LeadJourneyLab(){
                 <h2>{card.title}</h2>
                 <div className="ljl-node-meta">
                   {def?.tool&&def.tool!=="None"&&<span>{def.tool}</span>}
+                  {def?.assignedPerson&&<span>{def.assignedPerson}</span>}
                   {def?.workshopStatus&&<span>{def.workshopStatus}</span>}
                 </div>
                 {!presentationMode&&!bulkMode&&<div className="ljl-node-actions">
@@ -869,7 +879,7 @@ export function LeadJourneyLab(){
       onMerge={(targetJourneyId,targetCardId)=>{const source=cardById.get(mergeCardId);if(source)mergeToJourney(source,targetJourneyId,targetCardId)}}
       onClose={()=>setMergeCardId(null)} saving={saving}/>}
 
-    {adding&&<AddCardModal board={board} activeJourneyId={activeJourneyId} initial={adding} onClose={()=>setAdding(null)}
+    {adding&&<AddCardModal board={board} activeJourneyId={activeJourneyId} mainJourneyId={mainJourneyId} initial={adding} onClose={()=>setAdding(null)}
       onUseLibrary={async(libId,title,journeyIds)=>{setSaving(true);try{const id=await createCardFromLibrary(libId,title,journeyIds,adding.x,adding.y,adding.parentId);if(id)setSelectedCardId(id);setAdding(null)}finally{setSaving(false)}}}
       onCreate={async(def,title,journeyIds)=>{setSaving(true);try{const id=await createNewCard(def,title,journeyIds,adding.x,adding.y,adding.parentId);if(id)setSelectedCardId(id);setAdding(null)}finally{setSaving(false)}}}
       saving={saving}/>}
@@ -901,6 +911,7 @@ function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,sug
     <section><h3>What happens next?</h3><div className="ljl-suggestion-list">
       {suggestedNext.length?suggestedNext.map((d:any,i:number)=><div className="ljl-suggestion-row" key={d.id}><div><span>Suggested card</span><strong>{d.name}</strong><small>{d.tool!=="None"?d.tool:""}</small></div><button onClick={()=>onAddSuggestion(d,i)}>Add</button></div>):<p className="muted">No suggestions set for this card.</p>}
     </div></section>
+    {(def.notes||card.notes)&&<section className="ljl-card-notes"><h3>{def.workshopStatus==="Needs Discussion"?"Workshop question / note":"Notes"}</h3>{def.notes&&<p>{def.notes}</p>}{card.notes&&<p>{card.notes}</p>}</section>}
     <section><h3>Workshop comments</h3><textarea className="ljl-comments" rows={4} value={comments} onChange={e=>setComments(e.target.value)} placeholder="Notes, decisions, questions…"/><button className="ljl-small-save" onClick={()=>onComments(comments)}><Save size={12}/> Save comments</button></section>
     {(def.campaignName||def.subject||def.templateName||def.messagePurpose)&&<section><h3>Communication</h3>
       <div className="ljl-detail-list"><p><b>Campaign:</b> {def.campaignName||"—"}</p><p><b>Subject:</b> {def.subject||"—"}</p><p><b>Template:</b> {def.templateName||"—"}</p><p><b>Purpose:</b> {def.messagePurpose||"—"}</p></div>
@@ -947,12 +958,12 @@ function JourneyModal({saving,board,onClose,onSave}:any){
   </div></div>;
 }
 
-function AddCardModal({board,activeJourneyId,initial,onClose,onUseLibrary,onCreate,saving}:any){
+function AddCardModal({board,activeJourneyId,mainJourneyId,initial,onClose,onUseLibrary,onCreate,saving}:any){
   const availableJourneys=board.journeys.filter((j:any)=>j.active&&!j.archived&&!j.template);
   const [mode,setMode]=useState<"library"|"new">("library");
   const [libraryId,setLibraryId]=useState(board.library[0]?.id||"");
   const [title,setTitle]=useState(board.library[0]?.name||"");
-  const defaultJourneyIds:string[]=activeJourneyId==="all"?(availableJourneys[0]?.id?[availableJourneys[0].id]:[]):[activeJourneyId];
+  const defaultJourneyIds:string[]=activeJourneyId==="all"?(mainJourneyId?[mainJourneyId]:(availableJourneys[0]?.id?[availableJourneys[0].id]:[])):[activeJourneyId];
   const [journeyIds,setJourneyIds]=useState<string[]>(defaultJourneyIds);
   const [journeyQuery,setJourneyQuery]=useState("");
   const [global,setGlobal]=useState(false);
