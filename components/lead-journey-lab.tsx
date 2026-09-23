@@ -28,23 +28,95 @@ function emptyLibrary(id:string,name:string):LibraryCard{
 }
 function fallbackBoard():Board{
   const journeys:Journey[]=[
-    {id:"j-web",name:"Website Lead",description:"",order:1,active:true},
-    {id:"j-social",name:"Social Media Lead",description:"",order:2,active:true},
-    {id:"j-personal",name:"Personal Lead",description:"",order:3,active:true},
-    {id:"j-referral",name:"Referral Lead",description:"",order:4,active:true},
+    {id:"j-web",name:"Website Lead",description:"Direct sign-up, website enquiry form or direct email.",order:1,active:true},
+    {id:"j-social",name:"Social Media Lead",description:"LinkedIn, Instagram or Facebook.",order:2,active:true},
+    {id:"j-personal",name:"Personal Lead",description:"Lead from George or Gabriela's personal network.",order:3,active:true},
+    {id:"j-referral",name:"Referral Lead",description:"Lead introduced or referred to FPX.",order:4,active:true},
   ];
-  const lead={...emptyLibrary("l-lead","Lead"),category:"Source",workshopStatus:"Agreed"};
-  const capture={...emptyLibrary("l-capture","Lead Capture"),category:"Capture",leadStatus:"New Lead",workshopStatus:"Agreed"};
-  lead.suggestedNextIds=["l-capture"]; capture.suggestedParentIds=["l-lead"];
   const all=journeys.map(j=>j.id);
-  return {
-    configured:false,journeys,library:[lead,capture],
-    cards:[
-      {id:"c-lead",title:"Lead",notes:"",order:1,x:520,y:80,journeyIds:all,libraryId:"l-lead"},
-      {id:"c-capture",title:"Lead Capture",notes:"",order:2,x:520,y:300,journeyIds:all,libraryId:"l-capture"},
-    ],
-    connections:[{id:"x-lead-capture",name:"Lead → Lead Capture",fromId:"c-lead",toId:"c-capture",journeyIds:all,label:"",order:1,active:true}]
-  };
+  const mk=(id:string,name:string,category:string,tool="None",extra:any={})=>({
+    ...emptyLibrary(id,name),category,tool,...extra,applicableJourneyIds:extra.applicableJourneyIds||all
+  });
+  const library:LibraryCard[]=[
+    mk("l-lead","Lead","Source","None",{workshopStatus:"Agreed",suggestedNextIds:["l-capture"]}),
+    mk("l-capture","Lead Capture","Capture","None",{leadStatus:"New Lead",workshopStatus:"Agreed",
+      suggestedNextIds:["l-signup","l-form","l-email","l-linkedin","l-instagram","l-facebook","l-personal","l-referral"],suggestedParentIds:["l-lead"]}),
+    mk("l-signup","Direct Sign-up","Capture","FPX App",{use:"Lead creates an FPX account directly.",action:"Create account",leadStatus:"Pending Activation",workshopStatus:"Needs Discussion",applicableJourneyIds:["j-web"],suggestedNextIds:["l-activated"]}),
+    mk("l-form","Website Enquiry Form","Capture","Website Form",{use:"Capture a website enquiry.",action:"Submit lead capture form",leadStatus:"New Lead",workshopStatus:"Agreed",applicableJourneyIds:["j-web"],suggestedNextIds:["l-airtable-auto"]}),
+    mk("l-email","Direct Email","Capture","Outlook",{use:"Lead emails FPX directly.",action:"Receive inbound email",assignedPerson:"George / Gabriela",leadStatus:"New Lead",workshopStatus:"Agreed",applicableJourneyIds:["j-web"],suggestedNextIds:["l-airtable-manual"]}),
+    mk("l-linkedin","LinkedIn Lead","Capture","LinkedIn",{use:"Lead enters through LinkedIn.",action:"Capture lead",assignedPerson:"George / Gabriela",leadStatus:"New Lead",workshopStatus:"Agreed",applicableJourneyIds:["j-social"],suggestedNextIds:["l-airtable-manual"]}),
+    mk("l-instagram","Instagram Lead","Capture","Instagram",{use:"Lead enters through Instagram.",action:"Capture lead",assignedPerson:"George / Gabriela",leadStatus:"New Lead",workshopStatus:"Agreed",applicableJourneyIds:["j-social"],suggestedNextIds:["l-airtable-manual"]}),
+    mk("l-facebook","Facebook Lead","Capture","Facebook",{use:"Lead enters through Facebook.",action:"Capture lead",assignedPerson:"George / Gabriela",leadStatus:"New Lead",workshopStatus:"Agreed",applicableJourneyIds:["j-social"],suggestedNextIds:["l-airtable-manual"]}),
+    mk("l-personal","Personal Lead","Source","None",{use:"Lead from George or Gabriela's personal network.",assignedPerson:"George / Gabriela",leadStatus:"New Lead",workshopStatus:"Agreed",applicableJourneyIds:["j-personal"],suggestedNextIds:["l-call","l-text","l-outlook","l-airtable-manual"]}),
+    mk("l-referral","Referral Lead","Source","None",{use:"Lead introduced or referred to FPX.",assignedPerson:"George / Gabriela",leadStatus:"New Lead",workshopStatus:"Agreed",applicableJourneyIds:["j-referral"],suggestedNextIds:["l-call","l-text","l-outlook","l-airtable-manual"]}),
+    mk("l-call","Call Lead","Communication","Call",{use:"Manual lead contact by phone.",action:"Make call",assignedPerson:"George / Gabriela",workshopStatus:"Draft"}),
+    mk("l-text","Text Lead","Communication","Text",{use:"Manual lead contact by text.",action:"Send text",assignedPerson:"George / Gabriela",workshopStatus:"Draft"}),
+    mk("l-outlook","Outlook Manual Email","Communication","Outlook",{use:"Manual one-to-one lead email.",action:"Send email",assignedPerson:"George / Gabriela",workshopStatus:"Draft"}),
+    mk("l-airtable-auto","Airtable - Add Lead (Automated)","CRM","Airtable",{use:"Create CRM lead from a digital capture.",action:"Add lead",automated:"Yes",automationTool:"Make",assignedPerson:"System",timing:"Immediately",leadStatus:"New Lead",workshopStatus:"Needs Discussion",suggestedNextIds:["l-invite"]}),
+    mk("l-airtable-manual","Airtable - Add Lead (Manual)","CRM","Airtable",{use:"Create CRM lead from a manual capture.",action:"Add lead",automated:"No",assignedPerson:"George / Gabriela",leadStatus:"New Lead",workshopStatus:"Agreed",suggestedNextIds:["l-invite"]}),
+    mk("l-invite","FPX Invitation","Nurture","Brevo",{use:"Initial FPX account invitation nurture email.",action:"Send nurture email",automated:"Yes",automationTool:"Make",assignedPerson:"System",campaignName:"FPX Invitation",timing:"Initial invitation",leadStatus:"Invited",workshopStatus:"Needs Discussion",suggestedNextIds:["l-follow","l-converted"]}),
+    mk("l-follow","FPX Invitation Follow-Up","Nurture","Brevo",{use:"Follow up if the lead has not replied or activated.",action:"Send nurture follow-up",automated:"Yes",automationTool:"Make",assignedPerson:"System",campaignName:"FPX Invitation Follow-Up",timing:"Wait 3 days",leadStatus:"Invited",workshopStatus:"Needs Discussion",suggestedNextIds:["l-one-month","l-converted"]}),
+    mk("l-one-month","FPX Invitation - 1 Month","Nurture","Brevo",{use:"One-month nurture. Perk/incentive to be agreed.",action:"Send nurture email",automated:"Yes",automationTool:"Make",assignedPerson:"System",campaignName:"FPX Invitation 1 Month",timing:"Wait 1 month",leadStatus:"Invited",workshopStatus:"Needs Discussion",notes:"Perk / incentive to decide.",suggestedNextIds:["l-three-month","l-converted"]}),
+    mk("l-three-month","FPX Invitation - 3 Months","Nurture","Brevo",{use:"Final planned nurture before no-response Lead Lost.",action:"Send nurture email",automated:"Yes",automationTool:"Make",assignedPerson:"System",campaignName:"FPX Invitation 3 Months",timing:"Wait 3 months",leadStatus:"Invited",workshopStatus:"Needs Discussion",notes:"Perk / incentive to decide. No reply after this routes to Lead Lost.",suggestedNextIds:["l-lost","l-converted"]}),
+    mk("l-activated","Account Activated?","Decision","None",{use:"Check whether the FPX account has been activated.",action:"Review activation",automated:"To Decide",automationTool:"To Decide",leadStatus:"Pending Activation",workshopStatus:"Needs Discussion",applicableJourneyIds:["j-web"],suggestedNextIds:["l-converted","l-invite"]}),
+    mk("l-converted","Converted","Outcome","Airtable",{use:"Lead conversion point: FPX account activated.",action:"Set lead to Converted",automated:"To Decide",automationTool:"To Decide",leadStatus:"Converted",workshopStatus:"Agreed"}),
+    mk("l-lost","Lead Lost","Outcome","Airtable",{use:"Final lead outcome after the full nurture sequence has no reply, or the lead explicitly declines further contact.",action:"Close lead",automated:"To Decide",automationTool:"To Decide",leadStatus:"Not Applicable",workshopStatus:"Needs Discussion",notes:"Exact CRM handling for no-response Lead Lost to decide. Explicit DNC remains DNC."})
+  ];
+  const cards:Card[]=[
+    {id:"c-lead",title:"Lead",notes:"",order:1,x:1250,y:60,journeyIds:all,libraryId:"l-lead"},
+    {id:"c-capture",title:"Lead Capture",notes:"",order:2,x:1250,y:260,journeyIds:all,libraryId:"l-capture"},
+    {id:"c-signup",title:"Direct Sign-up",notes:"",order:10,x:250,y:520,journeyIds:["j-web"],libraryId:"l-signup"},
+    {id:"c-form",title:"Website Enquiry Form",notes:"",order:11,x:550,y:520,journeyIds:["j-web"],libraryId:"l-form"},
+    {id:"c-email",title:"Direct Email",notes:"",order:12,x:850,y:520,journeyIds:["j-web"],libraryId:"l-email"},
+    {id:"c-linkedin",title:"LinkedIn Lead",notes:"",order:20,x:1150,y:520,journeyIds:["j-social"],libraryId:"l-linkedin"},
+    {id:"c-instagram",title:"Instagram Lead",notes:"",order:21,x:1450,y:520,journeyIds:["j-social"],libraryId:"l-instagram"},
+    {id:"c-facebook",title:"Facebook Lead",notes:"",order:22,x:1750,y:520,journeyIds:["j-social"],libraryId:"l-facebook"},
+    {id:"c-personal",title:"Personal Lead",notes:"",order:30,x:2050,y:520,journeyIds:["j-personal"],libraryId:"l-personal"},
+    {id:"c-referral",title:"Referral Lead",notes:"",order:40,x:2350,y:520,journeyIds:["j-referral"],libraryId:"l-referral"},
+    {id:"c-web-next",title:"What happens next? - Website",notes:"",order:50,x:650,y:760,journeyIds:["j-web"],libraryId:"l-airtable-manual"},
+    {id:"c-social-next",title:"What happens next? - Social",notes:"",order:51,x:1450,y:760,journeyIds:["j-social"],libraryId:"l-airtable-manual"},
+    {id:"c-personal-next",title:"What happens next? - Personal",notes:"",order:52,x:2050,y:760,journeyIds:["j-personal"],libraryId:"l-airtable-manual"},
+    {id:"c-referral-next",title:"What happens next? - Referral",notes:"",order:53,x:2350,y:760,journeyIds:["j-referral"],libraryId:"l-airtable-manual"},
+    {id:"c-activated",title:"Account Activated?",notes:"",order:54,x:250,y:760,journeyIds:["j-web"],libraryId:"l-activated"},
+    {id:"c-invite",title:"FPX Invitation",notes:"",order:60,x:1250,y:1020,journeyIds:all,libraryId:"l-invite"},
+    {id:"c-follow",title:"FPX Invitation Follow-Up",notes:"",order:61,x:1250,y:1240,journeyIds:all,libraryId:"l-follow"},
+    {id:"c-one-month",title:"FPX Invitation - 1 Month",notes:"",order:62,x:1250,y:1460,journeyIds:all,libraryId:"l-one-month"},
+    {id:"c-three-month",title:"FPX Invitation - 3 Months",notes:"",order:63,x:1250,y:1680,journeyIds:all,libraryId:"l-three-month"},
+    {id:"c-converted",title:"Converted",notes:"",order:90,x:1040,y:1910,journeyIds:all,libraryId:"l-converted"},
+    {id:"c-lost",title:"Lead Lost",notes:"",order:91,x:1460,y:1910,journeyIds:all,libraryId:"l-lost"}
+  ];
+  const x=(id:string,fromId:string,toId:string,journeyIds:string[],label=""):Connection=>({id,name:id,fromId,toId,journeyIds,label,order:Date.now(),active:true});
+  const connections:Connection[]=[
+    x("Lead → Capture","c-lead","c-capture",all),
+    x("Capture → Sign-up","c-capture","c-signup",["j-web"]),
+    x("Capture → Form","c-capture","c-form",["j-web"]),
+    x("Capture → Email","c-capture","c-email",["j-web"]),
+    x("Capture → LinkedIn","c-capture","c-linkedin",["j-social"]),
+    x("Capture → Instagram","c-capture","c-instagram",["j-social"]),
+    x("Capture → Facebook","c-capture","c-facebook",["j-social"]),
+    x("Capture → Personal","c-capture","c-personal",["j-personal"]),
+    x("Capture → Referral","c-capture","c-referral",["j-referral"]),
+    x("Sign-up → Activated?","c-signup","c-activated",["j-web"]),
+    x("Activated → Converted","c-activated","c-converted",["j-web"],"Yes"),
+    x("Activated → Invitation","c-activated","c-invite",["j-web"],"No"),
+    x("Form → Web next","c-form","c-web-next",["j-web"]),
+    x("Email → Web next","c-email","c-web-next",["j-web"]),
+    x("Web next → Invite","c-web-next","c-invite",["j-web"]),
+    x("LinkedIn → Social next","c-linkedin","c-social-next",["j-social"]),
+    x("Instagram → Social next","c-instagram","c-social-next",["j-social"]),
+    x("Facebook → Social next","c-facebook","c-social-next",["j-social"]),
+    x("Social next → Invite","c-social-next","c-invite",["j-social"]),
+    x("Personal → Personal next","c-personal","c-personal-next",["j-personal"]),
+    x("Personal next → Invite","c-personal-next","c-invite",["j-personal"]),
+    x("Referral → Referral next","c-referral","c-referral-next",["j-referral"]),
+    x("Referral next → Invite","c-referral-next","c-invite",["j-referral"]),
+    x("Invite → Follow-Up","c-invite","c-follow",all),
+    x("Follow-Up → 1 Month","c-follow","c-one-month",all),
+    x("1 Month → 3 Months","c-one-month","c-three-month",all),
+    x("3 Months → Converted","c-three-month","c-converted",all,"Activated"),
+    x("3 Months → Lost","c-three-month","c-lost",all,"No reply")
+  ];
+  return {configured:false,journeys,library,cards,connections};
 }
 function norm(v:string){return v.trim().toLowerCase()}
 
