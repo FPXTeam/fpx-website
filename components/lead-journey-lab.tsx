@@ -12,7 +12,7 @@ type Journey={id:string;name:string;description:string;order:number;active:boole
 type LibraryCard={
   id:string;name:string;category:string;tool:string;use:string;action:string;automated:string;automationTool:string;
   assignedPerson:string;campaignName:string;subject:string;templateName:string;messagePurpose:string;timing:string;
-  leadStatus:string;workshopStatus:string;notes:string;active:boolean;suggestedNextIds:string[];suggestedParentIds:string[];
+  leadStatus:string;workshopStatus:string;workshopAnswer:string;notes:string;active:boolean;suggestedNextIds:string[];suggestedParentIds:string[];
   applicableJourneyIds:string[];global?:boolean;
 };
 type Card={id:string;title:string;notes:string;comments?:string;order:number;x:number;y:number;journeyIds:string[];libraryId:string};
@@ -25,7 +25,7 @@ const nodeW=250,nodeH=128;
 function emptyLibrary(id:string,name:string):LibraryCard{
   return {id,name,category:"Action",tool:"None",use:"",action:"",automated:"No",automationTool:"None",assignedPerson:"",
     campaignName:"",subject:"",templateName:"",messagePurpose:"",timing:"",leadStatus:"Not Applicable",workshopStatus:"Draft",
-    notes:"",active:true,global:false,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:[]};
+    workshopAnswer:"",notes:"",active:true,global:false,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:[]};
 }
 function fallbackBoard():Board{
   const journeys:Journey[]=[
@@ -143,7 +143,11 @@ export function LeadJourneyLab(){
   const canvasRef=useRef<HTMLDivElement|null>(null);
   const dragRef=useRef<{id:string;dx:number;dy:number;moved:boolean;before?:any[];group?:{id:string;x:number;y:number}[];startX?:number;startY?:number}|null>(null);
   const panRef=useRef<{startX:number;startY:number;scrollLeft:number;scrollTop:number}|null>(null);
+  const selectRef=useRef<{startX:number;startY:number;additive:boolean}|null>(null);
   const [panning,setPanning]=useState(false);
+  const [selectionBox,setSelectionBox]=useState<{x:number;y:number;w:number;h:number}|null>(null);
+  const [selectMode,setSelectMode]=useState(false);
+  const [layoutDirection,setLayoutDirection]=useState<"horizontal"|"vertical">("horizontal");
   const [displayName,setDisplayName]=useState("");
   const [journeyManagerOpen,setJourneyManagerOpen]=useState(false);
   const [toolsOpen,setToolsOpen]=useState(false);
