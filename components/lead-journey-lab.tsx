@@ -1354,9 +1354,9 @@ function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,sug
     <div className="ljl-inspector-title"><span>{def.category}</span><h2>{card.title}</h2><small>{def.tool!=="None"?def.tool:"No tool"}</small></div>
     <section className="ljl-detail-grid">
       <div><span>Use</span><strong>{def.use||"—"}</strong></div><div><span>Action</span><strong>{def.action||"—"}</strong></div>
-      <div><span>Automated?</span><strong>{def.automated||"—"}</strong></div><div><span>Automation tool</span><strong>{def.automationTool||"—"}</strong></div>
-      <div><span>Assigned person</span><strong>{def.assignedPerson||"—"}</strong></div><div><span>Timing</span><strong>{def.timing||"—"}</strong></div>
-      <div><span>Lead status</span><strong>{def.leadStatus||"—"}</strong></div><div><span>Workshop status</span><strong>{def.workshopStatus||"—"}</strong></div>
+      <div><span>Execution</span><strong>{def.execution||"Manual"}</strong></div><div><span>Assigned person</span><strong>{def.assignedPerson||"—"}</strong></div>
+      <div><span>Timing</span><strong>{def.timing||"—"}</strong></div><div><span>Lead status</span><strong>{def.leadStatus||"—"}</strong></div>
+      <div><span>Workshop status</span><strong>{def.workshopStatus||"—"}</strong></div><div><span>Sequence</span><strong>{card.sequenceName||"—"}</strong></div>
     </section>
     <section><div className="ljl-section-head"><h3>Connections</h3></div>
       {!incoming.length&&!outgoing.length&&<p className="muted">No connections.</p>}
@@ -1448,7 +1448,7 @@ function AddCardModal({board,activeJourneyId,mainJourneyId,initial,onClose,onUse
   const [journeyIds,setJourneyIds]=useState<string[]>(defaultJourneyIds);
   const [journeyQuery,setJourneyQuery]=useState("");
   const [global,setGlobal]=useState(false);
-  const [name,setName]=useState(""),[category,setCategory]=useState("Action"),[tool,setTool]=useState("None"),[use,setUse]=useState(""),[action,setAction]=useState("");
+  const [name,setName]=useState(""),[category,setCategory]=useState("Action"),[tool,setTool]=useState("None"),[use,setUse]=useState(""),[action,setAction]=useState(""),[execution,setExecution]=useState("Manual");
   const filteredJourneys=availableJourneys.filter((j:any)=>!journeyQuery||(`${j.name} ${j.group||""}`).toLowerCase().includes(journeyQuery.toLowerCase()));
   function toggleJourney(id:string){setJourneyIds(v=>v.includes(id)?v.filter(x=>x!==id):[...v,id])}
   function chooseLibrary(id:string){
@@ -1468,6 +1468,7 @@ function AddCardModal({board,activeJourneyId,mainJourneyId,initial,onClose,onUse
         <label>Tool<select value={tool} onChange={e=>setTool(e.target.value)}>{["None","FPX App","Website Form","Airtable","Brevo","Call","Text","Outlook","LinkedIn","Facebook","Instagram","Make"].map(x=><option key={x}>{x}</option>)}</select></label>
         <label>Use / Purpose<input value={use} onChange={e=>setUse(e.target.value)}/></label>
         <label>Tool Action<input value={action} onChange={e=>setAction(e.target.value)}/></label>
+        <label>Execution<select value={execution} onChange={e=>setExecution(e.target.value)}>{["Manual","Can be automated","Automated"].map(x=><option key={x}>{x}</option>)}</select></label>
         <label className="ljl-checkline"><input type="checkbox" checked={global} onChange={e=>{setGlobal(e.target.checked);if(e.target.checked)setJourneyIds(availableJourneys.map((j:any)=>j.id))}}/> Global card — all current and future journeys</label>
       </>}
       <div className="ljl-journey-picker">
@@ -1478,7 +1479,7 @@ function AddCardModal({board,activeJourneyId,mainJourneyId,initial,onClose,onUse
     </div>
     <footer><button className="secondary" onClick={onClose}>Cancel</button>{mode==="library"
       ?<button className="primary" disabled={saving||!libraryId||!title||!journeyIds.length} onClick={()=>onUseLibrary(libraryId,title,journeyIds)}>{saving?"Saving…":"Add card"}</button>
-      :<button className="primary" disabled={saving||!name||!journeyIds.length} onClick={()=>onCreate({name,category,tool,use,action,automated:"No",automationTool:"None",assignedPerson:"",campaignName:"",subject:"",templateName:"",messagePurpose:"",timing:"",leadStatus:"Not Applicable",workshopStatus:"Draft",workshopAnswer:"",notes:"",active:true,global,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:journeyIds},title||name,journeyIds)}>{saving?"Saving…":"Create & add"}</button>}
+      :<button className="primary" disabled={saving||!name||!journeyIds.length} onClick={()=>onCreate({name,category,tool,use,action,execution,automated:execution==="Automated"?"Yes":execution==="Can be automated"?"To Decide":"No",automationTool:"None",assignedPerson:"",campaignName:"",subject:"",templateName:"",messagePurpose:"",timing:"",leadStatus:"Not Applicable",workshopStatus:"Draft",workshopAnswer:"",notes:"",active:true,global,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:journeyIds},title||name,journeyIds)}>{saving?"Saving…":"Create & add"}</button>}
     </footer>
   </div></div>;
 }
@@ -1492,7 +1493,7 @@ function LibraryModal({board,onClose,onEdit}:any){
     <div className="ljl-library-tools"><label><Search size={14}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search cards or tools"/></label><select value={category} onChange={e=>setCategory(e.target.value)}>{cats.map(c=><option key={c}>{c}</option>)}</select></div>
     <div className="ljl-library-groups">{cats.filter(c=>c!=="All"&&(category==="All"||category===c)).map(cat=>{
       const items=filtered.filter((x:any)=>x.category===cat);if(!items.length)return null;
-      return <section key={cat}><h3>{cat}<span>{items.length}</span></h3><div>{items.map((x:any)=><button className="ljl-library-card" key={x.id} onClick={()=>onEdit(x.id)}><div><strong>{x.name}</strong><span>{x.tool!=="None"?x.tool:"No tool"} · {x.automated==="Yes"?"Automated via "+x.automationTool:"Manual / "+x.automated}</span></div><Edit3 size={14}/></button>)}</div></section>;
+      return <section key={cat}><h3>{cat}<span>{items.length}</span></h3><div>{items.map((x:any)=><button className="ljl-library-card" key={x.id} onClick={()=>onEdit(x.id)}><div><strong>{x.name}</strong><span>{x.tool!=="None"?x.tool:"No tool"} · {x.execution||"Manual"}</span></div><Edit3 size={14}/></button>)}</div></section>;
     })}</div>
   </div></div>;
 }
@@ -1513,8 +1514,7 @@ function LibraryEditor({def,board,saving,onClose,onSave}:{def:LibraryCard|null;b
       <label>Tool<select value={draft.tool} onChange={e=>set("tool",e.target.value)}>{["None","FPX App","Website Form","Airtable","Brevo","Call","Text","Outlook","LinkedIn","Facebook","Instagram","Make"].map(x=><option key={x}>{x}</option>)}</select></label>
       <label>Use / Purpose<input value={draft.use} onChange={e=>set("use",e.target.value)}/></label>
       <label>Tool Action<input value={draft.action} onChange={e=>set("action",e.target.value)}/></label>
-      <label>Automated?<select value={draft.automated} onChange={e=>set("automated",e.target.value)}>{["Yes","No","To Decide"].map(x=><option key={x}>{x}</option>)}</select></label>
-      <label>Automation Tool<select value={draft.automationTool} onChange={e=>set("automationTool",e.target.value)}>{["None","Make","Brevo","To Decide"].map(x=><option key={x}>{x}</option>)}</select></label>
+      <label>Execution<select value={draft.execution||"Manual"} onChange={e=>{const value=e.target.value;setDraft(d=>({...d,execution:value,automated:value==="Automated"?"Yes":value==="Can be automated"?"To Decide":"No"}))}}>{["Manual","Can be automated","Automated"].map(x=><option key={x}>{x}</option>)}</select></label>
       <label>Assigned Person<input value={draft.assignedPerson} onChange={e=>set("assignedPerson",e.target.value)}/></label>
       <label>Timing<input value={draft.timing} onChange={e=>set("timing",e.target.value)} placeholder="e.g. Wait 3 days"/></label>
       <label>Lead Status<select value={draft.leadStatus} onChange={e=>set("leadStatus",e.target.value)}>{["Converted","Pending Activation","Invited","Pending Invite","New Lead","Pending Contact Details","DNC","Not Applicable"].map(x=><option key={x}>{x}</option>)}</select></label>
