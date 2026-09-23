@@ -878,6 +878,7 @@ export function LeadJourneyLab(){
     {!board.configured&&<div className="ljl-storage-note">Preview storage only. Connect the Airtable token in Vercel before the three-person shared workshop.</div>}
     {error&&<div className="ljl-banner ljl-error">{error}</div>}
     {connectingFromId&&<div className="ljl-connect-mode">Connecting from <strong>{cardById.get(connectingFromId)?.title}</strong>. Click the top connector on the destination card. <button onClick={()=>setConnectingFromId(null)}>Cancel</button></div>}
+    {selectMode&&!presentationMode&&<div className="ljl-select-hint"><strong>Box Select:</strong> drag across cards. Click Select again to return to normal pan. You can also hold Shift + drag at any time.</div>}
 
     <section className="ljl-workspace">
       <div ref={wrapRef} className={"ljl-canvas-wrap "+(panning?"is-panning":"")}
@@ -899,6 +900,7 @@ export function LeadJourneyLab(){
                 const route=routedConnection(connection,index);if(!route)return null;
                 return <g key={connection.id} className={selectedConnectionId===connection.id?"is-selected":""}>
                   <path className="ljl-line-hit" d={route.d} onClick={e=>{e.stopPropagation();setSelectedConnectionId(connection.id);setSelectedCardId(null)}}/>
+                  <path className="ljl-line-shadow" d={route.d}/>
                   <path className="ljl-line" d={route.d} markerEnd="url(#lab-arrow)"/>
                   {connection.label&&<text x={route.mx} y={route.my-7}>{connection.label}</text>}
                 </g>;
