@@ -198,12 +198,59 @@ export function LeadJourneyLab(){
   const visibleConnections=useMemo(()=>board.connections.filter(c=>c.active&&visibleCardIds.has(c.fromId)&&visibleCardIds.has(c.toId)&&(
     currentJourneyId?c.journeyIds.includes(currentJourneyId):(activeJourneyId==="all"||c.journeyIds.includes(activeJourneyId))
   )),[board.connections,visibleCardIds,activeJourneyId,currentJourneyId]);
+  const outgoingMap=useMemo(()=>{
+    const map=new Map<string,Connection[]>();
+    visibleConnections.forEach(c=>map.set(c.fromId,[...(map.get(c.fromId)||[]),c]));
+    map.forEach(list=>list.sort((a,b)=>a.order-b.order));
+    return map;
+  },[visibleConnections]);
+  const incomingMap=useMemo(()=>{
+    const map=new Map<string,Connection[]>();
+    visibleConnections.forEach(c=>map.set(c.toId,[...(map.get(c.toId)||[]),c]));
+    map.forEach(list=>list.sort((a,b)=>a.order-b.order));
+    return map;
+  },[visibleConnections]);
 
   const selectedCard=selectedCardId?cardById.get(selectedCardId)||null:null;
   const selectedConnection=selectedConnectionId?board.connections.find(c=>c.id===selectedConnectionId)||null:null;
   const selectedDef=selectedCard?libById.get(selectedCard.libraryId)||null:null;
   const width=Math.max(1300,...visibleCards.map(c=>c.x+420));
   const height=Math.max(950,...visibleCards.map(c=>c.y+360));
+
+  function routedConnection(connection:Connection,index:number){
+    const from=cardById.get(connection.fromId),to=cardById.get(connection.toId);
+    if(!from||!to)return null;
+    const outs=outgoingMap.get(from.id)||[connection],ins=incomingMap.get(to.id)||[connection];
+    const oi=Math.max(0,outs.findIndex(c=>c.id===connection.id)),ii=Math.max(0,ins.findIndex(c=>c.id===connection.id));
+    if(layoutDirection==="horizontal"){
+      const forward=to.x>=from.x;
+      const x1=forward?from.x+nodeW:from.x,x2=forward?to.x:to.x+nodeW;
+      const y1=from.y+nodeH*((oi+1)/(outs.length+1)),y2=to.y+nodeH*((ii+1)/(ins.length+1));
+      const adjacent=forward&&(to.x-from.x)<=440;
+      if(adjacent){
+        const lane=(x1+x2)/2+(oi-(outs.length-1)/2)*10;
+        const d="M "+x1+" "+y1+" L "+lane+" "+y1+" L "+lane+" "+y2+" L "+x2+" "+y2;
+        return {d,mx:lane,my:(y1+y2)/2};
+      }
+      const laneY=Math.max(...visibleCards.map(c=>c.y+nodeH))+70+(index%14)*16;
+      const sx=x1+(forward?36:-36),tx=x2+(forward?-36:36);
+      const d="M "+x1+" "+y1+" L "+sx+" "+y1+" L "+sx+" "+laneY+" L "+tx+" "+laneY+" L "+tx+" "+y2+" L "+x2+" "+y2;
+      return {d,mx:(sx+tx)/2,my:laneY};
+    }
+    const forward=to.y>=from.y;
+    const y1=forward?from.y+nodeH:from.y,y2=forward?to.y:to.y+nodeH;
+    const x1=from.x+nodeW*((oi+1)/(outs.length+1)),x2=to.x+nodeW*((ii+1)/(ins.length+1));
+    const adjacent=forward&&(to.y-from.y)<=310;
+    if(adjacent){
+      const lane=(y1+y2)/2+(oi-(outs.length-1)/2)*9;
+      const d="M "+x1+" "+y1+" L "+x1+" "+lane+" L "+x2+" "+lane+" L "+x2+" "+y2;
+      return {d,mx:(x1+x2)/2,my:lane};
+    }
+    const laneX=Math.max(...visibleCards.map(c=>c.x+nodeW))+70+(index%14)*16;
+    const sy=y1+(forward?34:-34),ty=y2+(forward?-34:34);
+    const d="M "+x1+" "+y1+" L "+x1+" "+sy+" L "+laneX+" "+sy+" L "+laneX+" "+ty+" L "+x2+" "+ty+" L "+x2+" "+y2;
+    return {d,mx:laneX,my:(sy+ty)/2};
+  }
 
   function localSave(next:Board){
     setBoard(next);
