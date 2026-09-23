@@ -841,6 +841,18 @@ export function LeadJourneyLab(){
     setSelectedCardId(null);
   }
 
+  function edgeAutoScroll(clientX:number,clientY:number){
+    const wrap=wrapRef.current;if(!wrap)return;
+    const rect=wrap.getBoundingClientRect(),zone=76,maxSpeed=24;
+    const speed=(distance:number)=>Math.ceil(maxSpeed*Math.min(1,Math.max(0,(zone-distance)/zone)));
+    let dx=0,dy=0;
+    if(clientX<rect.left+zone)dx=-speed(clientX-rect.left);
+    else if(clientX>rect.right-zone)dx=speed(rect.right-clientX);
+    if(clientY<rect.top+zone)dy=-speed(clientY-rect.top);
+    else if(clientY>rect.bottom-zone)dy=speed(rect.bottom-clientY);
+    if(dx||dy)wrap.scrollBy({left:dx,top:dy,behavior:"auto"});
+  }
+
   function startDrag(e:React.PointerEvent,card:Card){
     if((e.target as HTMLElement).closest("button"))return;
     const rect=canvasRef.current?.getBoundingClientRect(); if(!rect)return;
@@ -861,7 +873,9 @@ export function LeadJourneyLab(){
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   }
   function dragMove(e:React.PointerEvent){
-    const drag=dragRef.current,rect=canvasRef.current?.getBoundingClientRect();if(!drag||!rect)return;
+    const drag=dragRef.current;if(!drag)return;
+    edgeAutoScroll(e.clientX,e.clientY);
+    const rect=canvasRef.current?.getBoundingClientRect();if(!rect)return;
     if(drag.group?.length){
       const dx=(e.clientX-(drag.startX||e.clientX))/zoom,dy=(e.clientY-(drag.startY||e.clientY))/zoom;
       if(Math.abs(dx)>2||Math.abs(dy)>2)drag.moved=true;
@@ -909,6 +923,7 @@ export function LeadJourneyLab(){
   function movePan(e:React.PointerEvent<HTMLDivElement>){
     const canvas=canvasRef.current;
     if(selectRef.current&&canvas){
+      edgeAutoScroll(e.clientX,e.clientY);
       const rect=canvas.getBoundingClientRect();
       const x=(e.clientX-rect.left)/zoom,y=(e.clientY-rect.top)/zoom;
       const sx=selectRef.current.startX,sy=selectRef.current.startY;
