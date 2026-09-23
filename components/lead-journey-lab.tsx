@@ -1312,10 +1312,12 @@ export function LeadJourneyLab(){
     {contextMenu&&<ContextMenu menu={contextMenu} card={contextMenu.cardId?cardById.get(contextMenu.cardId)||null:null}
       onClose={()=>setContextMenu(null)}
       onAdd={()=>{const parent=contextMenu.cardId;setAdding({x:parent?(cardById.get(parent)?.x||contextMenu.canvasX):contextMenu.canvasX,y:parent?(cardById.get(parent)?.y||contextMenu.canvasY)+220:contextMenu.canvasY,parentId:parent});setContextMenu(null)}}
+      onSequence={()=>{const parent=contextMenu.cardId;const c=parent?cardById.get(parent):null;setSequencePicker({x:c?(layoutDirection==="horizontal"?c.x+320:c.x):contextMenu.canvasX,y:c?(layoutDirection==="vertical"?c.y+220:c.y):contextMenu.canvasY,parentId:parent});setContextMenu(null)}}
       onEdit={()=>{const c=contextMenu.cardId?cardById.get(contextMenu.cardId):null;if(c?.libraryId)setEditingLibraryId(c.libraryId);setContextMenu(null)}}
       onDuplicate={()=>{const c=contextMenu.cardId?cardById.get(contextMenu.cardId):null;if(c)duplicateCard(c);setContextMenu(null)}}
       onAutoAlign={()=>{setContextMenu(null);autoAlign()}} onFit={()=>{setContextMenu(null);fitView()}}/>}
 
+    {sequencePicker&&<SequenceModal saving={saving} onClose={()=>setSequencePicker(null)} onInsert={insertSequence}/>}
     {addingJourney&&<JourneyModal saving={saving} board={board} onClose={()=>setAddingJourney(false)} onSave={createJourney}/>}
     {journeyManagerOpen&&<JourneyManagerModal board={board} activeJourneyId={activeJourneyId}
       onOpen={id=>{setActiveJourneyId(id);setJourneyManagerOpen(false)}}
@@ -1390,14 +1392,36 @@ function ConnectionInspector({connection,cards,onSave,onDisconnect}:any){
   </div>;
 }
 
-function ContextMenu({menu,card,onClose,onAdd,onEdit,onDuplicate,onAutoAlign,onFit}:any){
+function ContextMenu({menu,card,onClose,onAdd,onSequence,onEdit,onDuplicate,onAutoAlign,onFit}:any){
   return <div className="ljl-context" style={{left:menu.x,top:menu.y}} onClick={e=>e.stopPropagation()}>
     <button onClick={onAdd}><Plus size={14}/>{card?"Add next card":"Add card here"}</button>
+    <button onClick={onSequence}><Boxes size={14}/>{card?"Add sequence after this":"Add sequence here"}</button>
     {card&&<button onClick={onDuplicate}><Copy size={14}/> Duplicate card</button>}
     {card&&<button onClick={onEdit}><Edit3 size={14}/> Edit master card</button>}
     <hr/><button onClick={onAutoAlign}><WandSparkles size={14}/> Auto Align</button><button onClick={onFit}><Maximize2 size={14}/> Fit to screen</button>
     <button onClick={onClose}><X size={14}/> Close</button>
   </div>;
+}
+
+function SequenceModal({saving,onClose,onInsert}:any){
+  const [selectedId,setSelectedId]=useState(SEQUENCE_TEMPLATES[0]?.id||"");
+  const selected=SEQUENCE_TEMPLATES.find(t=>t.id===selectedId)||SEQUENCE_TEMPLATES[0];
+  return <div className="ljl-modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><div className="ljl-sequence-modal">
+    <header><div><span>SEQUENCE LIBRARY</span><h2>Add sequence</h2><p>Insert a reusable journey flow. Review the timing and decision cards after adding it.</p></div><button onClick={onClose}><X/></button></header>
+    <div className="ljl-sequence-layout">
+      <nav>{SEQUENCE_TEMPLATES.map(template=><button key={template.id} className={selectedId===template.id?"active":""} onClick={()=>setSelectedId(template.id)}>
+        <span className={"ljl-sequence-dot tone-"+template.tone}/><div><strong>{template.name}</strong><small>{template.steps.length} steps</small></div>
+      </button>)}</nav>
+      {selected&&<section className={"ljl-sequence-preview tone-"+selected.tone}>
+        <div className="ljl-sequence-preview-head"><span>SEQUENCE</span><h3>{selected.name}</h3><p>{selected.description}</p></div>
+        <div className="ljl-sequence-steps">{selected.steps.map((step,index)=><div key={index} className={"ljl-sequence-step cat-"+cssToken(step.category)}>
+          <b>{index+1}</b><div><strong>{step.name}</strong><span>{step.category} · {step.execution}{step.timing?" · "+step.timing:""}</span></div>
+        </div>)}</div>
+        <p className="ljl-sequence-note">Decision branches and exit conditions are inserted with the sequence. TBC timing stays marked for workshop discussion.</p>
+      </section>}
+    </div>
+    <footer><button className="secondary" onClick={onClose}>Cancel</button><button className="primary" disabled={saving||!selected} onClick={()=>selected&&onInsert(selected)}>{saving?"Adding…":"Insert Sequence"}</button></footer>
+  </div></div>;
 }
 
 function JourneyModal({saving,board,onClose,onSave}:any){
