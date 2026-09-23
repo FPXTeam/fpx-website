@@ -665,6 +665,7 @@ export function LeadJourneyLab(){
       setSelectionBox(box);
       const hit=visibleCards.filter(card=>card.x<box.x+box.w&&card.x+nodeW>box.x&&card.y<box.y+box.h&&card.y+nodeH>box.y).map(card=>card.id);
       setSelectedCardIds(prev=>selectRef.current?.additive?Array.from(new Set([...prev,...hit])):hit);
+      if(hit.length)setBulkMode(true);
       return;
     }
     const pan=panRef.current,wrap=wrapRef.current;if(!pan||!wrap)return;
@@ -841,6 +842,9 @@ export function LeadJourneyLab(){
           <button onClick={()=>setJourneyManagerOpen(true)}><Users size={14}/> Journeys</button>
           <button onClick={()=>setAddingJourney(true)}><Plus size={14}/> Journey</button>
           <button onClick={()=>setAdding({x:520,y:180})}><Plus size={14}/> Add Card</button>
+          <button className={layoutDirection==="horizontal"?"active":""} onClick={()=>{setLayoutDirection("horizontal");autoAlign(undefined,"horizontal")}} title="Arrange the current journey left to right">Horizontal</button>
+          <button className={layoutDirection==="vertical"?"active":""} onClick={()=>{setLayoutDirection("vertical");autoAlign(undefined,"vertical")}} title="Arrange the current journey top to bottom">Vertical</button>
+          <button className={selectMode?"active":""} onClick={()=>setSelectMode(v=>!v)} title="Box Select: drag across cards. Shift + drag also selects without changing modes."><CheckSquare size={14}/> Select</button>
           <button disabled={!layoutUndo.length} onClick={undoLayout} title="Undo last layout move"><Undo2 size={14}/></button>
           <button disabled={!layoutRedo.length} onClick={redoLayout} title="Redo layout move"><Redo2 size={14}/></button>
           <button onClick={()=>setToolsOpen(true)}><Filter size={14}/> Tools</button>
@@ -885,6 +889,7 @@ export function LeadJourneyLab(){
                 </g>;
               })}
             </svg>
+            {selectionBox&&<div className="ljl-selection-box" style={{left:selectionBox.x,top:selectionBox.y,width:selectionBox.w,height:selectionBox.h}}/>}
 
             {visibleCards.map(card=>{
               const def=libById.get(card.libraryId);
