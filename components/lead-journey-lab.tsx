@@ -2,7 +2,7 @@
 
 import { useMemo,useRef,useState } from "react";
 import {
-  ArrowRight,Edit3,GripVertical,Link2,Lock,LogOut,Plus,RefreshCw,Trash2,X
+  ArrowRight,Edit3,GripVertical,Link2,Lock,LogOut,Minus,Plus,RefreshCw,RotateCcw,Trash2,X
 } from "lucide-react";
 
 type Card={
@@ -29,8 +29,8 @@ const sourceNames=["Website","LinkedIn","Personal","Referral","Email"];
 const LOCAL_KEY="fpx-lead-journey-lab-local-v2";
 
 const fallbackCards:Card[]=[
-  {id:"local-lead",title:"Lead",type:"Touchpoint",notes:"",priority:"Now",status:"Open",owner:"",channels:[],order:1,createdBy:"",connectFrom:[],x:80,y:160},
-  {id:"local-capture",title:"Lead Capture",type:"Touchpoint",notes:"Where did the lead come from? Website, LinkedIn, personal, referral, email or another source.",priority:"Now",status:"Open",owner:"",channels:[],order:2,createdBy:"",connectFrom:["local-lead"],x:370,y:160},
+  {id:"local-lead",title:"Lead",type:"Touchpoint",notes:"",priority:"Now",status:"Open",owner:"",channels:[],order:1,createdBy:"",connectFrom:[],x:520,y:80},
+  {id:"local-capture",title:"Lead Capture",type:"Touchpoint",notes:"Where did the lead come from? Website, LinkedIn, personal, referral, email or another source.",priority:"Now",status:"Open",owner:"",channels:[],order:2,createdBy:"",connectFrom:["local-lead"],x:520,y:300},
 ];
 
 function norm(value:string){return value.trim().toLowerCase()}
@@ -41,8 +41,8 @@ function suggestedParent(card:Card,cards:Card[]){
   const exact=(name:string)=>cards.find(c=>norm(c.title)===norm(name));
   if(title==="lead capture")return exact("Lead")||null;
   if(sourceNames.map(norm).includes(title))return exact("Lead Capture")||null;
-  if(title==="what happens next?")return [...cards].filter(c=>c.id!==card.id&&c.x<card.x).sort((a,b)=>b.x-a.x)[0]||null;
-  return [...cards].filter(c=>c.id!==card.id&&c.x<card.x).sort((a,b)=>b.x-a.x)[0]||null;
+  if(title==="what happens next?")return [...cards].filter(c=>c.id!==card.id&&c.y<card.y).sort((a,b)=>b.y-a.y)[0]||null;
+  return [...cards].filter(c=>c.id!==card.id&&c.y<card.y).sort((a,b)=>b.y-a.y)[0]||null;
 }
 
 function nextSuggestions(card:Card):Suggestion[]{
@@ -76,13 +76,14 @@ export function LeadJourneyLab(){
   const [editing,setEditing]=useState<Card|null>(null);
   const [addingFrom,setAddingFrom]=useState<Card|null>(null);
   const [saving,setSaving]=useState(false);
+  const [zoom,setZoom]=useState(.85);
   const canvasRef=useRef<HTMLDivElement|null>(null);
   const dragRef=useRef<{id:string;dx:number;dy:number;moved:boolean}|null>(null);
 
   const cards=board.cards;
   const selected=cards.find(c=>c.id===selectedId)||null;
-  const width=Math.max(1400,...cards.map(c=>c.x+560));
-  const height=Math.max(720,...cards.map(c=>c.y+320));
+  const width=Math.max(1300,...cards.map(c=>c.x+420));
+  const height=Math.max(900,...cards.map(c=>c.y+360));
 
   function persistLocal(next:Card[]){
     setBoard({configured:false,cards:next});
@@ -167,8 +168,8 @@ export function LeadJourneyLab(){
       order:Date.now(),
       createdBy:"",
       connectFrom:input.connectFrom||[],
-      x:input.x??Math.max(40,(parent?.x??80)+300),
-      y:input.y??Math.max(40,parent?.y??260),
+      x:input.x??Math.max(40,parent?.x??520),
+      y:input.y??Math.max(40,(parent?.y??80)+220),
     };
 
     if(!board.configured){
@@ -216,13 +217,13 @@ export function LeadJourneyLab(){
         setSelectedId(updated.id);
       }else{
         const branchCount=nextSuggestions(selected).length;
-        const offset=(index-(branchCount-1)/2)*145;
+        const offset=(index-(branchCount-1)/2)*280;
         const card=await createCard({
           title:suggestion.title,
           type:suggestion.type,
           connectFrom:[selected.id],
-          x:selected.x+310,
-          y:Math.max(40,selected.y+offset),
+          x:Math.max(40,selected.x+offset),
+          y:selected.y+220,
         });
         setSelectedId(card.id);
       }
@@ -248,8 +249,8 @@ export function LeadJourneyLab(){
           type:values.type,
           notes:values.notes,
           connectFrom:values.parentId?[values.parentId]:[],
-          x:parent?parent.x+310:100,
-          y:parent?parent.y:320,
+          x:parent?parent.x:520,
+          y:parent?parent.y+220:320,
         });
         setSelectedId(created.id);
       }
@@ -263,7 +264,9 @@ export function LeadJourneyLab(){
     const rect=canvasRef.current?.getBoundingClientRect();
     if(!rect)return;
     setSelectedId(card.id);
-    dragRef.current={id:card.id,dx:e.clientX-rect.left-card.x,dy:e.clientY-rect.top-card.y,moved:false};
+    const px=(e.clientX-rect.left)/zoom;
+    const py=(e.clientY-rect.top)/zoom;
+    dragRef.current={id:card.id,dx:px-card.x,dy:py-card.y,moved:false};
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   }
 
@@ -271,8 +274,8 @@ export function LeadJourneyLab(){
     const drag=dragRef.current;
     const rect=canvasRef.current?.getBoundingClientRect();
     if(!drag||!rect)return;
-    const x=Math.max(20,Math.round(e.clientX-rect.left-drag.dx));
-    const y=Math.max(20,Math.round(e.clientY-rect.top-drag.dy));
+    const x=Math.max(20,Math.round((e.clientX-rect.left)/zoom-drag.dx));
+    const y=Math.max(20,Math.round((e.clientY-rect.top)/zoom-drag.dy));
     if(Math.abs(x-(cards.find(c=>c.id===drag.id)?.x||0))>2||Math.abs(y-(cards.find(c=>c.id===drag.id)?.y||0))>2)drag.moved=true;
     setBoard(prev=>({...prev,cards:prev.cards.map(c=>c.id===drag.id?{...c,x,y}:c)}));
   }
@@ -329,15 +332,22 @@ export function LeadJourneyLab(){
 
     <section className="ljl-workspace">
       <div className="ljl-canvas-wrap">
-        <div ref={canvasRef} className="ljl-canvas" style={{width,height}} onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}>
+        <div className="ljl-zoom-controls" aria-label="Canvas zoom controls">
+          <button onClick={()=>setZoom(z=>Math.max(.45,Math.round((z-.1)*100)/100))} aria-label="Zoom out"><Minus size={15}/></button>
+          <span>{Math.round(zoom*100)}%</span>
+          <button onClick={()=>setZoom(z=>Math.min(1.5,Math.round((z+.1)*100)/100))} aria-label="Zoom in"><Plus size={15}/></button>
+          <button onClick={()=>setZoom(.85)} aria-label="Reset zoom"><RotateCcw size={14}/></button>
+        </div>
+        <div className="ljl-canvas-scale" style={{width:width*zoom,height:height*zoom}}>
+        <div ref={canvasRef} className="ljl-canvas" style={{width,height,transform:`scale(${zoom})`}} onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}>
           <svg className="ljl-lines" width={width} height={height} aria-hidden="true">
             <defs><marker id="lab-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs>
             {cards.flatMap(card=>card.connectFrom.map(parentId=>{
               const parent=cards.find(c=>c.id===parentId);
               if(!parent)return null;
-              const x1=parent.x+250,y1=parent.y+64,x2=card.x,y2=card.y+64;
-              const bend=Math.max(70,(x2-x1)/2);
-              return <path key={parentId+"-"+card.id} d={`M ${x1} ${y1} C ${x1+bend} ${y1}, ${x2-bend} ${y2}, ${x2} ${y2}`} markerEnd="url(#lab-arrow)"/>;
+              const x1=parent.x+125,y1=parent.y+126,x2=card.x+125,y2=card.y;
+              const bend=Math.max(70,(y2-y1)/2);
+              return <path key={parentId+"-"+card.id} d={`M ${x1} ${y1} C ${x1} ${y1+bend}, ${x2} ${y2-bend}, ${x2} ${y2}`} markerEnd="url(#lab-arrow)"/>;
             }))}
           </svg>
 
@@ -353,6 +363,7 @@ export function LeadJourneyLab(){
               <button aria-label={"Edit "+card.title} onPointerDown={e=>e.stopPropagation()} onClick={()=>setEditing(card)}><Edit3 size={13}/></button>
             </div>
           </article>)}
+        </div>
         </div>
       </div>
 
