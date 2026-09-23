@@ -15,12 +15,12 @@ const priorities=["Now","Next","Later"];
 const statuses=["Open","Agreed","Parked"];
 const channels=["Website","Explore FPX","Contact Form","Email","LinkedIn","Sales","Referral","Other"];
 
-export function LeadJourneyLab({initiallyUnlocked,passwordConfigured}:{initiallyUnlocked:boolean,passwordConfigured:boolean}){
-  const [unlocked,setUnlocked]=useState(initiallyUnlocked);
+export function LeadJourneyLab(){
+  const [unlocked,setUnlocked]=useState(false);
   const [password,setPassword]=useState("");
   const [authError,setAuthError]=useState("");
   const [board,setBoard]=useState<BoardData>({configured:true,stages:[],cards:[]});
-  const [loading,setLoading]=useState(initiallyUnlocked);
+  const [loading,setLoading]=useState(false);
   const [error,setError]=useState("");
   const [dragCard,setDragCard]=useState<Card|null>(null);
   const [editing,setEditing]=useState<Card|null>(null);
@@ -30,11 +30,11 @@ export function LeadJourneyLab({initiallyUnlocked,passwordConfigured}:{initially
 
   async function api(method:string,body?:any){
     const response=await fetch("/api/internal/lead-journey-lab",{
-      method,headers:{"Content-Type":"application/json"},
+      method,headers:{"Content-Type":"application/json","X-Lead-Journey-Password":password},
       body:body?JSON.stringify(body):undefined,
     });
     const data=await response.json().catch(()=>({}));
-    if(response.status===401){setUnlocked(false);throw new Error("Session expired. Please unlock the Lab again.")}
+    if(response.status===401){setUnlocked(false);throw new Error("Incorrect password or session locked.")}
     if(!response.ok)throw new Error(data.error||"Request failed.");
     setBoard(data);
     return data;
@@ -49,18 +49,20 @@ export function LeadJourneyLab({initiallyUnlocked,passwordConfigured}:{initially
   useEffect(()=>{if(unlocked)load()},[unlocked]);
 
   async function unlock(e:React.FormEvent){
-    e.preventDefault();setAuthError("");
-    const response=await fetch("/api/internal/lead-journey-lab/auth",{
-      method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password})
+    e.preventDefault();setAuthError("");setLoading(true);
+    const response=await fetch("/api/internal/lead-journey-lab",{
+      method:"GET",headers:{"X-Lead-Journey-Password":password}
     });
     const data=await response.json().catch(()=>({}));
-    if(!response.ok){setAuthError(data.error||"Unable to unlock.");return}
-    setPassword("");setUnlocked(true);
+    setLoading(false);
+    if(!response.ok){setAuthError(data.error||"Incorrect password.");return}
+    setBoard(data);setUnlocked(true);
   }
 
-  async function logout(){
-    await fetch("/api/internal/lead-journey-lab/auth",{method:"DELETE"});
-    setUnlocked(false);setBoard({configured:true,stages:[],cards:[]});
+  function logout(){
+    setPassword("");
+    setUnlocked(false);
+    setBoard({configured:true,stages:[],cards:[]});
   }
 
   const stages=useMemo(()=>board.stages.filter(s=>s.active).sort((a,b)=>a.order-b.order),[board.stages]);
@@ -99,12 +101,11 @@ export function LeadJourneyLab({initiallyUnlocked,passwordConfigured}:{initially
         <p className="ljl-kicker">PRIVATE WORKSPACE</p>
         <h1>Lead Journey Lab</h1>
         <p>Internal FPX workspace for mapping, challenging and improving the lead journey.</p>
-        {!passwordConfigured?<div className="ljl-config-warning"><strong>Password not configured.</strong><span>Add <code>LEAD_JOURNEY_LAB_PASSWORD</code> to the Vercel Preview environment for this branch.</span></div>:
         <form onSubmit={unlock}>
           <label>Workspace password<input autoFocus type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Enter password"/></label>
           {authError&&<small className="ljl-error">{authError}</small>}
-          <button type="submit">Unlock Lab <ArrowRight size={16}/></button>
-        </form>}
+          <button type="submit" disabled={loading}>{loading?"Checking…":<>Unlock Lab <ArrowRight size={16}/></>}</button>
+        </form>
         <small>Private · Noindex · FPX internal use only</small>
       </div>
     </main>;
