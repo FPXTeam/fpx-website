@@ -225,7 +225,23 @@ export function LeadJourneyLab(){
     const obstacles=visibleCards.filter(c=>c.id!==from.id&&c.id!==to.id);
     const hitsH=(y:number,a:number,b:number)=>{const lo=Math.min(a,b),hi=Math.max(a,b);return obstacles.some(c=>y>c.y-14&&y<c.y+nodeH+14&&hi>c.x-14&&lo<c.x+nodeW+14)};
     const hitsV=(x:number,a:number,b:number)=>{const lo=Math.min(a,b),hi=Math.max(a,b);return obstacles.some(c=>x>c.x-14&&x<c.x+nodeW+14&&hi>c.y-14&&lo<c.y+nodeH+14)};
+    const outTargets=outs.map(c=>cardById.get(c.toId)).filter(Boolean) as Card[];
+    const inSources=ins.map(c=>cardById.get(c.fromId)).filter(Boolean) as Card[];
     if(layoutDirection==="horizontal"){
+      const outSameColumn=outTargets.length>1&&Math.max(...outTargets.map(c=>c.x))-Math.min(...outTargets.map(c=>c.x))<90&&outTargets.every(c=>c.x>from.x);
+      if(outSameColumn){
+        const busX=(from.x+nodeW+Math.min(...outTargets.map(c=>c.x)))/2;
+        const x1=from.x+nodeW,y1=from.y+nodeH/2,x2=to.x,y2=to.y+nodeH/2;
+        const d="M "+x1+" "+y1+" L "+busX+" "+y1+" L "+busX+" "+y2+" L "+x2+" "+y2;
+        return {d,mx:busX,my:y2};
+      }
+      const inSameColumn=inSources.length>1&&Math.max(...inSources.map(c=>c.x))-Math.min(...inSources.map(c=>c.x))<90&&inSources.every(c=>c.x<to.x);
+      if(inSameColumn){
+        const busX=(Math.max(...inSources.map(c=>c.x+nodeW))+to.x)/2;
+        const x1=from.x+nodeW,y1=from.y+nodeH/2,x2=to.x,y2=to.y+nodeH/2;
+        const d="M "+x1+" "+y1+" L "+busX+" "+y1+" L "+busX+" "+y2+" L "+x2+" "+y2;
+        return {d,mx:busX,my:y2};
+      }
       const forward=to.x>=from.x;
       const x1=forward?from.x+nodeW:from.x,x2=forward?to.x:to.x+nodeW;
       const y1=from.y+nodeH*((oi+1)/(outs.length+1)),y2=to.y+nodeH*((ii+1)/(ins.length+1));
@@ -248,6 +264,20 @@ export function LeadJourneyLab(){
       const sx=x1+(forward?36:-36),tx=x2+(forward?-36:36);
       const d="M "+x1+" "+y1+" L "+sx+" "+y1+" L "+sx+" "+laneY+" L "+tx+" "+laneY+" L "+tx+" "+y2+" L "+x2+" "+y2;
       return {d,mx:(sx+tx)/2,my:laneY};
+    }
+    const outSameRow=outTargets.length>1&&Math.max(...outTargets.map(c=>c.y))-Math.min(...outTargets.map(c=>c.y))<90&&outTargets.every(c=>c.y>from.y);
+    if(outSameRow){
+      const busY=(from.y+nodeH+Math.min(...outTargets.map(c=>c.y)))/2;
+      const x1=from.x+nodeW/2,y1=from.y+nodeH,x2=to.x+nodeW/2,y2=to.y;
+      const d="M "+x1+" "+y1+" L "+x1+" "+busY+" L "+x2+" "+busY+" L "+x2+" "+y2;
+      return {d,mx:x2,my:busY};
+    }
+    const inSameRow=inSources.length>1&&Math.max(...inSources.map(c=>c.y))-Math.min(...inSources.map(c=>c.y))<90&&inSources.every(c=>c.y<to.y);
+    if(inSameRow){
+      const busY=(Math.max(...inSources.map(c=>c.y+nodeH))+to.y)/2;
+      const x1=from.x+nodeW/2,y1=from.y+nodeH,x2=to.x+nodeW/2,y2=to.y;
+      const d="M "+x1+" "+y1+" L "+x1+" "+busY+" L "+x2+" "+busY+" L "+x2+" "+y2;
+      return {d,mx:x2,my:busY};
     }
     const forward=to.y>=from.y;
     const y1=forward?from.y+nodeH:from.y,y2=forward?to.y:to.y+nodeH;
