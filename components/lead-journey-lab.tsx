@@ -480,9 +480,45 @@ export function LeadJourneyLab(){
       body:body?JSON.stringify(body):undefined
     });
     const data=await response.json().catch(()=>({}));
-    if(!response.ok)throw new Error(data.error||"Request failed.");
+    if(!response.ok){
+      const err:any=new Error(data.error||"Request failed.");
+      Object.assign(err,data,{status:response.status});
+      throw err;
+    }
     return data;
   }
+
+  function currentViewName(){
+    if(activeJourneyId!=="all")return board.journeys.find(j=>j.id===activeJourneyId)?.name||"Journey";
+    if(sourceFocus==="we-search")return "We Search";
+    if(sourceFocus==="they-find-us")return "They Find Us";
+    if(sourceFocus==="word-of-mouth")return "Word of Mouth";
+    return "Main View";
+  }
+
+  useEffect(()=>{
+    if(sessionIdRef.current)return;
+    try{
+      const existing=sessionStorage.getItem("fpx-ljl-session");
+      sessionIdRef.current=existing||("ljl-"+Date.now()+"-"+Math.random().toString(36).slice(2,9));
+      if(!existing)sessionStorage.setItem("fpx-ljl-session",sessionIdRef.current);
+    }catch{sessionIdRef.current="ljl-"+Date.now()}
+  },[]);
+
+  useEffect(()=>{
+    if(!unlocked||!displayName||!currentJourneyId)return;
+    let cancelled=false;
+    const send=async()=>{
+      try{
+        const data=await rawRequest("","POST",{action:"heartbeatPresence",journeyId:currentJourneyId,viewName:currentViewName(),
+          sourceFocus,detailMode:detailMode==="deep"?"In-Depth":"Simple",selectedCard:cardById.get(selectedCardId||"")?.title||"",sessionId:sessionIdRef.current});
+        if(!cancelled)setPresence(data.presence||[]);
+      }catch{}
+    };
+    send();
+    const timer=window.setInterval(send,30000);
+    return()=>{cancelled=true;window.clearInterval(timer)};
+  },[unlocked,displayName,currentJourneyId,activeJourneyId,sourceFocus,detailMode,selectedCardId]);
 
   function currentLayout(cards=baseVisibleCards){
     return cards.map(card=>({id:card.id,x:card.x,y:card.y}));
