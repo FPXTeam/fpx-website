@@ -1480,7 +1480,7 @@ export function LeadJourneyLab(){
             })}
           </div>
         </div>
-        {miniMap&&<MiniMap cards={visibleCards} width={width} height={height}/>}
+        {miniMap&&<MiniMap cards={displayVisibleCards} width={width} height={height}/>}
       </div>
 
       {!presentationMode&&<aside className="ljl-inspector">
