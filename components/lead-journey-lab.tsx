@@ -1456,7 +1456,10 @@ export function LeadJourneyLab(){
       assignedFilter={assignedFilter} setAssignedFilter={setAssignedFilter} statusFilter={statusFilter} setStatusFilter={setStatusFilter}
       bulkMode={bulkMode} setBulkMode={setBulkMode} onFit={fitView} onFitSelected={fitSelected}
       onExportSvg={exportSvg} onPrint={()=>window.print()} onChangeLog={loadChangeLog}
+      onSource={()=>{setToolsOpen(false);setJourneySourceOpen(true)}}
       onPresentation={()=>{setToolsOpen(false);setPresentationMode(true)}} onClose={()=>setToolsOpen(false)}/>}
+    {journeySourceOpen&&currentJourneyId&&<JourneySourceModal journeyId={currentJourneyId} focusName={currentViewName()} rawRequest={rawRequest}
+      onBoard={(data:any)=>setBoard(data)} onClose={()=>setJourneySourceOpen(false)}/>}
     {historyOpen&&<VersionHistoryModal snapshots={snapshots} onSave={saveSnapshot} onRestore={restoreSnapshot}
       onDelete={removeSnapshot} onClose={()=>setHistoryOpen(false)}/>}
     {changeLogOpen&&<ChangeLogModal changes={changeLog} onClose={()=>setChangeLogOpen(false)}/>}
@@ -1689,7 +1692,7 @@ function JourneyManagerModal({board,activeJourneyId,onOpen,onNew,onDuplicate,onA
   </div></div>;
 }
 
-function WorkspaceToolsModal({board,miniMap,setMiniMap,hideAgreed,setHideAgreed,toolFilter,setToolFilter,assignedFilter,setAssignedFilter,statusFilter,setStatusFilter,bulkMode,setBulkMode,onFit,onFitSelected,onExportSvg,onPrint,onChangeLog,onPresentation,onClose}:any){
+function WorkspaceToolsModal({board,miniMap,setMiniMap,hideAgreed,setHideAgreed,toolFilter,setToolFilter,assignedFilter,setAssignedFilter,statusFilter,setStatusFilter,bulkMode,setBulkMode,onFit,onFitSelected,onExportSvg,onPrint,onChangeLog,onSource,onPresentation,onClose}:any){
   const tools=["All",...Array.from(new Set(board.library.map((d:any)=>d.tool||"None"))).sort()] as string[];
   const people=["All",...Array.from(new Set(board.library.map((d:any)=>d.assignedPerson||"Unassigned"))).sort()] as string[];
   return <div className="ljl-modal-backdrop"><div className="ljl-modal">
@@ -1701,7 +1704,7 @@ function WorkspaceToolsModal({board,miniMap,setMiniMap,hideAgreed,setHideAgreed,
       <label className="ljl-checkline"><input type="checkbox" checked={hideAgreed} onChange={e=>setHideAgreed(e.target.checked)}/> Hide Agreed cards</label>
       <label className="ljl-checkline"><input type="checkbox" checked={miniMap} onChange={e=>setMiniMap(e.target.checked)}/> Show mini-map</label>
       <label className="ljl-checkline"><input type="checkbox" checked={bulkMode} onChange={e=>setBulkMode(e.target.checked)}/> Multi-select cards</label>
-      <div className="ljl-tool-grid"><button onClick={onFit}><Maximize2 size={13}/> Fit All</button><button onClick={onFitSelected}><Maximize2 size={13}/> Fit Selected</button><button onClick={onExportSvg}><Download size={13}/> Export SVG</button><button onClick={onPrint}><FileDown size={13}/> Print / PDF</button><button onClick={onChangeLog}><History size={13}/> Change Log</button><button onClick={onPresentation}><Presentation size={13}/> Presentation Mode</button></div>
+      <div className="ljl-tool-grid"><button onClick={onFit}><Maximize2 size={13}/> Fit All</button><button onClick={onFitSelected}><Maximize2 size={13}/> Fit Selected</button><button onClick={onSource}><Code2 size={13}/> Copy for AI / Journey Source</button><button onClick={onExportSvg}><Download size={13}/> Export SVG</button><button onClick={onPrint}><FileDown size={13}/> Print / PDF</button><button onClick={onChangeLog}><History size={13}/> Change Log</button><button onClick={onPresentation}><Presentation size={13}/> Presentation Mode</button></div>
     </div>
   </div></div>;
 }
