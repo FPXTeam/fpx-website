@@ -1254,49 +1254,66 @@ export function LeadJourneyLab(){
     <div className="ljl-mark">FPX <span>INTERNAL</span></div><div className="ljl-lock-icon"><Lock size={22}/></div>
     <h1>Lead Journey Lab</h1>
     <form onSubmit={unlock}>
-      <label>Your name<input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Gabriel / George / Gabriela"/></label>
+      <label>Your name<select value={displayName} onChange={e=>setDisplayName(e.target.value)}><option value="">Choose your name</option><option>Gabriel</option><option>Gabriela</option><option>George</option></select></label>
       <label>Password<input autoFocus type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Enter password"/></label>
       {authError&&<small className="ljl-error">{authError}</small>}
       <button disabled={loading}>{loading?"Checking…":<>Open <ArrowRight size={16}/></>}</button></form>
   </div></main>;
 
-  return <main className={"ljl "+(presentationMode?"is-presentation":"")} onClick={()=>setContextMenu(null)}>
-    <header className="ljl-topbar">
-      <div className="ljl-top-left"><div className="ljl-mark">FPX <span>INTERNAL</span></div><strong>Lead Journey Lab</strong></div>
-      <div className="ljl-view-switcher">
-        <button className={activeJourneyId==="all"?"active":""} onClick={()=>{setActiveJourneyId("all");setSourceFocus("all");setSelectedCardId(null);setSelectedConnectionId(null)}}><Layers size={14}/> Main View</button>
-        <select value={activeJourneyId==="all"?"":activeJourneyId} onChange={e=>{setActiveJourneyId(e.target.value||"all");setSourceFocus("all");setSelectedCardId(null);setSelectedConnectionId(null)}}>
-          <option value="">Choose Sub View</option>
-          {journeyGroups.map(group=><optgroup key={group} label={group}>{subJourneys.filter(j=>(j.group||"Other")===group).map(j=><option key={j.id} value={j.id}>{j.name}</option>)}</optgroup>)}
-        </select>
-        {isMainView&&<select className="ljl-source-focus" value={sourceFocus} onChange={e=>{setSourceFocus(e.target.value as any);setSelectedCardId(null);setSelectedConnectionId(null)}}>
-          <option value="all">All Sources</option>
-          <option value="we-search">We Search</option>
-          <option value="they-find-us">They Find Us</option>
-          <option value="word-of-mouth">Word of Mouth</option>
-        </select>}
-        <span className="ljl-progress">{completion.agreed}/{completion.total} agreed{completion.questions?" · "+completion.questions+" questions":""}</span>
+  return <main className={"ljl "+(presentationMode?"is-presentation":"")} onClick={()=>{setContextMenu(null);setViewMenuOpen(false);setPresencePerson(null)}}>
+    <header className="ljl-topbar" onClick={e=>e.stopPropagation()}>
+      <div className="ljl-top-row">
+        <div className="ljl-top-left"><div className="ljl-mark">FPX <span>INTERNAL</span></div><strong>Lead Journey Lab</strong></div>
+        <div className="ljl-view-switcher">
+          <select className="ljl-workspace-select" value={workspaceViewValue} onChange={e=>changeWorkspaceView(e.target.value)}>
+            <option value="main">Main View</option>
+            <optgroup label="Source Views">
+              <option value="source:we-search">We Search</option>
+              <option value="source:they-find-us">They Find Us</option>
+              <option value="source:word-of-mouth">Word of Mouth</option>
+            </optgroup>
+            {journeyGroups.map(group=><optgroup key={group} label={group}>{subJourneys.filter(j=>(j.group||"Other")===group).map(j=><option key={j.id} value={j.id}>{j.name}</option>)}</optgroup>)}
+          </select>
+          <span className="ljl-progress">{completion.agreed}/{completion.total} agreed{completion.questions?" · "+completion.questions+" questions":""}</span>
+        </div>
+        <div className="ljl-presence">
+          {presencePeople.map(({name,item})=><button key={name} className={"ljl-presence-chip "+presenceState(item)} onClick={()=>setPresencePerson(p=>p===name?null:name)}>
+            <i/>{name}
+          </button>)}
+        </div>
+        <div className="ljl-top-utilities">
+          <button onClick={refresh} disabled={loading} title="Refresh shared journey"><RefreshCw size={14}/></button>
+          <button onClick={lock}><LogOut size={14}/> Logout</button>
+        </div>
       </div>
-      <div className="ljl-top-actions">
+      <div className="ljl-command-row">
         {presentationMode?<>
           <button onClick={()=>setPresentationMode(false)}><EyeOff size={14}/> Exit Presentation</button>
           <button onClick={fitView}><Maximize2 size={14}/> Fit</button>
         </>:<>
           <button onClick={()=>setLibraryOpen(true)}><BookOpen size={14}/> Card Library</button>
           <button onClick={()=>setJourneyManagerOpen(true)}><Users size={14}/> Journeys</button>
-          <button onClick={()=>setAddingJourney(true)}><Plus size={14}/> Journey</button>
-          <button onClick={()=>setAdding({x:520,y:180})}><Plus size={14}/> Add Card</button>
           <button onClick={()=>setSequencePicker({x:520,y:180})}><Boxes size={14}/> Sequence</button>
-          <button className={layoutDirection==="horizontal"?"active":""} onClick={()=>{setLayoutDirection("horizontal");autoAlign(undefined,"horizontal")}} title="Arrange the current journey left to right">Horizontal</button>
-          <button className={layoutDirection==="vertical"?"active":""} onClick={()=>{setLayoutDirection("vertical");autoAlign(undefined,"vertical")}} title="Arrange the current journey top to bottom">Vertical</button>
-          <button className={selectMode?"active":""} onClick={()=>setSelectMode(v=>!v)} title="Box Select: drag across cards. Shift + drag also selects without changing modes."><CheckSquare size={14}/> Select</button>
-          <button disabled={!layoutUndo.length} onClick={undoLayout} title="Undo last layout move"><Undo2 size={14}/></button>
-          <button disabled={!layoutRedo.length} onClick={redoLayout} title="Redo layout move"><Redo2 size={14}/></button>
+          <span className="ljl-command-divider"/>
+          <button className={!selectMode?"active":""} onClick={()=>{setSelectMode(false);setBulkMode(false);setSelectedCardIds([])}}><MousePointer2 size={14}/> Pointer</button>
+          <button className={selectMode?"active":""} onClick={()=>setSelectMode(true)} title="Box-select cards. Shift + drag also works from Pointer mode."><CheckSquare size={14}/> Select</button>
+          <div className="ljl-view-control">
+            <button className={viewMenuOpen?"active":""} onClick={()=>setViewMenuOpen(v=>!v)}><Eye size={14}/> View</button>
+            {viewMenuOpen&&<div className="ljl-view-menu">
+              <span>DETAIL</span>
+              <button className={detailMode==="simple"?"active":""} onClick={()=>{setDetailMode("simple");setViewMenuOpen(false)}}>Simple</button>
+              <button className={detailMode==="deep"?"active":""} onClick={()=>{setDetailMode("deep");setViewMenuOpen(false)}}>In-Depth</button>
+              <hr/><span>LAYOUT</span>
+              <button className={layoutDirection==="horizontal"?"active":""} onClick={()=>{setLayoutDirection("horizontal");setViewMenuOpen(false);autoAlign(undefined,"horizontal")}}>Horizontal</button>
+              <button className={layoutDirection==="vertical"?"active":""} onClick={()=>{setLayoutDirection("vertical");setViewMenuOpen(false);autoAlign(undefined,"vertical")}}>Vertical</button>
+            </div>}
+          </div>
+          <button disabled={!layoutUndo.length} onClick={undoLayout} title="Undo layout"><Undo2 size={14}/></button>
+          <button disabled={!layoutRedo.length} onClick={redoLayout} title="Redo layout"><Redo2 size={14}/></button>
+          <span className="ljl-command-divider"/>
           <button onClick={()=>setToolsOpen(true)}><Filter size={14}/> Tools</button>
           <button onClick={loadSnapshots}><History size={14}/> History</button>
           <button onClick={()=>setPresentationMode(true)}><Presentation size={14}/> Present</button>
-          <button onClick={refresh} disabled={loading}><RefreshCw size={14}/></button>
-          <button onClick={lock}><LogOut size={14}/></button>
         </>}
       </div>
     </header>
