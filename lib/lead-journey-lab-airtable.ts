@@ -355,6 +355,7 @@ const SOURCE_CATEGORIES=["Source","Capture","Communication","CRM","Decision","Nu
 const SOURCE_EXECUTION=["Automated","Can be automated","Manual"];
 const SOURCE_WORKSHOP=["Draft","Needs Discussion","Agreed"];
 const SOURCE_TOP_KEYS=new Set(["schema","journey","cards","connections","removeCards","removeConnections"]);
+const SOURCE_JOURNEY_KEYS=new Set(["id","name"]);
 const SOURCE_CARD_KEYS=new Set(["id","title","type","execution","owner","tool","use","action","timing","leadStatus","workshopStatus","workshopAnswer","notes","sequence"]);
 const SOURCE_SEQUENCE_KEYS=new Set(["id","name","step"]);
 const SOURCE_CONNECTION_KEYS=new Set(["id","from","to","label"]);
@@ -422,6 +423,8 @@ export function validateJourneySource(input:any,current:any,{replace=false}:any=
   onlyKeys(input,SOURCE_TOP_KEYS,"Journey Source");
   if(input.schema!==JOURNEY_SOURCE_SCHEMA)throw new Error('Journey Source schema must be "'+JOURNEY_SOURCE_SCHEMA+'".');
   if(!input.journey||typeof input.journey!=="object")throw new Error("Journey Source is missing journey metadata.");
+  onlyKeys(input.journey,SOURCE_JOURNEY_KEYS,"Journey metadata");
+  if(current?.journey?.id&&input.journey.id!==current.journey.id)throw new Error("This Journey Source belongs to a different FPX journey. Open the correct journey and copy it again.");
   if(!Array.isArray(input.cards)||!Array.isArray(input.connections))throw new Error("Journey Source must contain complete cards and connections arrays.");
   if(input.cards.length>350||input.connections.length>800)throw new Error("Journey Source is too large for a safe import.");
   const cards=input.cards.map((raw:any,index:number)=>{
