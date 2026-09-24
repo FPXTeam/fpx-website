@@ -220,6 +220,8 @@ export function LeadJourneyLab(){
   const [addingJourney,setAddingJourney]=useState(false);
   const [contextMenu,setContextMenu]=useState<{x:number;y:number;canvasX:number;canvasY:number;cardId?:string}|null>(null);
   const [sequencePicker,setSequencePicker]=useState<{x:number;y:number;parentId?:string}|null>(null);
+  const [sequenceTemplates,setSequenceTemplates]=useState<SequenceTemplate[]>(SEQUENCE_TEMPLATES);
+  const [journeyOverviewOpen,setJourneyOverviewOpen]=useState(false);
   const [sourceFocus,setSourceFocus]=useState<"all"|"we-search"|"they-find-us"|"word-of-mouth">("all");
   const [detailMode,setDetailMode]=useState<"simple"|"deep">("simple");
   const [collapsedSequences,setCollapsedSequences]=useState<string[]>([]);
@@ -495,6 +497,19 @@ export function LeadJourneyLab(){
     if(sourceFocus==="word-of-mouth")return "Word of Mouth";
     return "Main View";
   }
+
+  async function loadSequenceTemplates(){
+    if(!board.configured){setSequenceTemplates(SEQUENCE_TEMPLATES);return}
+    try{
+      const data=await rawRequest("?section=sequences");
+      const overrides=new Map((data.sequences||[]).filter((x:any)=>x.active!==false).map((x:any)=>[x.id,x]));
+      const merged:any[]=SEQUENCE_TEMPLATES.map(template=>overrides.has(template.id)?{...template,...overrides.get(template.id)}:template);
+      for(const custom of overrides.values())if(!merged.some((x:any)=>x.id===(custom as any).id))merged.push(custom);
+      setSequenceTemplates(merged as SequenceTemplate[]);
+    }catch(e){setError(e instanceof Error?e.message:"Unable to load sequence library.")}
+  }
+
+  useEffect(()=>{if(sequencePicker)loadSequenceTemplates()},[Boolean(sequencePicker),board.configured]);
 
   useEffect(()=>{
     if(sessionIdRef.current)return;
