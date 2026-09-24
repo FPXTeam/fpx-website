@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { passwordMatches } from "../../../../lib/lead-journey-lab-auth";
 import {
-  applyGlobalCardsToJourney,bulkAssignCards,bulkDeleteCards,bulkMoveCards,createConnection,createJourney,createJourneyCard,
+  applyGlobalCardsToJourney,applyJourneySource,bulkAssignCards,bulkDeleteCards,bulkMoveCards,createConnection,createJourney,createJourneyCard,
   createLibraryCard,createSnapshot,deleteConnection,deleteJourney,deleteJourneyCard,deleteSnapshot,duplicateJourney,
-  getJourneyLabData,listChangeLog,listSnapshots,logChange,mergeIntoExistingJourney,restoreSnapshotLayout,syncGlobalCard,
+  getJourneyLabData,getJourneySource,heartbeatPresence,listChangeLog,listJourneyVersions,listPresence,listSnapshots,logChange,
+  mergeIntoExistingJourney,previewJourneySource,restoreJourneyVersion,restoreSnapshotLayout,syncGlobalCard,
   updateConnection,updateJourney,updateJourneyCard,updateLibraryCard
 } from "../../../../lib/lead-journey-lab-airtable";
 
@@ -21,6 +22,16 @@ export async function GET(request:Request){
   try{
     if(section==="snapshots")return NextResponse.json({snapshots:await listSnapshots()});
     if(section==="changes")return NextResponse.json({changes:await listChangeLog()});
+    if(section==="presence")return NextResponse.json({presence:await listPresence()});
+    if(section==="versions"){
+      const journeyId=url.searchParams.get("journeyId")||"";
+      return NextResponse.json({versions:journeyId?await listJourneyVersions(journeyId):[]});
+    }
+    if(section==="source"){
+      const journeyId=url.searchParams.get("journeyId")||"";
+      if(!journeyId)return NextResponse.json({error:"Journey ID is required."},{status:400});
+      return NextResponse.json(await getJourneySource(journeyId));
+    }
     return NextResponse.json(await getJourneyLabData());
   }catch(error){return fail(error,"Unable to load Lead Journey Lab.")}
 }
@@ -30,6 +41,21 @@ export async function POST(request:Request){
   const body=await request.json().catch(()=>({}));
   try{
     switch(body.action){
+      case "heartbeatPresence":{
+        return NextResponse.json({presence:await heartbeatPresence({...body,person:user(request)})});
+      }
+      case "previewJourneySource":{
+        const result=await previewJourneySource(String(body.journeyId),body.source);
+        return NextResponse.json(result);
+      }
+      case "applyJourneySource":{
+        const result=await applyJourneySource({...body,createdBy:user(request)});
+        return NextResponse.json(result);
+      }
+      case "restoreJourneyVersion":{
+        const result=await restoreJourneyVersion({...body,createdBy:user(request)});
+        return NextResponse.json(result);
+      }
       case "createJourney":{
         const made=await createJourney(body);
         const id=made.records?.[0]?.id;
@@ -77,7 +103,10 @@ export async function POST(request:Request){
       default:return NextResponse.json({error:"Unknown create action."},{status:400});
     }
     return NextResponse.json(await getJourneyLabData());
-  }catch(error){return fail(error,"Unable to create item.")}
+  }catch(error:any){
+    if(error?.code==="JOURNEY_CONFLICT")return NextResponse.json({error:error.message,code:error.code,currentRevision:error.currentRevision,latestVersion:error.latestVersion},{status:409});
+    return fail(error,"Unable to create item.");
+  }
 }
 
 export async function PATCH(request:Request){
