@@ -380,9 +380,9 @@ function plain(value:any,max=4000){return typeof value==="string"?value.slice(0,
 function makeLocalLibraryFromSource(card:any,journeyId:string,current?:any){
   const existing=current||{};
   let execution=SOURCE_EXECUTION.includes(card.execution)?card.execution:(existing.execution||"Can be automated");
-  if(!current&&execution==="Automated")execution="Can be automated";
+  if((!current||existing.execution!=="Automated")&&execution==="Automated")execution="Can be automated";
   let workshop=SOURCE_WORKSHOP.includes(card.workshopStatus)?card.workshopStatus:(existing.workshopStatus||"Draft");
-  if(!current&&workshop==="Agreed")workshop="Draft";
+  if((!current||existing.workshopStatus!=="Agreed")&&workshop==="Agreed")workshop=current?.workshopStatus||"Draft";
   return {
     name:plain(card.title,255)||"Untitled card",category:SOURCE_CATEGORIES.includes(card.type)?card.type:(existing.category||"Action"),
     tool:plain(card.tool,100)||existing.tool||"None",use:plain(card.use)||existing.use||"",action:plain(card.action,255)||existing.action||"",
