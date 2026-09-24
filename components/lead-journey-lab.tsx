@@ -316,6 +316,27 @@ export function LeadJourneyLab(){
     if(!card.sequenceId||!collapsedMap.has(card.sequenceId))return true;
     return collapsedMap.get(card.sequenceId)!.cards[0]?.id===card.id;
   }),[filteredCards,collapsedMap]);
+
+  // Simple View expands a sequence as a temporary vertical stack directly under its
+  // collapsed anchor. This is display-only: the saved canvas coordinates are untouched.
+  const expandedSimpleMap=useMemo(()=>new Map(sequenceGroups.filter(group=>
+    detailMode==="simple"&&expandedSimpleSequences.includes(group.id)
+  ).map(group=>[group.id,group] as const)),[sequenceGroups,detailMode,expandedSimpleSequences]);
+  const displayPositionById=useMemo(()=>{
+    const map=new Map<string,{x:number;y:number}>();
+    expandedSimpleMap.forEach(group=>{
+      const anchor=group.cards[0];if(!anchor)return;
+      const gap=34;
+      group.cards.forEach((card,index)=>map.set(card.id,{x:anchor.x,y:anchor.y+index*(nodeH+gap)}));
+    });
+    return map;
+  },[expandedSimpleMap]);
+  const displayCardById=useMemo(()=>new Map(board.cards.map(card=>{
+    const pos=displayPositionById.get(card.id);
+    return [card.id,pos?{...card,...pos}:card] as const;
+  })),[board.cards,displayPositionById]);
+  const displayVisibleCards=useMemo(()=>visibleCards.map(card=>displayCardById.get(card.id)||card),[visibleCards,displayCardById]);
+
   const visibleCardIds=useMemo(()=>new Set(visibleCards.map(c=>c.id)),[visibleCards]);
   const filteredCardIds=useMemo(()=>new Set(filteredCards.map(c=>c.id)),[filteredCards]);
   const overviewCardIds=useMemo(()=>new Set(baseVisibleCards.map(c=>c.id)),[baseVisibleCards]);
@@ -364,19 +385,28 @@ export function LeadJourneyLab(){
   const selectedCard=selectedCardId?cardById.get(selectedCardId)||null:null;
   const selectedConnection=selectedConnectionId?board.connections.find(c=>c.id===selectedConnectionId)||null:null;
   const selectedDef=selectedCard?libById.get(selectedCard.libraryId)||null:null;
-  const width=Math.max(1800,...visibleCards.map(c=>c.x+1050));
-  const height=Math.max(1300,...visibleCards.map(c=>c.y+900));
+  const width=Math.max(1800,...displayVisibleCards.map(c=>c.x+1050));
+  const height=Math.max(1300,...displayVisibleCards.map(c=>c.y+900));
 
   function routedConnection(connection:Connection,index:number){
-    const from=cardById.get(connection.fromId),to=cardById.get(connection.toId);
+    const from=displayCardById.get(connection.fromId),to=displayCardById.get(connection.toId);
     if(!from||!to)return null;
     const outs=outgoingMap.get(from.id)||[connection],ins=incomingMap.get(to.id)||[connection];
     const oi=Math.max(0,outs.findIndex(c=>c.id===connection.id)),ii=Math.max(0,ins.findIndex(c=>c.id===connection.id));
-    const obstacles=visibleCards.filter(c=>c.id!==from.id&&c.id!==to.id);
+    const obstacles=displayVisibleCards.filter(c=>c.id!==from.id&&c.id!==to.id);
     const hitsH=(y:number,a:number,b:number)=>{const lo=Math.min(a,b),hi=Math.max(a,b);return obstacles.some(c=>y>c.y-14&&y<c.y+nodeH+14&&hi>c.x-14&&lo<c.x+nodeW+14)};
     const hitsV=(x:number,a:number,b:number)=>{const lo=Math.min(a,b),hi=Math.max(a,b);return obstacles.some(c=>x>c.x-14&&x<c.x+nodeW+14&&hi>c.y-14&&lo<c.y+nodeH+14)};
-    const outTargets=outs.map(c=>cardById.get(c.toId)).filter(Boolean) as Card[];
-    const inSources=ins.map(c=>cardById.get(c.fromId)).filter(Boolean) as Card[];
+    const outTargets=outs.map(c=>displayCardById.get(c.toId)).filter(Boolean) as Card[];
+    const inSources=ins.map(c=>displayCardById.get(c.fromId)).filter(Boolean) as Card[];
+
+    const expandedSequenceId=from.sequenceId&&from.sequenceId===to.sequenceId&&expandedSimpleMap.has(from.sequenceId)?from.sequenceId:"";
+    if(expandedSequenceId){
+      const x1=from.x+nodeW/2,y1=from.y+nodeH,x2=to.x+nodeW/2,y2=to.y;
+      const lane=(y1+y2)/2;
+      const d="M "+x1+" "+y1+" L "+x1+" "+lane+" L "+x2+" "+lane+" L "+x2+" "+y2;
+      return {d,mx:(x1+x2)/2,my:lane};
+    }
+
     if(layoutDirection==="horizontal"){
       const outSameColumn=outTargets.length>1&&Math.max(...outTargets.map(c=>c.x))-Math.min(...outTargets.map(c=>c.x))<90&&outTargets.every(c=>c.x>from.x);
       if(outSameColumn){
@@ -926,6 +956,11 @@ export function LeadJourneyLab(){
     const rect=canvasRef.current?.getBoundingClientRect(); if(!rect)return;
     setSelectedCardId(card.id);setSelectedConnectionId(null);setContextMenu(null);
     if(presentationMode)return;
+    if(detailMode==="simple"&&card.sequenceId&&expandedSimpleMap.has(card.sequenceId)){
+      // Expanded Simple View is a temporary readable stack. Collapse it before
+      // permanently moving sequence cards so saved coordinates never jump unexpectedly.
+      return;
+    }
     const collapsedGroup=card.sequenceId?collapsedMap.get(card.sequenceId):null;
     if(collapsedGroup&&collapsedGroup.cards[0]?.id===card.id&&!selectMode&&!bulkMode){
       const group=collapsedGroup.cards.map(c=>({id:c.id,x:c.x,y:c.y}));
