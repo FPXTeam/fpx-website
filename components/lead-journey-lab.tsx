@@ -1709,6 +1709,145 @@ function WorkspaceToolsModal({board,miniMap,setMiniMap,hideAgreed,setHideAgreed,
   </div></div>;
 }
 
+function JourneySourceModal({journeyId,focusName,rawRequest,onBoard,onClose}:any){
+  const [source,setSource]=useState<any>(null);
+  const [editor,setEditor]=useState("");
+  const [revision,setRevision]=useState("");
+  const [latestVersion,setLatestVersion]=useState(0);
+  const [versions,setVersions]=useState<any[]>([]);
+  const [preview,setPreview]=useState<any>(null);
+  const [busy,setBusy]=useState(false);
+  const [error,setError]=useState("");
+  const [notice,setNotice]=useState("");
+  const [undoStack,setUndoStack]=useState<string[]>([]);
+  const [redoStack,setRedoStack]=useState<string[]>([]);
+
+  async function load(){
+    setBusy(true);setError("");
+    try{
+      const data=await rawRequest("?section=source&journeyId="+encodeURIComponent(journeyId));
+      setSource(data.source);setEditor(JSON.stringify(data.source,null,2));setRevision(data.revision||"");
+      setLatestVersion(Number(data.latestVersion||0));setVersions(data.versions||[]);setPreview(null);setUndoStack([]);setRedoStack([]);
+    }catch(e){setError(e instanceof Error?e.message:"Unable to load Journey Source.")}
+    finally{setBusy(false)}
+  }
+  useEffect(()=>{load()},[journeyId]);
+
+  function setEditorWithHistory(next:string){
+    setUndoStack(stack=>[...stack.slice(-29),editor]);setRedoStack([]);setEditor(next);setPreview(null);setNotice("");
+  }
+  function undo(){
+    const prior=undoStack.at(-1);if(prior===undefined)return;
+    setUndoStack(stack=>stack.slice(0,-1));setRedoStack(stack=>[...stack,editor]);setEditor(prior);setPreview(null);
+  }
+  function redo(){
+    const next=redoStack.at(-1);if(next===undefined)return;
+    setRedoStack(stack=>stack.slice(0,-1));setUndoStack(stack=>[...stack,editor]);setEditor(next);setPreview(null);
+  }
+  function parseEditor(){
+    const raw=editor.trim();
+    const first=raw.indexOf("{"),last=raw.lastIndexOf("}");
+    if(first<0||last<=first)throw new Error("No complete FPX Journey Source JSON was found. Paste the full AI response, including the complete journey code.");
+    return JSON.parse(raw.slice(first,last+1));
+  }
+  async function copyForAI(){
+    if(!editor.trim())return;
+    const instructions=`You are editing an FPX Lead Journey.
+
+STRICT OUTPUT RULES:
+1. Return the COMPLETE updated FPX Journey Source JSON document.
+2. Do not return snippets, patches, diffs, examples, partial blocks, or "replace this section" instructions.
+3. Do not say "keep the rest unchanged". Include every unchanged card and every unchanged connection in the returned code.
+4. Preserve every existing id when modifying an existing card or connection.
+5. Do not remove any existing card or connection unless the user explicitly asks for removal. If removal is explicitly requested, list its id in removeCards or removeConnections.
+6. New cards may use a clear new id such as "new_supplier_followup". New recommendations must start as Draft. Use "Can be automated" unless the step is clearly Manual. Never mark a newly proposed automation as Automated.
+7. Modify journey content and logic only. You may change cards, titles, categories, owners, execution, timing, decision branches, sequences, connections, notes, questions and nurture logic.
+8. You may NOT modify or describe changes to the FPX Lead Journey Lab UI, navigation, menus, card styling, colours, zoom, pan, mouse behaviour, dragging, selection, auto-align, authentication, Airtable credentials, API routes or any other journey.
+9. Do not add CSS, React, JavaScript, HTML or executable code.
+10. Your final answer must contain exactly one complete valid FPX Journey Source JSON document. No prose before or after it.
+
+The user is currently focused on: ${focusName}.
+Keep the complete journey intact while making the user's requested journey-content changes.
+
+--- COMPLETE CURRENT FPX JOURNEY SOURCE ---
+${editor}
+--- END SOURCE ---`;
+    try{await navigator.clipboard.writeText(instructions);setNotice("Copied. Paste into ChatGPT or Claude, add what you want changed, then copy the complete returned Journey Source back here.")}
+    catch{setError("Clipboard access was blocked. Select the source and copy it manually.")}
+  }
+  async function pasteAI(){
+    try{
+      const value=await navigator.clipboard.readText();
+      if(!value.trim())throw new Error("Clipboard is empty.");
+      setEditorWithHistory(value);setNotice("AI response pasted. Preview the changes before saving.");
+    }catch(e){setError(e instanceof Error?e.message:"Unable to read the clipboard. You can paste into the editor manually.")}
+  }
+  async function validate(){
+    setBusy(true);setError("");setNotice("");
+    try{
+      const parsed=parseEditor();
+      const result=await rawRequest("","POST",{action:"previewJourneySource",journeyId,source:parsed});
+      setPreview(result);setNotice("Validation passed. Review the change summary, then Save Version when you are happy.");
+    }catch(e:any){
+      setPreview(null);setError(e?.message||"Unable to validate Journey Source.");
+    }finally{setBusy(false)}
+  }
+  async function save(){
+    if(!preview?.normalized)return;
+    setBusy(true);setError("");setNotice("");
+    try{
+      const result=await rawRequest("","POST",{action:"applyJourneySource",journeyId,source:preview.normalized,baseRevision:revision,baseVersion:latestVersion,reason:"AI Import"});
+      if(result.data)onBoard(result.data);
+      setSource(result.source);setEditor(JSON.stringify(result.source,null,2));setRevision(result.revision||"");setLatestVersion(Number(result.versionNumber||latestVersion+1));
+      const fresh=await rawRequest("?section=versions&journeyId="+encodeURIComponent(journeyId));setVersions(fresh.versions||[]);
+      setPreview(null);setUndoStack([]);setRedoStack([]);setNotice("Saved live as version "+result.versionNumber+". Everyone will see this shared journey.");
+    }catch(e:any){
+      if(e?.code==="JOURNEY_CONFLICT")setError("This journey changed while you were editing it. Reload the current source before saving so you do not overwrite someone else's work.");
+      else setError(e?.message||"Unable to save Journey Source.");
+    }finally{setBusy(false)}
+  }
+  async function restore(version:any){
+    if(!confirm("Restore "+version.label+"? The current state will remain in history and the restored state will be saved as a new version."))return;
+    setBusy(true);setError("");setNotice("");
+    try{
+      const result=await rawRequest("","POST",{action:"restoreJourneyVersion",journeyId,versionId:version.id});
+      if(result.data)onBoard(result.data);
+      await load();setNotice("Restored "+version.label+" as a new current version.");
+    }catch(e){setError(e instanceof Error?e.message:"Unable to restore version.")}
+    finally{setBusy(false)}
+  }
+  const d=preview?.diff;
+  return <div className="ljl-modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><div className="ljl-source-modal">
+    <header><div><span>JOURNEY SOURCE</span><h2>{focusName}</h2><p>Only journey content can be changed here. FPX Internal UI and canvas behaviour are protected.</p></div><button onClick={onClose}><X/></button></header>
+    <div className="ljl-source-toolbar">
+      <button className="primary" onClick={copyForAI} disabled={busy||!editor}><ClipboardCopy size={13}/> Copy for AI</button>
+      <button onClick={pasteAI} disabled={busy}><ClipboardPaste size={13}/> Paste AI Update</button>
+      <span/>
+      <button onClick={undo} disabled={!undoStack.length}><Undo2 size={13}/> Undo</button>
+      <button onClick={redo} disabled={!redoStack.length}><Redo2 size={13}/> Redo</button>
+      <button onClick={load} disabled={busy}><RefreshCw size={13}/> Reload Current</button>
+    </div>
+    <div className="ljl-source-body">
+      <section className="ljl-source-editor">
+        <div className="ljl-source-editor-head"><strong>Complete Journey Source</strong><span>Base version: v{latestVersion||"0"} · {revision||"loading"}</span></div>
+        <textarea spellCheck={false} value={editor} onChange={e=>setEditorWithHistory(e.target.value)} placeholder="Complete FPX Journey Source JSON appears here…"/>
+        {error&&<div className="ljl-source-message error">{error}</div>}
+        {notice&&<div className="ljl-source-message success">{notice}</div>}
+        <div className="ljl-source-actions"><button onClick={validate} disabled={busy||!editor}>Preview Changes</button><button className="primary" onClick={save} disabled={busy||!preview}>Save Version</button></div>
+        {d&&<div className="ljl-source-diff">
+          <h3>Proposed changes</h3>
+          <div className="ljl-diff-grid"><span><b>+{d.cardsAdded}</b> cards</span><span><b>~{d.cardsChanged}</b> cards</span><span><b>-{d.cardsRemoved}</b> cards</span><span><b>+{d.connectionsAdded}</b> connections</span><span><b>~{d.connectionsChanged}</b> connections</span><span><b>-{d.connectionsRemoved}</b> connections</span></div>
+          {!!d.addedCards?.length&&<p><b>New:</b> {d.addedCards.join(", ")}</p>}
+          {!!d.changedCards?.length&&<p><b>Updated:</b> {d.changedCards.join(", ")}</p>}
+        </div>}
+      </section>
+      <aside className="ljl-source-versions"><div className="ljl-source-version-head"><strong>Version History</strong><span>Meaningful saves only</span></div>
+        <div>{versions.length?versions.map((v:any)=><article key={v.id}><div><strong>{v.label}</strong><span>{v.createdBy||"Shared user"} · {v.createdAt?new Date(v.createdAt).toLocaleString():""}</span><small>{v.summary||v.reason}</small></div><button onClick={()=>restore(v)} disabled={busy}>Restore</button></article>):<p className="muted">No saved Journey Source versions yet. A baseline is created before the first saved update.</p>}</div>
+      </aside>
+    </div>
+  </div></div>;
+}
+
 function VersionHistoryModal({snapshots,onSave,onRestore,onDelete,onClose}:any){
   return <div className="ljl-modal-backdrop"><div className="ljl-library-modal">
     <header><div><span>VERSION HISTORY</span><h2>Snapshots</h2></div><button onClick={onClose}><X/></button></header>
