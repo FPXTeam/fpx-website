@@ -29,8 +29,9 @@ export async function GET(request:Request){
     }
     if(section==="source"){
       const journeyId=url.searchParams.get("journeyId")||"";
+      const focus=url.searchParams.get("focus")||"";
       if(!journeyId)return NextResponse.json({error:"Journey ID is required."},{status:400});
-      return NextResponse.json(await getJourneySource(journeyId));
+      return NextResponse.json(await getJourneySource(journeyId,focus));
     }
     return NextResponse.json(await getJourneyLabData());
   }catch(error){return fail(error,"Unable to load Lead Journey Lab.")}
@@ -45,7 +46,7 @@ export async function POST(request:Request){
         return NextResponse.json({presence:await heartbeatPresence({...body,person:user(request)})});
       }
       case "previewJourneySource":{
-        const result=await previewJourneySource(String(body.journeyId),body.source);
+        const result=await previewJourneySource(String(body.journeyId),body.source,String(body.scopeFocus||""));
         return NextResponse.json(result);
       }
       case "applyJourneySource":{
