@@ -1720,6 +1720,7 @@ function JourneySourceModal({journeyId,focusName,rawRequest,onBoard,onClose}:any
   const [busy,setBusy]=useState(false);
   const [error,setError]=useState("");
   const [notice,setNotice]=useState("");
+  const [sourceOrigin,setSourceOrigin]=useState<"manual"|"ai">("manual");
   const [undoStack,setUndoStack]=useState<string[]>([]);
   const [redoStack,setRedoStack]=useState<string[]>([]);
 
@@ -1728,7 +1729,7 @@ function JourneySourceModal({journeyId,focusName,rawRequest,onBoard,onClose}:any
     try{
       const data=await rawRequest("?section=source&journeyId="+encodeURIComponent(journeyId));
       setSource(data.source);setEditor(JSON.stringify(data.source,null,2));setRevision(data.revision||"");
-      setLatestVersion(Number(data.latestVersion||0));setVersions(data.versions||[]);setPreview(null);setUndoStack([]);setRedoStack([]);
+      setLatestVersion(Number(data.latestVersion||0));setVersions(data.versions||[]);setPreview(null);setUndoStack([]);setRedoStack([]);setSourceOrigin("manual");
     }catch(e){setError(e instanceof Error?e.message:"Unable to load Journey Source.")}
     finally{setBusy(false)}
   }
@@ -1780,7 +1781,7 @@ ${editor}
     try{
       const value=await navigator.clipboard.readText();
       if(!value.trim())throw new Error("Clipboard is empty.");
-      setEditorWithHistory(value);setNotice("AI response pasted. Preview the changes before saving.");
+      setEditorWithHistory(value);setSourceOrigin("ai");setNotice("AI response pasted. Preview the changes before saving.");
     }catch(e){setError(e instanceof Error?e.message:"Unable to read the clipboard. You can paste into the editor manually.")}
   }
   async function validate(){
@@ -1797,13 +1798,13 @@ ${editor}
     if(!preview?.normalized)return;
     setBusy(true);setError("");setNotice("");
     try{
-      const result=await rawRequest("","POST",{action:"applyJourneySource",journeyId,source:preview.normalized,baseRevision:revision,baseVersion:latestVersion,reason:"AI Import"});
+      const result=await rawRequest("","POST",{action:"applyJourneySource",journeyId,source:preview.normalized,baseRevision:revision,baseVersion:latestVersion,reason:sourceOrigin==="ai"?"AI Import":"Manual Structural Edit"});
       if(result.data)onBoard(result.data);
       setSource(result.source);setEditor(JSON.stringify(result.source,null,2));setRevision(result.revision||"");setLatestVersion(Number(result.versionNumber||latestVersion+1));
       const fresh=await rawRequest("?section=versions&journeyId="+encodeURIComponent(journeyId));setVersions(fresh.versions||[]);
       setPreview(null);setUndoStack([]);setRedoStack([]);setNotice("Saved live as version "+result.versionNumber+". Everyone will see this shared journey.");
     }catch(e:any){
-      if(e?.code==="JOURNEY_CONFLICT")setError("This journey changed while you were editing it. Reload the current source before saving so you do not overwrite someone else's work.");
+      if(e?.code==="JOURNEY_CONFLICT")setError("This journey changed while you were editing it"+(e?.latestVersion?.createdBy?" — latest saved by "+e.latestVersion.createdBy:"")+". Reload the current source before saving so you do not overwrite someone else's work.");
       else setError(e?.message||"Unable to save Journey Source.");
     }finally{setBusy(false)}
   }
