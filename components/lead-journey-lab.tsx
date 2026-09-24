@@ -278,7 +278,7 @@ export function LeadJourneyLab(){
   const sourceScopedIds=useMemo(()=>{
     if(!isMainView||sourceFocus==="all"||!mainJourneyId)return null;
     const title=sourceFocus==="we-search"?"WE SEARCH":sourceFocus==="they-find-us"?"THEY FIND US":"WORD OF MOUTH";
-    const root=journeyCards.find(card=>card.title.trim().toUpperCase()===title);
+    const root=journeyCards.find(card=>card.title.trim().toUpperCase()===title||card.title.trim().toUpperCase().endsWith("· "+title));
     if(!root)return null;
     const ids=new Set([root.id]),queue=[root.id];
     const connections=board.connections.filter(c=>c.active&&c.journeyIds.includes(mainJourneyId));
@@ -357,8 +357,8 @@ export function LeadJourneyLab(){
   const selectedCard=selectedCardId?cardById.get(selectedCardId)||null:null;
   const selectedConnection=selectedConnectionId?board.connections.find(c=>c.id===selectedConnectionId)||null:null;
   const selectedDef=selectedCard?libById.get(selectedCard.libraryId)||null:null;
-  const width=Math.max(1300,...visibleCards.map(c=>c.x+420));
-  const height=Math.max(950,...visibleCards.map(c=>c.y+360));
+  const width=Math.max(1800,...visibleCards.map(c=>c.x+1050));
+  const height=Math.max(1300,...visibleCards.map(c=>c.y+900));
 
   function routedConnection(connection:Connection,index:number){
     const from=cardById.get(connection.fromId),to=cardById.get(connection.toId);
