@@ -906,7 +906,7 @@ export function LeadJourneyLab(){
 
   function fitSelected(){
     const ids=selectedCardIds.length?selectedCardIds:(selectedCardId?[selectedCardId]:[]);
-    const cards=visibleCards.filter(c=>ids.includes(c.id));if(!cards.length){fitView();return}
+    const cards=displayVisibleCards.filter(c=>ids.includes(c.id));if(!cards.length){fitView();return}
     const wrap=wrapRef.current;if(!wrap)return;
     const minX=Math.min(...cards.map(c=>c.x)),minY=Math.min(...cards.map(c=>c.y));
     const maxX=Math.max(...cards.map(c=>c.x+nodeW)),maxY=Math.max(...cards.map(c=>c.y+nodeH));
@@ -1239,9 +1239,9 @@ export function LeadJourneyLab(){
   }
 
   function fitView(){
-    const wrap=wrapRef.current;if(!wrap||!visibleCards.length)return;
-    const minX=Math.min(...visibleCards.map(c=>c.x)),minY=Math.min(...visibleCards.map(c=>c.y));
-    const maxX=Math.max(...visibleCards.map(c=>c.x+nodeW)),maxY=Math.max(...visibleCards.map(c=>c.y+nodeH));
+    const wrap=wrapRef.current;if(!wrap||!displayVisibleCards.length)return;
+    const minX=Math.min(...displayVisibleCards.map(c=>c.x)),minY=Math.min(...displayVisibleCards.map(c=>c.y));
+    const maxX=Math.max(...displayVisibleCards.map(c=>c.x+nodeW)),maxY=Math.max(...displayVisibleCards.map(c=>c.y+nodeH));
     const availableW=Math.max(320,wrap.clientWidth-80),availableH=Math.max(320,wrap.clientHeight-80);
     const next=Math.max(.25,Math.min(1.35,availableW/(maxX-minX),availableH/(maxY-minY)));
     setZoom(Math.round(next*100)/100);
@@ -1411,8 +1411,9 @@ export function LeadJourneyLab(){
           <div ref={canvasRef} className="ljl-canvas" style={{width,height,transform:`scale(${zoom})`}}
             onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}>
             {sequenceGroups.filter(group=>!collapsedMap.has(group.id)&&group.cards.length>1).map(group=>{
-              const minX=Math.min(...group.cards.map(c=>c.x))-22,minY=Math.min(...group.cards.map(c=>c.y))-42;
-              const maxX=Math.max(...group.cards.map(c=>c.x+nodeW))+22,maxY=Math.max(...group.cards.map(c=>c.y+nodeH))+22;
+              const shown=group.cards.map(c=>displayCardById.get(c.id)||c);
+              const minX=Math.min(...shown.map(c=>c.x))-22,minY=Math.min(...shown.map(c=>c.y))-42;
+              const maxX=Math.max(...shown.map(c=>c.x+nodeW))+22,maxY=Math.max(...shown.map(c=>c.y+nodeH))+22;
               return <div key={group.id} className={"ljl-sequence-group tone-"+sequenceTone(group.name)} style={{left:minX,top:minY,width:maxX-minX,height:maxY-minY}}>
                 <div className="ljl-sequence-group-label"><strong>{group.name}</strong><span>{group.cards.length} steps</span><button onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();detailMode==="simple"?setExpandedSimpleSequences(ids=>ids.filter(id=>id!==group.id)):setCollapsedSequences(ids=>Array.from(new Set([...ids,group.id])))}}>Collapse</button></div>
               </div>;
@@ -1431,9 +1432,11 @@ export function LeadJourneyLab(){
             </svg>
             {selectionBox&&<div className="ljl-selection-box" style={{left:selectionBox.x,top:selectionBox.y,width:selectionBox.w,height:selectionBox.h}}/>}
 
-            {visibleCards.map(card=>{
+            {displayVisibleCards.map(card=>{
               const def=libById.get(card.libraryId);
               const collapsedGroup=card.sequenceId?collapsedMap.get(card.sequenceId):null;
+              const expandedGroup=card.sequenceId?expandedSimpleMap.get(card.sequenceId):null;
+              const isExpandedAnchor=Boolean(expandedGroup&&expandedGroup.cards[0]?.id===card.id);
               const isSummary=Boolean(collapsedGroup&&collapsedGroup.cards[0]?.id===card.id);
               const displayTitle=isSummary?collapsedGroup!.name:card.title;
               const displayCategory=isSummary?"Sequence":(def?.category||"Card");
@@ -1446,7 +1449,11 @@ export function LeadJourneyLab(){
                 onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}
                 onContextMenu={e=>cardContext(e,card)}>
                 {!presentationMode&&<button className={"ljl-handle input "+(layoutDirection==="horizontal"?"horizontal":"vertical")} title="Connect to this card" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();connectHandle(card.id)}}/>}
-                <div className="ljl-node-top"><span>{displayCategory}</span>{isSummary?<button className="ljl-sequence-expand" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();detailMode==="simple"?setExpandedSimpleSequences(ids=>Array.from(new Set([...ids,card.sequenceId||""])).filter(Boolean)):setCollapsedSequences(ids=>ids.filter(id=>id!==card.sequenceId))}}>Expand</button>:(bulkMode?<CheckSquare size={15}/>:<GripVertical size={15}/>)}</div>
+                <div className="ljl-node-top"><span>{displayCategory}</span>{isSummary?
+                  <button className="ljl-sequence-expand" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();detailMode==="simple"?setExpandedSimpleSequences(ids=>Array.from(new Set([...ids,card.sequenceId||""])).filter(Boolean)):setCollapsedSequences(ids=>ids.filter(id=>id!==card.sequenceId))}}>Expand</button>:
+                  isExpandedAnchor?
+                  <button className="ljl-sequence-expand is-collapse" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setExpandedSimpleSequences(ids=>ids.filter(id=>id!==card.sequenceId))}}>Collapse</button>:
+                  (bulkMode?<CheckSquare size={15}/>:<GripVertical size={15}/>)}</div>
                 <h2>{displayTitle}</h2>
                 <div className="ljl-node-meta">
                   {isSummary?(()=>{
