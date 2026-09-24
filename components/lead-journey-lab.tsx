@@ -1850,7 +1850,7 @@ function JourneySourceModal({journeyId,focusName,scopeFocus,rawRequest,onBoard,o
   const [busy,setBusy]=useState(false);
   const [error,setError]=useState("");
   const [notice,setNotice]=useState("");
-  const [sourceOrigin,setSourceOrigin]=useState<"manual"|"ai">("manual");
+  const [sourceOrigin,setSourceOrigin]=useState<"manual"|"ai">("ai");
   const [undoStack,setUndoStack]=useState<string[]>([]);
   const [redoStack,setRedoStack]=useState<string[]>([]);
 
@@ -1858,71 +1858,61 @@ function JourneySourceModal({journeyId,focusName,scopeFocus,rawRequest,onBoard,o
     setBusy(true);setError("");
     try{
       const data=await rawRequest("?section=source&journeyId="+encodeURIComponent(journeyId)+(scopeFocus?"&focus="+encodeURIComponent(scopeFocus):""));
-      setSource(data.source);setEditor(JSON.stringify(data.source,null,2));setRevision(data.revision||"");
-      setLatestVersion(Number(data.latestVersion||0));setVersions(data.versions||[]);setPreview(null);setUndoStack([]);setRedoStack([]);setSourceOrigin("manual");
+      setSource(data.source);setEditor("");setRevision(data.revision||"");
+      setLatestVersion(Number(data.latestVersion||0));setVersions(data.versions||[]);setPreview(null);setUndoStack([]);setRedoStack([]);
     }catch(e){setError(e instanceof Error?e.message:"Unable to load Journey Source.")}
     finally{setBusy(false)}
   }
   useEffect(()=>{load()},[journeyId,scopeFocus]);
 
-  function setEditorWithHistory(next:string){
-    setUndoStack(stack=>[...stack.slice(-29),editor]);setRedoStack([]);setEditor(next);setPreview(null);setNotice("");
+  function changeEditor(next:string){
+    setUndoStack(stack=>[...stack.slice(-29),editor]);setRedoStack([]);setEditor(next);setPreview(null);setNotice("");setSourceOrigin("ai");
   }
-  function undo(){
-    const prior=undoStack.at(-1);if(prior===undefined)return;
-    setUndoStack(stack=>stack.slice(0,-1));setRedoStack(stack=>[...stack,editor]);setEditor(prior);setPreview(null);
-  }
-  function redo(){
-    const next=redoStack.at(-1);if(next===undefined)return;
-    setRedoStack(stack=>stack.slice(0,-1));setUndoStack(stack=>[...stack,editor]);setEditor(next);setPreview(null);
-  }
+  function undo(){const value=undoStack.at(-1);if(value===undefined)return;setUndoStack(x=>x.slice(0,-1));setRedoStack(x=>[...x,editor]);setEditor(value);setPreview(null)}
+  function redo(){const value=redoStack.at(-1);if(value===undefined)return;setRedoStack(x=>x.slice(0,-1));setUndoStack(x=>[...x,editor]);setEditor(value);setPreview(null)}
   function parseEditor(){
-    const raw=editor.trim();
-    const first=raw.indexOf("{"),last=raw.lastIndexOf("}");
-    if(first<0||last<=first)throw new Error("No complete FPX Journey Source JSON was found. Paste the full AI response, including the complete journey code.");
+    const raw=editor.trim(),first=raw.indexOf("{"),last=raw.lastIndexOf("}");
+    if(first<0||last<=first)throw new Error("No complete FPX Journey Source was found. Paste the FULL AI rewrite, not a snippet.");
     return JSON.parse(raw.slice(first,last+1));
   }
   async function copyForAI(){
-    if(!editor.trim())return;
+    if(!source)return;
+    const current=JSON.stringify(source,null,2);
     const instructions=`You are editing an FPX Lead Journey.
 
 STRICT OUTPUT RULES:
 1. Return the COMPLETE updated FPX Journey Source JSON document.
 2. Do not return snippets, patches, diffs, examples, partial blocks, or "replace this section" instructions.
-3. Do not say "keep the rest unchanged". Include every unchanged card and every unchanged connection in the returned code.
-4. Preserve every existing id when modifying an existing card or connection.
-5. Do not remove any existing card or connection unless the user explicitly asks for removal. If removal is explicitly requested, list its id in removeCards or removeConnections.
-6. New cards may use a clear new id such as "new_supplier_followup". New recommendations must start as Draft. Use "Can be automated" unless the step is clearly Manual. Never mark a newly proposed automation as Automated.
-7. Modify journey content and logic only. You may change cards, titles, categories, owners, execution, timing, decision branches, sequences, connections, notes, questions and nurture logic.
-8. You may NOT modify or describe changes to the FPX Lead Journey Lab UI, navigation, menus, card styling, colours, zoom, pan, mouse behaviour, dragging, selection, auto-align, authentication, Airtable credentials, API routes or any other journey.
-9. Do not add CSS, React, JavaScript, HTML or executable code.
-10. Your final answer must contain exactly one complete valid FPX Journey Source JSON document. No prose before or after it.
+3. Do not say "keep the rest unchanged". Include EVERY unchanged card and EVERY unchanged connection.
+4. Preserve existing IDs when editing existing cards or connections.
+5. Do not remove anything unless the user explicitly requests removal.
+6. New recommendations start as Draft. Use "Can be automated" unless clearly Manual. Never mark a new proposal Automated.
+7. Modify journey content and logic only.
+8. Do NOT modify UI, navigation, card styling, colours, zoom, pan, dragging, auto-align, authentication, Airtable, API routes, or another journey.
+9. Do not output React, CSS, JavaScript or HTML.
+10. Return exactly one COMPLETE valid FPX Journey Source JSON document with no prose before or after it.
 
-The user is currently focused on: ${focusName}.
-Keep the complete journey intact while making the user's requested journey-content changes.
+The user is working on: ${focusName}.
 
 --- COMPLETE CURRENT FPX JOURNEY SOURCE ---
-${editor}
+${current}
 --- END SOURCE ---`;
-    try{await navigator.clipboard.writeText(instructions);setNotice("Copied. Paste into ChatGPT or Claude, add what you want changed, then copy the complete returned Journey Source back here.")}
-    catch{setError("Clipboard access was blocked. Select the source and copy it manually.")}
+    try{await navigator.clipboard.writeText(instructions);setNotice("Copied for AI. Add your request in ChatGPT/Claude, then paste the COMPLETE returned Journey Source into the blank coding space below.")}
+    catch{setError("Clipboard access was blocked. Please try Copy for AI again.")}
   }
   async function pasteAI(){
     try{
-      const value=await navigator.clipboard.readText();
-      if(!value.trim())throw new Error("Clipboard is empty.");
-      setEditorWithHistory(value);setSourceOrigin("ai");setNotice("AI response pasted. Preview the changes before saving.");
-    }catch(e){setError(e instanceof Error?e.message:"Unable to read the clipboard. You can paste into the editor manually.")}
+      const value=await navigator.clipboard.readText();if(!value.trim())throw new Error("Clipboard is empty.");
+      changeEditor(value);setNotice("AI update pasted. Click Preview Changes before saving.");
+    }catch(e){setError(e instanceof Error?e.message:"Paste the complete AI code directly into the blank coding space.")}
   }
   async function validate(){
     setBusy(true);setError("");setNotice("");
     try{
-      const parsed=parseEditor();
-      const result=await rawRequest("","POST",{action:"previewJourneySource",journeyId,scopeFocus,source:parsed});
-      setPreview(result);setNotice("Validation passed. Review the change summary, then Save Version when you are happy.");
-    }catch(e:any){
-      setPreview(null);setError(e?.message||"Unable to validate Journey Source.");
-    }finally{setBusy(false)}
+      const result=await rawRequest("","POST",{action:"previewJourneySource",journeyId,scopeFocus,source:parseEditor()});
+      setPreview(result);setNotice("Preview ready. Review the actual cards and connections below. Nothing is live yet.");
+    }catch(e:any){setPreview(null);setError(e?.message||"Unable to validate Journey Source.")}
+    finally{setBusy(false)}
   }
   async function save(){
     if(!preview?.normalized)return;
@@ -1930,52 +1920,86 @@ ${editor}
     try{
       const result=await rawRequest("","POST",{action:"applyJourneySource",journeyId,scopeFocus,source:preview.normalized,baseRevision:revision,baseVersion:latestVersion,reason:sourceOrigin==="ai"?"AI Import":"Manual Structural Edit"});
       if(result.data)onBoard(result.data);
-      setSource(result.source);setEditor(JSON.stringify(result.source,null,2));setRevision(result.revision||"");setLatestVersion(Number(result.versionNumber||latestVersion+1));
+      setSource(result.source);setEditor("");setRevision(result.revision||"");setLatestVersion(Number(result.versionNumber||latestVersion+1));
       const fresh=await rawRequest("?section=versions&journeyId="+encodeURIComponent(journeyId));setVersions(fresh.versions||[]);
-      setPreview(null);setUndoStack([]);setRedoStack([]);setNotice("Saved live as version "+result.versionNumber+". Everyone will see this shared journey.");
+      setPreview(null);setUndoStack([]);setRedoStack([]);setNotice("Saved live as version "+result.versionNumber+". Everyone now sees the shared update.");
     }catch(e:any){
-      if(e?.code==="JOURNEY_CONFLICT")setError("This journey changed while you were editing it"+(e?.latestVersion?.createdBy?" — latest saved by "+e.latestVersion.createdBy:"")+". Reload the current source before saving so you do not overwrite someone else's work.");
+      if(e?.code==="JOURNEY_CONFLICT")setError("This journey changed while you were editing it"+(e?.latestVersion?.createdBy?" — latest saved by "+e.latestVersion.createdBy:"")+". Reload Current before saving.");
       else setError(e?.message||"Unable to save Journey Source.");
     }finally{setBusy(false)}
   }
   async function restore(version:any){
-    if(!confirm("Restore "+version.label+"? The current state will remain in history and the restored state will be saved as a new version."))return;
-    setBusy(true);setError("");setNotice("");
+    if(!confirm("Restore "+version.label+"? The restored state will become a new version; current history stays intact."))return;
+    setBusy(true);setError("");
     try{
       const result=await rawRequest("","POST",{action:"restoreJourneyVersion",journeyId,versionId:version.id});
-      if(result.data)onBoard(result.data);
-      await load();setNotice("Restored "+version.label+" as a new current version.");
+      if(result.data)onBoard(result.data);await load();setNotice("Restored "+version.label+" as a new current version.");
     }catch(e){setError(e instanceof Error?e.message:"Unable to restore version.")}
     finally{setBusy(false)}
   }
-  const d=preview?.diff;
+
+  function comparable(v:any){const x={...v};delete x.id;return JSON.stringify(x)}
+  const visual=useMemo(()=>{
+    if(!preview?.current||!preview?.normalized)return null;
+    const before=preview.current,after=preview.normalized;
+    const bm=new Map((before.cards||[]).map((x:any)=>[x.id,x])),am=new Map((after.cards||[]).map((x:any)=>[x.id,x]));
+    const bx=new Map((before.connections||[]).map((x:any)=>[x.id,x])),ax=new Map((after.connections||[]).map((x:any)=>[x.id,x]));
+    const removedCards=new Set(after.removeCards||[]),removedConnections=new Set(after.removeConnections||[]);
+    const added=[...am.values()].filter((x:any)=>!bm.has(x.id));
+    const changed=[...am.values()].filter((x:any)=>bm.has(x.id)&&comparable(bm.get(x.id))!==comparable(x));
+    const removed=[...bm.values()].filter((x:any)=>removedCards.has(x.id)||!am.has(x.id));
+    const addedX=[...ax.values()].filter((x:any)=>!bx.has(x.id));
+    const changedX=[...ax.values()].filter((x:any)=>bx.has(x.id)&&comparable(bx.get(x.id))!==comparable(x));
+    const removedX=[...bx.values()].filter((x:any)=>removedConnections.has(x.id)||!ax.has(x.id));
+    const title=(id:string)=>am.get(id)?.title||bm.get(id)?.title||id;
+    return {bm,am,added,changed,removed,addedX,changedX,removedX,title};
+  },[preview]);
+
+  const fields:any={title:"Title",type:"Type",execution:"Execution",owner:"Owner",tool:"Tool",timing:"Timing",leadStatus:"Lead Status",workshopStatus:"Workshop Status",notes:"Notes",sequence:"Sequence"};
+  function diffFields(before:any,after:any){return Object.keys(fields).filter(k=>JSON.stringify(before?.[k]??"")!==JSON.stringify(after?.[k]??""))}
+  function PreviewCard({card,tone}:{card:any;tone:string}){
+    return <div className={"ljl-ai-preview-card "+tone}>
+      <div><span>{card.type||"Card"}</span>{card.execution&&<b>{card.execution}</b>}</div>
+      <strong>{card.title}</strong>
+      <small>{[card.owner,card.timing,card.workshopStatus].filter(Boolean).join(" · ")||"No extra details"}</small>
+    </div>;
+  }
+
   return <div className="ljl-modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><div className="ljl-source-modal">
-    <header><div><span>JOURNEY SOURCE</span><h2>{focusName}</h2><p>Only journey content can be changed here. FPX Internal UI and canvas behaviour are protected.</p></div><button onClick={onClose}><X/></button></header>
+    <header><div><span>JOURNEY SOURCE</span><h2>{focusName}</h2><p>Copy the protected journey to AI, then paste the complete rewritten code into the blank coding space.</p></div><button onClick={onClose}><X/></button></header>
     <div className="ljl-source-toolbar">
-      <button className="primary" onClick={copyForAI} disabled={busy||!editor}><ClipboardCopy size={13}/> Copy for AI</button>
-      <button onClick={pasteAI} disabled={busy}><ClipboardPaste size={13}/> Paste AI Update</button>
-      <span/>
+      <button className="primary" onClick={copyForAI} disabled={busy||!source}><ClipboardCopy size={13}/> Copy for AI</button>
+      <button onClick={pasteAI} disabled={busy}><ClipboardPaste size={13}/> Paste AI Update</button><span/>
       <button onClick={undo} disabled={!undoStack.length}><Undo2 size={13}/> Undo</button>
       <button onClick={redo} disabled={!redoStack.length}><Redo2 size={13}/> Redo</button>
       <button onClick={load} disabled={busy}><RefreshCw size={13}/> Reload Current</button>
     </div>
     <div className="ljl-source-body">
       <section className="ljl-source-editor">
-        <div className="ljl-source-editor-head"><strong>Complete Journey Source</strong><span>Base version: v{latestVersion||"0"} · {revision||"loading"}</span></div>
-        <textarea spellCheck={false} value={editor} onChange={e=>setEditorWithHistory(e.target.value)} placeholder="Complete FPX Journey Source JSON appears here…"/>
-        {error&&<div className="ljl-source-message error">{error}</div>}
-        {notice&&<div className="ljl-source-message success">{notice}</div>}
-        <div className="ljl-source-actions"><button onClick={validate} disabled={busy||!editor}>Preview Changes</button><button className="primary" onClick={save} disabled={busy||!preview}>Save Version</button></div>
-        {d&&<div className="ljl-source-diff">
-          <h3>Proposed changes</h3>
-          <div className="ljl-diff-grid"><span><b>+{d.cardsAdded}</b> cards</span><span><b>~{d.cardsChanged}</b> cards</span><span><b>-{d.cardsRemoved}</b> cards</span><span><b>+{d.connectionsAdded}</b> connections</span><span><b>~{d.connectionsChanged}</b> connections</span><span><b>-{d.connectionsRemoved}</b> connections</span></div>
-          {!!d.addedCards?.length&&<p><b>New:</b> {d.addedCards.join(", ")}</p>}
-          {!!d.changedCards?.length&&<p><b>Updated:</b> {d.changedCards.join(", ")}</p>}
+        <div className="ljl-source-editor-head"><div><strong>Paste AI Update</strong><small>Blank by design. Paste the COMPLETE AI rewrite here.</small></div><span>Current: v{latestVersion||"0"} · {revision||"loading"}</span></div>
+        <textarea spellCheck={false} value={editor} onChange={e=>changeEditor(e.target.value)} placeholder={'Paste the COMPLETE AI Journey Source JSON here…\n\nFPX will reject snippets or incomplete rewrites.'}/>
+        {error&&<div className="ljl-source-message error">{error}</div>}{notice&&<div className="ljl-source-message success">{notice}</div>}
+        <div className="ljl-source-actions"><button onClick={()=>{setEditor("");setPreview(null);setError("");setNotice("")}} disabled={!editor||busy}>Clear</button><button onClick={validate} disabled={busy||!editor}>Preview Changes</button><button className="primary" onClick={save} disabled={busy||!preview}>Save Version</button></div>
+
+        {visual&&<div className="ljl-visual-change-preview">
+          <div className="ljl-visual-preview-head"><div><span>VISUAL PREVIEW</span><h3>What will actually change</h3><p>Green is new, amber is changed, red is removed. Review the actual card content before saving.</p></div><div className="ljl-preview-legend"><span className="new">New</span><span className="changed">Changed</span><span className="removed">Removed</span></div></div>
+
+          {!!visual.added.length&&<section><h4>New cards</h4><div className="ljl-ai-card-grid">{visual.added.map((card:any)=><PreviewCard key={card.id} card={card} tone="new"/>)}</div></section>}
+          {!!visual.changed.length&&<section><h4>Changed cards</h4><div className="ljl-ai-change-list">{visual.changed.map((card:any)=>{
+            const before=visual.bm.get(card.id);const changed=diffFields(before,card);
+            return <article key={card.id}><div className="ljl-ai-before-after"><div><em>BEFORE</em><PreviewCard card={before} tone="before"/></div><ArrowRight size={16}/><div><em>AFTER</em><PreviewCard card={card} tone="changed"/></div></div><p>{changed.map(k=>fields[k]).join(", ")||"Card details changed"}</p></article>;
+          })}</div></section>}
+          {!!visual.removed.length&&<section><h4>Removed cards</h4><div className="ljl-ai-card-grid">{visual.removed.map((card:any)=><PreviewCard key={card.id} card={card} tone="removed"/>)}</div></section>}
+
+          {(visual.addedX.length||visual.changedX.length||visual.removedX.length)?<section><h4>Connection changes</h4><div className="ljl-ai-connection-list">
+            {visual.addedX.map((x:any)=><div key={"a"+x.id} className="new"><b>NEW</b><span>{visual.title(x.from)} <ArrowRight size={11}/> {visual.title(x.to)}{x.label?" · "+x.label:""}</span></div>)}
+            {visual.changedX.map((x:any)=><div key={"c"+x.id} className="changed"><b>CHANGED</b><span>{visual.title(x.from)} <ArrowRight size={11}/> {visual.title(x.to)}{x.label?" · "+x.label:""}</span></div>)}
+            {visual.removedX.map((x:any)=><div key={"r"+x.id} className="removed"><b>REMOVED</b><span>{visual.title(x.from)} <ArrowRight size={11}/> {visual.title(x.to)}{x.label?" · "+x.label:""}</span></div>)}
+          </div></section>:null}
+          {!visual.added.length&&!visual.changed.length&&!visual.removed.length&&!visual.addedX.length&&!visual.changedX.length&&!visual.removedX.length&&<div className="ljl-no-change">No journey changes detected.</div>}
         </div>}
       </section>
-      <aside className="ljl-source-versions"><div className="ljl-source-version-head"><strong>Version History</strong><span>Meaningful saves only</span></div>
-        <div>{versions.length?versions.map((v:any)=><article key={v.id}><div><strong>{v.label}</strong><span>{v.createdBy||"Shared user"} · {v.createdAt?new Date(v.createdAt).toLocaleString():""}</span><small>{v.summary||v.reason}</small></div><button onClick={()=>restore(v)} disabled={busy}>Restore</button></article>):<p className="muted">No saved Journey Source versions yet. A baseline is created before the first saved update.</p>}</div>
-      </aside>
+      <aside className="ljl-source-versions"><div className="ljl-source-version-head"><strong>Version History</strong><span>Meaningful saves only</span></div><div>{versions.length?versions.map((v:any)=><article key={v.id}><div><strong>{v.label}</strong><span>{v.createdBy||"Shared user"} · {v.createdAt?new Date(v.createdAt).toLocaleString():""}</span><small>{v.summary||v.reason}</small></div><button onClick={()=>restore(v)} disabled={busy}>Restore</button></article>):<p className="muted">No saved versions yet. A baseline is created before the first update.</p>}</div></aside>
     </div>
   </div></div>;
 }
