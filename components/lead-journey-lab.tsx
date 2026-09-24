@@ -1323,7 +1323,6 @@ export function LeadJourneyLab(){
               <span>DETAIL</span>
               <button className={detailMode==="simple"?"active":""} onClick={()=>{setDetailMode("simple");setViewMenuOpen(false)}}>Simple</button>
               <button className={detailMode==="deep"?"active":""} onClick={()=>{setDetailMode("deep");setViewMenuOpen(false)}}>In-Depth</button>
-              <button onClick={()=>{setJourneyOverviewOpen(true);setViewMenuOpen(false)}}>Journey Overview</button>
               <hr/><span>LAYOUT</span>
               <button className={layoutDirection==="horizontal"?"active":""} onClick={()=>{setLayoutDirection("horizontal");setViewMenuOpen(false);autoAlign(undefined,"horizontal")}}>Horizontal</button>
               <button className={layoutDirection==="vertical"?"active":""} onClick={()=>{setLayoutDirection("vertical");setViewMenuOpen(false);autoAlign(undefined,"vertical")}}>Vertical</button>
@@ -1489,7 +1488,8 @@ export function LeadJourneyLab(){
       }catch(e){setError(e instanceof Error?e.message:"Unable to save sequence template.")}finally{setSaving(false)}}}/>}
     {addingJourney&&<JourneyModal saving={saving} board={board} onClose={()=>setAddingJourney(false)} onSave={createJourney}/>}
     {journeyManagerOpen&&<JourneyManagerModal board={board} activeJourneyId={activeJourneyId}
-      onOpen={id=>{setActiveJourneyId(id);setSourceFocus("all");setJourneyManagerOpen(false)}}
+      onOpen={id=>{setActiveJourneyId(id);setSourceFocus("all");setJourneyManagerOpen(false);setJourneyOverviewOpen(false)}}
+      onOverview={id=>{setActiveJourneyId(id===mainJourneyId?"all":id);setSourceFocus("all");setJourneyManagerOpen(false);setJourneyOverviewOpen(true)}}
       onNew={()=>{setJourneyManagerOpen(false);setAddingJourney(true)}}
       onDuplicate={duplicateJourney} onArchive={setJourneyArchived} onTemplate={setJourneyTemplate}
       onDelete={async(journey)=>{setJourneyManagerOpen(false);await deleteJourney(journey)}} onClose={()=>setJourneyManagerOpen(false)}/>}
@@ -1860,7 +1860,7 @@ function MiniMap({cards,width,height}:any){
   return <div className="ljl-minimap" aria-label="Journey mini-map"><svg width={190} height={130} viewBox="0 0 190 130"><rect x="0" y="0" width="190" height="130" rx="8" fill="white"/>{cards.map((card:any)=><rect key={card.id} x={card.x*scale+5} y={card.y*scale+5} width={Math.max(8,nodeW*scale)} height={Math.max(5,nodeH*scale)} rx="2" fill="#b8c7bd" stroke="#758956"/>)}</svg></div>;
 }
 
-function JourneyManagerModal({board,activeJourneyId,onOpen,onNew,onDuplicate,onArchive,onTemplate,onDelete,onClose}:any){
+function JourneyManagerModal({board,activeJourneyId,onOpen,onOverview,onNew,onDuplicate,onArchive,onTemplate,onDelete,onClose}:any){
   const [query,setQuery]=useState(""),[group,setGroup]=useState("All"),[showArchived,setShowArchived]=useState(false);
   const groups=["All",...Array.from(new Set(board.journeys.map((j:any)=>j.group||"Other"))).sort()] as string[];
   const items=board.journeys.filter((j:any)=>(showArchived||!j.archived)&&(group==="All"||(j.group||"Other")===group)&&(!query||(`${j.name} ${j.description} ${j.group||""}`).toLowerCase().includes(query.toLowerCase())));
@@ -1868,7 +1868,7 @@ function JourneyManagerModal({board,activeJourneyId,onOpen,onNew,onDuplicate,onA
     <header><div><span>JOURNEYS</span><h2>Journey Manager</h2></div><div className="ljl-modal-head-actions"><button className="primary-lite" onClick={onNew}><Plus size={13}/> Add Journey</button><button onClick={onClose}><X/></button></div></header>
     <div className="ljl-library-tools"><label><Search size={14}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search journeys"/></label><select value={group} onChange={e=>setGroup(e.target.value)}>{groups.map(g=><option key={g}>{g}</option>)}</select></div>
     <div className="ljl-manager-options"><label><input type="checkbox" checked={showArchived} onChange={e=>setShowArchived(e.target.checked)}/> Show archived</label></div>
-    <div className="ljl-journey-list">{items.map((j:any)=><article key={j.id} className={j.id===activeJourneyId?"active":""}><div><span>{j.group||"Other"}{j.template?" · TEMPLATE":""}{j.archived?" · ARCHIVED":""}</span><strong>{j.name}</strong><p>{j.description||"No description"}</p></div><div className="ljl-row-actions"><button onClick={()=>onOpen(j.id)}>Open</button><button onClick={()=>onDuplicate(j)}><Copy size={12}/> Duplicate</button><button onClick={()=>onArchive(j,!j.archived)}><Archive size={12}/> {j.archived?"Restore":"Archive"}</button><button onClick={()=>onTemplate(j,!j.template)}><Boxes size={12}/> {j.template?"Remove Template":"Make Template"}</button><button className="danger" onClick={()=>onDelete(j)}><Trash2 size={12}/> Delete</button></div></article>)}</div>
+    <div className="ljl-journey-list">{items.map((j:any)=><article key={j.id} className={j.id===activeJourneyId?"active":""}><div><span>{j.group||"Other"}{j.template?" · TEMPLATE":""}{j.archived?" · ARCHIVED":""}</span><strong>{j.name}</strong><p>{j.description||"No description"}</p></div><div className="ljl-row-actions"><button onClick={()=>onOpen(j.id)}>Open Canvas</button><button onClick={()=>onOverview(j.id)}><Eye size={12}/> Overview</button><button onClick={()=>onDuplicate(j)}><Copy size={12}/> Duplicate</button><button onClick={()=>onArchive(j,!j.archived)}><Archive size={12}/> {j.archived?"Restore":"Archive"}</button><button onClick={()=>onTemplate(j,!j.template)}><Boxes size={12}/> {j.template?"Remove Template":"Make Template"}</button><button className="danger" onClick={()=>onDelete(j)}><Trash2 size={12}/> Delete</button></div></article>)}</div>
   </div></div>;
 }
 
