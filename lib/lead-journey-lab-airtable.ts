@@ -462,8 +462,8 @@ function summarizeSourceDiff(current:any,next:any){
   const cx=new Map((current.connections||[]).map((x:any)=>[x.id,x])),nx=new Map((next.connections||[]).map((x:any)=>[x.id,x]));
   const added=[...nm.keys()].filter(id=>!cm.has(id)),changed=[...nm.keys()].filter(id=>cm.has(id)&&sourceComparable(cm.get(id))!==sourceComparable(nm.get(id)));
   const addedX=[...nx.keys()].filter(id=>!cx.has(id)),changedX=[...nx.keys()].filter(id=>cx.has(id)&&sourceComparable(cx.get(id))!==sourceComparable(nx.get(id)));
-  const removed=Array.from(new Set([...(next.removeCards||[]),...([...cm.keys()].filter(id=>!nm.has(id)&&!(next.cards||[]).some((c:any)=>c.id===id))]));
-  const removedX=Array.from(new Set([...(next.removeConnections||[]),...([...cx.keys()].filter(id=>!nx.has(id)&&!(next.connections||[]).some((c:any)=>c.id===id))]));
+  const removed=Array.from(new Set([...(next.removeCards||[]),...[...cm.keys()].filter(id=>!nm.has(id)&&!(next.cards||[]).some((c:any)=>c.id===id))]));
+  const removedX=Array.from(new Set([...(next.removeConnections||[]),...[...cx.keys()].filter(id=>!nx.has(id)&&!(next.connections||[]).some((c:any)=>c.id===id))]));
   return {cardsAdded:added.length,cardsChanged:changed.length,cardsRemoved:removed.length,connectionsAdded:addedX.length,connectionsChanged:changedX.length,connectionsRemoved:removedX.length,
     addedCards:added.map(id=>nm.get(id)?.title||id),changedCards:changed.map(id=>nm.get(id)?.title||id)};
 }
