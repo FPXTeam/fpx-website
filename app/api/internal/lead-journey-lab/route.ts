@@ -3,8 +3,8 @@ import { passwordMatches } from "../../../../lib/lead-journey-lab-auth";
 import {
   applyGlobalCardsToJourney,applyJourneySource,bulkAssignCards,bulkDeleteCards,bulkMoveCards,createConnection,createJourney,createJourneyCard,
   createLibraryCard,createSnapshot,deleteConnection,deleteJourney,deleteJourneyCard,deleteSnapshot,duplicateJourney,
-  getJourneyLabData,getJourneySource,heartbeatPresence,listChangeLog,listJourneyVersions,listPresence,listSnapshots,logChange,
-  mergeIntoExistingJourney,previewJourneySource,restoreJourneyVersion,restoreSnapshotLayout,syncGlobalCard,
+  getJourneyLabData,getJourneySource,heartbeatPresence,listChangeLog,listJourneyVersions,listPresence,listSequenceTemplates,listSnapshots,logChange,
+  mergeIntoExistingJourney,previewJourneySource,restoreJourneyVersion,restoreSnapshotLayout,saveSequenceTemplate,syncGlobalCard,
   updateConnection,updateJourney,updateJourneyCard,updateLibraryCard
 } from "../../../../lib/lead-journey-lab-airtable";
 
@@ -23,6 +23,7 @@ export async function GET(request:Request){
     if(section==="snapshots")return NextResponse.json({snapshots:await listSnapshots()});
     if(section==="changes")return NextResponse.json({changes:await listChangeLog()});
     if(section==="presence")return NextResponse.json({presence:await listPresence()});
+    if(section==="sequences")return NextResponse.json({sequences:await listSequenceTemplates()});
     if(section==="versions"){
       const journeyId=url.searchParams.get("journeyId")||"";
       return NextResponse.json({versions:journeyId?await listJourneyVersions(journeyId):[]});
@@ -44,6 +45,11 @@ export async function POST(request:Request){
     switch(body.action){
       case "heartbeatPresence":{
         return NextResponse.json({presence:await heartbeatPresence({...body,person:user(request)})});
+      }
+      case "saveSequenceTemplate":{
+        await saveSequenceTemplate({...body.template,updatedBy:user(request)});
+        await log(request,body,{action:"Updated",itemType:"Sequence Template",itemName:body.template?.name||""});
+        return NextResponse.json({sequences:await listSequenceTemplates()});
       }
       case "previewJourneySource":{
         const result=await previewJourneySource(String(body.journeyId),body.source,String(body.scopeFocus||""));
