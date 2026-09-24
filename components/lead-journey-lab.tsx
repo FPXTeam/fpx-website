@@ -958,9 +958,9 @@ export function LeadJourneyLab(){
   function startPan(e:React.PointerEvent<HTMLDivElement>){
     if(e.button!==0)return;
     const target=e.target as HTMLElement;
-    if(target.closest(".ljl-node,.ljl-zoom-controls,.ljl-line-hit,button,select,input,textarea"))return;
+    if(target.closest(".ljl-node,.ljl-zoom-controls,button,select,input,textarea"))return;
     const wrap=wrapRef.current,canvas=canvasRef.current;if(!wrap||!canvas)return;
-    e.preventDefault();setContextMenu(null);
+    e.preventDefault();setContextMenu(null);suppressLineClickRef.current=false;
     if(selectMode||e.shiftKey){
       const rect=canvas.getBoundingClientRect();
       const x=Math.max(0,(e.clientX-rect.left)/zoom),y=Math.max(0,(e.clientY-rect.top)/zoom);
@@ -989,8 +989,10 @@ export function LeadJourneyLab(){
       return;
     }
     const pan=panRef.current,wrap=wrapRef.current;if(!pan||!wrap)return;
-    wrap.scrollLeft=pan.scrollLeft-(e.clientX-pan.startX);
-    wrap.scrollTop=pan.scrollTop-(e.clientY-pan.startY);
+    const dx=e.clientX-pan.startX,dy=e.clientY-pan.startY;
+    if(Math.abs(dx)>3||Math.abs(dy)>3)suppressLineClickRef.current=true;
+    wrap.scrollLeft=pan.scrollLeft-dx;
+    wrap.scrollTop=pan.scrollTop-dy;
   }
   function endPan(e:React.PointerEvent<HTMLDivElement>){
     if(selectRef.current){
@@ -1002,6 +1004,7 @@ export function LeadJourneyLab(){
     if(!panRef.current)return;
     panRef.current=null;setPanning(false);
     try{e.currentTarget.releasePointerCapture(e.pointerId)}catch{}
+    window.setTimeout(()=>{suppressLineClickRef.current=false},0);
   }
   function wheelZoom(e:React.WheelEvent<HTMLDivElement>){
     e.preventDefault();
@@ -1317,7 +1320,7 @@ export function LeadJourneyLab(){
               {visibleConnections.map((connection,index)=>{
                 const route=routedConnection(connection,index);if(!route)return null;
                 return <g key={connection.id} className={selectedConnectionId===connection.id?"is-selected":""}>
-                  <path className="ljl-line-hit" d={route.d} onClick={e=>{e.stopPropagation();if(connection.id.startsWith("virtual-"))return;setSelectedConnectionId(connection.id);setSelectedCardId(null)}}/>
+                  <path className="ljl-line-hit" d={route.d} onClick={e=>{e.stopPropagation();if(suppressLineClickRef.current||connection.id.startsWith("virtual-"))return;setSelectedConnectionId(connection.id);setSelectedCardId(null)}}/>
                   <path className="ljl-line-shadow" d={route.d}/>
                   <path className="ljl-line" d={route.d} markerEnd="url(#lab-arrow)"/>
                   {connection.label&&<text x={route.mx} y={route.my-7}>{connection.label}</text>}
