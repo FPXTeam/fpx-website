@@ -455,6 +455,7 @@ export function validateJourneySource(input:any,current:any,{replace=false}:any=
     onlyKeys(raw,SOURCE_CARD_KEYS,"Card "+(index+1));
     const id=plain(raw.id,100),title=plain(raw.title,255);
     if(!id||!title)throw new Error("Every card needs an id and title.");
+    if(!/^[A-Za-z0-9._:-]+$/.test(id))throw new Error("Card id "+id+" contains unsupported characters.");
     if(raw.sequence){onlyKeys(raw.sequence,SOURCE_SEQUENCE_KEYS,"Sequence on "+title)}
     const previous=currentCards.get(id);
     let execution=SOURCE_EXECUTION.includes(raw.execution)?raw.execution:"Can be automated";
@@ -469,11 +470,15 @@ export function validateJourneySource(input:any,current:any,{replace=false}:any=
     onlyKeys(raw,SOURCE_CONNECTION_KEYS,"Connection "+(index+1));
     const id=plain(raw.id,100),from=plain(raw.from,100),to=plain(raw.to,100);
     if(!id||!from||!to)throw new Error("Every connection needs id, from and to.");
+    if(!/^[A-Za-z0-9._:-]+$/.test(id))throw new Error("Connection id "+id+" contains unsupported characters.");
     if(!cardIds.has(from)||!cardIds.has(to))throw new Error("Connection "+id+" points to a card missing from the complete Journey Source.");
     return {...raw,id,from,to,label:plain(raw.label,255)};
   });
   const removeCards=Array.isArray(input.removeCards)?input.removeCards.map((x:any)=>plain(x,100)).filter(Boolean):[];
   const removeConnections=Array.isArray(input.removeConnections)?input.removeConnections.map((x:any)=>plain(x,100)).filter(Boolean):[];
+  for(const id of removeCards)if(cardIds.has(id))throw new Error("Card "+id+" is listed for removal but is still present in cards. Remove it from cards and keep its id in removeCards.");
+  const connectionIds=new Set(connections.map((c:any)=>c.id));
+  for(const id of removeConnections)if(connectionIds.has(id))throw new Error("Connection "+id+" is listed for removal but is still present in connections.");
   if(current&&!replace){
     const returned=new Set(cards.map((c:any)=>c.id)),removed=new Set(removeCards);
     const missing=(current.cards||[]).map((c:any)=>c.id).filter((id:string)=>!returned.has(id)&&!removed.has(id));
