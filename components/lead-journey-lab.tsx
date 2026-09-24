@@ -1821,6 +1821,38 @@ function BulkBar({count,journeys,onAssign,onDelete,onAlign,onFit,onClear,onExit}
   return <div className="ljl-bulkbar"><strong>{count} selected</strong><select value={journeyId} onChange={e=>setJourneyId(e.target.value)}><option value="">Assign to journey…</option>{journeys.map((j:any)=><option key={j.id} value={j.id}>{j.name}</option>)}</select><button disabled={!count||!journeyId} onClick={()=>onAssign(journeyId)}>Assign</button><button disabled={!count} onClick={onAlign}><WandSparkles size={13}/> Align</button><button disabled={!count} onClick={onFit}><Maximize2 size={13}/> Fit</button><button disabled={!count} className="danger" onClick={onDelete}><Trash2 size={13}/> Delete</button><button onClick={onClear}>Clear</button><button onClick={onExit}><X size={13}/> Exit</button></div>;
 }
 
+function JourneyOverviewDrawer({name,cards,connections,libById,cardById,layoutDirection,saving,onClose,onSelect,onRename,onNotes,onEditDetails,onAddNext,onAddCard,onAddSequence,onConnection,onDeleteConnection,onDeleteCard}:any){
+  const [query,setQuery]=useState("");
+  const ordered=[...cards].sort((a:any,b:any)=>layoutDirection==="horizontal"?(a.x-b.x||a.y-b.y):(a.y-b.y||a.x-b.x));
+  const filtered=ordered.filter((card:any)=>{
+    const def=libById.get(card.libraryId);const hay=(card.title+" "+(def?.category||"")+" "+(def?.assignedPerson||"")+" "+(card.sequenceName||"")).toLowerCase();
+    return !query||hay.includes(query.toLowerCase());
+  });
+  const outgoing=(id:string)=>connections.filter((c:any)=>c.fromId===id).sort((a:any,b:any)=>a.order-b.order);
+  return <aside className="ljl-overview-drawer">
+    <header><div><span>JOURNEY OVERVIEW</span><h2>{name}</h2><p>Edit here and the same underlying canvas records update immediately after each field is saved.</p></div><button onClick={onClose}><X size={16}/></button></header>
+    <div className="ljl-overview-tools">
+      <label><Search size={13}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find a card, owner or sequence"/></label>
+      <button onClick={onAddCard}><Plus size={12}/> Card</button><button onClick={onAddSequence}><Boxes size={12}/> Sequence</button>
+    </div>
+    <div className="ljl-overview-list">{filtered.map((card:any,index:number)=>{
+      const def=libById.get(card.libraryId),outs=outgoing(card.id);
+      return <article key={card.id} className="ljl-overview-card">
+        <div className="ljl-overview-card-head"><b>{index+1}</b><div><span>{def?.category||"Card"}{card.sequenceName?" · "+card.sequenceName:""}</span><small>{def?.execution||"Manual"}{def?.assignedPerson?" · "+def.assignedPerson:""}{def?.timing?" · "+def.timing:""}</small></div><button onClick={()=>onSelect(card)} title="Highlight on canvas"><MousePointer2 size={12}/></button></div>
+        <label>Card title<input key={card.title} defaultValue={card.title} onBlur={e=>onRename(card,e.currentTarget.value)} /></label>
+        <label>Canvas note<textarea key={card.notes||""} rows={2} defaultValue={card.notes||""} onBlur={e=>onNotes(card,e.currentTarget.value)} placeholder="Optional note for this card instance"/></label>
+        <div className="ljl-overview-card-actions"><button onClick={()=>onEditDetails(card)}><Edit3 size={11}/> Edit Details</button><button onClick={()=>onAddNext(card)}><Plus size={11}/> Add Next</button><button className="danger" onClick={()=>onDeleteCard(card)}><Trash2 size={11}/></button></div>
+        {outs.length>0&&<div className="ljl-overview-connections"><strong>Next</strong>{outs.map((connection:any)=>{
+          const target=cardById.get(connection.toId);
+          return <div key={connection.id}><span><ArrowRight size={11}/>{target?.title||"Unknown card"}</span><input key={connection.label||""} defaultValue={connection.label||""} placeholder="Branch label" onBlur={e=>{const label=e.currentTarget.value;if(label!==connection.label)onConnection(connection.id,{label,name:connection.name})}}/><button className="danger" onClick={()=>onDeleteConnection(connection.id)}><Unlink size={11}/></button></div>;
+        })}</div>}
+      </article>;
+    })}</div>
+    {!filtered.length&&<div className="ljl-empty"><Search size={18}/><strong>No matching cards</strong><p>Clear the search to see the current journey.</p></div>}
+    {saving&&<div className="ljl-overview-saving">Saving shared changes…</div>}
+  </aside>;
+}
+
 function MiniMap({cards,width,height}:any){
   if(!cards.length)return null;
   const scale=Math.min(180/Math.max(width,1),120/Math.max(height,1));
