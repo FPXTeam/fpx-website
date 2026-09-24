@@ -1234,6 +1234,22 @@ export function LeadJourneyLab(){
   )):[];
   const suggestedParents=selectedDef?(selectedDef.suggestedParentIds||[]).flatMap(id=>visibleCards.filter(c=>c.libraryId===id)):[];
 
+  const workspaceViewValue=activeJourneyId!=="all"?activeJourneyId:(sourceFocus==="all"?"main":"source:"+sourceFocus);
+  function changeWorkspaceView(value:string){
+    setSelectedCardId(null);setSelectedConnectionId(null);setPresencePerson(null);
+    if(value==="main"){setActiveJourneyId("all");setSourceFocus("all");return}
+    if(value.startsWith("source:")){
+      setActiveJourneyId("all");setSourceFocus(value.slice(7) as any);return;
+    }
+    setActiveJourneyId(value);setSourceFocus("all");
+  }
+  function presenceState(item:any){
+    if(!item?.lastSeen)return "offline";
+    const age=Date.now()-new Date(item.lastSeen).getTime();
+    return age<70000?"active":age<180000?"idle":"offline";
+  }
+  const presencePeople=["Gabriel","Gabriela","George"].map(name=>({name,item:presence.find((p:any)=>p.person===name)||null}));
+
   if(!unlocked)return <main className="ljl-lock"><div className="ljl-lock-card">
     <div className="ljl-mark">FPX <span>INTERNAL</span></div><div className="ljl-lock-icon"><Lock size={22}/></div>
     <h1>Lead Journey Lab</h1>
