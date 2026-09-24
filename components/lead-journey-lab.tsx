@@ -1430,6 +1430,7 @@ export function LeadJourneyLab(){
           onConnectParent={(parent)=>createConnection(parent.id,selectedCard.id)} onAddSuggestion={addSuggested}
           onComments={(comments:string)=>saveCardComments(selectedCard,comments)}
           onResolve={(answer:string)=>saveLibrary({...selectedDef,workshopAnswer:answer.trim(),workshopStatus:"Agreed"})}
+          onPromote={()=>saveLibrary({...selectedDef,journeyLocal:false})}
           onMerge={()=>activeJourneyId!=="all"&&setMergeCardId(selectedCard.id)}
           canMerge={activeJourneyId!=="all"} onDuplicate={()=>duplicateCard(selectedCard)} onDelete={()=>removeCard(selectedCard)}/>:
         <div className="ljl-empty"><Link2 size={19}/><strong>Select a card or connection</strong><p>Card details, suggestions and connection controls will appear here.</p></div>}
@@ -1478,7 +1479,7 @@ export function LeadJourneyLab(){
   </main>;
 }
 
-function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,suggestedNext,onEditAll,onDisconnect,onConnectParent,onAddSuggestion,onComments,onResolve,onMerge,canMerge,onDuplicate,onDelete}:any){
+function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,suggestedNext,onEditAll,onDisconnect,onConnectParent,onAddSuggestion,onComments,onResolve,onPromote,onMerge,canMerge,onDuplicate,onDelete}:any){
   const [comments,setComments]=useState(card.comments||"");
   const [answer,setAnswer]=useState(def.workshopAnswer||"");
   return <div className="ljl-inspector-inner">
@@ -1506,7 +1507,7 @@ function CardInspector({card,def,incoming,outgoing,cardById,suggestedParents,sug
     {(def.campaignName||def.subject||def.templateName||def.messagePurpose)&&<section><h3>Communication</h3>
       <div className="ljl-detail-list"><p><b>Campaign:</b> {def.campaignName||"—"}</p><p><b>Subject:</b> {def.subject||"—"}</p><p><b>Template:</b> {def.templateName||"—"}</p><p><b>Purpose:</b> {def.messagePurpose||"—"}</p></div>
     </section>}
-    <section className="ljl-inspector-actions">{canMerge&&<button onClick={onMerge}><GitMerge size={13}/> Connect to journey</button>}<button onClick={onDuplicate}><Copy size={13}/> Duplicate card</button><button onClick={onEditAll}><Edit3 size={13}/> Edit master card</button><button className="danger" onClick={onDelete}><Trash2 size={13}/> Delete from map</button></section>
+    <section className="ljl-inspector-actions">{canMerge&&<button onClick={onMerge}><GitMerge size={13}/> Connect to journey</button>}{def.journeyLocal&&<button onClick={onPromote}><BookOpen size={13}/> Promote to Master Card</button>}<button onClick={onDuplicate}><Copy size={13}/> Duplicate card</button><button onClick={onEditAll}><Edit3 size={13}/> Edit master card</button><button className="danger" onClick={onDelete}><Trash2 size={13}/> Delete from map</button></section>
   </div>;
 }
 
@@ -1624,7 +1625,7 @@ function LibraryModal({board,onClose,onAdd,onEdit}:any){
     <div className="ljl-library-tools"><label><Search size={14}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search cards or tools"/></label><select value={category} onChange={e=>setCategory(e.target.value)}>{cats.map(c=><option key={c}>{c}</option>)}</select></div>
     <div className="ljl-library-groups">{cats.filter(c=>c!=="All"&&(category==="All"||category===c)).map(cat=>{
       const items=filtered.filter((x:any)=>x.category===cat);if(!items.length)return null;
-      return <section key={cat}><h3>{cat}<span>{items.length}</span></h3><div>{items.map((x:any)=><button className="ljl-library-card" key={x.id} onClick={()=>onEdit(x.id)}><div><strong>{x.name}</strong><span>{x.tool!=="None"?x.tool:"No tool"} · {x.execution||"Manual"}</span></div><Edit3 size={14}/></button>)}</div></section>;
+      return <section key={cat}><h3>{cat}<span>{items.length}</span></h3><div>{items.map((x:any)=><button className="ljl-library-card" key={x.id} onClick={()=>onEdit(x.id)}><div><strong>{x.name}</strong><span>{x.tool!=="None"?x.tool:"No tool"} · {x.execution||"Manual"}{x.journeyLocal?" · JOURNEY LOCAL":""}</span></div><Edit3 size={14}/></button>)}</div></section>;
     })}</div>
   </div></div>;
 }
