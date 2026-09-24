@@ -25,7 +25,7 @@ const LF={
   automationTool:"fldtj3DqwwQzdSaZt",execution:"fldoUMvXmzWh9k4Mj",assignedPerson:"fldekExx7LZuhfnoQ",campaignName:"fldbGbTqoGkNvZTzN",
   subject:"fldHHAvFN2lpvRt7K",templateName:"fld0Py25FHr00nQWH",messagePurpose:"fld7i7fhPftgjQXnJ",
   timing:"fldB1f036jAgXMt5c",leadStatus:"fldNWEf7sSt4ChpIi",workshopStatus:"fld134QjRkl0fF6iQ",
-  workshopAnswer:"fld8Eto4esvZ0y8Vw",notes:"flduBE9ecTbGhwxYJ",active:"fldVkdrb1OjCC16VH",global:"fldxsxqYkRpa9NhTo",
+  workshopAnswer:"fld8Eto4esvZ0y8Vw",notes:"flduBE9ecTbGhwxYJ",active:"fldVkdrb1OjCC16VH",global:"fldxsxqYkRpa9NhTo",journeyLocal:"fldPaa9HLd065kLHu",
   suggestedNext:"fldObxiWfVZnqtj0F",suggestedParent:"fld2u1vmpFdO87LVD",applicableJourneys:"fldyuRZmv4uDz2MxI"
 } as const;
 const XF={
@@ -67,7 +67,7 @@ export type LabJourney={id:string;name:string;description:string;order:number;ac
 export type LabLibraryCard={
   id:string;name:string;category:string;tool:string;use:string;action:string;automated:string;automationTool:string;execution:string;
   assignedPerson:string;campaignName:string;subject:string;templateName:string;messagePurpose:string;timing:string;
-  leadStatus:string;workshopStatus:string;workshopAnswer:string;notes:string;active:boolean;global:boolean;
+  leadStatus:string;workshopStatus:string;workshopAnswer:string;notes:string;active:boolean;global:boolean;journeyLocal:boolean;
   suggestedNextIds:string[];suggestedParentIds:string[];applicableJourneyIds:string[];
 };
 export type LabCard={id:string;title:string;notes:string;comments:string;order:number;x:number;y:number;journeyIds:string[];libraryId:string;sequenceId:string;sequenceName:string;sequenceStep:number};
@@ -92,7 +92,7 @@ export async function getJourneyLabData(){
     execution:selectName(val(r,LF.execution),"Manual"),assignedPerson:val(r,LF.assignedPerson),campaignName:val(r,LF.campaignName),subject:val(r,LF.subject),templateName:val(r,LF.templateName),
     messagePurpose:val(r,LF.messagePurpose),timing:val(r,LF.timing),leadStatus:selectName(val(r,LF.leadStatus),"Not Applicable"),
     workshopStatus:selectName(val(r,LF.workshopStatus),"Draft"),workshopAnswer:val(r,LF.workshopAnswer),notes:val(r,LF.notes),active:val(r,LF.active,true)!==false,
-    global:Boolean(val(r,LF.global,false)),suggestedNextIds:links(val(r,LF.suggestedNext,[])),suggestedParentIds:links(val(r,LF.suggestedParent,[])),
+    global:Boolean(val(r,LF.global,false)),journeyLocal:Boolean(val(r,LF.journeyLocal,false)),suggestedNextIds:links(val(r,LF.suggestedNext,[])),suggestedParentIds:links(val(r,LF.suggestedParent,[])),
     applicableJourneyIds:links(val(r,LF.applicableJourneys,[]))
   }));
   const cards:LabCard[]=c.records.map((r:any)=>({
@@ -148,7 +148,7 @@ function libraryFields(input:any){
     name:LF.name,category:LF.category,tool:LF.tool,use:LF.use,action:LF.action,automated:LF.automated,
     automationTool:LF.automationTool,execution:LF.execution,assignedPerson:LF.assignedPerson,campaignName:LF.campaignName,subject:LF.subject,
     templateName:LF.templateName,messagePurpose:LF.messagePurpose,timing:LF.timing,leadStatus:LF.leadStatus,
-    workshopStatus:LF.workshopStatus,workshopAnswer:LF.workshopAnswer,notes:LF.notes,active:LF.active,global:LF.global,
+    workshopStatus:LF.workshopStatus,workshopAnswer:LF.workshopAnswer,notes:LF.notes,active:LF.active,global:LF.global,journeyLocal:LF.journeyLocal,
     suggestedNextIds:LF.suggestedNext,suggestedParentIds:LF.suggestedParent,applicableJourneyIds:LF.applicableJourneys
   };
   for(const [key,id] of Object.entries(map))if(input[key]!==undefined)fields[id as string]=input[key];
@@ -391,7 +391,7 @@ function makeLocalLibraryFromSource(card:any,journeyId:string,current?:any){
     subject:existing.subject||"",templateName:existing.templateName||"",messagePurpose:existing.messagePurpose||"",
     timing:plain(card.timing,255)||existing.timing||"",leadStatus:plain(card.leadStatus,100)||existing.leadStatus||"Not Applicable",
     workshopStatus:workshop,workshopAnswer:plain(card.workshopAnswer)||existing.workshopAnswer||"",notes:plain(card.notes)||existing.notes||"",
-    active:true,global:false,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:[journeyId]
+    active:true,global:false,journeyLocal:true,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:[journeyId]
   };
 }
 function sourceCardFromData(card:any,def:any){
