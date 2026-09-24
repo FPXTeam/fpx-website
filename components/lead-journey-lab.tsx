@@ -1318,6 +1318,7 @@ export function LeadJourneyLab(){
               <span>DETAIL</span>
               <button className={detailMode==="simple"?"active":""} onClick={()=>{setDetailMode("simple");setViewMenuOpen(false)}}>Simple</button>
               <button className={detailMode==="deep"?"active":""} onClick={()=>{setDetailMode("deep");setViewMenuOpen(false)}}>In-Depth</button>
+              <button onClick={()=>{setJourneyOverviewOpen(true);setViewMenuOpen(false)}}>Journey Overview</button>
               <hr/><span>LAYOUT</span>
               <button className={layoutDirection==="horizontal"?"active":""} onClick={()=>{setLayoutDirection("horizontal");setViewMenuOpen(false);autoAlign(undefined,"horizontal")}}>Horizontal</button>
               <button className={layoutDirection==="vertical"?"active":""} onClick={()=>{setLayoutDirection("vertical");setViewMenuOpen(false);autoAlign(undefined,"vertical")}}>Vertical</button>
@@ -1460,7 +1461,15 @@ export function LeadJourneyLab(){
       onDuplicate={()=>{const c=contextMenu.cardId?cardById.get(contextMenu.cardId):null;if(c)duplicateCard(c);setContextMenu(null)}}
       onAutoAlign={()=>{setContextMenu(null);autoAlign()}} onFit={()=>{setContextMenu(null);fitView()}}/>}
 
-    {sequencePicker&&<SequenceModal saving={saving} onClose={()=>setSequencePicker(null)} onInsert={insertSequence}/>}
+    {sequencePicker&&<SequenceModal saving={saving} templates={sequenceTemplates} onClose={()=>setSequencePicker(null)} onInsert={insertSequence}
+      onSaveTemplate={async(template:any)=>{setSaving(true);setError("");try{
+        if(!board.configured){setSequenceTemplates(items=>items.map(x=>x.id===template.id?template:x));return}
+        const data=await rawRequest("","POST",{action:"saveSequenceTemplate",template});
+        const overrides=new Map((data.sequences||[]).filter((x:any)=>x.active!==false).map((x:any)=>[x.id,x]));
+        const merged:any[]=SEQUENCE_TEMPLATES.map(base=>overrides.has(base.id)?{...base,...overrides.get(base.id)}:base);
+        for(const custom of overrides.values())if(!merged.some((x:any)=>x.id===(custom as any).id))merged.push(custom);
+        setSequenceTemplates(merged as SequenceTemplate[]);
+      }catch(e){setError(e instanceof Error?e.message:"Unable to save sequence template.")}finally{setSaving(false)}}}/>}
     {addingJourney&&<JourneyModal saving={saving} board={board} onClose={()=>setAddingJourney(false)} onSave={createJourney}/>}
     {journeyManagerOpen&&<JourneyManagerModal board={board} activeJourneyId={activeJourneyId}
       onOpen={id=>{setActiveJourneyId(id);setSourceFocus("all");setJourneyManagerOpen(false)}}
