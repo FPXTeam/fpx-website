@@ -1459,7 +1459,8 @@ export function LeadJourneyLab(){
       onExportSvg={exportSvg} onPrint={()=>window.print()} onChangeLog={loadChangeLog}
       onSource={()=>{setToolsOpen(false);setJourneySourceOpen(true)}}
       onPresentation={()=>{setToolsOpen(false);setPresentationMode(true)}} onClose={()=>setToolsOpen(false)}/>}
-    {journeySourceOpen&&currentJourneyId&&<JourneySourceModal journeyId={currentJourneyId} focusName={currentViewName()} rawRequest={rawRequest}
+    {journeySourceOpen&&currentJourneyId&&<JourneySourceModal journeyId={currentJourneyId} focusName={currentViewName()}
+      scopeFocus={isMainView&&sourceFocus!=="all"?sourceFocus:""} rawRequest={rawRequest}
       onBoard={(data:any)=>setBoard(data)} onClose={()=>setJourneySourceOpen(false)}/>}
     {historyOpen&&<VersionHistoryModal snapshots={snapshots} onSave={saveSnapshot} onRestore={restoreSnapshot}
       onDelete={removeSnapshot} onClose={()=>setHistoryOpen(false)}/>}
@@ -1710,7 +1711,7 @@ function WorkspaceToolsModal({board,miniMap,setMiniMap,hideAgreed,setHideAgreed,
   </div></div>;
 }
 
-function JourneySourceModal({journeyId,focusName,rawRequest,onBoard,onClose}:any){
+function JourneySourceModal({journeyId,focusName,scopeFocus,rawRequest,onBoard,onClose}:any){
   const [source,setSource]=useState<any>(null);
   const [editor,setEditor]=useState("");
   const [revision,setRevision]=useState("");
@@ -1727,13 +1728,13 @@ function JourneySourceModal({journeyId,focusName,rawRequest,onBoard,onClose}:any
   async function load(){
     setBusy(true);setError("");
     try{
-      const data=await rawRequest("?section=source&journeyId="+encodeURIComponent(journeyId));
+      const data=await rawRequest("?section=source&journeyId="+encodeURIComponent(journeyId)+(scopeFocus?"&focus="+encodeURIComponent(scopeFocus):""));
       setSource(data.source);setEditor(JSON.stringify(data.source,null,2));setRevision(data.revision||"");
       setLatestVersion(Number(data.latestVersion||0));setVersions(data.versions||[]);setPreview(null);setUndoStack([]);setRedoStack([]);setSourceOrigin("manual");
     }catch(e){setError(e instanceof Error?e.message:"Unable to load Journey Source.")}
     finally{setBusy(false)}
   }
-  useEffect(()=>{load()},[journeyId]);
+  useEffect(()=>{load()},[journeyId,scopeFocus]);
 
   function setEditorWithHistory(next:string){
     setUndoStack(stack=>[...stack.slice(-29),editor]);setRedoStack([]);setEditor(next);setPreview(null);setNotice("");
@@ -1788,7 +1789,7 @@ ${editor}
     setBusy(true);setError("");setNotice("");
     try{
       const parsed=parseEditor();
-      const result=await rawRequest("","POST",{action:"previewJourneySource",journeyId,source:parsed});
+      const result=await rawRequest("","POST",{action:"previewJourneySource",journeyId,scopeFocus,source:parsed});
       setPreview(result);setNotice("Validation passed. Review the change summary, then Save Version when you are happy.");
     }catch(e:any){
       setPreview(null);setError(e?.message||"Unable to validate Journey Source.");
@@ -1798,7 +1799,7 @@ ${editor}
     if(!preview?.normalized)return;
     setBusy(true);setError("");setNotice("");
     try{
-      const result=await rawRequest("","POST",{action:"applyJourneySource",journeyId,source:preview.normalized,baseRevision:revision,baseVersion:latestVersion,reason:sourceOrigin==="ai"?"AI Import":"Manual Structural Edit"});
+      const result=await rawRequest("","POST",{action:"applyJourneySource",journeyId,scopeFocus,source:preview.normalized,baseRevision:revision,baseVersion:latestVersion,reason:sourceOrigin==="ai"?"AI Import":"Manual Structural Edit"});
       if(result.data)onBoard(result.data);
       setSource(result.source);setEditor(JSON.stringify(result.source,null,2));setRevision(result.revision||"");setLatestVersion(Number(result.versionNumber||latestVersion+1));
       const fresh=await rawRequest("?section=versions&journeyId="+encodeURIComponent(journeyId));setVersions(fresh.versions||[]);
