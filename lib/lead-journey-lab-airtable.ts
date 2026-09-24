@@ -6,6 +6,8 @@ const LIBRARY_TABLE="tblRQEzsSkgvc4Fra";
 const CONNECTIONS_TABLE="tblzBBKa4YFA3QoHh";
 const SNAPSHOTS_TABLE="tblKeb91K0Hx4FUjs";
 const CHANGE_LOG_TABLE="tblt6YPVAye7Ji2HB";
+const PRESENCE_TABLE="tblxisRPy6D7ovq16";
+const VERSIONS_TABLE="tblFEIR5UCWzLbBxq";
 
 const JF={
   name:"fldR1mvKg5WmaHtxl",description:"fldAYmPtMLBa2ngkD",order:"fldqQz8GHBBjgntY4",
@@ -32,6 +34,8 @@ const XF={
 } as const;
 const SF={name:"fldSdlemWaw8XgzZ5",journey:"fldcRZ4N9cgMcqLQO",createdAt:"fldL3PiCzd4fWSOLJ",createdBy:"fldLUsfY4316Fai8v",json:"fld6VvuOdiyRtCwRr"} as const;
 const GF={event:"fldciLs2nCvg36DaW",action:"fldgEDhvqhYxrdOC9",itemType:"fldBARvD5dnrsvMN3",itemName:"fldiuhJaaKoMdKsYm",journey:"fldYTs9jFFvzZ6O6c",changedAt:"fldQlsRbRRYYgqFKb",changedBy:"fld6KEtFxjEPIZxgs",details:"fldM4aOFt1fIoNtYa"} as const;
+const PF={person:"fldrf6abISjrfJMfg",journey:"fldnXC2VwZnYD43wD",view:"fldnTZDsrGC6Yujcc",focus:"fldMQhiBofsYyrz5B",mode:"fld0478yhVusa500h",card:"fld2PBtOpvyKzsvzv",lastSeen:"fldjYuGolbyCsWs3q",session:"fldr00MCCNh9pIO72"} as const;
+const VF={label:"fldvfYLJHumrDdbOQ",journey:"fldtdtfmhbKT122dR",number:"fldlaHTTCSvezapFW",createdAt:"fldqNRajyIh2S2GkJ",createdBy:"fld4UtNQUOPydXMGb",reason:"fldYLxWjHPfHtzssw",base:"fld2xFkmYX8yTpFjL",summary:"fld2WA8jt5cobtXXX",source:"fldHpk6Gqst6PJOCH"} as const;
 
 function token(){return process.env.AIRTABLE_TOKEN?.trim()||process.env.AIRTABLE_PERSONAL_ACCESS_TOKEN?.trim()||""}
 function headers(){const value=token();if(!value)throw new Error("AIRTABLE_TOKEN is not configured.");return {Authorization:`Bearer ${value}`,"Content-Type":"application/json"}}
@@ -343,4 +347,312 @@ export async function logChange(input:any){
     [GF.journey]:input.journeyIds||[],[GF.changedAt]:now(),[GF.changedBy]:input.changedBy||"Shared user",[GF.details]:input.details||""
   };
   return airtable(CHANGE_LOG_TABLE,{method:"POST",body:JSON.stringify({records:[{fields}],typecast:true})});
+}
+
+
+const JOURNEY_SOURCE_SCHEMA="fpx-journey-v1";
+const SOURCE_CATEGORIES=["Source","Capture","Communication","CRM","Decision","Nurture","Wait","Action","Outcome","Customer Handoff"];
+const SOURCE_EXECUTION=["Automated","Can be automated","Manual"];
+const SOURCE_WORKSHOP=["Draft","Needs Discussion","Agreed"];
+const SOURCE_TOP_KEYS=new Set(["schema","journey","cards","connections","removeCards","removeConnections"]);
+const SOURCE_CARD_KEYS=new Set(["id","title","type","execution","owner","tool","use","action","timing","leadStatus","workshopStatus","workshopAnswer","notes","sequence"]);
+const SOURCE_SEQUENCE_KEYS=new Set(["id","name","step"]);
+const SOURCE_CONNECTION_KEYS=new Set(["id","from","to","label"]);
+
+function sourceHash(value:any){
+  const normalized=JSON.stringify({
+    ...value,
+    cards:[...(value?.cards||[])].sort((a:any,b:any)=>String(a.id).localeCompare(String(b.id))),
+    connections:[...(value?.connections||[])].sort((a:any,b:any)=>String(a.id).localeCompare(String(b.id))),
+    removeCards:[...(value?.removeCards||[])].sort(),
+    removeConnections:[...(value?.removeConnections||[])].sort()
+  });
+  let h=2166136261;
+  for(let i=0;i<normalized.length;i++){h^=normalized.charCodeAt(i);h=Math.imul(h,16777619)}
+  return "fpx-"+(h>>>0).toString(16).padStart(8,"0");
+}
+function onlyKeys(obj:any,allowed:Set<string>,label:string){
+  if(!obj||typeof obj!=="object"||Array.isArray(obj))throw new Error(label+" must be an object.");
+  const extras=Object.keys(obj).filter(k=>!allowed.has(k));
+  if(extras.length)throw new Error(label+" contains unsupported field(s): "+extras.join(", ")+".");
+}
+function plain(value:any,max=4000){return typeof value==="string"?value.slice(0,max):""}
+function makeLocalLibraryFromSource(card:any,journeyId:string,current?:any){
+  const existing=current||{};
+  let execution=SOURCE_EXECUTION.includes(card.execution)?card.execution:(existing.execution||"Can be automated");
+  if(!current&&execution==="Automated")execution="Can be automated";
+  let workshop=SOURCE_WORKSHOP.includes(card.workshopStatus)?card.workshopStatus:(existing.workshopStatus||"Draft");
+  if(!current&&workshop==="Agreed")workshop="Draft";
+  return {
+    name:plain(card.title,255)||"Untitled card",category:SOURCE_CATEGORIES.includes(card.type)?card.type:(existing.category||"Action"),
+    tool:plain(card.tool,100)||existing.tool||"None",use:plain(card.use)||existing.use||"",action:plain(card.action,255)||existing.action||"",
+    execution,automated:execution==="Automated"?"Yes":execution==="Can be automated"?"To Decide":"No",
+    automationTool:"None",assignedPerson:plain(card.owner,255)||existing.assignedPerson||"",campaignName:existing.campaignName||"",
+    subject:existing.subject||"",templateName:existing.templateName||"",messagePurpose:existing.messagePurpose||"",
+    timing:plain(card.timing,255)||existing.timing||"",leadStatus:plain(card.leadStatus,100)||existing.leadStatus||"Not Applicable",
+    workshopStatus:workshop,workshopAnswer:plain(card.workshopAnswer)||existing.workshopAnswer||"",notes:plain(card.notes)||existing.notes||"",
+    active:true,global:false,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:[journeyId]
+  };
+}
+function sourceCardFromData(card:any,def:any){
+  return {
+    id:card.id,title:card.title,type:def?.category||"Action",execution:def?.execution||"Manual",
+    owner:def?.assignedPerson||"",tool:def?.tool||"None",use:def?.use||"",action:def?.action||"",timing:def?.timing||"",
+    leadStatus:def?.leadStatus||"Not Applicable",workshopStatus:def?.workshopStatus||"Draft",workshopAnswer:def?.workshopAnswer||"",
+    notes:def?.notes||card.notes||"",
+    ...(card.sequenceId?{sequence:{id:card.sequenceId,name:card.sequenceName||"Sequence",step:Number(card.sequenceStep||0)}}:{})
+  };
+}
+export function buildJourneySource(data:any,journeyId:string){
+  const journey=data.journeys.find((j:any)=>j.id===journeyId);
+  if(!journey)throw new Error("Journey not found.");
+  const cards=data.cards.filter((c:any)=>c.journeyIds.includes(journeyId)).sort((a:any,b:any)=>a.order-b.order);
+  const ids=new Set(cards.map((c:any)=>c.id));
+  const connections=data.connections.filter((c:any)=>c.active&&c.journeyIds.includes(journeyId)&&ids.has(c.fromId)&&ids.has(c.toId)).sort((a:any,b:any)=>a.order-b.order);
+  const defs=new Map(data.library.map((d:any)=>[d.id,d]));
+  return {
+    schema:JOURNEY_SOURCE_SCHEMA,
+    journey:{id:journey.id,name:journey.name},
+    cards:cards.map((card:any)=>sourceCardFromData(card,defs.get(card.libraryId))),
+    connections:connections.map((c:any)=>({id:c.id,from:c.fromId,to:c.toId,label:c.label||""})),
+    removeCards:[],removeConnections:[]
+  };
+}
+export function validateJourneySource(input:any,current:any,{replace=false}:any={}){
+  onlyKeys(input,SOURCE_TOP_KEYS,"Journey Source");
+  if(input.schema!==JOURNEY_SOURCE_SCHEMA)throw new Error('Journey Source schema must be "'+JOURNEY_SOURCE_SCHEMA+'".');
+  if(!input.journey||typeof input.journey!=="object")throw new Error("Journey Source is missing journey metadata.");
+  if(!Array.isArray(input.cards)||!Array.isArray(input.connections))throw new Error("Journey Source must contain complete cards and connections arrays.");
+  if(input.cards.length>350||input.connections.length>800)throw new Error("Journey Source is too large for a safe import.");
+  const cards=input.cards.map((raw:any,index:number)=>{
+    onlyKeys(raw,SOURCE_CARD_KEYS,"Card "+(index+1));
+    const id=plain(raw.id,100),title=plain(raw.title,255);
+    if(!id||!title)throw new Error("Every card needs an id and title.");
+    if(raw.sequence){onlyKeys(raw.sequence,SOURCE_SEQUENCE_KEYS,"Sequence on "+title)}
+    return {...raw,id,title,type:SOURCE_CATEGORIES.includes(raw.type)?raw.type:"Action",
+      execution:SOURCE_EXECUTION.includes(raw.execution)?raw.execution:"Can be automated",
+      workshopStatus:SOURCE_WORKSHOP.includes(raw.workshopStatus)?raw.workshopStatus:"Draft"};
+  });
+  const cardIds=new Set<string>();
+  for(const card of cards){if(cardIds.has(card.id))throw new Error("Duplicate card id: "+card.id);cardIds.add(card.id)}
+  const connections=input.connections.map((raw:any,index:number)=>{
+    onlyKeys(raw,SOURCE_CONNECTION_KEYS,"Connection "+(index+1));
+    const id=plain(raw.id,100),from=plain(raw.from,100),to=plain(raw.to,100);
+    if(!id||!from||!to)throw new Error("Every connection needs id, from and to.");
+    if(!cardIds.has(from)||!cardIds.has(to))throw new Error("Connection "+id+" points to a card missing from the complete Journey Source.");
+    return {...raw,id,from,to,label:plain(raw.label,255)};
+  });
+  const removeCards=Array.isArray(input.removeCards)?input.removeCards.map((x:any)=>plain(x,100)).filter(Boolean):[];
+  const removeConnections=Array.isArray(input.removeConnections)?input.removeConnections.map((x:any)=>plain(x,100)).filter(Boolean):[];
+  if(current&&!replace){
+    const returned=new Set(cards.map((c:any)=>c.id)),removed=new Set(removeCards);
+    const missing=(current.cards||[]).map((c:any)=>c.id).filter((id:string)=>!returned.has(id)&&!removed.has(id));
+    const returnedX=new Set(connections.map((c:any)=>c.id)),removedX=new Set(removeConnections);
+    const missingX=(current.connections||[]).map((c:any)=>c.id).filter((id:string)=>!returnedX.has(id)&&!removedX.has(id));
+    if(missing.length||missingX.length){
+      const count=missing.length+missingX.length;
+      throw new Error("This appears to be a partial AI response. "+count+" existing journey item"+(count===1?" is":"s are")+" missing and no removal was requested. Please ask AI to give you a full rewrite of the complete FPX Journey Source, not snippets of changes.");
+    }
+  }
+  return {...input,cards,connections,removeCards,removeConnections};
+}
+function sourceComparable(card:any){const x={...card};delete x.id;return JSON.stringify(x)}
+function summarizeSourceDiff(current:any,next:any){
+  const cm=new Map((current.cards||[]).map((x:any)=>[x.id,x])),nm=new Map((next.cards||[]).map((x:any)=>[x.id,x]));
+  const cx=new Map((current.connections||[]).map((x:any)=>[x.id,x])),nx=new Map((next.connections||[]).map((x:any)=>[x.id,x]));
+  const added=[...nm.keys()].filter(id=>!cm.has(id)),changed=[...nm.keys()].filter(id=>cm.has(id)&&sourceComparable(cm.get(id))!==sourceComparable(nm.get(id)));
+  const addedX=[...nx.keys()].filter(id=>!cx.has(id)),changedX=[...nx.keys()].filter(id=>cx.has(id)&&sourceComparable(cx.get(id))!==sourceComparable(nx.get(id)));
+  const removed=Array.from(new Set([...(next.removeCards||[]),...([...cm.keys()].filter(id=>!nm.has(id)&&!(next.cards||[]).some((c:any)=>c.id===id))]));
+  const removedX=Array.from(new Set([...(next.removeConnections||[]),...([...cx.keys()].filter(id=>!nx.has(id)&&!(next.connections||[]).some((c:any)=>c.id===id))]));
+  return {cardsAdded:added.length,cardsChanged:changed.length,cardsRemoved:removed.length,connectionsAdded:addedX.length,connectionsChanged:changedX.length,connectionsRemoved:removedX.length,
+    addedCards:added.map(id=>nm.get(id)?.title||id),changedCards:changed.map(id=>nm.get(id)?.title||id)};
+}
+
+export async function getJourneySource(journeyId:string){
+  const data=await getJourneyLabData();
+  const source=buildJourneySource(data,journeyId);
+  const versions=await listJourneyVersions(journeyId);
+  return {source,revision:sourceHash(source),latestVersion:versions[0]?.versionNumber||0,versions};
+}
+export async function listJourneyVersions(journeyId:string){
+  const d=await airtableAll(`${VERSIONS_TABLE}?pageSize=100`);
+  return d.records.map((r:any)=>({
+    id:r.id,label:val(r,VF.label,"Version"),journeyIds:links(val(r,VF.journey,[])),versionNumber:Number(val(r,VF.number,0)),
+    createdAt:val(r,VF.createdAt),createdBy:val(r,VF.createdBy),reason:selectName(val(r,VF.reason),"Manual Structural Edit"),
+    baseVersion:Number(val(r,VF.base,0)),summary:val(r,VF.summary),sourceJson:val(r,VF.source,"")
+  })).filter((v:any)=>v.journeyIds.includes(journeyId)).sort((a:any,b:any)=>b.versionNumber-a.versionNumber);
+}
+export async function createJourneyVersion(input:any){
+  const versions=await listJourneyVersions(input.journeyId);
+  const versionNumber=Number(input.versionNumber||((versions[0]?.versionNumber||0)+1));
+  const fields:any={
+    [VF.label]:input.label||`v${versionNumber} · ${input.reason||"Saved"}`,[VF.journey]:[input.journeyId],[VF.number]:versionNumber,
+    [VF.createdAt]:now(),[VF.createdBy]:input.createdBy||"Shared user",[VF.reason]:input.reason||"Manual Structural Edit",
+    [VF.base]:Number(input.baseVersion||0),[VF.summary]:input.summary||"",[VF.source]:JSON.stringify(input.source||{})
+  };
+  const made=await airtable(VERSIONS_TABLE,{method:"POST",body:JSON.stringify({records:[{fields}],typecast:true})});
+  return {id:made.records?.[0]?.id,versionNumber};
+}
+async function ensureBaselineVersion(journeyId:string,createdBy:string,currentSource:any){
+  const versions=await listJourneyVersions(journeyId);
+  if(versions.length)return versions[0].versionNumber;
+  const made=await createJourneyVersion({journeyId,createdBy,reason:"Baseline",baseVersion:0,summary:"Baseline before the first saved Journey Source change.",source:currentSource,versionNumber:1,label:"v1 · Baseline"});
+  return made.versionNumber;
+}
+async function unlinkCardFromJourney(card:any,journeyId:string){
+  await updateJourneyCard(card.id,{journeyIds:card.journeyIds.filter((id:string)=>id!==journeyId)});
+}
+async function unlinkConnectionFromJourney(connection:any,journeyId:string){
+  await updateConnection(connection.id,{journeyIds:connection.journeyIds.filter((id:string)=>id!==journeyId)});
+}
+export async function previewJourneySource(journeyId:string,input:any){
+  const data=await getJourneyLabData(),current=buildJourneySource(data,journeyId);
+  const normalized=validateJourneySource(input,current);
+  return {normalized,diff:summarizeSourceDiff(current,normalized),revision:sourceHash(current),current};
+}
+export async function applyJourneySource(input:any){
+  const journeyId=String(input.journeyId||""),createdBy=input.createdBy||"Shared user";
+  const beforeData=await getJourneyLabData(),current=buildJourneySource(beforeData,journeyId);
+  const currentRevision=sourceHash(current);
+  if(!input.force&&input.baseRevision&&input.baseRevision!==currentRevision){
+    const versions=await listJourneyVersions(journeyId);
+    const error:any=new Error("This journey changed while you were editing it. Reload the current journey before saving your AI update.");
+    error.code="JOURNEY_CONFLICT";error.currentRevision=currentRevision;error.latestVersion=versions[0]||null;throw error;
+  }
+  const normalized=validateJourneySource(input.source,current,{replace:Boolean(input.replace)});
+  const diff=summarizeSourceDiff(current,normalized);
+  const baselineVersion=await ensureBaselineVersion(journeyId,createdBy,current);
+  const oldCards=new Map(beforeData.cards.map((c:any)=>[c.id,c])),oldConnections=new Map(beforeData.connections.map((c:any)=>[c.id,c])),oldDefs=new Map(beforeData.library.map((d:any)=>[d.id,d]));
+  const createdCards:string[]=[],createdConnections:string[]=[],createdLibraries:string[]=[],updatedCards:any[]=[],updatedConnections:any[]=[];
+  const idMap=new Map<string,string>();
+  const cardInputMap=new Map(normalized.cards.map((c:any)=>[c.id,c]));
+  const currentCardMap=new Map(current.cards.map((c:any)=>[c.id,c]));
+  let maxX=Math.max(100,...beforeData.cards.filter((c:any)=>c.journeyIds.includes(journeyId)).map((c:any)=>c.x||100));
+  let maxY=Math.max(100,...beforeData.cards.filter((c:any)=>c.journeyIds.includes(journeyId)).map((c:any)=>c.y||100));
+  async function localDef(cardSource:any,currentDef:any){
+    const made=await createLibraryCard(makeLocalLibraryFromSource(cardSource,journeyId,currentDef));
+    const id=made.records?.[0]?.id;if(!id)throw new Error("Unable to create journey-local card definition.");
+    createdLibraries.push(id);return id;
+  }
+  try{
+    for(let i=0;i<normalized.cards.length;i++){
+      const src=normalized.cards[i],existing=oldCards.get(src.id),existingDef=existing?oldDefs.get(existing.libraryId):null;
+      const currentExport=currentCardMap.get(src.id);
+      if(existing&&existing.journeyIds.includes(journeyId)&&currentExport&&sourceComparable(currentExport)===sourceComparable(src)){
+        idMap.set(src.id,existing.id);continue;
+      }
+      if(existing&&existing.journeyIds.includes(journeyId)){
+        const libraryId=await localDef(src,existingDef);
+        if(existing.journeyIds.length>1){
+          const made=await createJourneyCard({title:src.title,notes:existing.notes||"",comments:existing.comments||"",order:existing.order,
+            x:existing.x,y:existing.y,journeyIds:[journeyId],libraryId,sequenceId:src.sequence?.id||"",sequenceName:src.sequence?.name||"",sequenceStep:Number(src.sequence?.step||0)});
+          const newId=made.records?.[0]?.id;if(!newId)throw new Error("Unable to isolate shared card.");
+          createdCards.push(newId);updatedCards.push(existing);await unlinkCardFromJourney(existing,journeyId);idMap.set(src.id,newId);
+        }else{
+          updatedCards.push(existing);
+          await updateJourneyCard(existing.id,{title:src.title,libraryId,sequenceId:src.sequence?.id||"",sequenceName:src.sequence?.name||"",sequenceStep:Number(src.sequence?.step||0)});
+          idMap.set(src.id,existing.id);
+        }
+      }else if(existing&&!existing.journeyIds.includes(journeyId)){
+        const libraryId=await localDef(src,existingDef);
+        const made=await createJourneyCard({title:src.title,notes:"",comments:"",order:Date.now()+i,x:existing.x||maxX+320,y:existing.y||maxY,
+          journeyIds:[journeyId],libraryId,sequenceId:src.sequence?.id||"",sequenceName:src.sequence?.name||"",sequenceStep:Number(src.sequence?.step||0)});
+        const newId=made.records?.[0]?.id;if(!newId)throw new Error("Unable to restore journey card.");
+        createdCards.push(newId);idMap.set(src.id,newId);
+      }else{
+        const safeSrc={...src,execution:src.execution==="Automated"?"Can be automated":src.execution,workshopStatus:src.workshopStatus==="Agreed"?"Draft":src.workshopStatus};
+        const libraryId=await localDef(safeSrc,null);
+        maxX+=320;if(maxX>2600){maxX=120;maxY+=210}
+        const made=await createJourneyCard({title:safeSrc.title,notes:"",comments:"",order:Date.now()+i,x:maxX,y:maxY,journeyIds:[journeyId],libraryId,
+          sequenceId:safeSrc.sequence?.id||"",sequenceName:safeSrc.sequence?.name||"",sequenceStep:Number(safeSrc.sequence?.step||0)});
+        const newId=made.records?.[0]?.id;if(!newId)throw new Error("Unable to create new journey card.");
+        createdCards.push(newId);idMap.set(src.id,newId);
+      }
+    }
+    const explicitRemove=new Set(normalized.removeCards||[]);
+    if(input.replace)for(const card of current.cards)if(!cardInputMap.has(card.id))explicitRemove.add(card.id);
+    for(const id of explicitRemove){
+      const card=oldCards.get(id);if(card?.journeyIds.includes(journeyId)){updatedCards.push(card);await unlinkCardFromJourney(card,journeyId)}
+    }
+    const currentConnectionMap=new Map(current.connections.map((c:any)=>[c.id,c]));
+    const desiredConnectionIds=new Set<string>();
+    for(let i=0;i<normalized.connections.length;i++){
+      const src=normalized.connections[i],fromId=idMap.get(src.from)||src.from,toId=idMap.get(src.to)||src.to;
+      const existing=oldConnections.get(src.id),currentExport=currentConnectionMap.get(src.id);
+      desiredConnectionIds.add(src.id);
+      const same=existing&&existing.journeyIds.includes(journeyId)&&currentExport&&currentExport.from===src.from&&currentExport.to===src.to&&(currentExport.label||"")===(src.label||"")&&fromId===existing.fromId&&toId===existing.toId;
+      if(same)continue;
+      if(existing&&existing.journeyIds.includes(journeyId)){
+        if(existing.journeyIds.length>1){
+          const made=await createConnection({name:src.id,fromId,toId,journeyIds:[journeyId],label:src.label||"",order:existing.order});
+          const newId=made.records?.[0]?.id;if(newId)createdConnections.push(newId);
+          updatedConnections.push(existing);await unlinkConnectionFromJourney(existing,journeyId);
+        }else{
+          updatedConnections.push(existing);await updateConnection(existing.id,{fromId,toId,label:src.label||"",journeyIds:[journeyId]});
+        }
+      }else{
+        const made=await createConnection({name:src.id,fromId,toId,journeyIds:[journeyId],label:src.label||"",order:Date.now()+i});
+        const newId=made.records?.[0]?.id;if(newId)createdConnections.push(newId);
+      }
+    }
+    const explicitRemoveX=new Set(normalized.removeConnections||[]);
+    if(input.replace)for(const connection of current.connections)if(!desiredConnectionIds.has(connection.id))explicitRemoveX.add(connection.id);
+    for(const id of explicitRemoveX){
+      const connection=oldConnections.get(id);if(connection?.journeyIds.includes(journeyId)){updatedConnections.push(connection);await unlinkConnectionFromJourney(connection,journeyId)}
+    }
+    // Any connection still using an isolated old card is rewritten to the new journey-specific card.
+    const midData=await getJourneyLabData();
+    for(const connection of midData.connections.filter((c:any)=>c.active&&c.journeyIds.includes(journeyId))){
+      const sourceConn=normalized.connections.find((x:any)=>x.id===connection.id);
+      if(!sourceConn)continue;
+      const desiredFrom=idMap.get(sourceConn.from)||sourceConn.from,desiredTo=idMap.get(sourceConn.to)||sourceConn.to;
+      if(connection.fromId!==desiredFrom||connection.toId!==desiredTo)await updateConnection(connection.id,{fromId:desiredFrom,toId:desiredTo});
+    }
+    const afterData=await getJourneyLabData(),afterSource=buildJourneySource(afterData,journeyId);
+    const titles=new Set(afterSource.cards.map((c:any)=>c.title));
+    for(const src of normalized.cards)if(!titles.has(src.title))throw new Error("Verification failed after saving card: "+src.title);
+    const summary=`+${diff.cardsAdded} cards, ~${diff.cardsChanged} cards, -${diff.cardsRemoved} cards; +${diff.connectionsAdded} connections, ~${diff.connectionsChanged} connections, -${diff.connectionsRemoved} connections.`;
+    const madeVersion=await createJourneyVersion({journeyId,createdBy,reason:input.reason||"AI Import",baseVersion:Number(input.baseVersion||baselineVersion),summary,source:afterSource});
+    await logChange({action:"Saved",itemType:"Journey Version",itemName:afterData.journeys.find((j:any)=>j.id===journeyId)?.name||"Journey",journeyIds:[journeyId],changedBy:createdBy,details:summary});
+    return {data:afterData,source:afterSource,revision:sourceHash(afterSource),versionNumber:madeVersion.versionNumber,diff,summary};
+  }catch(error){
+    // Best-effort rollback. Imports never physically delete pre-existing cards/connections.
+    for(const original of [...updatedConnections].reverse()){
+      try{await updateConnection(original.id,{name:original.name,fromId:original.fromId,toId:original.toId,journeyIds:original.journeyIds,label:original.label,order:original.order,active:original.active})}catch{}
+    }
+    for(const original of [...updatedCards].reverse()){
+      try{await updateJourneyCard(original.id,{title:original.title,notes:original.notes,comments:original.comments,order:original.order,x:original.x,y:original.y,journeyIds:original.journeyIds,libraryId:original.libraryId,sequenceId:original.sequenceId,sequenceName:original.sequenceName,sequenceStep:original.sequenceStep})}catch{}
+    }
+    for(const id of createdConnections.reverse())try{await airtable(`${CONNECTIONS_TABLE}/${id}`,{method:"DELETE"})}catch{}
+    for(const id of createdCards.reverse())try{await airtable(`${CARDS_TABLE}/${id}`,{method:"DELETE"})}catch{}
+    for(const id of createdLibraries.reverse())try{await airtable(`${LIBRARY_TABLE}/${id}`,{method:"DELETE"})}catch{}
+    throw error;
+  }
+}
+export async function restoreJourneyVersion(input:any){
+  const versions=await listJourneyVersions(input.journeyId);
+  const version=versions.find((v:any)=>v.id===input.versionId);
+  if(!version)throw new Error("Saved version not found.");
+  const source=JSON.parse(version.sourceJson||"{}");
+  const current=(await getJourneySource(input.journeyId));
+  return applyJourneySource({journeyId:input.journeyId,source,replace:true,force:true,baseRevision:current.revision,baseVersion:current.latestVersion,createdBy:input.createdBy||"Shared user",reason:"Restore"});
+}
+export async function listPresence(){
+  const d=await airtableAll(`${PRESENCE_TABLE}?pageSize=100`);
+  return d.records.map((r:any)=>({
+    id:r.id,person:val(r,PF.person),journeyIds:links(val(r,PF.journey,[])),viewName:val(r,PF.view),sourceFocus:val(r,PF.focus),
+    detailMode:selectName(val(r,PF.mode),"Simple"),selectedCard:val(r,PF.card),lastSeen:val(r,PF.lastSeen),sessionId:val(r,PF.session)
+  })).filter((x:any)=>x.person);
+}
+export async function heartbeatPresence(input:any){
+  const allowed=["Gabriel","Gabriela","George"];
+  const person=allowed.find(x=>x.toLowerCase()===String(input.person||"").trim().toLowerCase())||plain(input.person,80)||"Shared user";
+  const presence=await listPresence(),existing=presence.find((x:any)=>x.person.toLowerCase()===person.toLowerCase());
+  const fields:any={
+    [PF.person]:person,[PF.journey]:input.journeyId?[input.journeyId]:[],[PF.view]:plain(input.viewName,255),[PF.focus]:plain(input.sourceFocus,100),
+    [PF.mode]:input.detailMode==="In-Depth"?"In-Depth":"Simple",[PF.card]:plain(input.selectedCard,255),[PF.lastSeen]:now(),[PF.session]:plain(input.sessionId,255)
+  };
+  if(existing)await airtable(PRESENCE_TABLE,{method:"PATCH",body:JSON.stringify({records:[{id:existing.id,fields}],typecast:true})});
+  else await airtable(PRESENCE_TABLE,{method:"POST",body:JSON.stringify({records:[{fields}],typecast:true})});
+  return listPresence();
 }
