@@ -1,11 +1,11 @@
 // @ts-nocheck
 "use client";
 
-import { useMemo,useRef,useState } from "react";
+import { useEffect,useMemo,useRef,useState } from "react";
 import {
   Archive,ArrowRight,BookOpen,Boxes,CheckSquare,Copy,Download,Edit3,Eye,EyeOff,FileDown,Filter,
-  GitMerge,GripVertical,History,Layers,Link2,Lock,LogOut,Maximize2,MessageSquare,Minus,Plus,
-  Presentation,Redo2,RefreshCw,RotateCcw,Save,Search,Trash2,Undo2,Unlink,Users,WandSparkles,X
+  ClipboardCopy,ClipboardPaste,Code2,GitMerge,GripVertical,History,Layers,Link2,Lock,LogOut,Maximize2,MessageSquare,Minus,MousePointer2,Plus,
+  Presentation,Redo2,RefreshCw,Save,Search,Trash2,Undo2,Unlink,Users,WandSparkles,X
 } from "lucide-react";
 
 type Journey={id:string;name:string;description:string;order:number;active:boolean;group?:string;archived?:boolean;template?:boolean};
@@ -13,7 +13,7 @@ type LibraryCard={
   id:string;name:string;category:string;tool:string;use:string;action:string;automated:string;automationTool:string;execution:string;
   assignedPerson:string;campaignName:string;subject:string;templateName:string;messagePurpose:string;timing:string;
   leadStatus:string;workshopStatus:string;workshopAnswer:string;notes:string;active:boolean;suggestedNextIds:string[];suggestedParentIds:string[];
-  applicableJourneyIds:string[];global?:boolean;
+  applicableJourneyIds:string[];global?:boolean;journeyLocal?:boolean;
 };
 type Card={id:string;title:string;notes:string;comments?:string;order:number;x:number;y:number;journeyIds:string[];libraryId:string;sequenceId?:string;sequenceName?:string;sequenceStep?:number};
 type Connection={id:string;name:string;fromId:string;toId:string;journeyIds:string[];label:string;order:number;active:boolean};
@@ -107,7 +107,7 @@ const SEQUENCE_TEMPLATES:SequenceTemplate[]=[
 function emptyLibrary(id:string,name:string):LibraryCard{
   return {id,name,category:"Action",tool:"None",use:"",action:"",automated:"No",automationTool:"None",execution:"Manual",assignedPerson:"",
     campaignName:"",subject:"",templateName:"",messagePurpose:"",timing:"",leadStatus:"Not Applicable",workshopStatus:"Draft",
-    workshopAnswer:"",notes:"",active:true,global:false,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:[]};
+    workshopAnswer:"",notes:"",active:true,global:false,journeyLocal:false,suggestedNextIds:[],suggestedParentIds:[],applicableJourneyIds:[]};
 }
 function fallbackBoard():Board{
   const journeys:Journey[]=[
