@@ -626,6 +626,16 @@ export async function applyJourneySource(input:any){
     for(const id of createdConnections.reverse())try{await airtable(`${CONNECTIONS_TABLE}/${id}`,{method:"DELETE"})}catch{}
     for(const id of createdCards.reverse())try{await airtable(`${CARDS_TABLE}/${id}`,{method:"DELETE"})}catch{}
     for(const id of createdLibraries.reverse())try{await airtable(`${LIBRARY_TABLE}/${id}`,{method:"DELETE"})}catch{}
+    try{
+      const rolledData=await getJourneyLabData();
+      const rolledSource=buildJourneySource(rolledData,journeyId);
+      if(sourceHash(rolledSource)!==currentRevision){
+        await logChange({action:"Rollback warning",itemType:"Journey Source",itemName:beforeData.journeys.find((j:any)=>j.id===journeyId)?.name||"Journey",journeyIds:[journeyId],changedBy:createdBy,details:"AI import failed and the automatic rollback could not be fully verified."}).catch(()=>{});
+        throw new Error("The AI import failed and FPX could not fully verify the automatic rollback. Do not continue editing this journey until the previous saved version has been restored.");
+      }
+    }catch(rollbackError){
+      if(rollbackError instanceof Error&&rollbackError.message.includes("could not fully verify"))throw rollbackError;
+    }
     throw error;
   }
 }
