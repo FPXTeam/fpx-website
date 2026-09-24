@@ -1823,36 +1823,101 @@ function BulkBar({count,journeys,onAssign,onDelete,onAlign,onFit,onClear,onExit}
   return <div className="ljl-bulkbar"><strong>{count} selected</strong><select value={journeyId} onChange={e=>setJourneyId(e.target.value)}><option value="">Assign to journey…</option>{journeys.map((j:any)=><option key={j.id} value={j.id}>{j.name}</option>)}</select><button disabled={!count||!journeyId} onClick={()=>onAssign(journeyId)}>Assign</button><button disabled={!count} onClick={onAlign}><WandSparkles size={13}/> Align</button><button disabled={!count} onClick={onFit}><Maximize2 size={13}/> Fit</button><button disabled={!count} className="danger" onClick={onDelete}><Trash2 size={13}/> Delete</button><button onClick={onClear}>Clear</button><button onClick={onExit}><X size={13}/> Exit</button></div>;
 }
 
-function JourneyOverviewDrawer({name,cards,connections,libById,cardById,layoutDirection,saving,onClose,onSelect,onLiveRename,onRename,onNotes,onEditDetails,onAddNext,onAddCard,onAddSequence,onConnection,onDeleteConnection,onDeleteCard}:any){
+function JourneyOverviewModal({name,cards,connections,libById,cardById,layoutDirection,saving,onClose,onSelect,onLiveRename,onRename,onNotes,onEditDetails,onAddNext,onAddCard,onAddSequence,onConnection,onDeleteConnection,onDeleteCard}:any){
   const [query,setQuery]=useState("");
+  const [editing,setEditing]=useState(false);
+  const [expandedSequences,setExpandedSequences]=useState<string[]>([]);
   const ordered=[...cards].sort((a:any,b:any)=>layoutDirection==="horizontal"?(a.x-b.x||a.y-b.y):(a.y-b.y||a.x-b.x));
-  const filtered=ordered.filter((card:any)=>{
-    const def=libById.get(card.libraryId);const hay=(card.title+" "+(def?.category||"")+" "+(def?.assignedPerson||"")+" "+(card.sequenceName||"")).toLowerCase();
-    return !query||hay.includes(query.toLowerCase());
-  });
   const outgoing=(id:string)=>connections.filter((c:any)=>c.fromId===id).sort((a:any,b:any)=>a.order-b.order);
-  return <aside className="ljl-overview-drawer">
-    <header><div><span>JOURNEY OVERVIEW</span><h2>{name}</h2><p>Edit here and the same underlying canvas records update immediately after each field is saved.</p></div><button onClick={onClose}><X size={16}/></button></header>
-    <div className="ljl-overview-tools">
-      <label><Search size={13}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find a card, owner or sequence"/></label>
-      <button onClick={onAddCard}><Plus size={12}/> Card</button><button onClick={onAddSequence}><Boxes size={12}/> Sequence</button>
+
+  const items=useMemo(()=>{
+    const seen=new Set<string>(),result:any[]=[];
+    for(const card of ordered){
+      if(card.sequenceId){
+        if(seen.has(card.sequenceId))continue;
+        seen.add(card.sequenceId);
+        const members=ordered.filter((x:any)=>x.sequenceId===card.sequenceId).sort((a:any,b:any)=>(a.sequenceStep||0)-(b.sequenceStep||0)||a.order-b.order);
+        result.push({kind:"sequence",id:card.sequenceId,name:card.sequenceName||"Sequence",cards:members});
+      }else result.push({kind:"card",id:card.id,card});
+    }
+    return result;
+  },[ordered.map((c:any)=>c.id+":"+c.title+":"+c.sequenceId+":"+c.sequenceStep).join("|")]);
+
+  const filtered=items.filter((item:any)=>{
+    if(!query)return true;
+    const q=query.toLowerCase();
+    if(item.kind==="sequence")return (item.name+" "+item.cards.map((c:any)=>c.title).join(" ")).toLowerCase().includes(q);
+    const def=libById.get(item.card.libraryId);
+    return (item.card.title+" "+(def?.category||"")+" "+(def?.assignedPerson||"")).toLowerCase().includes(q);
+  });
+
+  function meta(card:any){
+    const def=libById.get(card.libraryId);
+    return [def?.category||"Card",def?.execution||"Manual",def?.timing||""].filter(Boolean).join(" · ");
+  }
+  function Branches({card,editable=false}:{card:any;editable?:boolean}){
+    const outs=outgoing(card.id);
+    if(!outs.length)return null;
+    return <div className={"ljl-overview-branches "+(editable?"editable":"")}>{outs.map((connection:any)=>{
+      const target=cardById.get(connection.toId);
+      return <div key={connection.id}>
+        <ArrowRight size={11}/>
+        {editable?<input defaultValue={connection.label||""} placeholder="Branch label" onBlur={e=>{const label=e.currentTarget.value;if(label!==connection.label)onConnection(connection.id,{label,name:connection.name})}}/>:
+          <b>{connection.label||"Next"}</b>}
+        <span>{target?.title||"Unknown card"}</span>
+        {editable&&<button className="danger" onClick={()=>onDeleteConnection(connection.id)}><Unlink size={10}/></button>}
+      </div>;
+    })}</div>;
+  }
+  function ReadCard({card,index,nested=false}:{card:any;index:number;nested?:boolean}){
+    const def=libById.get(card.libraryId);
+    return <article className={"ljl-overview-simple-card "+(nested?"nested":"")}>
+      <div className="ljl-overview-step-number">{index+1}</div>
+      <div className="ljl-overview-simple-content">
+        <strong>{card.title}</strong>
+        <span>{meta(card)}</span>
+        {def?.workshopStatus==="Needs Discussion"&&<em>Needs Discussion</em>}
+        <Branches card={card}/>
+      </div>
+      <button className="icon-only" onClick={()=>onSelect(card)} title="Open this card on canvas"><MousePointer2 size={12}/></button>
+    </article>;
+  }
+  function EditCard({card,index,nested=false}:{card:any;index:number;nested?:boolean}){
+    const def=libById.get(card.libraryId);
+    return <article className={"ljl-overview-edit-card "+(nested?"nested":"")}>
+      <div className="ljl-overview-card-head"><b>{index+1}</b><div><span>{def?.category||"Card"}</span><small>{meta(card)}</small></div></div>
+      <label>Card title<input value={card.title} onChange={e=>onLiveRename(card,e.currentTarget.value)} onBlur={e=>onRename(card,e.currentTarget.value)}/></label>
+      <label>Canvas note<textarea key={card.notes||""} rows={2} defaultValue={card.notes||""} onBlur={e=>onNotes(card,e.currentTarget.value)} placeholder="Optional note"/></label>
+      <Branches card={card} editable/>
+      <div className="ljl-overview-card-actions"><button onClick={()=>onEditDetails(card)}><Edit3 size={11}/> Details</button><button onClick={()=>onAddNext(card)}><Plus size={11}/> Add Next</button><button className="danger" onClick={()=>onDeleteCard(card)}><Trash2 size={11}/></button></div>
+    </article>;
+  }
+
+  return <div className="ljl-modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><div className="ljl-overview-modal">
+    <header><div><span>JOURNEY OVERVIEW</span><h2>{name}</h2><p>{editing?"Editing the overview changes the same shared canvas records.":"A clean read-through of the journey. Expand sequences only when you need the detail."}</p></div><div className="ljl-overview-head-actions"><button onClick={()=>setEditing(v=>!v)}><Edit3 size={13}/>{editing?"Done Editing":"Edit Journey"}</button><button className="icon-close" onClick={onClose}><X size={18}/></button></div></header>
+    <div className="ljl-overview-toolbar">
+      <label><Search size={14}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search journey"/></label>
+      {editing&&<><button onClick={onAddCard}><Plus size={12}/> Add Card</button><button onClick={onAddSequence}><Boxes size={12}/> Add Sequence</button></>}
     </div>
-    <div className="ljl-overview-list">{filtered.map((card:any,index:number)=>{
-      const def=libById.get(card.libraryId),outs=outgoing(card.id);
-      return <article key={card.id} className="ljl-overview-card">
-        <div className="ljl-overview-card-head"><b>{index+1}</b><div><span>{def?.category||"Card"}{card.sequenceName?" · "+card.sequenceName:""}</span><small>{def?.execution||"Manual"}{def?.assignedPerson?" · "+def.assignedPerson:""}{def?.timing?" · "+def.timing:""}</small></div><button onClick={()=>onSelect(card)} title="Highlight on canvas"><MousePointer2 size={12}/></button></div>
-        <label>Card title<input value={card.title} onChange={e=>onLiveRename(card,e.currentTarget.value)} onBlur={e=>onRename(card,e.currentTarget.value)} /></label>
-        <label>Canvas note<textarea key={card.notes||""} rows={2} defaultValue={card.notes||""} onBlur={e=>onNotes(card,e.currentTarget.value)} placeholder="Optional note for this card instance"/></label>
-        <div className="ljl-overview-card-actions"><button onClick={()=>onEditDetails(card)}><Edit3 size={11}/> Edit Details</button><button onClick={()=>onAddNext(card)}><Plus size={11}/> Add Next</button><button className="danger" onClick={()=>onDeleteCard(card)}><Trash2 size={11}/></button></div>
-        {outs.length>0&&<div className="ljl-overview-connections"><strong>Next</strong>{outs.map((connection:any)=>{
-          const target=cardById.get(connection.toId);
-          return <div key={connection.id}><span><ArrowRight size={11}/>{target?.title||"Unknown card"}</span><input key={connection.label||""} defaultValue={connection.label||""} placeholder="Branch label" onBlur={e=>{const label=e.currentTarget.value;if(label!==connection.label)onConnection(connection.id,{label,name:connection.name})}}/><button className="danger" onClick={()=>onDeleteConnection(connection.id)}><Unlink size={11}/></button></div>;
-        })}</div>}
-      </article>;
+    <div className="ljl-overview-simple-list">{filtered.map((item:any,itemIndex:number)=>{
+      if(item.kind==="card")return editing?<EditCard key={item.id} card={item.card} index={itemIndex}/>:<ReadCard key={item.id} card={item.card} index={itemIndex}/>;
+      const expanded=expandedSequences.includes(item.id);
+      const defs=item.cards.map((c:any)=>libById.get(c.libraryId)).filter(Boolean);
+      const executions=Array.from(new Set(defs.map((d:any)=>d.execution).filter(Boolean)));
+      const timings=defs.map((d:any)=>d.timing).filter(Boolean);
+      const questions=defs.filter((d:any)=>d.workshopStatus==="Needs Discussion").length;
+      return <section key={item.id} className="ljl-overview-sequence-block">
+        <div className="ljl-overview-sequence-summary">
+          <div className="ljl-overview-step-number">{itemIndex+1}</div>
+          <div><span>SEQUENCE</span><strong>{item.name}</strong><small>{item.cards.length} steps{timings.length?" · "+timings[0]+(timings.at(-1)!==timings[0]?" → "+timings.at(-1):""):""} · {executions.length===1?executions[0]:"Mixed execution"}{questions?" · "+questions+" question"+(questions===1?"":"s"):""}</small></div>
+          <button onClick={()=>setExpandedSequences(ids=>expanded?ids.filter(id=>id!==item.id):[...ids,item.id])}>{expanded?"Collapse":"Expand"}</button>
+        </div>
+        {expanded&&<div className="ljl-overview-sequence-steps">{item.cards.map((card:any,index:number)=>editing?<EditCard key={card.id} card={card} index={index} nested/>:<ReadCard key={card.id} card={card} index={index} nested/>)}</div>}
+      </section>;
     })}</div>
-    {!filtered.length&&<div className="ljl-empty"><Search size={18}/><strong>No matching cards</strong><p>Clear the search to see the current journey.</p></div>}
-    {saving&&<div className="ljl-overview-saving">Saving shared changes…</div>}
-  </aside>;
+    {!filtered.length&&<div className="ljl-empty"><Search size={18}/><strong>No matching steps</strong><p>Clear the search to see the whole journey.</p></div>}
+    <footer><span>{cards.length} cards · {connections.length} connections</span><div>{saving&&<small>Saving shared changes…</small>}<button className="primary" onClick={onClose}>Close Overview</button></div></footer>
+  </div></div>;
 }
 
 function MiniMap({cards,width,height}:any){
