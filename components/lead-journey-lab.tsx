@@ -1560,24 +1560,129 @@ function ContextMenu({menu,card,onClose,onAdd,onSequence,onEdit,onDuplicate,onAu
   </div>;
 }
 
-function SequenceModal({saving,onClose,onInsert}:any){
-  const [selectedId,setSelectedId]=useState(SEQUENCE_TEMPLATES[0]?.id||"");
-  const selected=SEQUENCE_TEMPLATES.find(t=>t.id===selectedId)||SEQUENCE_TEMPLATES[0];
+function SequenceModal({saving,templates,onClose,onInsert,onSaveTemplate}:any){
+  const items:SequenceTemplate[]=templates?.length?templates:SEQUENCE_TEMPLATES;
+  const [selectedId,setSelectedId]=useState(items[0]?.id||"");
+  const [editing,setEditing]=useState(false);
+  const [draft,setDraft]=useState<SequenceTemplate|null>(null);
+  const selected=items.find((t:any)=>t.id===selectedId)||items[0];
+
+  useEffect(()=>{
+    if(!items.some((x:any)=>x.id===selectedId))setSelectedId(items[0]?.id||"");
+  },[items.map((x:any)=>x.id).join("|")]);
+
+  function beginEdit(){
+    if(!selected)return;
+    setDraft(JSON.parse(JSON.stringify(selected)));setEditing(true);
+  }
+  function updateDraft(key:string,value:any){setDraft((d:any)=>d?{...d,[key]:value}:d)}
+  function updateStep(index:number,key:string,value:any){
+    setDraft((d:any)=>{
+      if(!d)return d;const steps=d.steps.map((step:any,i:number)=>i===index?{...step,[key]:value}:step);return {...d,steps};
+    });
+  }
+  function addStep(){
+    setDraft((d:any)=>{
+      if(!d)return d;
+      const steps=[...d.steps,{name:"New Step",category:"Action",tool:"None",execution:"Manual",assigned:"",timing:"",use:"",action:"",notes:"",workshopStatus:"Draft",leadStatus:"Not Applicable"}];
+      const edges=[...(d.edges||[])];if(steps.length>1)edges.push([steps.length-2,steps.length-1,""]);
+      return {...d,steps,edges};
+    });
+  }
+  function removeStep(index:number){
+    setDraft((d:any)=>{
+      if(!d||d.steps.length<=1)return d;
+      const steps=d.steps.filter((_:any,i:number)=>i!==index);
+      const edges=(d.edges||[]).filter((edge:any)=>edge[0]!==index&&edge[1]!==index).map((edge:any)=>[
+        edge[0]>index?edge[0]-1:edge[0],edge[1]>index?edge[1]-1:edge[1],edge[2]||""
+      ]);
+      return {...d,steps,edges};
+    });
+  }
+  function moveStep(index:number,delta:number){
+    const target=index+delta;
+    setDraft((d:any)=>{
+      if(!d||target<0||target>=d.steps.length)return d;
+      const steps=[...d.steps];[steps[index],steps[target]]=[steps[target],steps[index]];
+      const remap=(n:number)=>n===index?target:n===target?index:n;
+      const edges=(d.edges||[]).map((edge:any)=>[remap(edge[0]),remap(edge[1]),edge[2]||""]);
+      return {...d,steps,edges};
+    });
+  }
+  function updateEdge(index:number,pos:number,value:any){
+    setDraft((d:any)=>{
+      if(!d)return d;const edges=[...(d.edges||[])];const edge=[...(edges[index]||[0,0,""])] as any[];
+      edge[pos]=pos<2?Number(value):value;edges[index]=edge;return {...d,edges};
+    });
+  }
+  function addEdge(){setDraft((d:any)=>d?{...d,edges:[...(d.edges||[]),[0,Math.min(1,d.steps.length-1),""]]}:d)}
+  function removeEdge(index:number){setDraft((d:any)=>d?{...d,edges:(d.edges||[]).filter((_:any,i:number)=>i!==index)}:d)}
+  async function saveTemplate(){
+    if(!draft?.name.trim()||!draft.steps.length)return;
+    await onSaveTemplate({...draft,name:draft.name.trim(),description:draft.description||"",tone:draft.tone||"sage"});
+    setEditing(false);setSelectedId(draft.id);
+  }
+
   return <div className="ljl-modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><div className="ljl-sequence-modal">
-    <header><div><span>SEQUENCE LIBRARY</span><h2>Add sequence</h2><p>Insert a reusable journey flow. Review the timing and decision cards after adding it.</p></div><button onClick={onClose}><X/></button></header>
+    <header><div><span>SEQUENCE LIBRARY</span><h2>{editing?"Edit sequence":"Sequence Library"}</h2><p>{editing?"Edit the reusable template. Future inserts use this saved version.":"Insert a reusable journey flow or edit an existing sequence template."}</p></div><button onClick={onClose}><X/></button></header>
     <div className="ljl-sequence-layout">
-      <nav>{SEQUENCE_TEMPLATES.map(template=><button key={template.id} className={selectedId===template.id?"active":""} onClick={()=>setSelectedId(template.id)}>
+      <nav>{items.map((template:any)=><button key={template.id} className={selectedId===template.id?"active":""} onClick={()=>{setSelectedId(template.id);setEditing(false);setDraft(null)}}>
         <span className={"ljl-sequence-dot tone-"+template.tone}/><div><strong>{template.name}</strong><small>{template.steps.length} steps</small></div>
       </button>)}</nav>
-      {selected&&<section className={"ljl-sequence-preview tone-"+selected.tone}>
+
+      {!editing&&selected&&<section className={"ljl-sequence-preview tone-"+selected.tone}>
         <div className="ljl-sequence-preview-head"><span>SEQUENCE</span><h3>{selected.name}</h3><p>{selected.description}</p></div>
-        <div className="ljl-sequence-steps">{selected.steps.map((step,index)=><div key={index} className={"ljl-sequence-step cat-"+cssToken(step.category)}>
+        <div className="ljl-sequence-preview-actions"><button onClick={beginEdit}><Edit3 size={13}/> Edit Sequence</button></div>
+        <div className="ljl-sequence-steps">{selected.steps.map((step:any,index:number)=><div key={index} className={"ljl-sequence-step cat-"+cssToken(step.category)}>
           <b>{index+1}</b><div><strong>{step.name}</strong><span>{step.category} · {step.execution}{step.timing?" · "+step.timing:""}</span></div>
         </div>)}</div>
-        <p className="ljl-sequence-note">Decision branches and exit conditions are inserted with the sequence. TBC timing stays marked for workshop discussion.</p>
+        <p className="ljl-sequence-note">Connections and branch labels are stored with the template. Editing the template changes future inserts; already-placed journey instances stay unchanged unless edited on their canvas.</p>
+      </section>}
+
+      {editing&&draft&&<section className="ljl-sequence-editor">
+        <div className="ljl-sequence-editor-meta">
+          <label>Name<input value={draft.name} onChange={e=>updateDraft("name",e.target.value)}/></label>
+          <label>Tone<select value={draft.tone} onChange={e=>updateDraft("tone",e.target.value)}>{["sage","mint","olive","sand","mist","amber","forest"].map(x=><option key={x}>{x}</option>)}</select></label>
+          <label className="wide">Description<textarea rows={2} value={draft.description||""} onChange={e=>updateDraft("description",e.target.value)}/></label>
+        </div>
+        <div className="ljl-sequence-editor-section">
+          <div className="section-head"><div><span>STEPS</span><strong>{draft.steps.length} steps</strong></div><button onClick={addStep}><Plus size={12}/> Add Step</button></div>
+          <div className="ljl-sequence-edit-steps">{draft.steps.map((step:any,index:number)=><article key={index}>
+            <div className="step-head"><b>{index+1}</b><strong>{step.name||"Untitled step"}</strong><div>
+              <button disabled={index===0} onClick={()=>moveStep(index,-1)}>↑</button><button disabled={index===draft.steps.length-1} onClick={()=>moveStep(index,1)}>↓</button>
+              <button className="danger" disabled={draft.steps.length<=1} onClick={()=>removeStep(index)}><Trash2 size={11}/></button>
+            </div></div>
+            <div className="step-grid">
+              <label className="wide">Step name<input value={step.name||""} onChange={e=>updateStep(index,"name",e.target.value)}/></label>
+              <label>Category<select value={step.category||"Action"} onChange={e=>updateStep(index,"category",e.target.value)}>{["Source","Capture","Communication","CRM","Decision","Nurture","Wait","Action","Outcome","Customer Handoff"].map(x=><option key={x}>{x}</option>)}</select></label>
+              <label>Execution<select value={step.execution||"Manual"} onChange={e=>updateStep(index,"execution",e.target.value)}>{["Manual","Can be automated","Automated"].map(x=><option key={x}>{x}</option>)}</select></label>
+              <label>Tool<input value={step.tool||""} onChange={e=>updateStep(index,"tool",e.target.value)}/></label>
+              <label>Owner<input value={step.assigned||""} onChange={e=>updateStep(index,"assigned",e.target.value)}/></label>
+              <label>Timing<input value={step.timing||""} onChange={e=>updateStep(index,"timing",e.target.value)}/></label>
+              <label>Workshop<select value={step.workshopStatus||"Draft"} onChange={e=>updateStep(index,"workshopStatus",e.target.value)}>{["Draft","Needs Discussion","Agreed"].map(x=><option key={x}>{x}</option>)}</select></label>
+              <label className="wide">Notes<textarea rows={2} value={step.notes||""} onChange={e=>updateStep(index,"notes",e.target.value)}/></label>
+            </div>
+          </article>)}</div>
+        </div>
+        <div className="ljl-sequence-editor-section">
+          <div className="section-head"><div><span>CONNECTIONS</span><strong>{(draft.edges||[]).length} connections</strong></div><button onClick={addEdge}><Plus size={12}/> Add Connection</button></div>
+          <div className="ljl-sequence-edge-list">{(draft.edges||[]).map((edge:any,index:number)=><div key={index}>
+            <select value={edge[0]} onChange={e=>updateEdge(index,0,e.target.value)}>{draft.steps.map((step:any,i:number)=><option key={i} value={i}>{i+1}. {step.name}</option>)}</select>
+            <ArrowRight size={13}/>
+            <select value={edge[1]} onChange={e=>updateEdge(index,1,e.target.value)}>{draft.steps.map((step:any,i:number)=><option key={i} value={i}>{i+1}. {step.name}</option>)}</select>
+            <input value={edge[2]||""} onChange={e=>updateEdge(index,2,e.target.value)} placeholder="Label: Yes / No / optional"/>
+            <button className="danger" onClick={()=>removeEdge(index)}><Trash2 size={11}/></button>
+          </div>)}</div>
+        </div>
       </section>}
     </div>
-    <footer><button className="secondary" onClick={onClose}>Cancel</button><button className="primary" disabled={saving||!selected} onClick={()=>selected&&onInsert(selected)}>{saving?"Adding…":"Insert Sequence"}</button></footer>
+    <footer>{editing?<>
+      <button className="secondary" onClick={()=>{setEditing(false);setDraft(null)}}>Cancel Edit</button>
+      <button className="primary" disabled={saving||!draft?.name.trim()} onClick={saveTemplate}>{saving?"Saving…":"Save Sequence Template"}</button>
+    </>:<>
+      <button className="secondary" onClick={onClose}>Cancel</button>
+      <button className="primary" disabled={saving||!selected} onClick={()=>selected&&onInsert(selected)}>{saving?"Adding…":"Insert Sequence"}</button>
+    </>}</footer>
   </div></div>;
 }
 
