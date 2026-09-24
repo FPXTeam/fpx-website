@@ -427,14 +427,18 @@ export function validateJourneySource(input:any,current:any,{replace=false}:any=
   if(current?.journey?.id&&input.journey.id!==current.journey.id)throw new Error("This Journey Source belongs to a different FPX journey. Open the correct journey and copy it again.");
   if(!Array.isArray(input.cards)||!Array.isArray(input.connections))throw new Error("Journey Source must contain complete cards and connections arrays.");
   if(input.cards.length>350||input.connections.length>800)throw new Error("Journey Source is too large for a safe import.");
+  const currentCards=new Map((current?.cards||[]).map((c:any)=>[c.id,c]));
   const cards=input.cards.map((raw:any,index:number)=>{
     onlyKeys(raw,SOURCE_CARD_KEYS,"Card "+(index+1));
     const id=plain(raw.id,100),title=plain(raw.title,255);
     if(!id||!title)throw new Error("Every card needs an id and title.");
     if(raw.sequence){onlyKeys(raw.sequence,SOURCE_SEQUENCE_KEYS,"Sequence on "+title)}
-    return {...raw,id,title,type:SOURCE_CATEGORIES.includes(raw.type)?raw.type:"Action",
-      execution:SOURCE_EXECUTION.includes(raw.execution)?raw.execution:"Can be automated",
-      workshopStatus:SOURCE_WORKSHOP.includes(raw.workshopStatus)?raw.workshopStatus:"Draft"};
+    const previous=currentCards.get(id);
+    let execution=SOURCE_EXECUTION.includes(raw.execution)?raw.execution:"Can be automated";
+    if((!previous||previous.execution!=="Automated")&&execution==="Automated")execution="Can be automated";
+    let workshopStatus=SOURCE_WORKSHOP.includes(raw.workshopStatus)?raw.workshopStatus:"Draft";
+    if((!previous||previous.workshopStatus!=="Agreed")&&workshopStatus==="Agreed")workshopStatus=previous?.workshopStatus||"Draft";
+    return {...raw,id,title,type:SOURCE_CATEGORIES.includes(raw.type)?raw.type:"Action",execution,workshopStatus};
   });
   const cardIds=new Set<string>();
   for(const card of cards){if(cardIds.has(card.id))throw new Error("Duplicate card id: "+card.id);cardIds.add(card.id)}
