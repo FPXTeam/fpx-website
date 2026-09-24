@@ -221,7 +221,13 @@ export function LeadJourneyLab(){
   const [contextMenu,setContextMenu]=useState<{x:number;y:number;canvasX:number;canvasY:number;cardId?:string}|null>(null);
   const [sequencePicker,setSequencePicker]=useState<{x:number;y:number;parentId?:string}|null>(null);
   const [sourceFocus,setSourceFocus]=useState<"all"|"we-search"|"they-find-us"|"word-of-mouth">("all");
+  const [detailMode,setDetailMode]=useState<"simple"|"deep">("simple");
   const [collapsedSequences,setCollapsedSequences]=useState<string[]>([]);
+  const [expandedSimpleSequences,setExpandedSimpleSequences]=useState<string[]>([]);
+  const [viewMenuOpen,setViewMenuOpen]=useState(false);
+  const [journeySourceOpen,setJourneySourceOpen]=useState(false);
+  const [presence,setPresence]=useState<any[]>([]);
+  const [presencePerson,setPresencePerson]=useState<string|null>(null);
   const [zoom,setZoom]=useState(.8);
   const [loading,setLoading]=useState(false);
   const [saving,setSaving]=useState(false);
@@ -231,6 +237,8 @@ export function LeadJourneyLab(){
   const dragRef=useRef<{id:string;dx:number;dy:number;moved:boolean;before?:any[];group?:{id:string;x:number;y:number}[];startX?:number;startY?:number}|null>(null);
   const panRef=useRef<{startX:number;startY:number;scrollLeft:number;scrollTop:number}|null>(null);
   const selectRef=useRef<{startX:number;startY:number;additive:boolean}|null>(null);
+  const suppressLineClickRef=useRef(false);
+  const sessionIdRef=useRef("");
   const [panning,setPanning]=useState(false);
   const [selectionBox,setSelectionBox]=useState<{x:number;y:number;w:number;h:number}|null>(null);
   const [selectMode,setSelectMode]=useState(false);
@@ -299,7 +307,9 @@ export function LeadJourneyLab(){
     map.forEach(group=>group.cards.sort((a,b)=>(a.sequenceStep||0)-(b.sequenceStep||0)||a.order-b.order));
     return Array.from(map.values());
   },[filteredCards]);
-  const collapsedMap=useMemo(()=>new Map(sequenceGroups.filter(g=>collapsedSequences.includes(g.id)).map(g=>[g.id,g] as const)),[sequenceGroups,collapsedSequences]);
+  const collapsedMap=useMemo(()=>new Map(sequenceGroups.filter(g=>
+    detailMode==="simple"?!expandedSimpleSequences.includes(g.id):collapsedSequences.includes(g.id)
+  ).map(g=>[g.id,g] as const)),[sequenceGroups,collapsedSequences,expandedSimpleSequences,detailMode]);
   const visibleCards=useMemo(()=>filteredCards.filter(card=>{
     if(!card.sequenceId||!collapsedMap.has(card.sequenceId))return true;
     return collapsedMap.get(card.sequenceId)!.cards[0]?.id===card.id;
