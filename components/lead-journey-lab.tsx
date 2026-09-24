@@ -318,6 +318,11 @@ export function LeadJourneyLab(){
   }),[filteredCards,collapsedMap]);
   const visibleCardIds=useMemo(()=>new Set(visibleCards.map(c=>c.id)),[visibleCards]);
   const filteredCardIds=useMemo(()=>new Set(filteredCards.map(c=>c.id)),[filteredCards]);
+  const overviewCardIds=useMemo(()=>new Set(baseVisibleCards.map(c=>c.id)),[baseVisibleCards]);
+  const overviewConnections=useMemo(()=>board.connections.filter(c=>c.active&&overviewCardIds.has(c.fromId)&&overviewCardIds.has(c.toId)&&(
+    currentJourneyId?c.journeyIds.includes(currentJourneyId):(activeJourneyId==="all"||c.journeyIds.includes(activeJourneyId))
+  )),[board.connections,overviewCardIds,currentJourneyId,activeJourneyId]);
+
   const completion=useMemo(()=>{
     const total=baseVisibleCards.length;
     const agreed=baseVisibleCards.filter(card=>libById.get(card.libraryId)?.workshopStatus==="Agreed").length;
@@ -1437,7 +1442,18 @@ export function LeadJourneyLab(){
         {miniMap&&<MiniMap cards={visibleCards} width={width} height={height}/>}
       </div>
 
-      {!presentationMode&&<aside className="ljl-inspector">
+      {!presentationMode&&(journeyOverviewOpen?<JourneyOverviewDrawer name={currentViewName()} cards={baseVisibleCards} connections={overviewConnections}
+        libById={libById} cardById={cardById} layoutDirection={layoutDirection} saving={saving}
+        onClose={()=>setJourneyOverviewOpen(false)}
+        onSelect={(card:any)=>{setSelectedCardId(card.id);setSelectedConnectionId(null)}}
+        onRename={async(card:any,title:string)=>{const next=title.trim();if(next&&next!==card.title)await updateCard(card.id,{title:next})}}
+        onNotes={async(card:any,notes:string)=>{if(notes!==card.notes)await updateCard(card.id,{notes})}}
+        onEditDetails={(card:any)=>setEditingLibraryId(card.libraryId)}
+        onAddNext={(card:any)=>setAdding({x:layoutDirection==="horizontal"?card.x+320:card.x,y:layoutDirection==="vertical"?card.y+220:card.y,parentId:card.id})}
+        onAddCard={()=>setAdding({x:Math.max(120,...baseVisibleCards.map(c=>c.x))+320,y:Math.max(120,...baseVisibleCards.map(c=>c.y))})}
+        onAddSequence={()=>setSequencePicker({x:Math.max(120,...baseVisibleCards.map(c=>c.x))+320,y:Math.max(120,...baseVisibleCards.map(c=>c.y))})}
+        onConnection={updateConnection} onDeleteConnection={deleteConnection} onDeleteCard={removeCard}/>:
+      <aside className="ljl-inspector">
         {selectedConnection?<ConnectionInspector key={selectedConnection.id} connection={selectedConnection} cards={visibleCards}
           onSave={updateConnection} onDisconnect={()=>deleteConnection(selectedConnection.id)}/>:
         selectedCard&&selectedDef?<CardInspector card={selectedCard} def={selectedDef} incoming={incoming} outgoing={outgoing}
@@ -1450,7 +1466,7 @@ export function LeadJourneyLab(){
           onMerge={()=>activeJourneyId!=="all"&&setMergeCardId(selectedCard.id)}
           canMerge={activeJourneyId!=="all"} onDuplicate={()=>duplicateCard(selectedCard)} onDelete={()=>removeCard(selectedCard)}/>:
         <div className="ljl-empty"><Link2 size={19}/><strong>Select a card or connection</strong><p>Card details, suggestions and connection controls will appear here.</p></div>}
-      </aside>}
+      </aside>)}
     </section>
 
     {contextMenu&&<ContextMenu menu={contextMenu} card={contextMenu.cardId?cardById.get(contextMenu.cardId)||null:null}
