@@ -195,3 +195,12 @@
 .ljl-source-versions>div>article{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:11px 13px;border-bottom:1px solid #e8ece9}.ljl-source-versions article>div{display:grid;gap:3px}.ljl-source-versions article strong{font-size:9px}.ljl-source-versions article span,.ljl-source-versions article small{font-size:7px;color:var(--muted);line-height:1.35}.ljl-source-versions article button{border:1px solid var(--line);background:#fff;border-radius:6px;min-height:28px;padding:0 8px;font-size:7px;font-weight:800;cursor:pointer}.ljl-source-versions .muted{padding:14px}
 @media(max-width:1050px){.ljl-top-row{grid-template-columns:1fr auto}.ljl-view-switcher{order:3;grid-column:1/-1}.ljl-presence{justify-content:flex-end}.ljl{--lab-header:142px}.ljl-source-body{grid-template-columns:1fr}.ljl-source-versions{border-left:0;border-top:1px solid var(--line);max-height:240px}}
 @media(max-width:760px){.ljl-presence{display:none}.ljl-top-row{grid-template-columns:1fr auto}.ljl-command-row{overflow-x:auto;flex-wrap:nowrap}.ljl-command-row>button{white-space:nowrap}.ljl-workspace-select{min-width:190px!important}.ljl-source-toolbar{grid-template-columns:1fr 1fr}.ljl-source-toolbar>span{display:none}.ljl-source-modal{height:96vh}.ljl-zoom-controls{top:auto!important;bottom:18px!important}.ljl-minimap{display:none!important}}
+
+
+/* Canvas viewport fix: keep the page shell fixed so vertical left-drag pans the canvas instead of the document */
+.ljl{height:100vh!important;min-height:100vh!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+.ljl-topbar{flex:0 0 auto!important}
+.ljl-storage-note,.ljl-connect-mode,.ljl-banner,.ljl-select-hint,.ljl-bulkbar{flex:0 0 auto}
+.ljl-workspace{flex:1 1 auto!important;min-height:0!important;height:auto!important;overflow:hidden!important}
+.ljl-canvas-wrap{height:100%!important;min-height:0!important;max-height:none!important;overflow:auto!important}
+.ljl-inspector{position:relative!important;top:auto!important;height:100%!important;min-height:0!important}
