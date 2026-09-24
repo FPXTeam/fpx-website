@@ -8,6 +8,7 @@ const SNAPSHOTS_TABLE="tblKeb91K0Hx4FUjs";
 const CHANGE_LOG_TABLE="tblt6YPVAye7Ji2HB";
 const PRESENCE_TABLE="tblxisRPy6D7ovq16";
 const VERSIONS_TABLE="tblFEIR5UCWzLbBxq";
+const SEQUENCE_LIBRARY_TABLE="tbln4TMWTNCr4WZK6";
 
 const JF={
   name:"fldR1mvKg5WmaHtxl",description:"fldAYmPtMLBa2ngkD",order:"fldqQz8GHBBjgntY4",
@@ -36,6 +37,7 @@ const SF={name:"fldSdlemWaw8XgzZ5",journey:"fldcRZ4N9cgMcqLQO",createdAt:"fldL3P
 const GF={event:"fldciLs2nCvg36DaW",action:"fldgEDhvqhYxrdOC9",itemType:"fldBARvD5dnrsvMN3",itemName:"fldiuhJaaKoMdKsYm",journey:"fldYTs9jFFvzZ6O6c",changedAt:"fldQlsRbRRYYgqFKb",changedBy:"fld6KEtFxjEPIZxgs",details:"fldM4aOFt1fIoNtYa"} as const;
 const PF={person:"fldrf6abISjrfJMfg",journey:"fldnXC2VwZnYD43wD",view:"fldnTZDsrGC6Yujcc",focus:"fldMQhiBofsYyrz5B",mode:"fld0478yhVusa500h",card:"fld2PBtOpvyKzsvzv",lastSeen:"fldjYuGolbyCsWs3q",session:"fldr00MCCNh9pIO72"} as const;
 const VF={label:"fldvfYLJHumrDdbOQ",journey:"fldtdtfmhbKT122dR",number:"fldlaHTTCSvezapFW",createdAt:"fldqNRajyIh2S2GkJ",createdBy:"fld4UtNQUOPydXMGb",reason:"fldYLxWjHPfHtzssw",base:"fld2xFkmYX8yTpFjL",summary:"fld2WA8jt5cobtXXX",source:"fldHpk6Gqst6PJOCH"} as const;
+const QF={name:"fldb9b7YZ81Ag0l65",templateId:"fldjMyTwgmda1Zk3e",description:"fldwYz0wMIYGDSwKr",tone:"fldqtBOdpjYnPLh27",steps:"fldAyBdpxa9BzEe46",edges:"fldbYzrrjpQQaPlta",active:"fldE5RCMe32ff0dSw",updatedAt:"fldUUWJTpG1P3FpNv",updatedBy:"fldJlmWRFrh1yN9Mx"} as const;
 
 function token(){return process.env.AIRTABLE_TOKEN?.trim()||process.env.AIRTABLE_PERSONAL_ACCESS_TOKEN?.trim()||""}
 function headers(){const value=token();if(!value)throw new Error("AIRTABLE_TOKEN is not configured.");return {Authorization:`Bearer ${value}`,"Content-Type":"application/json"}}
@@ -701,4 +703,50 @@ export async function heartbeatPresence(input:any){
   if(existing)await airtable(PRESENCE_TABLE,{method:"PATCH",body:JSON.stringify({records:[{id:existing.id,fields}],typecast:true})});
   else await airtable(PRESENCE_TABLE,{method:"POST",body:JSON.stringify({records:[{fields}],typecast:true})});
   return listPresence();
+}
+
+
+export async function listSequenceTemplates(){
+  const d=await airtableAll(`${SEQUENCE_LIBRARY_TABLE}?pageSize=100`);
+  return d.records.map((r:any)=>{
+    let steps:any[]=[],edges:any[]=[];
+    try{steps=JSON.parse(val(r,QF.steps,"[]"))}catch{}
+    try{edges=JSON.parse(val(r,QF.edges,"[]"))}catch{}
+    return {
+      recordId:r.id,id:val(r,QF.templateId),name:val(r,QF.name),description:val(r,QF.description),
+      tone:selectName(val(r,QF.tone),"sage"),steps:Array.isArray(steps)?steps:[],edges:Array.isArray(edges)?edges:[],
+      active:val(r,QF.active,true)!==false,updatedAt:val(r,QF.updatedAt),updatedBy:val(r,QF.updatedBy)
+    };
+  }).filter((x:any)=>x.id&&x.name);
+}
+export async function saveSequenceTemplate(input:any){
+  const id=plain(input.id,100),name=plain(input.name,255);
+  if(!id||!name)throw new Error("Sequence ID and name are required.");
+  const steps=Array.isArray(input.steps)?input.steps:[];
+  const edges=Array.isArray(input.edges)?input.edges:[];
+  if(!steps.length)throw new Error("A sequence needs at least one step.");
+  if(steps.length>60)throw new Error("Sequence has too many steps.");
+  const allowedCategories=new Set(["Source","Capture","Communication","CRM","Decision","Nurture","Wait","Action","Outcome","Customer Handoff"]);
+  const allowedExecution=new Set(["Automated","Can be automated","Manual"]);
+  const allowedWorkshop=new Set(["Draft","Needs Discussion","Agreed"]);
+  const safeSteps=steps.map((step:any,index:number)=>({
+    name:plain(step.name,255)||`Step ${index+1}`,
+    category:allowedCategories.has(step.category)?step.category:"Action",
+    tool:plain(step.tool,100)||"None",
+    execution:allowedExecution.has(step.execution)?step.execution:"Manual",
+    assigned:plain(step.assigned,255),timing:plain(step.timing,255),use:plain(step.use),action:plain(step.action,255),notes:plain(step.notes),
+    workshopStatus:allowedWorkshop.has(step.workshopStatus)?step.workshopStatus:"Draft",leadStatus:plain(step.leadStatus,100)||"Not Applicable"
+  }));
+  const safeEdges=edges.map((edge:any)=>{
+    const from=Number(edge?.[0]),to=Number(edge?.[1]),label=plain(edge?.[2],255);
+    if(!Number.isInteger(from)||!Number.isInteger(to)||from<0||to<0||from>=safeSteps.length||to>=safeSteps.length)throw new Error("Sequence contains an invalid connection.");
+    return [from,to,label];
+  });
+  const existing=(await listSequenceTemplates()).find((x:any)=>x.id===id);
+  const fields:any={
+    [QF.name]:name,[QF.templateId]:id,[QF.description]:plain(input.description),[QF.tone]:plain(input.tone,50)||"sage",
+    [QF.steps]:JSON.stringify(safeSteps),[QF.edges]:JSON.stringify(safeEdges),[QF.active]:input.active!==false,[QF.updatedAt]:now(),[QF.updatedBy]:plain(input.updatedBy,255)||"Shared user"
+  };
+  if(existing)return airtable(SEQUENCE_LIBRARY_TABLE,{method:"PATCH",body:JSON.stringify({records:[{id:existing.recordId,fields}],typecast:true})});
+  return airtable(SEQUENCE_LIBRARY_TABLE,{method:"POST",body:JSON.stringify({records:[{fields}],typecast:true})});
 }
