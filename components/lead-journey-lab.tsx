@@ -1257,7 +1257,7 @@ export function LeadJourneyLab(){
       <label>Your name<select value={displayName} onChange={e=>setDisplayName(e.target.value)}><option value="">Choose your name</option><option>Gabriel</option><option>Gabriela</option><option>George</option></select></label>
       <label>Password<input autoFocus type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Enter password"/></label>
       {authError&&<small className="ljl-error">{authError}</small>}
-      <button disabled={loading}>{loading?"Checking…":<>Open <ArrowRight size={16}/></>}</button></form>
+      <button disabled={loading||!displayName}>{loading?"Checking…":<>Open <ArrowRight size={16}/></>}</button></form>
   </div></main>;
 
   return <main className={"ljl "+(presentationMode?"is-presentation":"")} onClick={()=>{setContextMenu(null);setViewMenuOpen(false);setPresencePerson(null)}}>
@@ -1317,6 +1317,20 @@ export function LeadJourneyLab(){
         </>}
       </div>
     </header>
+
+    {presencePerson&&(()=>{
+      const item=presence.find((p:any)=>p.person===presencePerson);
+      const state=presenceState(item);
+      const last=item?.lastSeen?new Date(item.lastSeen).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}):"No recent activity";
+      return <div className="ljl-presence-popover" onClick={e=>e.stopPropagation()}>
+        <div className="ljl-presence-head"><span className={"presence-dot "+state}/><strong>{presencePerson}</strong><button onClick={()=>setPresencePerson(null)}><X size={13}/></button></div>
+        <div><span>Status</span><strong>{state==="active"?"Active now":state==="idle"?"Idle":"Offline"}</strong></div>
+        <div><span>Working in</span><strong>{item?.viewName||"—"}</strong></div>
+        <div><span>Detail</span><strong>{item?.detailMode||"—"}</strong></div>
+        <div><span>Selected</span><strong>{item?.selectedCard||"Nothing selected"}</strong></div>
+        <small>Last activity: {last}</small>
+      </div>;
+    })()}
 
     {bulkMode&&!presentationMode&&<BulkBar count={selectedCardIds.length} journeys={journeys}
       onAssign={bulkAssign} onDelete={bulkDelete}
