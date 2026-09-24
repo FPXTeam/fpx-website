@@ -1446,7 +1446,8 @@ export function LeadJourneyLab(){
         libById={libById} cardById={cardById} layoutDirection={layoutDirection} saving={saving}
         onClose={()=>setJourneyOverviewOpen(false)}
         onSelect={(card:any)=>{setSelectedCardId(card.id);setSelectedConnectionId(null)}}
-        onRename={async(card:any,title:string)=>{const next=title.trim();if(next&&next!==card.title)await updateCard(card.id,{title:next})}}
+        onLiveRename={(card:any,title:string)=>setBoard(prev=>({...prev,cards:prev.cards.map(c=>c.id===card.id?{...c,title}:c)}))}
+        onRename={async(card:any,title:string)=>{const next=title.trim();if(next)await updateCard(card.id,{title:next})}}
         onNotes={async(card:any,notes:string)=>{if(notes!==card.notes)await updateCard(card.id,{notes})}}
         onEditDetails={(card:any)=>setEditingLibraryId(card.libraryId)}
         onAddNext={(card:any)=>setAdding({x:layoutDirection==="horizontal"?card.x+320:card.x,y:layoutDirection==="vertical"?card.y+220:card.y,parentId:card.id})}
@@ -1821,7 +1822,7 @@ function BulkBar({count,journeys,onAssign,onDelete,onAlign,onFit,onClear,onExit}
   return <div className="ljl-bulkbar"><strong>{count} selected</strong><select value={journeyId} onChange={e=>setJourneyId(e.target.value)}><option value="">Assign to journey…</option>{journeys.map((j:any)=><option key={j.id} value={j.id}>{j.name}</option>)}</select><button disabled={!count||!journeyId} onClick={()=>onAssign(journeyId)}>Assign</button><button disabled={!count} onClick={onAlign}><WandSparkles size={13}/> Align</button><button disabled={!count} onClick={onFit}><Maximize2 size={13}/> Fit</button><button disabled={!count} className="danger" onClick={onDelete}><Trash2 size={13}/> Delete</button><button onClick={onClear}>Clear</button><button onClick={onExit}><X size={13}/> Exit</button></div>;
 }
 
-function JourneyOverviewDrawer({name,cards,connections,libById,cardById,layoutDirection,saving,onClose,onSelect,onRename,onNotes,onEditDetails,onAddNext,onAddCard,onAddSequence,onConnection,onDeleteConnection,onDeleteCard}:any){
+function JourneyOverviewDrawer({name,cards,connections,libById,cardById,layoutDirection,saving,onClose,onSelect,onLiveRename,onRename,onNotes,onEditDetails,onAddNext,onAddCard,onAddSequence,onConnection,onDeleteConnection,onDeleteCard}:any){
   const [query,setQuery]=useState("");
   const ordered=[...cards].sort((a:any,b:any)=>layoutDirection==="horizontal"?(a.x-b.x||a.y-b.y):(a.y-b.y||a.x-b.x));
   const filtered=ordered.filter((card:any)=>{
@@ -1839,7 +1840,7 @@ function JourneyOverviewDrawer({name,cards,connections,libById,cardById,layoutDi
       const def=libById.get(card.libraryId),outs=outgoing(card.id);
       return <article key={card.id} className="ljl-overview-card">
         <div className="ljl-overview-card-head"><b>{index+1}</b><div><span>{def?.category||"Card"}{card.sequenceName?" · "+card.sequenceName:""}</span><small>{def?.execution||"Manual"}{def?.assignedPerson?" · "+def.assignedPerson:""}{def?.timing?" · "+def.timing:""}</small></div><button onClick={()=>onSelect(card)} title="Highlight on canvas"><MousePointer2 size={12}/></button></div>
-        <label>Card title<input key={card.title} defaultValue={card.title} onBlur={e=>onRename(card,e.currentTarget.value)} /></label>
+        <label>Card title<input value={card.title} onChange={e=>onLiveRename(card,e.currentTarget.value)} onBlur={e=>onRename(card,e.currentTarget.value)} /></label>
         <label>Canvas note<textarea key={card.notes||""} rows={2} defaultValue={card.notes||""} onBlur={e=>onNotes(card,e.currentTarget.value)} placeholder="Optional note for this card instance"/></label>
         <div className="ljl-overview-card-actions"><button onClick={()=>onEditDetails(card)}><Edit3 size={11}/> Edit Details</button><button onClick={()=>onAddNext(card)}><Plus size={11}/> Add Next</button><button className="danger" onClick={()=>onDeleteCard(card)}><Trash2 size={11}/></button></div>
         {outs.length>0&&<div className="ljl-overview-connections"><strong>Next</strong>{outs.map((connection:any)=>{
