@@ -1335,17 +1335,17 @@ export function LeadJourneyLab(){
           <button onClick={()=>setZoom(z=>Math.max(.25,Math.round((z-.1)*100)/100))}><Minus size={15}/></button>
           <span>{Math.round(zoom*100)}%</span>
           <button onClick={()=>setZoom(z=>Math.min(1.5,Math.round((z+.1)*100)/100))}><Plus size={15}/></button>
-          <button onClick={()=>setZoom(.8)} title="Reset zoom"><RotateCcw size={14}/></button>
+          <button onClick={fitView} title="Fit to screen"><Maximize2 size={14}/></button>
         </div>
 
         <div className="ljl-canvas-scale" style={{width:width*zoom,height:height*zoom}}>
           <div ref={canvasRef} className="ljl-canvas" style={{width,height,transform:`scale(${zoom})`}}
             onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}>
-            {sequenceGroups.filter(group=>!collapsedSequences.includes(group.id)&&group.cards.length>1).map(group=>{
+            {sequenceGroups.filter(group=>!collapsedMap.has(group.id)&&group.cards.length>1).map(group=>{
               const minX=Math.min(...group.cards.map(c=>c.x))-22,minY=Math.min(...group.cards.map(c=>c.y))-42;
               const maxX=Math.max(...group.cards.map(c=>c.x+nodeW))+22,maxY=Math.max(...group.cards.map(c=>c.y+nodeH))+22;
               return <div key={group.id} className={"ljl-sequence-group tone-"+sequenceTone(group.name)} style={{left:minX,top:minY,width:maxX-minX,height:maxY-minY}}>
-                <div className="ljl-sequence-group-label"><strong>{group.name}</strong><span>{group.cards.length} steps</span><button onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setCollapsedSequences(ids=>[...ids,group.id])}}>Collapse</button></div>
+                <div className="ljl-sequence-group-label"><strong>{group.name}</strong><span>{group.cards.length} steps</span><button onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();detailMode==="simple"?setExpandedSimpleSequences(ids=>ids.filter(id=>id!==group.id)):setCollapsedSequences(ids=>Array.from(new Set([...ids,group.id])))}}>Collapse</button></div>
               </div>;
             })}
             <svg className="ljl-lines" width={width} height={height}>
@@ -1377,10 +1377,17 @@ export function LeadJourneyLab(){
                 onPointerMove={dragMove} onPointerUp={endDrag} onPointerCancel={endDrag}
                 onContextMenu={e=>cardContext(e,card)}>
                 {!presentationMode&&<button className={"ljl-handle input "+(layoutDirection==="horizontal"?"horizontal":"vertical")} title="Connect to this card" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();connectHandle(card.id)}}/>}
-                <div className="ljl-node-top"><span>{displayCategory}</span>{isSummary?<button className="ljl-sequence-expand" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();setCollapsedSequences(ids=>ids.filter(id=>id!==card.sequenceId))}}>Expand</button>:(bulkMode?<CheckSquare size={15}/>:<GripVertical size={15}/>)}</div>
+                <div className="ljl-node-top"><span>{displayCategory}</span>{isSummary?<button className="ljl-sequence-expand" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();detailMode==="simple"?setExpandedSimpleSequences(ids=>Array.from(new Set([...ids,card.sequenceId||""])).filter(Boolean)):setCollapsedSequences(ids=>ids.filter(id=>id!==card.sequenceId))}}>Expand</button>:(bulkMode?<CheckSquare size={15}/>:<GripVertical size={15}/>)}</div>
                 <h2>{displayTitle}</h2>
                 <div className="ljl-node-meta">
-                  {isSummary?<><span>{collapsedGroup!.cards.length} steps</span><span>Collapsed</span></>:<>
+                  {isSummary?(()=>{
+                    const questions=collapsedGroup!.cards.filter(c=>libById.get(c.libraryId)?.workshopStatus==="Needs Discussion").length;
+                    const executions=Array.from(new Set(collapsedGroup!.cards.map(c=>libById.get(c.libraryId)?.execution).filter(Boolean)));
+                    return <><span>{collapsedGroup!.cards.length} steps</span>{questions>0&&<span className="sequence-warning">{questions} question{questions===1?"":"s"}</span>}<span>{executions.length===1?executions[0]:"Mixed execution"}</span></>;
+                  })():detailMode==="simple"?<>
+                    {def?.execution&&<span className={"execution "+cssToken(def.execution)}>{def.execution}</span>}
+                    {def?.workshopStatus==="Needs Discussion"&&<span className="sequence-warning">Needs Discussion</span>}
+                  </>:<>
                     {def?.tool&&def.tool!=="None"&&<span>{def.tool}</span>}
                     {def?.execution&&<span className={"execution "+cssToken(def.execution)}>{def.execution}</span>}
                     {def?.assignedPerson&&<span>{def.assignedPerson}</span>}
