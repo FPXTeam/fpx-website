@@ -110,7 +110,8 @@ export async function supabaseAirtable(path:string,init:RequestInit|undefined,sp
     const params=new URLSearchParams({limit:String(limit),offset:String(offset)});
     const name=supplied.get("sort[0][field]")||"";
     const col=spec.sort?.[name];
-    if(col)params.set("order",col+"."+(supplied.get("sort[0][direction]")==="desc"?"desc":"asc"));
+    // Stable pagination is essential: library and cards exceed the page size.
+    params.set("order",col?(col+"."+(supplied.get("sort[0][direction]")==="desc"?"desc":"asc")+",id.asc"):"id.asc");
     const rows=await rest("GET",spec.table,params.toString());
     return {records:rows.map(mapRecord),...(rows.length===limit?{offset:String(offset+limit)}:{})};
   }
