@@ -20,6 +20,15 @@ export async function GET(request:Request){
   const url=new URL(request.url);
   const section=url.searchParams.get("section");
   try{
+    if(section==="health"){
+      const board=await getJourneyLabData();
+      return NextResponse.json({
+        status:board.configured?"ready":"not_configured",
+        provider:process.env.LJL_DATA_BACKEND==="supabase"?"supabase":"airtable",
+        counts:{journeys:board.journeys.length,cards:board.cards.length,
+          library:board.library.length,connections:board.connections.length}
+      },{headers:{"Cache-Control":"no-store"}});
+    }
     if(section==="snapshots")return NextResponse.json({snapshots:await listSnapshots()});
     if(section==="changes")return NextResponse.json({changes:await listChangeLog()});
     if(section==="presence")return NextResponse.json({presence:await listPresence()});
