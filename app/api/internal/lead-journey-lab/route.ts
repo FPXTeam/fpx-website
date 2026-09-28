@@ -21,13 +21,28 @@ export async function GET(request:Request){
   const section=url.searchParams.get("section");
   try{
     if(section==="health"){
-      const board=await getJourneyLabData();
-      return NextResponse.json({
-        status:board.configured?"ready":"not_configured",
-        provider:process.env.LJL_DATA_BACKEND==="supabase"?"supabase":"airtable",
-        counts:{journeys:board.journeys.length,cards:board.cards.length,
-          library:board.library.length,connections:board.connections.length}
-      },{headers:{"Cache-Control":"no-store"}});
+      // Authenticated diagnostic. Report only configuration presence, never secret values.
+      const provider=process.env.LJL_DATA_BACKEND==="supabase"?"supabase":"airtable";
+      const configured=provider==="supabase"
+        ? Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY?.trim())
+        : Boolean(process.env.AIRTABLE_TOKEN?.trim()||process.env.AIRTABLE_PERSONAL_ACCESS_TOKEN?.trim());
+      if(!configured){
+        return NextResponse.json({status:"not_configured",provider,secretPresent:false},
+          {status:503,headers:{"Cache-Control":"no-store"}});
+      }
+      try{
+        const board=await getJourneyLabData();
+        return NextResponse.json({
+          status:"ready",provider,secretPresent:true,
+          counts:{journeys:board.journeys.length,cards:board.cards.length,
+            library:board.library.length,connections:board.connections.length}
+        },{headers:{"Cache-Control":"no-store"}});
+      }catch(error){
+        return NextResponse.json({
+          status:"unavailable",provider,secretPresent:true,
+          error:error instanceof Error?error.message:"Storage connection failed."
+        },{status:503,headers:{"Cache-Control":"no-store"}});
+      }
     }
     if(section==="snapshots")return NextResponse.json({snapshots:await listSnapshots()});
     if(section==="changes")return NextResponse.json({changes:await listChangeLog()});
