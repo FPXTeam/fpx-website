@@ -80,7 +80,8 @@ export async function supabaseAirtable(path:string,init:RequestInit|undefined,sp
     for(const [col,field] of Object.entries(columnToField)) {
       if(row[col]!==undefined && row[col]!==null) {
         const value=row[col];
-        fields[field]=["snapshot_json","source_json","steps","edges"].includes(col) && typeof value!=="string" ? JSON.stringify(value) : value;
+        fields[field]=["library_id","from_card_id","to_card_id"].includes(col) ? [value] :
+          ["snapshot_json","source_json","steps","edges"].includes(col) && typeof value!=="string" ? JSON.stringify(value) : value;
       }
     }
     return {id: row.id, fields};
@@ -90,7 +91,8 @@ export async function supabaseAirtable(path:string,init:RequestInit|undefined,sp
     for(const [field,value] of Object.entries(fields||{})) {
       const col=fieldToColumn[field];
       if(col) {
-        data[col]=["snapshot_json","source_json","steps","edges"].includes(col) && typeof value==="string" ? JSON.parse(value||"{}") : value;
+        data[col]=["library_id","from_card_id","to_card_id"].includes(col) && Array.isArray(value) ? (value[0]||null) :
+          ["snapshot_json","source_json","steps","edges"].includes(col) && typeof value==="string" ? JSON.parse(value||"{}") : value;
       }
     }
     return data;
