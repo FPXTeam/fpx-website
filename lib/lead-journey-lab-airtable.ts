@@ -1,4 +1,5 @@
 // @ts-nocheck
+import {supabaseAirtable,type LabTableSpecs} from "./lead-journey-lab-supabase-transport";
 const BASE_ID="app46QGfgQet1CPIu";
 const JOURNEYS_TABLE="tbl8GQR6NDrgqjtF2";
 const CARDS_TABLE="tblCvEEGIiT0AL3R1";
@@ -39,9 +40,65 @@ const PF={person:"fldrf6abISjrfJMfg",journey:"fldnXC2VwZnYD43wD",view:"fldnTZDsr
 const VF={label:"fldvfYLJHumrDdbOQ",journey:"fldtdtfmhbKT122dR",number:"fldlaHTTCSvezapFW",createdAt:"fldqNRajyIh2S2GkJ",createdBy:"fld4UtNQUOPydXMGb",reason:"fldYLxWjHPfHtzssw",base:"fld2xFkmYX8yTpFjL",summary:"fld2WA8jt5cobtXXX",source:"fldHpk6Gqst6PJOCH"} as const;
 const QF={name:"fldb9b7YZ81Ag0l65",templateId:"fldjMyTwgmda1Zk3e",description:"fldwYz0wMIYGDSwKr",tone:"fldqtBOdpjYnPLh27",steps:"fldAyBdpxa9BzEe46",edges:"fldbYzrrjpQQaPlta",active:"fldE5RCMe32ff0dSw",updatedAt:"fldUUWJTpG1P3FpNv",updatedBy:"fldJlmWRFrh1yN9Mx"} as const;
 
+
+/**
+ * Explicit field mapping preserves the existing Journey Lab business logic.
+ * Airtable remains an archival option; Supabase is used only when enabled
+ * through server-side Vercel environment variables.
+ */
+function mapFields(ids:Record<string,string>,cols:Record<string,string>){
+  const fields:Record<string,string>={};
+  for(const [name,id] of Object.entries(ids)){
+    if(!cols[name])throw new Error("Unmapped Lead Journey Lab field: "+name);
+    fields[id]=cols[name];
+  }
+  return fields;
+}
+const LAB_DB_SPECS:LabTableSpecs={
+  [JOURNEYS_TABLE]:{table:"ljl_journeys",fields:mapFields(JF,{
+    name:"name",description:"description",order:"sort_order",active:"active",group:"group_name",archived:"archived",template:"template"
+  }),sort:{"Order":"sort_order"}},
+  [CARDS_TABLE]:{table:"ljl_cards",fields:mapFields(CF,{
+    title:"title",notes:"notes",comments:"comments",order:"sort_order",x:"canvas_x",y:"canvas_y",
+    journey:"journey_ids",library:"library_id",sequenceId:"sequence_id",sequenceName:"sequence_name",sequenceStep:"sequence_step"
+  }),sort:{"Sort Order":"sort_order"}},
+  [LIBRARY_TABLE]:{table:"ljl_library_cards",fields:mapFields(LF,{
+    name:"name",category:"category",tool:"tool",use:"use_purpose",action:"tool_action",automated:"automated",
+    automationTool:"automation_tool",execution:"execution",assignedPerson:"assigned_person",campaignName:"campaign_name",
+    subject:"subject",templateName:"template_name",messagePurpose:"message_purpose",timing:"timing",
+    leadStatus:"lead_status",workshopStatus:"workshop_status",workshopAnswer:"workshop_answer",notes:"notes",
+    active:"active",global:"global_card",journeyLocal:"journey_local",
+    suggestedNext:"suggested_next_ids",suggestedParent:"suggested_parent_ids",applicableJourneys:"applicable_journey_ids"
+  })},
+  [CONNECTIONS_TABLE]:{table:"ljl_connections",fields:mapFields(XF,{
+    name:"name",from:"from_card_id",to:"to_card_id",journey:"journey_ids",label:"label",order:"sort_order",active:"active"
+  }),sort:{"Order":"sort_order"}},
+  [SNAPSHOTS_TABLE]:{table:"ljl_snapshots",fields:mapFields(SF,{
+    name:"name",journey:"journey_ids",createdAt:"created_at",createdBy:"created_by",json:"snapshot_json"
+  }),sort:{"Created At":"created_at"}},
+  [CHANGE_LOG_TABLE]:{table:"ljl_change_log",fields:mapFields(GF,{
+    event:"event",action:"action",itemType:"item_type",itemName:"item_name",
+    journey:"journey_ids",changedAt:"changed_at",changedBy:"changed_by",details:"details"
+  }),sort:{"Changed At":"changed_at"}},
+  [PRESENCE_TABLE]:{table:"ljl_presence",fields:mapFields(PF,{
+    person:"person",journey:"journey_ids",view:"view_name",focus:"source_focus",
+    mode:"detail_mode",card:"selected_card",lastSeen:"last_seen",session:"session_id"
+  })},
+  [VERSIONS_TABLE]:{table:"ljl_versions",fields:mapFields(VF,{
+    label:"label",journey:"journey_ids",number:"version_number",createdAt:"created_at",
+    createdBy:"created_by",reason:"reason",base:"base_version",summary:"summary",source:"source_json"
+  })},
+  [SEQUENCE_LIBRARY_TABLE]:{table:"ljl_sequence_templates",fields:mapFields(QF,{
+    name:"name",templateId:"id",description:"description",tone:"tone",
+    steps:"steps",edges:"edges",active:"active",updatedAt:"updated_at",updatedBy:"updated_by"
+  })}
+};
+function supabaseEnabled(){return process.env.LJL_DATA_BACKEND==="supabase";}
+
 function token(){return process.env.AIRTABLE_TOKEN?.trim()||process.env.AIRTABLE_PERSONAL_ACCESS_TOKEN?.trim()||""}
 function headers(){const value=token();if(!value)throw new Error("AIRTABLE_TOKEN is not configured.");return {Authorization:`Bearer ${value}`,"Content-Type":"application/json"}}
 async function airtable(path:string,init?:RequestInit){
+  if(supabaseEnabled())return supabaseAirtable(path,init,LAB_DB_SPECS);
   const method=(init?.method||"GET").toUpperCase();
   const requestPath=method==="GET"?`${path}${path.includes("?")?"&":"?"}returnFieldsByFieldId=true`:path;
   const response=await fetch(`https://api.airtable.com/v0/${BASE_ID}/${requestPath}`,{...init,headers:{...headers(),...(init?.headers||{})},cache:"no-store"});
@@ -76,7 +133,13 @@ export type LabCard={id:string;title:string;notes:string;comments:string;order:n
 export type LabConnection={id:string;name:string;fromId:string;toId:string;journeyIds:string[];label:string;order:number;active:boolean};
 
 export async function getJourneyLabData(){
-  if(!token())return {configured:false,journeys:[],library:[],cards:[],connections:[]};
+  if(supabaseEnabled()&&!process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()) {
+    throw new Error("FPX Lab Supabase server configuration is missing. Shared editing is disabled.");
+  }
+  if(!supabaseEnabled()&&!token()){
+    if(process.env.NODE_ENV==="production")throw new Error("Shared Airtable storage is unavailable. Refusing local-only edits in production.");
+    return {configured:false,journeys:[],library:[],cards:[],connections:[]};
+  }
   const [j,c,l,x]=await Promise.all([
     airtableAll(`${JOURNEYS_TABLE}?pageSize=100&sort%5B0%5D%5Bfield%5D=Order&sort%5B0%5D%5Bdirection%5D=asc`),
     airtableAll(`${CARDS_TABLE}?pageSize=100&sort%5B0%5D%5Bfield%5D=Sort%20Order&sort%5B0%5D%5Bdirection%5D=asc`),
