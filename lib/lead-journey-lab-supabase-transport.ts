@@ -78,7 +78,10 @@ export async function supabaseAirtable(path:string,init:RequestInit|undefined,sp
   const mapRecord=(row:Record<string,any>)=>{
     const fields:Record<string,any>={};
     for(const [col,field] of Object.entries(columnToField)) {
-      if(row[col]!==undefined && row[col]!==null)fields[field]=row[col];
+      if(row[col]!==undefined && row[col]!==null) {
+        const value=row[col];
+        fields[field]=["snapshot_json","source_json","steps","edges"].includes(col) && typeof value!=="string" ? JSON.stringify(value) : value;
+      }
     }
     return {id: row.id, fields};
   };
@@ -86,7 +89,9 @@ export async function supabaseAirtable(path:string,init:RequestInit|undefined,sp
     const data:Record<string,any>={};
     for(const [field,value] of Object.entries(fields||{})) {
       const col=fieldToColumn[field];
-      if(col)data[col]=value;
+      if(col) {
+        data[col]=["snapshot_json","source_json","steps","edges"].includes(col) && typeof value==="string" ? JSON.parse(value||"{}") : value;
+      }
     }
     return data;
   };
