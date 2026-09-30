@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect,useMemo,useRef,useState } from "react";
+import { jsPDF } from "jspdf";
 import {
   Archive,ArrowRight,BookOpen,Boxes,CheckSquare,Copy,Download,Edit3,Eye,EyeOff,FileDown,Filter,
   ClipboardCopy,ClipboardPaste,Code2,GitMerge,GripVertical,History,Layers,Link2,Lock,LogOut,Maximize2,MessageSquare,Minus,MousePointer2,Plus,
@@ -927,6 +928,163 @@ export function LeadJourneyLab(){
     const url=URL.createObjectURL(new Blob([svg],{type:"image/svg+xml"}));const a=document.createElement("a");a.href=url;a.download="fpx-lead-journey.svg";a.click();URL.revokeObjectURL(url);
   }
 
+  function exportSopPdf(){
+    const journey=board.journeys.find(j=>j.id===currentJourneyId);
+    const cards=baseVisibleCards.slice().sort((a,b)=>a.order-b.order);
+    if(!cards.length){setError("There are no journey cards to export.");return}
+
+    const scopedIds=new Set(cards.map(card=>card.id));
+    const connections=board.connections.filter(conn=>
+      conn.active&&conn.journeyIds.includes(currentJourneyId)&&scopedIds.has(conn.fromId)&&scopedIds.has(conn.toId)
+    ).sort((a,b)=>a.order-b.order);
+    const cardDef=(card:Card)=>libById.get(card.libraryId);
+    const agreed=cards.filter(card=>cardDef(card)?.workshopStatus==="Agreed");
+    const openItems=cards.filter(card=>cardDef(card)?.workshopStatus!=="Agreed");
+    const agreedIds=new Set(agreed.map(card=>card.id));
+    const agreedConnections=connections.filter(conn=>agreedIds.has(conn.fromId)&&agreedIds.has(conn.toId));
+    const agreedById=new Map(agreed.map(card=>[card.id,card] as const));
+    const incoming=new Map<string,number>();
+    agreed.forEach(card=>incoming.set(card.id,0));
+    agreedConnections.forEach(conn=>incoming.set(conn.toId,(incoming.get(conn.toId)||0)+1));
+
+    const ordered:Card[]=[];
+    const seen=new Set<string>();
+    const walk=(id:string)=>{
+      if(seen.has(id))return;
+      const card=agreedById.get(id);if(!card)return;
+      seen.add(id);ordered.push(card);
+      agreedConnections.filter(conn=>conn.fromId===id).sort((a,b)=>a.order-b.order).forEach(conn=>walk(conn.toId));
+    };
+    agreed.filter(card=>(incoming.get(card.id)||0)===0).sort((a,b)=>a.order-b.order).forEach(card=>walk(card.id));
+    agreed.filter(card=>!seen.has(card.id)).sort((a,b)=>a.order-b.order).forEach(card=>walk(card.id));
+
+    const clean=(value:any)=>String(value??"")
+      .replace(/[–—]/g,"-").replace(/[‘’]/g,"'").replace(/[“”]/g,'"')
+      .replace(/→/g," to ").replace(/·/g," - ").replace(/\s+/g," ").trim();
+    const viewTitle=isMainView&&sourceFocus!=="all"?currentViewName():(journey?.name||currentViewName());
+    const parentTitle=journey?.name||"FPX Lead Journey";
+    const purpose=isMainView&&sourceFocus!=="all"
+      ?"This SOP covers the "+viewTitle+" path within "+parentTitle+"."
+      :(journey?.description||"This SOP explains the confirmed process for this FPX lead journey.");
+    const needsDiscussion=openItems.filter(card=>cardDef(card)?.workshopStatus==="Needs Discussion");
+    const drafts=openItems.filter(card=>cardDef(card)?.workshopStatus!=="Needs Discussion");
+    const status=openItems.length?"Working SOP":"Confirmed SOP";
+    const people=Array.from(new Set(agreed.map(card=>clean(cardDef(card)?.assignedPerson)).filter(Boolean)));
+    const tools=Array.from(new Set(agreed.map(card=>clean(cardDef(card)?.tool)).filter(value=>value&&value!=="None")));
+    const terminal=agreed.filter(card=>!agreedConnections.some(conn=>conn.fromId===card.id));
+
+    const pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+    const pageW=pdf.internal.pageSize.getWidth(),pageH=pdf.internal.pageSize.getHeight();
+    const margin=16,contentW=pageW-margin*2;
+    let y=18;
+    const ensure=(height:number)=>{if(y+height>pageH-18){pdf.addPage();y=18}};
+    const write=(value:any,size=9.4,bold=false,indent=0,gap=2.8)=>{
+      const text=clean(value);if(!text)return;
+      pdf.setFont("helvetica",bold?"bold":"normal");pdf.setFontSize(size);pdf.setTextColor(32,45,40);
+      const width=contentW-indent;
+      const lines=pdf.splitTextToSize(text,width);
+      const lineH=Math.max(3.7,size*.43);
+      ensure(lines.length*lineH+gap);
+      pdf.text(lines,margin+indent,y);
+      y+=lines.length*lineH+gap;
+    };
+    const section=(title:string)=>{
+      ensure(13);y+=2;
+      pdf.setFont("helvetica","bold");pdf.setFontSize(11);pdf.setTextColor(4,14,14);
+      pdf.text(clean(title).toUpperCase(),margin,y);y+=2.5;
+      pdf.setDrawColor(83,195,150);pdf.setLineWidth(.7);pdf.line(margin,y,margin+34,y);y+=6;
+    };
+    const meta=(label:string,value:any)=>{if(clean(value))write(label+": "+clean(value),8.3,false,4,1.6)};
+
+    pdf.setFillColor(4,14,14);pdf.rect(0,0,pageW,34,"F");
+    pdf.setFillColor(83,195,150);pdf.rect(0,34,pageW,2.2,"F");
+    pdf.setTextColor(255,255,255);pdf.setFont("helvetica","bold");pdf.setFontSize(9);
+    pdf.text("FOREST PRODUCTS EXCHANGE",margin,12);
+    pdf.setFontSize(16);pdf.text("PROCESS SOP",margin,21);
+    pdf.setFont("helvetica","normal");pdf.setFontSize(9);pdf.text(clean(viewTitle),margin,28);
+    y=46;
+
+    pdf.setFillColor(245,248,246);pdf.roundedRect(margin,y,contentW,22,2,2,"F");
+    pdf.setTextColor(4,14,14);pdf.setFont("helvetica","bold");pdf.setFontSize(10);
+    pdf.text(status,margin+5,y+7);
+    pdf.setFont("helvetica","normal");pdf.setFontSize(8.5);
+    pdf.text("Confirmed steps: "+agreed.length+"   |   Needs discussion: "+needsDiscussion.length+"   |   Draft: "+drafts.length,margin+5,y+14);
+    y+=29;
+
+    section("Purpose");
+    write(purpose,9.6,false,0,3.5);
+
+    section("Who is involved");
+    write(people.length?people.join(", "):"Owners are not yet confirmed.",9.2);
+    section("Tools used");
+    write(tools.length?tools.join(", "):"No tools are specified in the confirmed steps.",9.2);
+
+    section("Confirmed process");
+    if(!ordered.length){
+      write("No steps are currently marked Agreed. Review the open items below before treating this document as an approved procedure.",9.5,true);
+    }else{
+      ordered.forEach((card,index)=>{
+        const def=cardDef(card);
+        ensure(22);
+        pdf.setFillColor(248,250,249);pdf.roundedRect(margin,y-3,contentW,8,1.5,1.5,"F");
+        pdf.setTextColor(4,14,14);pdf.setFont("helvetica","bold");pdf.setFontSize(10.2);
+        pdf.text(String(index+1)+". "+clean(card.title),margin+3,y+2);y+=9;
+        const action=def?.use||def?.action||def?.messagePurpose||card.notes||def?.notes||"Complete this step as part of the journey.";
+        write(action,9.2,false,4,2);
+        const details=[def?.assignedPerson?"Owner: "+clean(def.assignedPerson):"",def?.timing?"Timing: "+clean(def.timing):"",def?.tool?"Tool: "+clean(def.tool):""].filter(Boolean);
+        if(details.length)write(details.join("   |   "),8.2,false,4,2);
+        const outgoing=agreedConnections.filter(conn=>conn.fromId===card.id).sort((a,b)=>a.order-b.order);
+        if(outgoing.length===1){
+          const target=agreedById.get(outgoing[0].toId);
+          if(target)write("Next: "+clean(target.title)+(outgoing[0].label?" ("+clean(outgoing[0].label)+")":""),8.5,true,4,3);
+        }else if(outgoing.length>1){
+          write("Decision paths:",8.5,true,4,1.5);
+          outgoing.forEach(conn=>{
+            const target=agreedById.get(conn.toId);if(!target)return;
+            write("- "+(conn.label?clean(conn.label)+": ":"")+clean(target.title),8.4,false,7,1.4);
+          });
+          y+=1.5;
+        }else y+=1.5;
+      });
+    }
+
+    section("Expected outcome");
+    write(terminal.length
+      ?"The confirmed journey currently ends at: "+terminal.map(card=>clean(card.title)).join(", ")+"."
+      :"Complete the confirmed steps and move the lead to the next agreed journey outcome.",9.2);
+
+    section("Not yet confirmed");
+    if(!openItems.length){
+      write("There are no Draft or Needs Discussion items in this journey.",9.2);
+    }else{
+      write("The items below are not part of the confirmed SOP yet. They remain visible so the team can resolve them without confusing them with agreed procedure.",8.8,true);
+      [...needsDiscussion,...drafts].forEach(card=>{
+        const def=cardDef(card),itemStatus=def?.workshopStatus||"Draft";
+        ensure(14);
+        write(itemStatus+": "+clean(card.title),9,true,0,1.5);
+        if(def?.workshopAnswer)write("Current note: "+clean(def.workshopAnswer),8.5,false,4,1.4);
+        else if(def?.notes||card.notes)write(clean(def?.notes||card.notes),8.5,false,4,1.4);
+      });
+    }
+
+    section("Document control");
+    write("Source: FPX Lead Journey Lab",8.8);
+    write("Journey status: "+status,8.8);
+    write("Generated: "+new Date().toLocaleString(),8.8);
+    if(displayName)write("Generated by: "+displayName,8.8);
+
+    const pages=pdf.getNumberOfPages();
+    for(let page=1;page<=pages;page++){
+      pdf.setPage(page);pdf.setDrawColor(220,226,222);pdf.setLineWidth(.3);pdf.line(margin,pageH-12,pageW-margin,pageH-12);
+      pdf.setTextColor(100,112,106);pdf.setFont("helvetica","normal");pdf.setFontSize(7.5);
+      pdf.text("FPX Lead Journey Lab | Simple SOP",margin,pageH-7);
+      pdf.text("Page "+page+" of "+pages,pageW-margin,pageH-7,{align:"right"});
+    }
+
+    const safe=clean(viewTitle).replace(/[^a-zA-Z0-9]+/g,"-").replace(/^-|-$/g,"")||"Lead-Journey";
+    pdf.save("FPX-"+safe+"-SOP.pdf");
+  }
+
   async function removeCard(card:Card){
     if(!confirm(`Delete “${card.title}” from the journey map?`))return;
     const related=board.connections.filter(c=>c.fromId===card.id||c.toId===card.id);
@@ -1367,7 +1525,7 @@ export function LeadJourneyLab(){
           <button disabled={!layoutRedo.length} onClick={redoLayout} title="Redo layout"><Redo2 size={14}/></button>
           <span className="ljl-command-divider"/>
           <button onClick={()=>setToolsOpen(true)}><Filter size={14}/> Tools</button>
-          <button onClick={loadSnapshots}><History size={14}/> History</button>
+          <button onClick={loadSnapshots}><History size={14}/> History</button><button onClick={exportSopPdf}><FileDown size={14}/> Export SOP PDF</button>
           <button onClick={()=>setPresentationMode(true)}><Presentation size={14}/> Present</button>
         </>}
       </div>
@@ -1540,7 +1698,7 @@ export function LeadJourneyLab(){
       hideAgreed={hideAgreed} setHideAgreed={setHideAgreed} toolFilter={toolFilter} setToolFilter={setToolFilter}
       assignedFilter={assignedFilter} setAssignedFilter={setAssignedFilter} statusFilter={statusFilter} setStatusFilter={setStatusFilter}
       bulkMode={bulkMode} setBulkMode={setBulkMode} onFit={fitView} onFitSelected={fitSelected}
-      onExportSvg={exportSvg} onPrint={()=>window.print()} onChangeLog={loadChangeLog}
+      onExportSop={()=>{setToolsOpen(false);exportSopPdf()}} onExportSvg={exportSvg} onPrint={()=>window.print()} onChangeLog={loadChangeLog}
       onSource={()=>{setToolsOpen(false);setJourneySourceOpen(true)}}
       onPresentation={()=>{setToolsOpen(false);setPresentationMode(true)}} onClose={()=>setToolsOpen(false)}/>}
     {journeySourceOpen&&currentJourneyId&&<JourneySourceModal journeyId={currentJourneyId} focusName={currentViewName()}
@@ -1980,7 +2138,7 @@ function JourneyManagerModal({board,activeJourneyId,onOpen,onOverview,onNew,onDu
   </div></div>;
 }
 
-function WorkspaceToolsModal({board,miniMap,setMiniMap,hideAgreed,setHideAgreed,toolFilter,setToolFilter,assignedFilter,setAssignedFilter,statusFilter,setStatusFilter,bulkMode,setBulkMode,onFit,onFitSelected,onExportSvg,onPrint,onChangeLog,onSource,onPresentation,onClose}:any){
+function WorkspaceToolsModal({board,miniMap,setMiniMap,hideAgreed,setHideAgreed,toolFilter,setToolFilter,assignedFilter,setAssignedFilter,statusFilter,setStatusFilter,bulkMode,setBulkMode,onFit,onFitSelected,onExportSop,onExportSvg,onPrint,onChangeLog,onSource,onPresentation,onClose}:any){
   const tools=["All",...Array.from(new Set(board.library.map((d:any)=>d.tool||"None"))).sort()] as string[];
   const people=["All",...Array.from(new Set(board.library.map((d:any)=>d.assignedPerson||"Unassigned"))).sort()] as string[];
   return <div className="ljl-modal-backdrop"><div className="ljl-modal">
@@ -1992,7 +2150,7 @@ function WorkspaceToolsModal({board,miniMap,setMiniMap,hideAgreed,setHideAgreed,
       <label className="ljl-checkline"><input type="checkbox" checked={hideAgreed} onChange={e=>setHideAgreed(e.target.checked)}/> Hide Agreed cards</label>
       <label className="ljl-checkline"><input type="checkbox" checked={miniMap} onChange={e=>setMiniMap(e.target.checked)}/> Show mini-map</label>
       <label className="ljl-checkline"><input type="checkbox" checked={bulkMode} onChange={e=>setBulkMode(e.target.checked)}/> Multi-select cards</label>
-      <div className="ljl-tool-grid"><button onClick={onFit}><Maximize2 size={13}/> Fit All</button><button onClick={onFitSelected}><Maximize2 size={13}/> Fit Selected</button><button onClick={onSource}><Code2 size={13}/> Copy for AI / Journey Source</button><button onClick={onExportSvg}><Download size={13}/> Export SVG</button><button onClick={onPrint}><FileDown size={13}/> Print / PDF</button><button onClick={onChangeLog}><History size={13}/> Change Log</button><button onClick={onPresentation}><Presentation size={13}/> Presentation Mode</button></div>
+      <div className="ljl-tool-grid"><button onClick={onFit}><Maximize2 size={13}/> Fit All</button><button onClick={onFitSelected}><Maximize2 size={13}/> Fit Selected</button><button onClick={onSource}><Code2 size={13}/> Copy for AI / Journey Source</button><button onClick={onExportSop}><FileDown size={13}/> Export Simple SOP PDF</button><button onClick={onExportSvg}><Download size={13}/> Export SVG</button><button onClick={onPrint}><FileDown size={13}/> Print Canvas</button><button onClick={onChangeLog}><History size={13}/> Change Log</button><button onClick={onPresentation}><Presentation size={13}/> Presentation Mode</button></div>
     </div>
   </div></div>;
 }
