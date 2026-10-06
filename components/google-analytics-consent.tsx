@@ -18,7 +18,7 @@ export function GoogleAnalyticsConsent(){
  const[enabled,setEnabled]=useState(false);
  const[ready,setReady]=useState(false);
  const lastPage=useRef("");
- const blocked=pathname.startsWith("/saw-point-admin");
+ const blocked=pathname.startsWith("/internal")||pathname.startsWith("/saw-point-admin");
 
  useEffect(()=>{
   const sync=()=>setEnabled(Boolean(readFpxConsent()?.analytics));
