@@ -159,6 +159,13 @@ function pageSchema(slug: string) {
   const data = pageMeta[slug as MasterPage];
   const path = data.canonical ?? `/${slug}`;
   const url = `${siteUrl}${path}`;
+  const organization = {
+    "@type":"Organization",
+    "@id":`${siteUrl}/#organization`,
+    name:"Forest Products Exchange Limited",
+    url:siteUrl,
+    logo:{"@type":"ImageObject",url:`${siteUrl}/images/fpx-logo-horizontal-original.png`},
+  };
 
   if (["timber-growth-rings","the-science-of-kiln-drying"].includes(slug)) {
     return {
@@ -175,8 +182,8 @@ function pageSchema(slug: string) {
         ? ["Radiata Pine kiln drying","timber moisture content","continuous kiln","conventional kiln","New Zealand timber"]
         : ["Radiata Pine characteristics","wood density","growth rings","New Zealand timber","Radiata Pine"],
       mainEntityOfPage:{"@type":"WebPage","@id":url},
-      publisher:{"@id":`${siteUrl}/#organization`},
-      author:{"@type":"Organization","@id":`${siteUrl}/#organization`,"name":"Forest Products Exchange Limited","url":`${siteUrl}/about-us`},
+      publisher:organization,
+      author:organization,
       isPartOf:{"@id":`${siteUrl}/#website`},
       about:[{"@type":"Thing","name":"Radiata Pine"},{"@type":"Thing","name":"New Zealand timber"}],
       inLanguage:"en-NZ"
