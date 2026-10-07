@@ -17,10 +17,10 @@ export default function SawPointPublisher(){
       await new Promise(resolve=>setTimeout(resolve,5000));
       const check=await fetch("/api/saw-point-admin/status?sha="+encodeURIComponent(commitSha),{cache:"no-store"});
       const state=await check.json();
-      if(state?.status==="ready"){onDone("DONE — GitHub updated and Vercel deployment is READY.");return}
+      if(state?.status==="ready"){onDone("DONE — GitHub updated and Saw Point is LIVE in Production.");return}
       if(state?.status==="error"){onError(state?.error||"Deployment failed.");return}
     }
-    onDone("GitHub is updated. Vercel is still deploying — refresh the live site in a minute.");
+    onDone("GitHub is updated. Vercel is still deploying or promoting to Production — check the live site shortly.");
   }
 
   async function publish(event:React.FormEvent<HTMLFormElement>){
@@ -40,7 +40,7 @@ export default function SawPointPublisher(){
       if(!response.ok || !data.commitSha) throw new Error(data.error||"Unable to publish issue.");
 
       setStatus("deploying");
-      setMessage("GitHub updated. Waiting for Vercel deployment…");
+      setMessage("GitHub updated. Deploying to Vercel Production…");
 
       await waitForDeployment(
         data.commitSha,
@@ -71,7 +71,7 @@ export default function SawPointPublisher(){
       if(!response.ok || !data.commitSha) throw new Error(data.error||"Unable to delete issue.");
 
       setDeleteStatus("deploying");
-      setDeleteMessage("Issue removed. Waiting for Vercel deployment…");
+      setDeleteMessage("Issue removed. Deploying update to Vercel Production…");
       await waitForDeployment(
         data.commitSha,
         value=>{setDeleteStatus("done");setDeleteMessage(value);setDeleteIssue("")},
@@ -88,7 +88,7 @@ export default function SawPointPublisher(){
       <div>
         <span>PRIVATE FPX TOOL</span>
         <h1>Publish Saw Point.</h1>
-        <p>Add the issue once. The website archive, featured issue and deployment are handled automatically.</p>
+        <p>Add the issue once. The website archive, featured issue and Production deployment are handled automatically.</p>
       </div>
       <form method="post" action="/api/saw-point-admin/logout"><button type="submit" className="spa-logout">Log out</button></form>
     </div>
