@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
       { source: "/homepage-copy", destination: "/", permanent: true },
       { source: "/procurement-and-sales-team", destination: "/our-customers", permanent: true },
       { source: "/inventory-management-system", destination: "/our-customers", permanent: true },
+      { source: "/pruned-and-unpruned-radiata-pine", destination: "/timber-growth-rings", permanent: true },
+      { source: "/about-us-3", destination: "/about-us", permanent: true },
+      { source: "/our-services", destination: "/fpx-sourcing", permanent: true },
     ];
   },
   async headers() {
