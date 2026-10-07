@@ -65,8 +65,9 @@ export async function POST(request:Request){
   }
 
   const year=date.match(/\b\d{4}\b/)?.[0] || new Date().getFullYear().toString();
+  const publishedAt=new Date().toISOString().slice(0,10);
   const slug=`issue-${issue}-${slugify(date)}`;
-  const next=[{issue,date,year,title,excerpt,linkedinUrl,slug,body:article},...issues]
+  const next=[{issue,date,year,publishedAt,title,excerpt,linkedinUrl,slug,body:article},...issues]
     .sort((a,b)=>issueDateValue(String(b.date))-issueDateValue(String(a.date))||Number(b.issue)-Number(a.issue));
 
   const update=await fetch(`https://api.github.com/repos/${owner}/${name}/contents/${path}`,{
