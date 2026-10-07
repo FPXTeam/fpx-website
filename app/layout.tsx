@@ -21,6 +21,31 @@ const siteUrl = "https://www.fpx.nz";
 const socialImage = "/images/social/fpx-social-share.jpg";
 const isProduction = process.env.VERCEL_ENV === "production";
 
+const organizationSchema = {
+  "@context":"https://schema.org",
+  "@type":"Organization",
+  "@id":`${siteUrl}/#organization`,
+  name:"Forest Products Exchange Limited",
+  legalName:"Forest Products Exchange Limited",
+  alternateName:"FPX",
+  url:siteUrl,
+  logo:{
+    "@type":"ImageObject",
+    url:`${siteUrl}/images/fpx-logo-horizontal-original.png`,
+  },
+};
+
+const websiteSchema = {
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  "@id":`${siteUrl}/#website`,
+  url:siteUrl,
+  name:"FPX",
+  alternateName:"Forest Products Exchange",
+  publisher:{"@id":`${siteUrl}/#organization`},
+  inLanguage:"en-NZ",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: "FPX | New Zealand Timber Sourcing", template: "%s | FPX" },
@@ -54,5 +79,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en-NZ"><body className={`${cormorant.variable} antialiased`}><Script id="fpx-google-consent-default" strategy="beforeInteractive" dangerouslySetInnerHTML={{__html:`window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};window.gtag("consent","default",{analytics_storage:"denied",ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});`}}/>{children}<GoogleAnalyticsConsent/></body></html>;
+  return <html lang="en-NZ"><body className={`${cormorant.variable} antialiased`}><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify([organizationSchema,websiteSchema])}}/><Script id="fpx-google-consent-default" strategy="beforeInteractive" dangerouslySetInnerHTML={{__html:`window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};window.gtag("consent","default",{analytics_storage:"denied",ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});`}}/>{children}<GoogleAnalyticsConsent/></body></html>;
 }
