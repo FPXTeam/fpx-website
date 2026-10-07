@@ -36,7 +36,37 @@ export async function GET(request:Request){
   if(!deployment) return NextResponse.json({status:"deploying"});
 
   const state=String(deployment.readyState||deployment.state||"").toUpperCase();
-  if(state==="READY") return NextResponse.json({status:"ready",url:deployment.url?("https://"+deployment.url):null});
   if(state==="ERROR"||state==="CANCELED") return NextResponse.json({status:"error",error:"Vercel deployment failed."});
-  return NextResponse.json({status:"deploying",state});
+  if(state!=="READY") return NextResponse.json({status:"deploying",state});
+
+  const target=String(deployment.target||"").toLowerCase();
+  if(target==="production"){
+    return NextResponse.json({status:"ready",production:true,url:deployment.url?("https://"+deployment.url):null});
+  }
+
+  const deploymentId=String(deployment.uid||deployment.id||"");
+  if(!deploymentId){
+    return NextResponse.json({status:"error",error:"Vercel deployment is ready but its deployment ID is missing."});
+  }
+
+  const promoteParams=new URLSearchParams();
+  if(teamId) promoteParams.set("teamId",teamId);
+  const promoteQuery=promoteParams.toString();
+  const promoteUrl=`https://api.vercel.com/v10/projects/${encodeURIComponent(projectId)}/promote/${encodeURIComponent(deploymentId)}${promoteQuery?`?${promoteQuery}`:""}`;
+  const promote=await fetch(promoteUrl,{
+    method:"POST",
+    headers:{Authorization:`Bearer ${token}`},
+    cache:"no-store"
+  });
+
+  if(promote.ok){
+    return NextResponse.json({status:"ready",production:true,promoted:true,url:deployment.url?("https://"+deployment.url):null});
+  }
+
+  if(promote.status===409){
+    return NextResponse.json({status:"deploying",state:"PROMOTING"});
+  }
+
+  console.error("Saw Point publisher: production promotion failed",await promote.text());
+  return NextResponse.json({status:"error",error:"Vercel deployment was created, but automatic promotion to Production failed."},{status:502});
 }
