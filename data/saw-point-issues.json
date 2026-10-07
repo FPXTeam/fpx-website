@@ -3,6 +3,7 @@
     "issue": "003",
     "date": "OCTOBER 2026",
     "year": "2026",
+    "publishedAt": "2026-10-07",
     "title": "Saw Point | Issue 003",
     "excerpt": "If it still says GITHUB_PUBLISH_TOKEN is not configured after that, then we know it’s not an old-deployment issue and we’ll check the env scope/name next.",
     "linkedinUrl": "https://www.linkedin.com/pulse/saw-point-issue-002-september-2026-forest-products-exchange-j04nc/",
