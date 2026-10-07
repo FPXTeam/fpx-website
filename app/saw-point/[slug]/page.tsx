@@ -7,6 +7,8 @@ import { ExternalLink, ArrowLeft } from "lucide-react";
 import issues from "../../../data/saw-point-issues.json";
 
 const siteUrl = "https://www.fpx.nz";
+const socialImage = "/images/social/fpx-social-share.jpg";
+type SawPointIssue = (typeof issues)[number] & { publishedAt?: string };
 
 export function generateStaticParams(){
   return issues.filter(item=>item.body).map(item=>({slug:item.slug}));
@@ -14,7 +16,7 @@ export function generateStaticParams(){
 
 export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{
   const {slug}=await params;
-  const issue=issues.find(item=>item.slug===slug && item.body);
+  const issue=issues.find(item=>item.slug===slug && item.body) as SawPointIssue | undefined;
   if(!issue)return {};
   const path=`/saw-point/${issue.slug}`;
   return {
@@ -28,15 +30,17 @@ export async function generateMetadata({params}:{params:Promise<{slug:string}>})
       siteName:"FPX | Forest Products Exchange",
       title:`${issue.title} | FPX`,
       description:issue.excerpt,
+      images:[{url:socialImage,width:1200,height:630,alt:`${issue.title} | FPX`}],
+      publishedTime:issue.publishedAt,
       authors:[`${siteUrl}/about-us#george-harman`]
     },
-    twitter:{card:"summary_large_image",title:`${issue.title} | FPX`,description:issue.excerpt}
+    twitter:{card:"summary_large_image",title:`${issue.title} | FPX`,description:issue.excerpt,images:[socialImage]}
   };
 }
 
 export default async function SawPointIssuePage({params}:{params:Promise<{slug:string}>}){
   const {slug}=await params;
-  const issue=issues.find(item=>item.slug===slug && item.body);
+  const issue=issues.find(item=>item.slug===slug && item.body) as SawPointIssue | undefined;
   if(!issue) notFound();
 
   const paragraphs=issue.body.split(/\n{2,}/).map(block=>block.trim()).filter(Boolean);
@@ -46,6 +50,9 @@ export default async function SawPointIssuePage({params}:{params:Promise<{slug:s
     "@type":"Article",
     headline:issue.title,
     description:issue.excerpt,
+    image:[`${siteUrl}${socialImage}`],
+    datePublished:issue.publishedAt,
+    dateModified:issue.publishedAt,
     mainEntityOfPage:{"@type":"WebPage","@id":url},
     author:{"@type":"Person","@id":`${siteUrl}/about-us#george-harman`,"name":"George Harman","jobTitle":"Director"},
     publisher:{"@id":`${siteUrl}/#organization`},
@@ -53,7 +60,7 @@ export default async function SawPointIssuePage({params}:{params:Promise<{slug:s
     inLanguage:"en-NZ"
   };
 
-  return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(articleSchema)}}/><main className="spi-page">
+  return <><script type="application/ld+json">{JSON.stringify(articleSchema)}</script><main className="spi-page">
     <header className="spi-hero">
       <Link href="/saw-point"><ArrowLeft size={15}/> Back to Saw Point</Link>
       <span>ISSUE {issue.issue} · {issue.date}</span>
@@ -65,6 +72,5 @@ export default async function SawPointIssuePage({params}:{params:Promise<{slug:s
       {paragraphs.map((paragraph,index)=><p key={index}>{paragraph}</p>)}
       <a href={issue.linkedinUrl} target="_blank" rel="noreferrer">View this issue on LinkedIn <ExternalLink size={15}/></a>
     </article>
-
   </main></>;
 }
