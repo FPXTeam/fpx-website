@@ -8,6 +8,7 @@ import "../components/premium-home-shared.css";
 import "../components/site-motion.css";
 import "../components/hero-image-quality.css";
 import "../components/app-visuals-hidden.css";
+import "../components/saw-point-hero-fix.css";
 
 const cormorant = Cormorant_Garamond({
   subsets:["latin"],
