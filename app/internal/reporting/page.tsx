@@ -121,7 +121,7 @@ function percentChange(current: number, previous: number) {
   return `${change >= 0 ? '+' : ''}${change.toFixed(1)}%`;
 }
 
-function cleanError(message?: string) {
+function cleanError(message?: string | null) {
   if (!message) return '';
   if (/unrecognised IP address/i.test(message)) {
     return 'Brevo is blocking the Vercel request under Authorised IP security. Update Brevo Security → Authorised IPs, then refresh this page.';
