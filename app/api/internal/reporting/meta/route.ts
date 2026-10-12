@@ -7,6 +7,11 @@ const GRAPH_VERSION = 'v26.0';
 
 type MetaResult<T> = { data: T | null; error: string | null };
 
+function normaliseToken(value?: string) {
+  if (!value) return '';
+  return value.trim().replace(/^['"]|['"]$/g, '');
+}
+
 async function metaFetch<T>(path: string, token: string): Promise<MetaResult<T>> {
   const joiner = path.includes('?') ? '&' : '?';
   const url = `https://graph.facebook.com/${GRAPH_VERSION}/${path}${joiner}access_token=${encodeURIComponent(token)}`;
@@ -22,9 +27,10 @@ async function metaFetch<T>(path: string, token: string): Promise<MetaResult<T>>
 
 export async function GET() {
   try {
-    const pageId = process.env.META_FACEBOOK_PAGE_ID;
-    const pageToken = process.env.META_FACEBOOK_PAGE_TOKEN;
-    const instagramId = process.env.META_INSTAGRAM_ACCOUNT_ID;
+    const pageId = process.env.META_FACEBOOK_PAGE_ID?.trim();
+    const pageToken = normaliseToken(process.env.META_FACEBOOK_PAGE_TOKEN);
+    const instagramId = process.env.META_INSTAGRAM_ACCOUNT_ID?.trim();
+    const instagramToken = normaliseToken(process.env.META_INSTAGRAM_ACCESS_TOKEN) || pageToken;
 
     if (!pageId || !pageToken) {
       return NextResponse.json({ error: 'Facebook Meta environment variables are incomplete.' }, { status: 500 });
@@ -35,20 +41,22 @@ export async function GET() {
         `${pageId}?fields=id,name,fan_count,followers_count`,
         pageToken,
       ),
-      metaFetch<{ data?: Array<{ id: string; message?: string; created_time?: string; permalink_url?: string; shares?: { count?: number }; comments?: { summary?: { total_count?: number } }; reactions?: { summary?: { total_count?: number } } }> }>(
-        `${pageId}/posts?fields=id,message,created_time,permalink_url,shares,comments.limit(0).summary(true),reactions.limit(0).summary(true)&limit=10`,
+      // Keep this request identical to the Graph API Explorer call already verified for FPX.
+      // Engagement fields can be added separately once the base post connection is stable.
+      metaFetch<{ data?: Array<{ id: string; message?: string; created_time?: string; permalink_url?: string }> }>(
+        `${pageId}/posts?fields=id,message,created_time,permalink_url&limit=10`,
         pageToken,
       ),
       instagramId
         ? metaFetch<{ id: string; username?: string; followers_count?: number; media_count?: number }>(
             `${instagramId}?fields=id,username,followers_count,media_count`,
-            pageToken,
+            instagramToken,
           )
         : Promise.resolve({ data: null, error: 'META_INSTAGRAM_ACCOUNT_ID is not configured.' }),
       instagramId
         ? metaFetch<{ data?: Array<{ id: string; caption?: string; media_type?: string; timestamp?: string; permalink?: string; like_count?: number; comments_count?: number }> }>(
             `${instagramId}/media?fields=id,caption,media_type,timestamp,permalink,like_count,comments_count&limit=10`,
-            pageToken,
+            instagramToken,
           )
         : Promise.resolve({ data: null, error: 'META_INSTAGRAM_ACCOUNT_ID is not configured.' }),
     ]);
@@ -60,11 +68,6 @@ export async function GET() {
     const facebookPosts = posts.data?.data || [];
     const instagramPosts = instagramMedia.data?.data || [];
 
-    const facebookRecentEngagement = facebookPosts.reduce(
-      (total, post) => total + (post.shares?.count || 0) + (post.comments?.summary?.total_count || 0) + (post.reactions?.summary?.total_count || 0),
-      0,
-    );
-
     const instagramRecentEngagement = instagramPosts.reduce(
       (total, post) => total + (post.like_count || 0) + (post.comments_count || 0),
       0,
@@ -74,7 +77,7 @@ export async function GET() {
       facebook: {
         page: page.data,
         posts: facebookPosts,
-        recentEngagement: facebookRecentEngagement,
+        recentEngagement: 0,
         error: posts.error,
       },
       instagram: {
