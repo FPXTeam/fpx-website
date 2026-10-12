@@ -23,6 +23,11 @@ const tools = [
     title: "Saw Point Admin",
     description: "Manage and publish Saw Point content.",
   },
+  {
+    href: "/internal/reporting",
+    title: "Reporting",
+    description: "Review FPX marketing, activity, SEO, Saw Point, email, social, leads and website health reporting.",
+  },
 ];
 
 export default function InternalToolsPage() {
