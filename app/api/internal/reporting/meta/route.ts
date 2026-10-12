@@ -51,7 +51,6 @@ async function metaFetch<T>(path: string, token: string): Promise<MetaResult<T>>
 }
 
 async function resolveFacebookPageToken(configuredToken: string, pageId: string) {
-  // If the configured token is already a Page access token, /me resolves to the Page.
   const identity = await metaFetch<{ id?: string; name?: string }>('me?fields=id,name', configuredToken);
   if (identity.data?.id === pageId) {
     return {
@@ -61,7 +60,6 @@ async function resolveFacebookPageToken(configuredToken: string, pageId: string)
     };
   }
 
-  // If a User access token was saved instead, resolve the FPX Page token automatically.
   const accounts = await metaFetch<{
     data?: Array<{ id?: string; name?: string; access_token?: string }>;
   }>('me/accounts?fields=id,name,access_token&limit=100', configuredToken);
@@ -75,7 +73,6 @@ async function resolveFacebookPageToken(configuredToken: string, pageId: string)
     };
   }
 
-  // Preserve the configured token so the downstream Meta error is surfaced accurately.
   return {
     token: configuredToken,
     source: 'configured-token-unresolved' as const,
@@ -87,7 +84,7 @@ export async function GET() {
   try {
     const pageId = process.env.META_FACEBOOK_PAGE_ID?.trim();
     const configuredFacebookToken = normaliseToken(process.env.META_FACEBOOK_PAGE_TOKEN);
-    const instagramId = process.env.META_INSTAGRAM_ACCOUNT_ID?.trim();
+    const configuredInstagramId = process.env.META_INSTAGRAM_ACCOUNT_ID?.trim();
 
     if (!pageId || !configuredFacebookToken) {
       return NextResponse.json({ error: 'Facebook Meta environment variables are incomplete.' }, { status: 500 });
@@ -97,28 +94,18 @@ export async function GET() {
     const pageToken = resolvedFacebook.token;
     const instagramToken = normaliseToken(process.env.META_INSTAGRAM_ACCESS_TOKEN) || pageToken;
 
-    const [page, posts, instagram, instagramMedia] = await Promise.all([
-      metaFetch<{ id: string; name?: string; fan_count?: number; followers_count?: number }>(
-        `${pageId}?fields=id,name,fan_count,followers_count`,
-        pageToken,
-      ),
-      metaFetch<{ data?: Array<{ id: string; message?: string; created_time?: string; permalink_url?: string }> }>(
-        `${pageId}/posts?fields=id,message,created_time,permalink_url&limit=10`,
-        pageToken,
-      ),
-      instagramId
-        ? metaFetch<{ id: string; username?: string; followers_count?: number; media_count?: number }>(
-            `${instagramId}?fields=id,username,followers_count,media_count`,
-            instagramToken,
-          )
-        : Promise.resolve({ data: null, error: 'META_INSTAGRAM_ACCOUNT_ID is not configured.' }),
-      instagramId
-        ? metaFetch<{ data?: Array<{ id: string; caption?: string; media_type?: string; timestamp?: string; permalink?: string; like_count?: number; comments_count?: number }> }>(
-            `${instagramId}/media?fields=id,caption,media_type,timestamp,permalink,like_count,comments_count&limit=10`,
-            instagramToken,
-          )
-        : Promise.resolve({ data: null, error: 'META_INSTAGRAM_ACCOUNT_ID is not configured.' }),
-    ]);
+    // Resolve the Instagram professional account from the Facebook Page itself instead
+    // of trusting a hard-coded/stale Instagram account ID.
+    const page = await metaFetch<{
+      id: string;
+      name?: string;
+      fan_count?: number;
+      followers_count?: number;
+      instagram_business_account?: { id?: string };
+    }>(
+      `${pageId}?fields=id,name,fan_count,followers_count,instagram_business_account`,
+      pageToken,
+    );
 
     if (!page.data) {
       return NextResponse.json({
@@ -130,6 +117,28 @@ export async function GET() {
       }, { status: 502 });
     }
 
+    const linkedInstagramId = page.data.instagram_business_account?.id?.trim();
+    const instagramId = linkedInstagramId || configuredInstagramId;
+
+    const [posts, instagram, instagramMedia] = await Promise.all([
+      metaFetch<{ data?: Array<{ id: string; message?: string; created_time?: string; permalink_url?: string }> }>(
+        `${pageId}/posts?fields=id,message,created_time,permalink_url&limit=10`,
+        pageToken,
+      ),
+      instagramId
+        ? metaFetch<{ id: string; username?: string; followers_count?: number; media_count?: number }>(
+            `${instagramId}?fields=id,username,followers_count,media_count`,
+            instagramToken,
+          )
+        : Promise.resolve({ data: null, error: 'No Instagram professional account is linked to the FPX Facebook Page.' }),
+      instagramId
+        ? metaFetch<{ data?: Array<{ id: string; caption?: string; media_type?: string; timestamp?: string; permalink?: string; like_count?: number; comments_count?: number }> }>(
+            `${instagramId}/media?fields=id,caption,media_type,timestamp,permalink,like_count,comments_count&limit=10`,
+            instagramToken,
+          )
+        : Promise.resolve({ data: null, error: 'No Instagram professional account is linked to the FPX Facebook Page.' }),
+    ]);
+
     const facebookPosts = posts.data?.data || [];
     const instagramPosts = instagramMedia.data?.data || [];
 
@@ -140,7 +149,12 @@ export async function GET() {
 
     return NextResponse.json({
       facebook: {
-        page: page.data,
+        page: {
+          id: page.data.id,
+          name: page.data.name,
+          fan_count: page.data.fan_count,
+          followers_count: page.data.followers_count,
+        },
         posts: facebookPosts,
         recentEngagement: 0,
         error: posts.error,
@@ -155,6 +169,8 @@ export async function GET() {
         facebookTokenResolution: resolvedFacebook.source,
         facebookTokenIdentity: resolvedFacebook.identity,
         instagramUsesSeparateToken: Boolean(normaliseToken(process.env.META_INSTAGRAM_ACCESS_TOKEN)),
+        instagramAccountSource: linkedInstagramId ? 'facebook-page-link' : configuredInstagramId ? 'configured-env-fallback' : 'none',
+        resolvedInstagramAccountId: instagramId || null,
       },
       generatedAt: new Date().toISOString(),
     });
