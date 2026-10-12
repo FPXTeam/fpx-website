@@ -20,6 +20,7 @@
 .connected { color:#246c4c; background:#e7f5ee; }
 .partial { color:#7b6428; background:#f5f0df; }
 .planned { color:#5e6870; background:#edf0f2; }
+.error { color:#8a2e2e; background:#fbeaea; }
 .sourceCard { display:flex; flex-direction:column; justify-content:center; padding:30px; border-radius:16px; }
 .sourceCard span { margin-bottom:8px; color:#7a8580; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; }
 .sourceCard strong { font-size:16px; line-height:1.5; }
