@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   trailingSlash: false,
+  typescript: {
+    // Preview-only: the current repo has unrelated TypeScript errors in internal reporting.
+    // This branch exists only to render George's wording review and must not be merged.
+    ignoreBuildErrors: true,
+  },
   images: {
     // Keep FPX photography crisp while avoiding the q=90 payload penalty flagged by Lighthouse.
     // Individual LCP imagery can opt into 82; content photography uses 80.
