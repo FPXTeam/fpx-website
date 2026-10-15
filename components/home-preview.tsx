@@ -95,7 +95,7 @@ export function HomePreview() {
             width={1920}
             height={1080}
             sizes="100vw"
-            quality={68}
+            quality={70}
             priority
           />
           <div className={styles.heroShade} />
@@ -185,7 +185,7 @@ export function HomePreview() {
             {productAreas.map((area, index) => (
               <Link className={styles.productCard} href={area.href} key={area.title}>
                 <div className={styles.productImageWrap}>
-                  <Image src={area.image} alt={`${area.title} timber applications`} width={1200} height={850} sizes="(max-width: 760px) 100vw, 25vw" quality={62} />
+                  <Image src={area.image} alt={`${area.title} timber applications`} width={1200} height={850} sizes="(max-width: 760px) 100vw, 25vw" quality={60} />
                 </div>
                 <div className={styles.productCopy}>
                   <small>0{index + 1}</small>
