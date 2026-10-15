@@ -1,4 +1,4 @@
-import { HomePreview } from "@/components/home-preview";
+import { MasterHome } from "@/components/master-home";
 
 const siteUrl = "https://www.fpx.nz";
 
@@ -61,7 +61,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([organizationSchema, websiteSchema]) }}
       />
-      <HomePreview />
+      <MasterHome />
     </>
   );
 }
