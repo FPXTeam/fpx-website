@@ -21,7 +21,7 @@ function PremiumHero(){
     <div className="ph-hero-copy">
       <Eyebrow>NEW ZEALAND TIMBER SOURCING</Eyebrow>
       <h1>Timber sourcing,<br/><span className="headline-accent">made clearer.</span></h1>
-      <p>Explore current Stock and Offers, or send FPX a specific requirement before creating an account. If the right timber is not shown online, FPX can source through suitable New Zealand sawmills, processors and trade supply routes.</p>
+      <p>Explore current timber Stock and Offers, or send FPX a specific commercial timber requirement before creating an account. If the right timber is not shown online, FPX can source through suitable New Zealand sawmills, processors and trade supply routes.</p>
       <AppButtons/>
     </div>
     <div className="ph-hero-scroll">SCROLL TO EXPLORE</div>
@@ -56,7 +56,7 @@ function PlatformStory(){
     <div className="ph-platform-head">
       <Eyebrow>FPX SOURCING</Eyebrow>
       <h2>Start with what is available.<br/><span className="headline-accent">Request what is not.</span></h2>
-      <p>Stock and Offers are the starting point, not the limit of FPX sourcing. If the right timber is not shown, create a Request and FPX can identify suitable options through relevant sawmills, processors and other trade supply routes.</p>
+      <p>Current Stock and Offers are the starting point, not the limit of FPX timber sourcing. If the right timber is not shown, create a Request and FPX can identify suitable options through relevant New Zealand sawmills, processors and other trade supply routes.</p>
       <Link href="/fpx-sourcing">See how FPX sourcing works <Arrow/></Link>
     </div>
     <div className="fpx-route-showcase" aria-label="Ways to source timber through FPX">
