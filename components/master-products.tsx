@@ -12,10 +12,10 @@ function productImageAlt(groupTitle:string,image:string){
 import { productGroups, Eyebrow, Arrow, AppButtons } from "./master-shared";
 
 export const productGroupDetails: Record<string,{title:string;description:string;hero:string;gallery:string[];categories:string[];examples?:string[];note:string;}> = {
-  "manufacturing": {title:"Manufacturing",description:"Timber feedstock for wood processors and timber manufacturers to remanufacture into finished products.",hero:"product-groups/manufacturing/manufacturing-warehouse-bundles.png",gallery:["product-groups/manufacturing/manufacturing-rollers.png","product-groups/manufacturing/manufacturing-hero-pine-stack.png","category-manufacturing-grades.webp"],categories:["Manufacturing Timber"],examples:["Clear 1","Clear 2","Mixed Clears","Dressing","Premium","Cuttings 1","Cuttings 2","Cuttings 3","COL","Merch","Industrial"],note:"The manufacturing range spans multiple grades and feedstock options. Individual grades, sizes and current specifications remain in FPX."},
-  "building-construction": {title:"Building & Construction",description:"Timber products for structural, building, finishing and specialist construction applications.",hero:"product-groups/building-construction/building-roof-framing.png",gallery:["product-groups/building-construction/building-symmetrical-framing.png","product-groups/building-construction/building-house-piles.png","product-groups/building-construction/building-battens-stack.png"],categories:["Structural Timber","Weatherboards","House Piles","Ceiling Battens","Tile Battens","Mouldings","Fascia","Scaffold Planks","Soleboards","Kickboards","Stair Treads"],note:"A broad construction range covering structural requirements, finishing timber and specialist site applications."},
-  "outdoor-landscaping": {title:"Outdoor & Landscaping",description:"Treated and purpose-made timber for landscaping, fencing, retaining and outdoor construction.",hero:"product-groups/outdoor-landscaping/outdoor-slat-fence.png",gallery:["product-groups/outdoor-landscaping/outdoor-cedar-fence.png","product-groups/outdoor-landscaping/outdoor-boardwalk.png","product-groups/outdoor-landscaping/outdoor-steps.png"],categories:["Outdoor","Posts","Rails","Palings","Decking","Retaining Boards","Sleepers, Squares & Beams","Screening","Pickets","Capping","Fence Battens","Trellis Battens","Roundwood","Pegs"],note:"The range supports everything from fences and decks to retaining structures and larger outdoor works."},
-  "dunnage": {title:"Dunnage",description:"Timber dunnage for freight, shipping, load support and industrial transport applications.",hero:"product-groups/dunnage/dunnage-stamped-stack.png",gallery:["product-groups/dunnage/dunnage-flatbed-support.png","product-groups/dunnage/dunnage-industrial-crate.png"],categories:["Dunnage"],examples:["Freight support","Shipping and container loading","Industrial transport","Load separation","Storage and handling"],note:"Dunnage timber is supplied for practical load support and protection across freight, shipping and industrial transport environments."}
+  "manufacturing": {title:"Manufacturing",description:"Timber feedstock for New Zealand wood processors and timber manufacturers to remanufacture into finished products.",hero:"product-groups/manufacturing/manufacturing-warehouse-bundles.png",gallery:["product-groups/manufacturing/manufacturing-rollers.png","product-groups/manufacturing/manufacturing-hero-pine-stack.png","category-manufacturing-grades.webp"],categories:["Manufacturing Timber"],examples:["Clear 1","Clear 2","Mixed Clears","Dressing","Premium","Cuttings 1","Cuttings 2","Cuttings 3","COL","Merch","Industrial"],note:"The manufacturing timber range spans multiple grades and feedstock options. Individual grades, sizes and current specifications remain in FPX."},
+  "building-construction": {title:"Building & Construction",description:"Structural, building, finishing and specialist construction timber for commercial projects across New Zealand.",hero:"product-groups/building-construction/building-roof-framing.png",gallery:["product-groups/building-construction/building-symmetrical-framing.png","product-groups/building-construction/building-house-piles.png","product-groups/building-construction/building-battens-stack.png"],categories:["Structural Timber","Weatherboards","House Piles","Ceiling Battens","Tile Battens","Mouldings","Fascia","Scaffold Planks","Soleboards","Kickboards","Stair Treads"],note:"A broad construction timber range covering structural requirements, finishing timber and specialist site applications."},
+  "outdoor-landscaping": {title:"Outdoor & Landscaping",description:"Treated and purpose-made timber for fencing, retaining, landscaping and outdoor construction across New Zealand.",hero:"product-groups/outdoor-landscaping/outdoor-slat-fence.png",gallery:["product-groups/outdoor-landscaping/outdoor-cedar-fence.png","product-groups/outdoor-landscaping/outdoor-boardwalk.png","product-groups/outdoor-landscaping/outdoor-steps.png"],categories:["Outdoor","Posts","Rails","Palings","Decking","Retaining Boards","Sleepers, Squares & Beams","Screening","Pickets","Capping","Fence Battens","Trellis Battens","Roundwood","Pegs"],note:"The outdoor and landscaping timber range supports fencing, decking, retaining structures and larger outdoor works."},
+  "dunnage": {title:"Dunnage",description:"Timber dunnage for freight, shipping, load support, storage and industrial transport applications across New Zealand.",hero:"product-groups/dunnage/dunnage-stamped-stack.png",gallery:["product-groups/dunnage/dunnage-flatbed-support.png","product-groups/dunnage/dunnage-industrial-crate.png"],categories:["Dunnage"],examples:["Freight support","Shipping and container loading","Industrial transport","Load separation","Storage and handling"],note:"Dunnage timber is supplied for practical load support and protection across freight, shipping, storage and industrial transport environments."}
 };
 
 const endUses=[
@@ -33,14 +33,14 @@ export function ProductsPage(){
       <div className="ppr-hero-copy">
         <Eyebrow>OUR TIMBER RANGE</Eyebrow>
         <h1>Timber for the work<br/><span className="headline-accent">New Zealand does.</span></h1>
-        <p>Explore the main FPX product groups, understand where they fit, then use Explore FPX Sourcing to browse current supply, offers and product information without creating an account.</p>
+        <p>Explore the main FPX timber product groups by application, then check current Stock and Offers or create a Request when the exact product, specification, length or quantity is not listed.</p>
       </div>
     </section>
 
     <section className="ppr-intro">
-      <Eyebrow>PRODUCT GROUPS</Eyebrow>
-      <h2>Four clear ways to understand the range.</h2>
-      <p>Each group is organised around what the timber is supplied for. Start with the application, then go deeper when you need the actual product detail.</p>
+      <Eyebrow>TIMBER PRODUCT GROUPS</Eyebrow>
+      <h2>Start with what the timber needs to do.</h2>
+      <p>The range is organised around commercial applications. Start with the job, then move into the product detail, current Stock or a specific Request.</p>
     </section>
 
     <section className="ppr-groups">
@@ -62,7 +62,7 @@ export function ProductsPage(){
       <header>
         <Eyebrow>EXPLORE BY APPLICATION</Eyebrow>
         <h2>Start with the job.</h2>
-        <p>Fencing, retaining, decking, commercial work and many more can also be a useful way into the range.</p>
+        <p>Fencing, retaining, decking and commercial projects are useful ways into the timber range when you know the application before the exact product.</p>
       </header>
       <div className="ppr-application-grid">
         {endUses.map((use,i)=><article key={use[0]}>
@@ -74,14 +74,14 @@ export function ProductsPage(){
           <p>{use[1]}</p>
         </article>)}
       </div>
-      <a className="ppr-view-all" href="https://app.fpx.nz/explore-fpx-sourcing">View all categories <Arrow/></a>
+      <a className="ppr-view-all" href="https://app.fpx.nz/explore-fpx-sourcing">Browse current Stock <Arrow/></a>
     </section>
 
     <section className="ppr-close">
       <div>
-        <Eyebrow>EXPLORE PRODUCT DETAIL IN FPX</Eyebrow>
-        <h2>Know the group?<br/><span className="headline-accent">Move into the detail.</span></h2>
-        <p>Explore current timber, review offers or submit the requirement you already have. You can start without creating an account.</p>
+        <Eyebrow>MOVE INTO FPX SOURCING</Eyebrow>
+        <h2>Know what you need?<br/><span className="headline-accent">Check Stock or send the requirement.</span></h2>
+        <p>Browse current Stock, review Offers or create a Request for the product, specification and quantity you need. If the right timber is not shown online, FPX can source wider through suitable New Zealand supply routes.</p>
       </div>
       <AppButtons/>
     </section>
@@ -116,14 +116,14 @@ export function ProductGroupPage({slug}:{slug:string}){
   };
   return <>
     <section className="pg-hero">
-      <div className="pg-hero-copy"><span className="pg-number">{number}</span><Eyebrow>PRODUCT GROUP</Eyebrow><h1>{group.title}</h1><p>{group.description}</p><div className="m-actions"><a href="https://app.fpx.nz/explore-fpx-sourcing" className="m-btn m-btn-primary">Browse current timber <Arrow/></a><a href="https://app.fpx.nz/explore-fpx-sourcing?request=1" className="m-btn m-btn-ghost">Request a product <Arrow/></a></div></div>
+      <div className="pg-hero-copy"><span className="pg-number">{number}</span><Eyebrow>PRODUCT GROUP</Eyebrow><h1>{group.title}</h1><p>{group.description}</p><div className="m-actions"><a href="https://app.fpx.nz/explore-fpx-sourcing" className="m-btn m-btn-primary">Browse Stock <Arrow/></a><a href="https://app.fpx.nz/explore-fpx-sourcing?request=1" className="m-btn m-btn-ghost">Create a Request <Arrow/></a></div></div>
       <div className="pg-hero-image"><Image src={`/images/${group.hero}`} alt={`${group.title} timber`} width={1800} height={1200} sizes="(max-width: 900px) 100vw, 50vw" priority/></div>
     </section>
 
     <section className="pg-summary">
       <article><small>WHAT IT IS</small><p>{group.description}</p></article>
-      <article><small>WHO IT IS FOR</small><p>FPX supplies this product group for {audience} across New Zealand.</p></article>
-      <article><small>HOW TO SOURCE IT</small><p>Explore current timber in FPX or submit a product request with the specifications and quantity you need. No account is required to start.</p></article>
+      <article><small>WHO IT IS FOR</small><p>FPX sources this timber product group for {audience} across New Zealand.</p></article>
+      <article><small>HOW TO SOURCE IT</small><p>Browse current Stock or create a Request with the grade, dimensions, treatment, quantity and timing you know. If the exact timber is not shown, FPX can source suitable options beyond the listed Stock.</p></article>
     </section>
 
     <section className={`pg-gallery ${group.gallery.length===2?"is-two":""}`}>
@@ -141,7 +141,7 @@ export function ProductGroupPage({slug}:{slug:string}){
       {relatedGuidance[slug].map(([label,title,href])=><article key={href}><small>{label}</small><p><Link href={href}>{title} <Arrow/></Link></p></article>)}
     </section>
 
-    <section className="pg-close"><div><Eyebrow>EXPLORE IN FPX</Eyebrow><h2>Need the grade, size or specification?</h2><p>Use the website to understand the range, then use Explore FPX Sourcing to browse supply, offers and product information. Sign in or request access when you need the full customer experience.</p></div><AppButtons/></section>
+    <section className="pg-close"><div><Eyebrow>EXPLORE IN FPX</Eyebrow><h2>Need the grade, size or specification?</h2><p>Use the website to understand the timber range, then use FPX Sourcing to browse current Stock and Offers or create a Request. If the exact product is not listed, FPX can source wider through suitable New Zealand supply routes.</p></div><AppButtons/></section>
   </>;
 }
 
