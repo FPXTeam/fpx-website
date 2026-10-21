@@ -12,7 +12,7 @@ const organizationSchema = {
   url: siteUrl,
   logo: `${siteUrl}/images/fpx-logo-horizontal-original.png`,
   description:
-    "FPX is a New Zealand digital timber sourcing service for commercial timber buyers. Explore FPX Sourcing lets visitors browse current timber supply, review offers and submit specific timber requirements before creating an account.",
+    "FPX is a New Zealand digital platform where customers can browse available timber and pricing, submit timber requirements, review quotations and manage orders. FPX Sourcing is operated commercially by Sutcliffe Trading.",
   areaServed: { "@type": "Country", name: "New Zealand" },
   knowsAbout: [
     "Commercial timber sourcing",
