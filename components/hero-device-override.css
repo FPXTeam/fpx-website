@@ -26,7 +26,7 @@ body .premium-home .ph-hero-product .ph-hero-devices::before{
   position:absolute;
   inset:0;
   display:block;
-  background-image:url("https://raw.githubusercontent.com/FPXTeam/fpx-website/623b3880f0e67c7c078c1a495fde5c94bbbb268b/public/images/Laptop-phone.png");
+  background-image:url("https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/Laptop-phone.png");
   background-repeat:no-repeat;
   background-position:center;
   background-size:contain;
