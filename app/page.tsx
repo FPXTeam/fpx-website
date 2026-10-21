@@ -1,4 +1,5 @@
 import { GeorgeHome } from "@/components/george-home";
+import "@/components/george-home-mobile.css";
 
 const siteUrl = "https://www.fpx.nz";
 
