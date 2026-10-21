@@ -1,4 +1,5 @@
 import { MasterHome } from "@/components/master-home";
+import "@/components/hero-device-override.css";
 
 const siteUrl = "https://www.fpx.nz";
 
