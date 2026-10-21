@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Shell } from "./site-shell";
 import "./george-home.css";
+import "./george-home-media.css";
 
 const browseUrl = "https://app.fpx.nz/explore-fpx-sourcing";
 const requestUrl = "https://app.fpx.nz/explore-fpx-sourcing?request=1";
