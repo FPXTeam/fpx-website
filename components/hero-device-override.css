@@ -6,11 +6,11 @@ body .premium-home .ph-hero-product{
 body .premium-home .ph-hero-product .ph-hero-devices{
   position:absolute!important;
   z-index:3!important;
-  right:3.5vw!important;
+  right:1vw!important;
   top:50%!important;
   transform:translateY(-48%)!important;
-  width:min(50vw,920px)!important;
-  height:min(72vh,650px)!important;
+  width:min(56vw,1060px)!important;
+  height:min(79vh,735px)!important;
   display:block!important;
   pointer-events:none!important;
   background:transparent!important;
@@ -39,30 +39,30 @@ body .premium-home .ph-hero-product .ph-hero-copy{
 
 @media(max-width:1100px){
   body .premium-home .ph-hero-product .ph-hero-devices{
-    right:1.5vw!important;
-    width:49vw!important;
-    height:58vh!important;
+    right:0!important;
+    width:54vw!important;
+    height:64vh!important;
   }
   body .premium-home .ph-hero-product .ph-hero-copy{
-    max-width:52vw!important;
+    max-width:50vw!important;
   }
 }
 
 @media(max-width:760px){
   body .premium-home .ph-hero-product{
     min-height:94svh!important;
-    padding-bottom:310px!important;
+    padding-bottom:330px!important;
   }
   body .premium-home .ph-hero-product .ph-hero-copy{
     max-width:none!important;
   }
   body .premium-home .ph-hero-product .ph-hero-devices{
     top:auto!important;
-    bottom:20px!important;
-    left:4vw!important;
-    right:4vw!important;
-    width:92vw!important;
-    height:285px!important;
+    bottom:12px!important;
+    left:1vw!important;
+    right:1vw!important;
+    width:98vw!important;
+    height:315px!important;
     transform:none!important;
   }
 }
