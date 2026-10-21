@@ -4,5 +4,48 @@
 .gh-intelligence-note strong{color:#fff}
 .gh-sutcliffe-mark{overflow:hidden}
 .gh-sutcliffe-logo{display:block;width:min(88%,360px);height:auto;object-fit:contain}
-@media(max-width:900px){.gh-intelligence-visual>img{border-radius:16px}.gh-sutcliffe-logo{width:min(74%,320px)}}
-@media(max-width:640px){.gh-intelligence-note{font-size:11px!important}.gh-sutcliffe-logo{width:min(82%,280px)}}
+
+.gh-source-ui-image{height:330px;background:#f4f7f5;padding:14px;display:flex;align-items:center;justify-content:center}
+.gh-source-ui-image img{display:block;width:100%;height:100%;object-fit:contain!important;object-position:center!important;border-radius:10px;background:#fff}
+
+.gh-customers-strip-section{background:#f6f8f6;max-width:none;padding-left:max(62px,calc((100vw - 1500px)/2 + 62px));padding-right:max(62px,calc((100vw - 1500px)/2 + 62px))}
+.gh-customer-intro{max-width:1376px;margin:0 auto 38px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);gap:72px;align-items:end}
+.gh-customer-intro h2{margin:0;font-family:Montserrat,Arial,sans-serif;font-size:clamp(46px,4.7vw,72px);line-height:.98;letter-spacing:-.05em;color:#040E0E}
+.gh-customer-intro>p{margin:0 0 5px;max-width:530px;color:#65726c;font-size:16px;line-height:1.7}
+.gh-customer-strip{max-width:1376px;margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));height:430px;overflow:hidden;background:transparent;border:1px solid #d9dfdb}
+.gh-customer-panel{position:relative;overflow:hidden;min-width:0;color:#fff;text-decoration:none;background:transparent}
+.gh-customer-panel+.gh-customer-panel{border-left:1px solid #d9dfdb}
+.gh-customer-panel>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
+.gh-customer-panel:hover>img{transform:scale(1.025)}
+.gh-customer-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,14,14,0) 35%,rgba(4,14,14,.58) 100%)}
+.gh-customer-panel-copy{position:absolute;left:30px;right:30px;bottom:28px;color:#fff}
+.gh-customer-panel-copy p{margin:0 0 10px;color:#d8f0e7;font-size:10px;font-weight:800;letter-spacing:.14em;line-height:1.45}
+.gh-customer-panel-copy h3{margin:0 0 16px;max-width:380px;font-family:Montserrat,Arial,sans-serif;font-size:clamp(25px,2.25vw,35px);line-height:1.02;letter-spacing:-.035em;color:#fff}
+.gh-customer-panel-copy span{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:800;color:#fff}
+.gh-customer-panel-copy span svg{width:17px;height:17px}
+
+@media(max-width:1180px){
+  .gh-customers-strip-section{padding-left:40px;padding-right:40px}
+}
+@media(max-width:900px){
+  .gh-intelligence-visual>img{border-radius:16px}
+  .gh-sutcliffe-logo{width:min(74%,320px)}
+  .gh-source-ui-image{height:300px}
+  .gh-customer-intro{grid-template-columns:1fr;gap:18px}
+  .gh-customer-intro h2{font-size:54px}
+  .gh-customer-strip{grid-template-columns:1fr;height:auto}
+  .gh-customer-panel{height:330px}
+  .gh-customer-panel+.gh-customer-panel{border-left:0;border-top:1px solid #d9dfdb}
+}
+@media(max-width:640px){
+  .gh-intelligence-note{font-size:11px!important}
+  .gh-sutcliffe-logo{width:min(82%,280px)}
+  .gh-source-ui-image{height:230px;padding:10px}
+  .gh-customers-strip-section{padding-left:22px!important;padding-right:22px!important}
+  .gh-customer-intro{margin-bottom:28px}
+  .gh-customer-intro h2{font-size:42px}
+  .gh-customer-intro>p{font-size:15px}
+  .gh-customer-panel{height:285px}
+  .gh-customer-panel-copy{left:22px;right:22px;bottom:22px}
+  .gh-customer-panel-copy h3{font-size:28px}
+}
