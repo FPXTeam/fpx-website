@@ -1,5 +1,4 @@
-import { MasterHome } from "@/components/master-home";
-import "@/components/hero-device-override.css";
+import { GeorgeHome } from "@/components/george-home";
 
 const siteUrl = "https://www.fpx.nz";
 
@@ -62,7 +61,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([organizationSchema, websiteSchema]) }}
       />
-      <MasterHome />
+      <GeorgeHome />
     </>
   );
 }
