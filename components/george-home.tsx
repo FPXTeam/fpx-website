@@ -31,9 +31,30 @@ const productGroups = [
 ];
 
 const customers = [
-  {eyebrow:"WOOD PROCESSORS & MANUFACTURERS",title:"Source timber to specification.",text:"Submit grades, dimensions, lengths, quantities and delivery requirements for the timber your production needs.",cta:"Submit a timber request",href:requestUrl},
-  {eyebrow:"TIMBER MERCHANTS",title:"Fill gaps in your timber supply.",text:"Browse available stock, specials and tier-volume pricing, or submit a requirement when you need something specific.",cta:"Browse timber",href:browseUrl},
-  {eyebrow:"COMMERCIAL END USERS",title:"Timber for the job at hand.",text:"Browse available timber and commercial pricing, or submit the specification and quantities required for your project.",cta:"Browse timber",href:browseUrl},
+  {
+    eyebrow:"WOOD PROCESSORS & MANUFACTURERS",
+    title:"Source timber to specification.",
+    cta:"Submit a timber request",
+    href:requestUrl,
+    image:"https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/fpx-customer-processor.png",
+    alt:"Wood processing and manufacturing customer",
+  },
+  {
+    eyebrow:"TIMBER MERCHANTS",
+    title:"Browse stock and fill supply gaps.",
+    cta:"Browse timber",
+    href:browseUrl,
+    image:"https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/fpx-customer-merchant.png",
+    alt:"Timber merchant customer",
+  },
+  {
+    eyebrow:"COMMERCIAL END USERS",
+    title:"Source timber for the job at hand.",
+    cta:"Browse timber",
+    href:browseUrl,
+    image:"https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/fpx-customer-builder.png",
+    alt:"Commercial construction customer",
+  },
 ];
 
 export function GeorgeHome(){
@@ -78,11 +99,15 @@ export function GeorgeHome(){
         </div>
         <div className="gh-two-cards">
           <article className="gh-source-card gh-source-stock">
-            <div className="gh-source-image"><Image src="/images/fpx-hero-timber-yard.webp" alt="Stacks of timber available to browse through FPX" fill sizes="(max-width: 800px) 100vw, 50vw"/></div>
+            <div className="gh-source-image gh-source-ui-image">
+              <img src="https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/fpx-browse-stock-homepage.png" alt="FPX browse available stock screen"/>
+            </div>
             <div className="gh-source-body"><div className="gh-card-icon"><Icon type="stock"/></div><h3>Browse available stock</h3><p>See available timber, specifications, pricing, specials and tier-volume pricing.</p><a href={browseUrl}>Browse Timber <Arrow/></a></div>
           </article>
           <article className="gh-source-card">
-            <div className="gh-source-image gh-source-request-image"><Image src="/images/product-groups/manufacturing/manufacturing-warehouse-bundles.png" alt="Timber prepared for commercial requirements" fill sizes="(max-width: 800px) 100vw, 50vw"/></div>
+            <div className="gh-source-image gh-source-request-image gh-source-ui-image">
+              <img src="https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/fpx-submit-request-homepage.png" alt="FPX submit timber request screen"/>
+            </div>
             <div className="gh-source-body"><div className="gh-card-icon"><Icon type="request"/></div><h3>Submit a timber request</h3><p>Send the specification, quantity and delivery requirements for timber you need sourced and quoted.</p><a href={requestUrl}>Submit a Request <Arrow/></a></div>
           </article>
         </div>
@@ -106,20 +131,24 @@ export function GeorgeHome(){
         </div>
       </section>
 
-      <section className="gh-section gh-customers">
-        <div className="gh-heading">
-          <p className="gh-eyebrow gh-eyebrow-dark">WHO USES FPX</p>
-          <h2>Built around how commercial timber buyers work.</h2>
+      <section className="gh-section gh-customers gh-customers-strip-section">
+        <div className="gh-customer-intro">
+          <div>
+            <p className="gh-eyebrow gh-eyebrow-dark">WHO USES FPX</p>
+            <h2>Built around how commercial timber buyers work.</h2>
+          </div>
           <p>Different buyers use FPX differently. Start with the path that matches what you need to do.</p>
         </div>
-        <div className="gh-customer-grid">
-          {customers.map((customer,i)=><article className="gh-customer-card" key={customer.eyebrow}>
-            <span className="gh-customer-number">0{i+1}</span>
-            <p className="gh-eyebrow gh-eyebrow-dark">{customer.eyebrow}</p>
-            <h3>{customer.title}</h3>
-            <p>{customer.text}</p>
-            <a href={customer.href}>{customer.cta} <Arrow/></a>
-          </article>)}
+        <div className="gh-customer-strip">
+          {customers.map((customer)=><a className="gh-customer-panel" href={customer.href} key={customer.eyebrow}>
+            <img src={customer.image} alt={customer.alt}/>
+            <div className="gh-customer-shade"/>
+            <div className="gh-customer-panel-copy">
+              <p>{customer.eyebrow}</p>
+              <h3>{customer.title}</h3>
+              <span>{customer.cta} <Arrow/></span>
+            </div>
+          </a>)}
         </div>
       </section>
 
