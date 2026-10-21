@@ -127,17 +127,26 @@ export function GeorgeHome(){
           <div className="gh-intelligence-copy">
             <p className="gh-eyebrow">FPX INTELLIGENCE</p>
             <h2>Market data for better timber decisions.</h2>
-            <p>FPX Intelligence adds practical New Zealand market context alongside the sourcing platform. Only live data is shown here.</p>
+            <p>FPX Intelligence brings key New Zealand market indicators into the platform, including Building Consents and the Diesel Price Index.</p>
           </div>
-          <div className="gh-intelligence-cards">
-            <article><span>LIVE IN FPX</span><h3>Building Consents</h3><p>Track building consent data as an indicator of construction activity.</p><div className="gh-mini-chart gh-bars"><i/><i/><i/><i/><i/></div></article>
-            <article><span>LIVE IN FPX</span><h3>Diesel Price Index</h3><p>Follow diesel price movement as a useful input for freight and market context.</p><div className="gh-mini-chart gh-line"><svg viewBox="0 0 220 70" aria-hidden="true"><polyline points="4,58 36,47 67,51 98,30 130,36 163,19 216,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/></svg></div></article>
+          <div className="gh-intelligence-visual">
+            <img
+              src="https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/FPX%20Analytics%20Dashboard%20Overview.png"
+              alt="Illustrative preview of the FPX Intelligence Building Consents and Diesel Price Index dashboards"
+            />
+            <p className="gh-intelligence-note"><strong>Sample data shown for display only.</strong> Actual Building Consents and Diesel Price Index data is available live in the FPX app.</p>
           </div>
         </div>
       </section>
 
       <section className="gh-section gh-sutcliffe">
-        <div className="gh-sutcliffe-mark"><p>SUTCLIFFE TRADING</p><span>Established 1988</span></div>
+        <div className="gh-sutcliffe-mark">
+          <img
+            className="gh-sutcliffe-logo"
+            src="https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/Sutcliffe%20Trading%20-%20Original%20(Square).png"
+            alt="Sutcliffe Trading"
+          />
+        </div>
         <div className="gh-sutcliffe-copy"><p className="gh-eyebrow gh-eyebrow-dark">THE TIMBER BUSINESS BEHIND FPX SOURCING</p><h2>Digital access. Commercial timber experience.</h2><p>FPX is the customer-facing digital platform. FPX Sourcing is operated commercially by Sutcliffe Trading, which sources, sells and invoices timber supplied through the platform.</p><Link href="/about-us" className="gh-text-link">About FPX <Arrow/></Link></div>
       </section>
 
