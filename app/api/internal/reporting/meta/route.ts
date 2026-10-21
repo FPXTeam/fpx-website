@@ -39,6 +39,13 @@ type InstagramPost = {
   comments_count?: number;
 };
 
+type InstagramLoadResult = {
+  account: InstagramAccount | null;
+  posts: InstagramPost[];
+  error: string | null;
+  mode: 'instagram-login' | 'facebook-login';
+};
+
 function normaliseToken(value?: string) {
   if (!value) return '';
   return value
@@ -114,7 +121,7 @@ async function resolveFacebookPageToken(configuredToken: string, pageId: string)
   };
 }
 
-async function loadInstagramWithInstagramLogin(token: string) {
+async function loadInstagramWithInstagramLogin(token: string): Promise<InstagramLoadResult> {
   const profile = await instagramFetch<InstagramAccount>(
     'me?fields=id,user_id,username,followers_count,media_count,account_type',
     token,
@@ -123,9 +130,9 @@ async function loadInstagramWithInstagramLogin(token: string) {
   if (!profile.data) {
     return {
       account: null,
-      posts: [] as InstagramPost[],
+      posts: [],
       error: profile.error,
-      mode: 'instagram-login' as const,
+      mode: 'instagram-login',
     };
   }
 
@@ -139,17 +146,20 @@ async function loadInstagramWithInstagramLogin(token: string) {
     account: { ...profile.data, id: accountId },
     posts: media.data?.data || [],
     error: media.error,
-    mode: 'instagram-login' as const,
+    mode: 'instagram-login',
   };
 }
 
-async function loadInstagramWithFacebookLogin(pageToken: string, instagramId?: string) {
+async function loadInstagramWithFacebookLogin(
+  pageToken: string,
+  instagramId?: string,
+): Promise<InstagramLoadResult> {
   if (!instagramId) {
     return {
       account: null,
-      posts: [] as InstagramPost[],
+      posts: [],
       error: 'No Instagram professional account could be resolved from the FPX Facebook Page.',
-      mode: 'facebook-login' as const,
+      mode: 'facebook-login',
     };
   }
 
@@ -168,7 +178,7 @@ async function loadInstagramWithFacebookLogin(pageToken: string, instagramId?: s
     account: profile.data,
     posts: media.data?.data || [],
     error: profile.error || media.error,
-    mode: 'facebook-login' as const,
+    mode: 'facebook-login',
   };
 }
 
@@ -221,18 +231,21 @@ export async function GET() {
     // 2) Facebook Login: instagram_basic/pages_* permissions + graph.facebook.com + Facebook/Page token.
     // Try the explicitly configured Instagram Login token first. If it is absent or invalid,
     // fall back to the Page-linked Facebook Login route.
-    let instagramResult = configuredInstagramToken
-      ? await loadInstagramWithInstagramLogin(configuredInstagramToken)
-      : null;
+    let instagramResult: InstagramLoadResult;
+    let directInstagramError: string | null = null;
 
-    const directInstagramError = instagramResult?.error || null;
+    if (configuredInstagramToken) {
+      const directInstagramResult = await loadInstagramWithInstagramLogin(configuredInstagramToken);
+      directInstagramError = directInstagramResult.error;
 
-    if (!instagramResult?.account) {
-      const facebookInstagram = await loadInstagramWithFacebookLogin(pageToken, facebookInstagramId);
-      instagramResult = facebookInstagram;
+      instagramResult = directInstagramResult.account
+        ? directInstagramResult
+        : await loadInstagramWithFacebookLogin(pageToken, facebookInstagramId);
+    } else {
+      instagramResult = await loadInstagramWithFacebookLogin(pageToken, facebookInstagramId);
     }
 
-    const instagramPosts = instagramResult.posts || [];
+    const instagramPosts = instagramResult.posts;
     const instagramRecentEngagement = instagramPosts.reduce(
       (total, post) => total + (post.like_count || 0) + (post.comments_count || 0),
       0,
