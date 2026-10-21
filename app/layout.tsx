@@ -47,10 +47,12 @@ const websiteSchema = {
   inLanguage:"en-NZ",
 };
 
+const platformDescription = "FPX is a New Zealand digital platform where customers can browse available timber and pricing, submit timber requirements, review quotations and manage orders.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: "FPX | New Zealand Timber Sourcing", template: "%s | FPX" },
-  description: "FPX helps commercial timber buyers across New Zealand explore current timber supply, review offers and submit timber requirements before creating an account.",
+  title: { default: "FPX | Browse Timber, Pricing & Submit Requests", template: "%s | FPX" },
+  description: platformDescription,
   applicationName: "FPX",
   alternates: { canonical: "/" },
   robots: isProduction
@@ -68,13 +70,13 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
   openGraph: {
     type: "website", locale: "en_NZ", url: siteUrl, siteName: "FPX | Forest Products Exchange",
-    title: "FPX | New Zealand Timber Sourcing",
-    description: "FPX helps commercial timber buyers across New Zealand explore current timber supply, review offers and submit timber requirements before creating an account.",
-    images: [{ url: socialImage, width: 1200, height: 630, alt: "FPX Forest Products Exchange, New Zealand timber sourcing" }],
+    title: "FPX | Browse Timber, Pricing & Submit Requests",
+    description: platformDescription,
+    images: [{ url: socialImage, width: 1200, height: 630, alt: "FPX Forest Products Exchange digital timber platform" }],
   },
   twitter: {
-    card: "summary_large_image", title: "FPX | New Zealand Timber Sourcing",
-    description: "FPX helps commercial timber buyers across New Zealand explore current timber supply, review offers and submit timber requirements before creating an account.",
+    card: "summary_large_image", title: "FPX | Browse Timber, Pricing & Submit Requests",
+    description: platformDescription,
     images: [socialImage],
   },
 };
