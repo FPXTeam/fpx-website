@@ -53,7 +53,11 @@ export function GeorgeHome(){
             <p className="gh-trust">FPX Sourcing is operated commercially by <strong>Sutcliffe Trading</strong>, a New Zealand timber trading business established in 1988.</p>
           </div>
           <div className="gh-device" aria-hidden="true">
-            <Image src="/images/Laptop-phone.png" alt="" fill sizes="(max-width: 760px) 96vw, 60vw" priority/>
+            <img
+              src="https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/Laptop-phone.png"
+              alt=""
+              style={{width:"100%",height:"100%",display:"block",objectFit:"contain",objectPosition:"center right",filter:"drop-shadow(0 30px 34px rgba(0,0,0,.3))"}}
+            />
           </div>
         </div>
       </section>
