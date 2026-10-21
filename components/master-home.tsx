@@ -15,17 +15,29 @@ const requestUrl = "https://app.fpx.nz/explore-fpx-sourcing?request=1";
 
 const Eyebrow=({children}:{children:React.ReactNode})=><p className="m-eyebrow">{children}</p>;
 const Arrow=()=> <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>;
-const AppButtons=()=> <div className="m-actions"><a className="m-btn m-btn-primary" href={browseUrl}>Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href={requestUrl}>Submit a request <Arrow/></a></div>;
+const AppButtons=()=> <div className="m-actions"><a className="m-btn m-btn-primary" href={browseUrl}>Browse Timber <Arrow/></a><a className="m-btn m-btn-ghost" href={requestUrl}>Submit a Timber Request <Arrow/></a></div>;
 
 function PremiumHero(){
-  return <section className="ph-hero">
+  return <section className="ph-hero ph-hero-product">
     <Image className="ph-hero-bg" src="/images/fpx-hero-timber-yard.webp" alt="New Zealand timber stored in a commercial yard" width={1920} height={1080} sizes="100vw" quality={60} priority fetchPriority="high"/>
     <div className="ph-hero-shade"/>
     <div className="ph-hero-copy">
       <Eyebrow>NEW ZEALAND TIMBER SOURCING</Eyebrow>
-      <h1>Timber sourcing,<br/><span className="headline-accent">made clearer.</span></h1>
+      <h1>Browse timber.<br/><span className="headline-accent">Submit what you need.</span></h1>
       <p>FPX gives commercial timber buyers one place to browse available timber and pricing, submit timber requirements, review quotations and manage orders.</p>
       <AppButtons/>
+    </div>
+    <div className="ph-hero-devices" aria-label="FPX guest application on desktop and mobile">
+      <div className="ph-device-laptop">
+        <div className="ph-device-laptop-screen">
+          <Image src="/fpx-desktop.png" alt="FPX guest application desktop view" width={1600} height={900} sizes="(max-width: 900px) 88vw, 48vw" quality={88} priority/>
+        </div>
+      </div>
+      <div className="ph-device-phone">
+        <div className="ph-device-phone-screen">
+          <Image src="/fpx-mobile.png" alt="FPX guest application mobile view" width={720} height={1500} sizes="(max-width: 900px) 26vw, 12vw" quality={88} priority/>
+        </div>
+      </div>
     </div>
     <div className="ph-hero-scroll">SCROLL TO EXPLORE</div>
   </section>;
