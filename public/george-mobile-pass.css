@@ -1,0 +1,126 @@
+/* FPX George preview — mobile-only refinement pass
+   Goal: shorter, clearer homepage without changing desktop structure. */
+
+@media (max-width: 900px) {
+  .section,
+  .intel { padding-top: 42px !important; padding-bottom: 42px !important; }
+  .source-grid,
+  .intel-in { gap: 20px !important; }
+  .final-in { gap: 18px !important; }
+}
+
+@media (max-width: 600px) {
+  .wrap { padding-left: 16px !important; padding-right: 16px !important; }
+
+  /* Header */
+  header { height: 58px !important; }
+  .nav .brand img { width: 88px !important; }
+
+  /* Hero: keep app imagery prominent, but remove unnecessary height */
+  .hero-inner { padding-top: 25px !important; padding-bottom: 0 !important; }
+  .hero .ey { margin-bottom: 8px !important; font-size: 9.5px !important; }
+  .hero h1 { margin-bottom: 14px !important; font-size: 38px !important; line-height: .97 !important; }
+  .hero-copy > p:not(.ey) { font-size: 13px !important; line-height: 1.5 !important; }
+  .hero-actions { margin-top: 17px !important; gap: 7px !important; }
+  .hero-actions .btn { min-height: 43px !important; padding-left: 15px !important; padding-right: 15px !important; }
+  .trust { margin-top: 11px !important; font-size: 9.9px !important; line-height: 1.45 !important; }
+  .device { width: 108% !important; margin-left: -4% !important; margin-top: -5px !important; }
+
+  /* Four proof points */
+  .benefit { grid-template-columns: 27px 1fr !important; gap: 8px !important; padding: 11px 8px !important; }
+  .benefit-icon { width: 26px !important; height: 26px !important; border-radius: 7px !important; }
+  .benefit svg { width: 15px !important; height: 15px !important; }
+  .benefit b { margin-bottom: 3px !important; font-size: 11.2px !important; line-height: 1.2 !important; }
+  .benefit span { font-size: 9.3px !important; line-height: 1.35 !important; }
+
+  /* Global mobile rhythm */
+  .section,
+  .intel { padding-top: 34px !important; padding-bottom: 34px !important; }
+  h2 { margin-bottom: 8px !important; font-size: 29px !important; line-height: 1.03 !important; }
+  .ey { margin-bottom: 8px !important; font-size: 9.5px !important; }
+  .sub { font-size: 12.6px !important; line-height: 1.5 !important; }
+
+  /* Two ways to source */
+  .source-head { margin-bottom: 14px !important; gap: 8px !important; }
+  .source-grid { gap: 11px !important; }
+  .source-card { border-radius: 14px !important; }
+  .source-visual { padding: 7px !important; }
+  .source-shot { height: 150px !important; border-radius: 9px !important; box-shadow: 0 5px 14px rgba(4,14,14,.07) !important; }
+  .source-copy { padding: 13px 15px 15px !important; }
+  .source-kicker { margin-bottom: 7px !important; font-size: 9px !important; }
+  .source-num { width: 21px !important; height: 21px !important; }
+  .source-copy h3 { margin-bottom: 5px !important; font-size: 18.5px !important; }
+  .source-copy p { margin-bottom: 10px !important; font-size: 11.2px !important; line-height: 1.43 !important; }
+  .source-copy a { font-size: 11.3px !important; }
+
+  /* Timber Range: intentionally compact per George's request */
+  .range-head { margin-bottom: 13px !important; gap: 6px !important; }
+  .products { gap: 7px !important; }
+  .product { border-radius: 11px !important; box-shadow: 0 4px 12px rgba(4,14,14,.04) !important; }
+  .product-media { height: 92px !important; }
+  .product-body { min-height: 49px !important; padding: 8px 9px 9px !important; display: flex !important; align-items: center !important; }
+  .product h3 { font-size: 12.2px !important; line-height: 1.16 !important; }
+  .product small { display: none !important; }
+
+  /* Wider sourcing: preserve meaning, reduce panel height */
+  .request-panel { margin-top: 16px !important; padding: 21px 11px 18px !important; border-radius: 15px !important; }
+  .request-panel .ey { margin-bottom: 7px !important; }
+  .request-panel h3 { margin-bottom: 7px !important; font-size: 21px !important; }
+  .request-panel > p { font-size: 11.3px !important; line-height: 1.48 !important; }
+  .capabilities { margin-top: 14px !important; border-radius: 9px !important; }
+  .capability { min-height: 43px !important; padding: 8px 7px !important; font-size: 9.4px !important; line-height: 1.25 !important; }
+  .network-line { margin-top: 10px !important; font-size: 9px !important; line-height: 1.4 !important; }
+
+  /* Customers: shorter image cards, same three segments */
+  .customers { margin-top: 14px !important; gap: 8px !important; }
+  .cust { height: 150px !important; border-radius: 13px !important; }
+  .cust-copy { left: 14px !important; right: 14px !important; bottom: 11px !important; }
+  .cust-copy small { font-size: 7.8px !important; }
+  .cust-copy h3 { margin-top: 4px !important; font-size: 18px !important; line-height: 1.05 !important; }
+
+  /* Intelligence: keep screenshots one-column and readable */
+  .intel-in { gap: 18px !important; }
+  .intel-note { margin-top: 8px !important; font-size: 9.3px !important; line-height: 1.42 !important; }
+  .intelshots { gap: 8px !important; }
+  .intelshots figure { border-radius: 11px !important; padding: 5px !important; }
+  .intelshots img { border-radius: 7px !important; }
+  .intelshots figcaption { padding: 6px 4px 3px !important; font-size: 9.2px !important; line-height: 1.35 !important; }
+
+  /* Final CTA */
+  .final-cta { padding-top: 25px !important; padding-bottom: 25px !important; }
+  .final-in { gap: 14px !important; }
+  .final-in h2 { font-size: 25px !important; line-height: 1.04 !important; }
+  .final-actions { gap: 7px !important; }
+  .final-actions .btn { min-height: 42px !important; }
+
+  /* Footer: preserve all content but reduce vertical run */
+  footer { padding-top: 34px !important; padding-bottom: 17px !important; }
+  .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 20px 18px !important; }
+  .footer-brand { grid-column: 1 / -1 !important; }
+  .footer-brand img { width: 43px !important; margin-bottom: 10px !important; }
+  .footer-brand p { max-width: 320px !important; font-size: 11.2px !important; line-height: 1.45 !important; }
+  .footer-col h4 { margin-bottom: 9px !important; font-size: 9.5px !important; }
+  .footer-col a { margin: 6px 0 !important; font-size: 10.8px !important; }
+  .footer-sub { margin-top: 21px !important; padding-top: 17px !important; padding-bottom: 17px !important; gap: 13px !important; }
+  .footer-sub b { font-size: 12.5px !important; }
+  .footer-form { gap: 7px !important; }
+  .footer-form input,
+  .footer-form button { height: 38px !important; }
+  .footer-bottom { gap: 10px !important; padding-top: 14px !important; font-size: 9px !important; }
+  .legal { gap: 10px !important; }
+
+  /* Mobile should feel responsive, not animated for animation's sake */
+  .fpx-reveal { transition-duration: .45s !important; transition-delay: 0ms !important; }
+  .source-card,
+  .product,
+  .cust,
+  .intelshots figure { box-shadow: none; }
+}
+
+@media (max-width: 390px) {
+  .hero h1 { font-size: 35px !important; }
+  .product-media { height: 86px !important; }
+  .product h3 { font-size: 11.6px !important; }
+  .source-shot { height: 142px !important; }
+  .cust { height: 142px !important; }
+}
