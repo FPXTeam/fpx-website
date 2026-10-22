@@ -10,137 +10,21 @@
 <div class="loading">Loading FPX preview…</div>
 <script>
 (async()=>{
-  const response=await fetch('/george-mockup.html?v=20261022-polished',{cache:'no-store'});
+  const response=await fetch('/george-mockup.html?v=20261022-final-pass',{cache:'no-store'});
   let html=await response.text();
+
   html=html.replace('Current stock examples','Available through FPX Stock');
+  html=html.replaceAll('Laptop-phone.png','LaptopPhone2.png');
 
-  const overrides=`<style id="fpx-app-continuity">
-:root{--app:#3FA847;--app-dark:#174B38;--app-line:#B9D9C6;--app-cream:#F7F5ED;--premium-shadow:0 18px 48px rgba(4,14,14,.10);--premium-shadow-hover:0 24px 64px rgba(4,14,14,.16)}
+  const headAdditions=`
+    <link rel="stylesheet" href="/george-polish.css?v=20261022-final2">
+    <link rel="stylesheet" href="/george-mobile-pass.css?v=20261022-mobile1">
+    <link rel="stylesheet" href="/george-mobile-nav.css?v=20261022-final2">`;
+  const bodyAdditions=`<script src="/george-enhancements.js?v=20261022-final2"><\/script>`;
 
-/* WEBSITE → GUEST EXPLORE CONTINUITY */
-.nav-actions a:first-child{order:2!important;background:var(--app)!important;color:#fff!important;border:1px solid var(--app)!important}
-.nav-actions a:nth-child(2){order:1!important;background:#fff!important;color:#040E0E!important;border:1px solid #D5DED9!important}
-.hero .btn-primary{background:#fff!important;color:var(--app-dark)!important;border:1px solid #A9D3B9!important}
-.hero .btn-outline{background:var(--app)!important;border-color:var(--app)!important;color:#fff!important}
-#sourcing{background:var(--app-cream)!important}
-.source-card:first-child{border-color:var(--app-line)!important}
-.source-card:nth-child(2){border-color:#8DCA96!important}
-.source-visual{background:#F1F0E9!important}
-.source-card:nth-child(2) .source-copy{background:var(--app)!important;color:#fff!important}
-.source-card:nth-child(2) .source-kicker,.source-card:nth-child(2) .source-copy p,.source-card:nth-child(2) .source-copy a{color:#fff!important}
-.source-card:nth-child(2) .source-num{background:rgba(255,255,255,.18)!important;color:#fff!important}
-.stock-note{background:#fff!important;border:1px solid var(--app-line)!important;color:var(--app-dark)!important}
-.product{border-color:#D9E0DB!important}
-.final-actions .btn:first-child{background:#fff!important;color:var(--app-dark)!important;border:1px solid var(--app-line)!important}
-.final-actions .btn:last-child{background:var(--app)!important;color:#fff!important;border:1px solid var(--app)!important}
+  html=html.replace('</head>',headAdditions+'</head>');
+  html=html.replace('</body>',bodyAdditions+'</body>');
 
-/* PREMIUM POLISH — restrained, not decorative for decoration's sake */
-body{overflow-x:hidden}
-header{position:relative;z-index:20;box-shadow:0 1px 0 rgba(4,14,14,.03)}
-.nav .brand img{transition:transform .28s ease,filter .28s ease}
-.nav .brand:hover img{transform:translateY(-1px);filter:drop-shadow(0 5px 10px rgba(4,14,14,.10))}
-.links a{position:relative;transition:color .22s ease}
-.links a:after{content:"";position:absolute;left:0;right:100%;bottom:-7px;height:2px;border-radius:2px;background:var(--app);transition:right .24s ease}
-.links a:hover:after{right:0}
-.nav-actions a,.btn{box-shadow:0 5px 14px rgba(4,14,14,.06);transition:transform .22s ease,box-shadow .22s ease,background-color .22s ease,border-color .22s ease!important}
-.nav-actions a:hover,.btn:hover{transform:translateY(-2px)!important;box-shadow:0 11px 26px rgba(4,14,14,.14)!important}
-
-.hero{isolation:isolate}
-.hero:before{content:"";position:absolute;z-index:1;width:620px;height:620px;border-radius:50%;right:8%;top:-220px;background:radial-gradient(circle,rgba(83,195,150,.20) 0%,rgba(83,195,150,.08) 35%,transparent 72%);filter:blur(2px);pointer-events:none}
-.hero-bg{transform:scale(1.015);animation:fpxHeroBreath 18s ease-in-out infinite alternate;will-change:transform}
-.hero h1{text-shadow:0 3px 24px rgba(0,0,0,.15)}
-.hero-copy{animation:fpxHeroIn .72s cubic-bezier(.2,.7,.2,1) both}
-.device{animation:fpxDeviceIn .85s .08s cubic-bezier(.2,.7,.2,1) both}
-.device img{animation:fpxDeviceFloat 7s 1.2s ease-in-out infinite;will-change:transform;transition:filter .35s ease}
-.device:hover img{filter:drop-shadow(0 34px 44px rgba(0,0,0,.42))}
-
-.benefits{background:linear-gradient(180deg,#fff 0%,#fbfcfb 100%)}
-.benefit{transition:background-color .25s ease,transform .25s ease}
-.benefit:hover{background:#F6FAF8;transform:translateY(-2px)}
-.benefit-icon{transition:transform .25s ease,box-shadow .25s ease,background-color .25s ease}
-.benefit:hover .benefit-icon{transform:translateY(-2px) scale(1.04);background:#DFF0E8;box-shadow:0 8px 18px rgba(44,114,90,.10)}
-
-#sourcing{position:relative;overflow:hidden;background-image:radial-gradient(circle at 86% 6%,rgba(63,168,71,.09),transparent 26%)!important}
-.source-card{box-shadow:0 10px 30px rgba(4,14,14,.055);transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s ease,border-color .3s ease}
-.source-card:hover{transform:translateY(-6px);box-shadow:var(--premium-shadow-hover)}
-.source-shot{transition:box-shadow .3s ease}
-.source-card:hover .source-shot{box-shadow:0 15px 32px rgba(4,14,14,.12)}
-.source-shot img{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
-.source-card:hover .source-shot img{transform:scale(1.025)}
-.source-copy a{transition:gap .22s ease,opacity .22s ease}
-.source-copy a:hover{gap:11px;opacity:.82}
-
-.products{perspective:1200px}
-.product{box-shadow:0 7px 20px rgba(4,14,14,.045)!important;transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s ease,border-color .3s ease!important}
-.product:hover{transform:translateY(-7px);box-shadow:0 20px 42px rgba(4,14,14,.13)!important;border-color:#BFD8CB!important}
-.product img{transition:transform .55s cubic-bezier(.2,.7,.2,1),filter .4s ease!important}
-.product:hover img{transform:scale(1.045)!important;filter:saturate(1.035) contrast(1.015)}
-.product-body{position:relative;background:#fff}
-.product-body:before{content:"";position:absolute;left:15px;right:100%;top:0;height:2px;background:var(--app);transition:right .32s ease}
-.product:hover .product-body:before{right:15px}
-
-.request-panel{box-shadow:0 22px 52px rgba(4,14,14,.18);background:linear-gradient(135deg,#0b1b17 0%,#102a21 100%)!important}
-.request-panel:after{content:"";position:absolute;width:360px;height:360px;border-radius:50%;left:-210px;bottom:-260px;background:rgba(83,195,150,.10);pointer-events:none}
-.capability{transition:background-color .23s ease,color .23s ease}
-.capability:hover{background:rgba(83,195,150,.10);color:#fff}
-
-.cust{box-shadow:0 10px 30px rgba(4,14,14,.10);transition:transform .32s cubic-bezier(.2,.7,.2,1),box-shadow .32s ease}
-.cust:hover{transform:translateY(-6px);box-shadow:0 23px 50px rgba(4,14,14,.18)}
-.cust>img{transition:transform .7s cubic-bezier(.2,.7,.2,1),filter .45s ease}
-.cust:hover>img{transform:scale(1.055);filter:saturate(1.05)}
-.cust:after{transition:background .4s ease}
-.cust:hover:after{background:linear-gradient(180deg,rgba(4,14,14,0) 20%,rgba(4,14,14,.94) 100%)}
-.cust-copy{transition:transform .3s ease}
-.cust:hover .cust-copy{transform:translateY(-3px)}
-
-.intel{position:relative;overflow:hidden;background:linear-gradient(145deg,#040E0E 0%,#071713 54%,#0d2b20 100%)!important}
-.intel:before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;right:-210px;top:-250px;background:radial-gradient(circle,rgba(83,195,150,.16),transparent 68%);pointer-events:none}
-.intel-in{position:relative;z-index:1}
-.intelshots figure{transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s ease}
-.intelshots figure:hover{transform:translateY(-6px) rotate(-.25deg);box-shadow:0 28px 56px rgba(0,0,0,.30)}
-.intelshots figure:nth-child(2):hover{transform:translateY(-6px) rotate(.25deg)}
-
-.final-cta{position:relative;overflow:hidden;background:linear-gradient(115deg,#EFF7F3 0%,#E4F2EB 100%)!important}
-.final-cta:after{content:"";position:absolute;width:340px;height:340px;border-radius:50%;right:-120px;top:-210px;background:rgba(83,195,150,.12);pointer-events:none}
-.final-in{position:relative;z-index:1}
-
-footer{position:relative;overflow:hidden;background:linear-gradient(145deg,#040E0E 0%,#071a14 100%)!important}
-footer:before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;left:-220px;bottom:-310px;background:rgba(83,195,150,.055);pointer-events:none}
-.footer-grid,.footer-sub,.footer-bottom{position:relative;z-index:1}
-.footer-col a{transition:color .2s ease,transform .2s ease}
-.footer-col a:hover{color:#fff;transform:translateX(3px)}
-
-/* Scroll reveal */
-.fpx-reveal{opacity:0;transform:translateY(20px);transition:opacity .65s cubic-bezier(.2,.7,.2,1),transform .65s cubic-bezier(.2,.7,.2,1);transition-delay:var(--fpx-delay,0ms)}
-.fpx-reveal.fpx-visible{opacity:1;transform:translateY(0)}
-
-@keyframes fpxHeroBreath{from{transform:scale(1.015) translate3d(0,0,0)}to{transform:scale(1.045) translate3d(-.35%,.2%,0)}}
-@keyframes fpxHeroIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fpxDeviceIn{from{opacity:0;transform:translateY(-47%) translateX(18px)}to{opacity:1;transform:translateY(-50%) translateX(0)}}
-@keyframes fpxDeviceFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-
-@media(max-width:900px){
-  .source-card:hover,.product:hover,.cust:hover,.intelshots figure:hover,.intelshots figure:nth-child(2):hover{transform:none}
-  .hero:before{width:420px;height:420px;right:-120px;top:-150px}
-  .device{animation:fpxDeviceMobileIn .72s .05s cubic-bezier(.2,.7,.2,1) both}
-  @keyframes fpxDeviceMobileIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-}
-@media(max-width:600px){
-  .source-card:nth-child(2) .source-copy{background:var(--app)!important}
-  .hero .btn-primary,.hero .btn-outline{width:100%!important}
-  .hero-bg,.device img{animation:none!important}
-  .fpx-reveal{transform:translateY(12px)}
-}
-@media(prefers-reduced-motion:reduce){
-  *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
-  .fpx-reveal{opacity:1!important;transform:none!important}
-}
-</style>`;
-
-  const polishScript=`<script id="fpx-polish-motion">\n(()=>{\n  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;\n  const selectors=['.benefit','.source-card','.product','.request-panel','.cust','.intel-in','.final-in'];\n  const nodes=[...document.querySelectorAll(selectors.join(','))];\n  nodes.forEach((el,i)=>{\n    el.classList.add('fpx-reveal');\n    el.style.setProperty('--fpx-delay', Math.min((i%6)*55,275)+'ms');\n  });\n  const io=new IntersectionObserver(entries=>{\n    entries.forEach(entry=>{\n      if(entry.isIntersecting){entry.target.classList.add('fpx-visible');io.unobserve(entry.target)}\n    });\n  },{threshold:.11,rootMargin:'0px 0px -40px 0px'});\n  nodes.forEach(el=>io.observe(el));\n})();\n<\/script>`;
-
-  html=html.replace('</head>',overrides+'<link rel="stylesheet" href="/george-mobile-pass.css?v=20261022-mobile1"></head>');
-  html=html.replace('</body>',polishScript+'</body>');
   document.open();
   document.write(html);
   document.close();
