@@ -139,7 +139,7 @@ footer:before{content:"";position:absolute;width:420px;height:420px;border-radiu
 
   const polishScript=`<script id="fpx-polish-motion">\n(()=>{\n  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;\n  const selectors=['.benefit','.source-card','.product','.request-panel','.cust','.intel-in','.final-in'];\n  const nodes=[...document.querySelectorAll(selectors.join(','))];\n  nodes.forEach((el,i)=>{\n    el.classList.add('fpx-reveal');\n    el.style.setProperty('--fpx-delay', Math.min((i%6)*55,275)+'ms');\n  });\n  const io=new IntersectionObserver(entries=>{\n    entries.forEach(entry=>{\n      if(entry.isIntersecting){entry.target.classList.add('fpx-visible');io.unobserve(entry.target)}\n    });\n  },{threshold:.11,rootMargin:'0px 0px -40px 0px'});\n  nodes.forEach(el=>io.observe(el));\n})();\n<\/script>`;
 
-  html=html.replace('</head>',overrides+'</head>');
+  html=html.replace('</head>',overrides+'<link rel="stylesheet" href="/george-mobile-pass.css?v=20261022-mobile1"></head>');
   html=html.replace('</body>',polishScript+'</body>');
   document.open();
   document.write(html);
