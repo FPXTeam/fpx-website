@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FPX George Preview</title>
+<style>html,body{margin:0;min-height:100%;background:#fff;font-family:Arial,sans-serif}.loading{min-height:100vh;display:grid;place-items:center;color:#24483b;font-weight:700}</style>
+</head>
+<body>
+<div class="loading">Loading FPX preview…</div>
+<script>
+(async()=>{
+  const response=await fetch('/george-mockup.html?v=20261022-seamless',{cache:'no-store'});
+  let html=await response.text();
+  html=html.replace('Current stock examples','Available through FPX Stock');
+  const overrides=`<style id="fpx-app-continuity">
+:root{--app:#3FA847;--app-dark:#174B38;--app-line:#B9D9C6;--app-cream:#F7F5ED}
+/* Keep the website intact, but mirror the existing Guest Explore action hierarchy. */
+.nav-actions a:first-child{order:2!important;background:var(--app)!important;color:#fff!important;border:1px solid var(--app)!important}
+.nav-actions a:nth-child(2){order:1!important;background:#fff!important;color:#040E0E!important;border:1px solid #D5DED9!important}
+.hero .btn-primary{background:#fff!important;color:var(--app-dark)!important;border:1px solid #A9D3B9!important}
+.hero .btn-outline{background:var(--app)!important;border-color:var(--app)!important;color:#fff!important}
+#sourcing{background:var(--app-cream)!important}
+.source-card:first-child{border-color:var(--app-line)!important}
+.source-card:nth-child(2){border-color:#8DCA96!important}
+.source-visual{background:#F1F0E9!important}
+.source-card:nth-child(2) .source-copy{background:var(--app)!important;color:#fff!important}
+.source-card:nth-child(2) .source-kicker,.source-card:nth-child(2) .source-copy p,.source-card:nth-child(2) .source-copy a{color:#fff!important}
+.source-card:nth-child(2) .source-num{background:rgba(255,255,255,.18)!important;color:#fff!important}
+.stock-note{background:#fff!important;border:1px solid var(--app-line)!important;color:var(--app-dark)!important}
+.product{border-color:#D9E0DB!important;box-shadow:none!important}
+.final-actions .btn:first-child{background:#fff!important;color:var(--app-dark)!important;border:1px solid var(--app-line)!important}
+.final-actions .btn:last-child{background:var(--app)!important;color:#fff!important;border:1px solid var(--app)!important}
+@media(max-width:600px){.source-card:nth-child(2) .source-copy{background:var(--app)!important}.hero .btn-primary,.hero .btn-outline{width:100%!important}}
+</style>`;
+  html=html.replace('</head>',overrides+'</head>');
+  document.open();
+  document.write(html);
+  document.close();
+})().catch(()=>{document.body.innerHTML='<div class="loading">Unable to load preview.</div>'});
+</script>
+</body>
+</html>
