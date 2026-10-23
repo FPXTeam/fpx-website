@@ -7,6 +7,7 @@ body:has(.m-inner-site) .brand{flex-basis:109px}
 body:has(.m-inner-site) .brand img{width:109px;height:auto}
 body:has(.m-inner-site) .desktop-nav{gap:22px}
 body:has(.m-inner-site) .desktop-nav a{font-size:13px;font-weight:700;color:#040e0e}
+body:has(.m-inner-site) .desktop-nav .drop button{font-size:13px;font-weight:700;color:#040e0e}
 body:has(.m-inner-site) .nav-actions{gap:8px}
 body:has(.m-inner-site) .nav-actions a{font-size:12px;font-weight:800;border-radius:9px}
 body:has(.m-inner-site) .nav-actions .nav-cta{background:#040e0e;color:#fff}
@@ -24,6 +25,7 @@ body:has(.m-inner-site) footer{background:#040e0e}
 .ap-hero-content{width:100%;padding-top:80px;padding-bottom:80px}
 .ap-hero .ap-eyebrow,.ap-final .ap-eyebrow{color:#53c396!important}
 .ap-hero h1{max-width:780px;margin:0 0 19px;font-size:clamp(42px,5.3vw,76px);line-height:1.04;color:white}
+.master-site .ap-hero h1,.master-site .ap-final h2{color:#fff!important}
 .ap-hero-lead{max-width:650px;margin:0!important;color:#dfe9e4;font-size:16px;line-height:1.65}
 .ap-trust{margin:18px 0 0!important;color:white;font-size:12px;font-weight:700}
 .ap-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
@@ -70,9 +72,12 @@ body:has(.m-inner-site) footer{background:#040e0e}
 .ap-group .ap-card-body{padding:18px}
 .ap-group h3{font-size:20px}
 .ap-group p:not(.ap-number){min-height:65px}
-.ap-request-panel{background:#0b1b17;color:white;border-radius:22px;padding:40px}
-.ap-request-panel .ap-eyebrow{color:#53c396!important}
-.ap-request-panel p:not(.ap-eyebrow){max-width:900px;color:#c0d1c7;line-height:1.7}
+.ap-request-panel{background:#eaf2eb;color:#040e0e;border:1px solid #d2e2d6;border-radius:22px;padding:40px}
+.master-site .ap-request-panel h2{color:#040e0e!important}
+.ap-request-panel p:not(.ap-eyebrow){max-width:900px;color:#3e594a;line-height:1.7}
+.ap-range-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:28px 0}
+.ap-range-list span{background:#fff;border:1px solid #cbddce;border-radius:10px;padding:16px 18px;font:700 15px/1.4 Lato,Arial,sans-serif;color:#123c29}
+.ap-request-panel .ap-range-close{font-weight:700;color:#163e2b}
 .ap-request-panel .ap-button{margin-top:12px}
 .ap-audiences{display:grid;gap:18px}
 .ap-audience{display:grid;grid-template-columns:1fr 1fr;min-height:340px;background:#f4f7f5;border:1px solid #dce5e0;border-radius:18px;overflow:hidden}
@@ -118,5 +123,6 @@ body:has(.m-inner-site) footer{background:#040e0e}
 .m-inner-site .pg-summary article,.m-inner-site .pg-category-list>div,.m-inner-site .phw-flow article{border-color:#dce5e0}
 .m-inner-site .pg-gallery figure img{object-fit:cover}
 @media(max-width:650px){.m-inner-site .pri-hero,.m-inner-site .pfq-hero{padding-top:48px;padding-bottom:42px}.m-inner-site .pct2-hero{min-height:0}.m-inner-site .pct2-hero h1{font-size:40px}}
-@media(max-width:850px){body:has(.m-inner-site) .nav-wrap{padding:0 24px}.ap-container{padding-left:24px;padding-right:24px}.ap-hero{min-height:440px}.ap-hero-content{padding-top:70px;padding-bottom:70px}.ap-group-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ap-split{gap:30px}.ap-final-inner{align-items:flex-start;flex-direction:column}.ap-final .ap-actions{margin-top:0}.ap-audience-copy{padding:30px}}
-@media(max-width:650px){body:has(.m-inner-site) .site-header{height:65px}body:has(.m-inner-site) .nav-wrap{padding:0 18px}body:has(.m-inner-site) .brand img{width:96px}.ap-container{padding-left:18px;padding-right:18px}.ap-hero{min-height:0}.ap-hero:before{background:linear-gradient(90deg,rgba(4,14,14,.96),rgba(4,14,14,.75))}.ap-hero-content{padding-top:55px;padding-bottom:58px}.ap-hero h1{font-size:clamp(39px,10vw,53px)}.ap-hero-lead{font-size:14px}.ap-actions{display:grid;width:100%}.ap-actions .ap-button{width:100%}.ap-section{padding:48px 0}.ap-intro{margin-bottom:22px}.ap-intro h2{font-size:34px}.ap-two,.ap-split,.ap-team-grid{grid-template-columns:1fr}.ap-screen img{height:205px}.ap-stock-grid,.ap-group-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.ap-stock img,.ap-group img{height:120px}.ap-stock .ap-card-body,.ap-group .ap-card-body{padding:12px}.ap-stock h3,.ap-group h3{font-size:15px}.ap-stock p:not(.ap-number),.ap-group p:not(.ap-number){min-height:0;font-size:11px}.ap-request-panel{padding:27px 21px}.ap-request-panel h2{font-size:30px}.ap-audience{grid-template-columns:1fr}.ap-audience:nth-child(even) .ap-audience-image{order:0}.ap-audience-image{min-height:200px}.ap-audience-copy{padding:25px}.ap-audience-copy h2{font-size:32px}.ap-intel-grid figcaption{flex-direction:column}.ap-person-image{height:300px}.ap-final{padding:39px 0}.ap-final h2{font-size:30px}}
+@media(max-width:1250px){body:has(.m-inner-site) .desktop-nav{gap:12px}body:has(.m-inner-site) .desktop-nav a,body:has(.m-inner-site) .desktop-nav .drop button{font-size:11px}}
+@media(max-width:850px){body:has(.m-inner-site) .nav-wrap{padding:0 24px}.ap-container{padding-left:24px;padding-right:24px}.ap-hero{min-height:440px}.ap-hero-content{padding-top:70px;padding-bottom:70px}.ap-range-list{grid-template-columns:repeat(2,minmax(0,1fr))}.ap-split{gap:30px}.ap-final-inner{align-items:flex-start;flex-direction:column}.ap-final .ap-actions{margin-top:0}.ap-audience-copy{padding:30px}}
+@media(max-width:650px){body:has(.m-inner-site) .site-header{height:65px}body:has(.m-inner-site) .nav-wrap{padding:0 18px}body:has(.m-inner-site) .brand img{width:96px}.ap-container{padding-left:18px;padding-right:18px}.ap-hero{min-height:0}.ap-hero:before{background:linear-gradient(90deg,rgba(4,14,14,.96),rgba(4,14,14,.75))}.ap-hero-content{padding-top:55px;padding-bottom:58px}.ap-hero h1{font-size:clamp(39px,10vw,53px)}.ap-hero-lead{font-size:14px}.ap-actions{display:grid;width:100%}.ap-actions .ap-button{width:100%}.ap-section{padding:48px 0}.ap-intro{margin-bottom:22px}.ap-intro h2{font-size:34px}.ap-two,.ap-split,.ap-team-grid{grid-template-columns:1fr}.ap-screen img{height:205px}.ap-stock-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.ap-stock img{height:120px}.ap-stock .ap-card-body{padding:12px}.ap-stock h3{font-size:15px}.ap-stock p:not(.ap-number){min-height:0;font-size:11px}.ap-request-panel{padding:27px 21px}.ap-request-panel h2{font-size:30px}.ap-range-list{grid-template-columns:1fr;gap:8px}.ap-range-list span{padding:13px 15px}.ap-audience{grid-template-columns:1fr}.ap-audience:nth-child(even) .ap-audience-image{order:0}.ap-audience-image{min-height:200px}.ap-audience-copy{padding:25px}.ap-audience-copy h2{font-size:32px}.ap-intel-grid figcaption{flex-direction:column}.ap-final{padding:39px 0}.ap-final h2{font-size:30px}}

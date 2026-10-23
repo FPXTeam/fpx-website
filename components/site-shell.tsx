@@ -18,7 +18,9 @@ export function Header(){
         <Link href="/timber">Timber Range</Link>
         <Link href="/our-customers">Our Customers</Link>
         <Link href="/fpx-intelligence">FPX Intelligence</Link>
+        <div className="drop"><button type="button" aria-haspopup="true">Resources <ChevronDownIcon/></button><div className="drop-menu"><Link href="/industry-insights"><b>FPX Insights</b><span>Timber guides and product information.</span></Link><Link href="/saw-point"><b>Saw Point</b><span>New Zealand timber industry updates.</span></Link><Link href="/frequently-asked-questions"><b>FAQ</b><span>Answers about using FPX.</span></Link></div></div>
         <Link href="/about-us">About Us</Link>
+        <Link href="/contact-us">Contact</Link>
       </nav>
       <div className="nav-actions"><a href="https://app.fpx.nz/sourcing-sign-up">Get FPX Access</a><a className="nav-cta" href="https://app.fpx.nz">Login <ArrowUpRightIcon/></a></div>
       <details className="mobile-nav-details">
