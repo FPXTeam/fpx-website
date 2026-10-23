@@ -338,11 +338,6 @@ export function ContactPage(){
         <div><small>SPECIFIC REQUIREMENT</small><h3>Create a timber request.</h3><p>Send the specification and quantity when you already know what the job needs.</p></div>
         <Arrow/>
       </a>
-      <a href="https://app.fpx.nz/explore-fpx-sourcing?view=offers">
-        <span>03</span>
-        <div><small>CURRENT OPPORTUNITIES</small><h3>Review current offers.</h3><p>See whether a current FPX opportunity suits the requirement.</p></div>
-        <Arrow/>
-      </a>
     </nav>
   </section>
 

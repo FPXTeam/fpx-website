@@ -15,11 +15,15 @@
     panel.setAttribute('aria-hidden','true');
     panel.innerHTML=`
       <nav class="mobile-menu-links" aria-label="Mobile navigation">
-        <a href="#sourcing">FPX Sourcing</a>
-        <a href="#range">Timber Range</a>
-        <a href="#customers">Our Customers</a>
-        <a href="#intel">FPX Intelligence</a>
+        <a href="/fpx-sourcing">FPX Sourcing</a>
+        <a href="/timber">Timber Range</a>
+        <a href="/our-customers">Our Customers</a>
+        <a href="/fpx-intelligence">FPX Intelligence</a>
+        <a href="/saw-point">Saw Point</a>
+        <a href="/industry-insights">FPX Insights</a>
+        <a href="/frequently-asked-questions">FAQ</a>
         <a href="/about-us">About Us</a>
+        <a href="/contact-us">Contact</a>
       </nav>
       <div class="mobile-menu-actions">
         <a class="mobile-login" href="https://app.fpx.nz/">Login</a>

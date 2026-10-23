@@ -116,14 +116,14 @@ export function ProductGroupPage({slug}:{slug:string}){
   };
   return <>
     <section className="pg-hero">
-      <div className="pg-hero-copy"><span className="pg-number">{number}</span><Eyebrow>PRODUCT GROUP</Eyebrow><h1>{group.title}</h1><p>{group.description}</p><div className="m-actions"><a href="https://app.fpx.nz/explore-fpx-sourcing" className="m-btn m-btn-primary">Browse Stock <Arrow/></a><a href="https://app.fpx.nz/explore-fpx-sourcing?request=1" className="m-btn m-btn-ghost">Create a Request <Arrow/></a></div></div>
+      <div className="pg-hero-copy"><span className="pg-number">{number}</span><Eyebrow>TIMBER RANGE</Eyebrow><h1>{group.title}</h1><p>{group.description}</p><div className="m-actions"><a href="https://app.fpx.nz/explore-fpx-sourcing" className="m-btn m-btn-primary">Browse Timber <Arrow/></a><a href="https://app.fpx.nz/explore-fpx-sourcing?request=1" className="m-btn m-btn-ghost">Submit a Timber Request <Arrow/></a></div></div>
       <div className="pg-hero-image"><Image src={`/images/${group.hero}`} alt={`${group.title} timber`} width={1800} height={1200} sizes="(max-width: 900px) 100vw, 50vw" priority/></div>
     </section>
 
     <section className="pg-summary">
       <article><small>WHAT IT IS</small><p>{group.description}</p></article>
-      <article><small>WHO IT IS FOR</small><p>FPX sources this timber product group for {audience} across New Zealand.</p></article>
-      <article><small>HOW TO SOURCE IT</small><p>Browse current Stock or create a Request with the grade, dimensions, treatment, quantity and timing you know. If the exact timber is not shown, FPX can source suitable options beyond the listed Stock.</p></article>
+      <article><small>WHO IT IS FOR</small><p>FPX sources this timber for {audience} across New Zealand.</p></article>
+      <article><small>HOW TO SOURCE IT</small><p>Browse current stock or submit a request with the grade, dimensions, treatment, quantity and timing you know. If the exact timber is not shown, FPX can source suitable options beyond listed stock.</p></article>
     </section>
 
     <section className={`pg-gallery ${group.gallery.length===2?"is-two":""}`}>
@@ -131,7 +131,7 @@ export function ProductGroupPage({slug}:{slug:string}){
     </section>
 
     <section className="pg-catalogue">
-      <div><Eyebrow>WHAT WE SUPPLY</Eyebrow><h2>{group.categories.length===1?"The product group.":"Product categories."}</h2><p>{group.note}</p></div>
+      <div><Eyebrow>WHAT WE SUPPLY</Eyebrow><h2>{group.categories.length===1?"Timber for this application.":"Explore the range."}</h2><p>{group.note}</p></div>
       <div className="pg-category-list">{group.categories.map((category,i)=><div key={category}><span>{String(i+1).padStart(2,"0")}</span><b>{category}</b></div>)}</div>
     </section>
 
@@ -141,7 +141,7 @@ export function ProductGroupPage({slug}:{slug:string}){
       {relatedGuidance[slug].map(([label,title,href])=><article key={href}><small>{label}</small><p><Link href={href}>{title} <Arrow/></Link></p></article>)}
     </section>
 
-    <section className="pg-close"><div><Eyebrow>EXPLORE IN FPX</Eyebrow><h2>Need the grade, size or specification?</h2><p>Use the website to understand the timber range, then use FPX Sourcing to browse current Stock and Offers or create a Request. If the exact product is not listed, FPX can source wider through suitable New Zealand supply routes.</p></div><AppButtons/></section>
+    <section className="pg-close"><div><Eyebrow>EXPLORE IN FPX</Eyebrow><h2>Need the grade, size or specification?</h2><p>Browse current stock or submit a timber request in FPX. The range shown here introduces possible applications; individual listings and availability are shown in FPX.</p></div><AppButtons/></section>
   </>;
 }
 
