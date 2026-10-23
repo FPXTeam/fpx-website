@@ -16,11 +16,22 @@
   html=html.replace('Current stock examples','Available through FPX Stock');
   html=html.replaceAll('Laptop-phone.png','LaptopPhone2.png');
 
+  // Keep George's approved homepage layout, but connect its site navigation
+  // to the exact revised Next.js pages included in this preview branch.
+  const previewRoutes=[
+    ['href="/"','href="/george-seamless.html"'],
+    ['href="#sourcing"','href="/fpx-sourcing"'],
+    ['href="#range"','href="/timber"'],
+    ['href="#customers"','href="/our-customers"'],
+    ['href="#intel"','href="/fpx-intelligence"']
+  ];
+  previewRoutes.forEach(([from,to])=>{html=html.replaceAll(from,to)});
+
   const headAdditions=`
     <link rel="stylesheet" href="/george-polish.css?v=20261022-final2">
     <link rel="stylesheet" href="/george-mobile-pass.css?v=20261022-mobile1">
     <link rel="stylesheet" href="/george-mobile-nav.css?v=20261022-final2">`;
-  const bodyAdditions=`<script src="/george-enhancements.js?v=20261022-final2"><\/script>`;
+  const bodyAdditions=`<script src="/george-enhancements.js?v=20261023-preview-routes1"><\/script>`;
 
   html=html.replace('</head>',headAdditions+'</head>');
   html=html.replace('</body>',bodyAdditions+'</body>');
