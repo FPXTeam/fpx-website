@@ -27,11 +27,46 @@
   ];
   previewRoutes.forEach(([from,to])=>{html=html.replaceAll(from,to)});
 
+  // The original static homepage mockup had an older shortened desktop nav.
+  // Replace it with the same complete top-level navigation used by the inner pages.
+  const oldDesktopNav='<nav class="links"><a href="/fpx-sourcing">FPX Sourcing</a><a href="/timber">Timber Range</a><a href="/our-customers">Our Customers</a><a href="/fpx-intelligence">FPX Intelligence</a><a href="/about-us">About Us</a></nav>';
+  const completeDesktopNav=`<nav class="links" aria-label="Primary navigation">
+    <a href="/fpx-sourcing">FPX Sourcing</a>
+    <a href="/timber">Timber Range</a>
+    <a href="/our-customers">Our Customers</a>
+    <a href="/fpx-intelligence">FPX Intelligence</a>
+    <div class="home-resources">
+      <button type="button" aria-haspopup="true">Resources <span aria-hidden="true">⌄</span></button>
+      <div class="home-resources-menu">
+        <a href="/industry-insights"><b>FPX Insights</b><small>Timber guides and product information.</small></a>
+        <a href="/saw-point"><b>Saw Point</b><small>New Zealand timber industry updates.</small></a>
+        <a href="/frequently-asked-questions"><b>FAQ</b><small>Answers about using FPX.</small></a>
+      </div>
+    </div>
+    <a href="/about-us">About Us</a>
+    <a href="/contact-us">Contact</a>
+  </nav>`;
+  html=html.replace(oldDesktopNav,completeDesktopNav);
+
   const headAdditions=`
     <link rel="stylesheet" href="/george-polish.css?v=20261022-final2">
     <link rel="stylesheet" href="/george-mobile-pass.css?v=20261022-mobile1">
-    <link rel="stylesheet" href="/george-mobile-nav.css?v=20261022-final2">`;
-  const bodyAdditions=`<script src="/george-enhancements.js?v=20261023-preview-routes1"><\/script>`;
+    <link rel="stylesheet" href="/george-mobile-nav.css?v=20261022-final2">
+    <style>
+      .links{align-items:center}
+      .home-resources{position:relative;display:flex;align-items:center}
+      .home-resources>button{display:flex;align-items:center;gap:7px;border:0;background:transparent;padding:0;color:inherit;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+      .home-resources>button span{font-size:18px;line-height:1;transform:translateY(-1px)}
+      .home-resources-menu{position:absolute;top:calc(100% + 18px);left:50%;transform:translateX(-50%) translateY(7px);width:245px;padding:8px;background:#fff;border:1px solid #DCE5E0;border-radius:12px;box-shadow:0 18px 44px rgba(4,14,14,.14);opacity:0;visibility:hidden;pointer-events:none;transition:.18s ease;z-index:100}
+      .home-resources:hover .home-resources-menu,.home-resources:focus-within .home-resources-menu{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+      .home-resources-menu a{display:block;padding:10px 11px;border-radius:8px}
+      .home-resources-menu a:hover{background:#F4F7F5;color:#040E0E}
+      .home-resources-menu a:after{display:none}
+      .home-resources-menu b{display:block;font-size:12px;color:#040E0E}
+      .home-resources-menu small{display:block;margin-top:3px;color:#66736D;font-size:10px;line-height:1.35;font-weight:400}
+      @media(max-width:1150px) and (min-width:901px){.links{gap:13px}.links a,.home-resources>button{font-size:11.5px}.nav{gap:20px}}
+    </style>`;
+  const bodyAdditions=`<script src="/george-enhancements.js?v=20261023-preview-routes2"><\/script>`;
 
   html=html.replace('</head>',headAdditions+'</head>');
   html=html.replace('</body>',bodyAdditions+'</body>');
