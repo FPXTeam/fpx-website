@@ -17,9 +17,8 @@ export function Header(){
         <Link href="/fpx-sourcing">FPX Sourcing</Link>
         <Link href="/timber">Timber Range</Link>
         <Link href="/our-customers">Our Customers</Link>
-        <div className="drop"><button type="button" aria-haspopup="true">Resources <ChevronDownIcon/></button><div className="drop-menu"><Link href="/saw-point"><b>Saw Point</b><span>New Zealand timber industry updates.</span></Link><Link href="/industry-insights"><b>FPX Insights</b><span>Timber guides and product information.</span></Link><Link href="/frequently-asked-questions"><b>FAQ</b><span>Answers about using FPX.</span></Link></div></div>
+        <Link href="/fpx-intelligence">FPX Intelligence</Link>
         <Link href="/about-us">About Us</Link>
-        <Link href="/contact-us">Contact</Link>
       </nav>
       <div className="nav-actions"><a href="https://app.fpx.nz/sourcing-sign-up">Get FPX Access</a><a className="nav-cta" href="https://app.fpx.nz">Login <ArrowUpRightIcon/></a></div>
       <details className="mobile-nav-details">
@@ -28,6 +27,7 @@ export function Header(){
           <Link href="/fpx-sourcing">FPX Sourcing</Link>
           <Link href="/timber">Timber Range</Link>
           <Link href="/our-customers">Our Customers</Link>
+          <Link href="/fpx-intelligence">FPX Intelligence</Link>
           <span>Resources</span>
           <Link href="/saw-point">Saw Point</Link>
           <Link href="/industry-insights">FPX Insights</Link>
@@ -50,7 +50,7 @@ export function Footer(){
         <nav className="footer-social" aria-label="FPX social profiles"><a href="https://www.linkedin.com/company/forest-products-exchange" target="_blank" rel="noreferrer" aria-label="FPX on LinkedIn"><LinkedInIcon/></a><a href="https://www.instagram.com/fpx.nz/" target="_blank" rel="noreferrer" aria-label="FPX on Instagram"><InstagramIcon/></a><a href="https://www.facebook.com/people/Forest-Products-Exchange/61583101360304/" target="_blank" rel="noreferrer" aria-label="FPX on Facebook"><FacebookIcon/></a></nav>
       </div>
       <div><p className="footer-heading">FPX</p><Link href="/fpx-sourcing">FPX Sourcing</Link><a href="https://app.fpx.nz/explore-fpx-sourcing">Browse Timber</a><a href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Submit a Timber Request</a><Link href="/timber">Timber Range</Link></div>
-      <div><p className="footer-heading">RESOURCES</p><Link href="/saw-point">Saw Point</Link><Link href="/industry-insights">FPX Insights</Link><Link href="/frequently-asked-questions">FAQ</Link><Link href="/our-customers">Our Customers</Link></div>
+      <div><p className="footer-heading">RESOURCES</p><Link href="/fpx-intelligence">FPX Intelligence</Link><Link href="/saw-point">Saw Point</Link><Link href="/industry-insights">FPX Insights</Link><Link href="/frequently-asked-questions">FAQ</Link><Link href="/our-customers">Our Customers</Link></div>
       <div><p className="footer-heading">COMPANY</p><Link href="/about-us">About Us</Link><Link href="/contact-us">Contact</Link><a href="https://app.fpx.nz/sourcing-sign-up">Get FPX Access</a><a href="https://app.fpx.nz">Login</a></div>
     </div>
     <FooterSubscribe/>

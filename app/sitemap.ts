@@ -11,6 +11,7 @@ const pages = [
   { path:"/dunnage", modified:"2026-09-21", changeFrequency:"weekly" as const, priority:.8 },
   { path:"/how-fpx-works", modified:"2026-09-21", changeFrequency:"monthly" as const, priority:.8 },
   { path:"/our-customers", modified:"2026-09-18", changeFrequency:"monthly" as const, priority:.7 },
+  { path:"/fpx-intelligence", modified:"2026-10-23", changeFrequency:"monthly" as const, priority:.7 },
   { path:"/about-us", modified:"2026-09-18", changeFrequency:"monthly" as const, priority:.7 },
   { path:"/contact-us", modified:"2026-09-18", changeFrequency:"monthly" as const, priority:.7 },
   { path:"/saw-point", modified:"2026-09-18", changeFrequency:"monthly" as const, priority:.8 },
