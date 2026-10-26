@@ -10,6 +10,7 @@ import { ApprovedSourcing, ApprovedTimber, ApprovedCustomers, ApprovedIntelligen
 import "./approved-inner-pages.css";
 import "./approved-support-pages.css";
 import "./consistent-hero-height.css";
+import "./homepage-font-parity.css";
 
 export function MasterInnerPage({slug}:{slug:string}){
   useParallax();

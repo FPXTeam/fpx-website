@@ -1,0 +1,29 @@
+/* George homepage typography: Montserrat headings, Lato smaller headings,
+   Open Sans reading text. Scope this to the inner pages only. */
+.master-site.m-inner-site{
+  font-family:"Open Sans",Arial,sans-serif!important;
+}
+.master-site.m-inner-site :is(p,a,button,small,label,input,textarea,select,li,figcaption){
+  font-family:"Open Sans",Arial,sans-serif!important;
+}
+.master-site.m-inner-site :is(h1,h2){
+  font-family:Montserrat,Arial,sans-serif!important;
+}
+.master-site.m-inner-site :is(h3,h4){
+  font-family:Lato,Arial,sans-serif!important;
+}
+.master-site.m-inner-site :is(.m-eyebrow,.ap-eyebrow,.ap-number,.spx-presents small){
+  font-family:Lato,Arial,sans-serif!important;
+}
+
+/* Earlier inner page styles introduced an italic serif accent that the
+   approved homepage does not use. Keep accent colour and layout intact. */
+.master-site.m-inner-site :is(h1,h2,h3,h4) :is(.headline-accent,em),
+.master-site.m-inner-site :is(h1,h2) > span{
+  font-family:inherit!important;
+  font-style:normal!important;
+  font-weight:inherit!important;
+  font-size:inherit!important;
+  line-height:inherit!important;
+  letter-spacing:inherit!important;
+}
