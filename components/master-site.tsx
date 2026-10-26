@@ -14,8 +14,8 @@ import "./homepage-font-parity.css";
 import "./smooth-inner-motion.css";
 
 export function MasterInnerPage({slug}:{slug:string}){
-  useParallax();
-  useSiteMotion();
+  useParallax(slug);
+  useSiteMotion(slug);
   let body:React.ReactNode;
   if(slug==="products")body=<ApprovedTimber/>;
   else if(hasProductGroup(slug))body=<ProductGroupPage slug={slug}/>;

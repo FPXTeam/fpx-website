@@ -36,7 +36,7 @@ export const pageData: Record<string,{eyebrow:string;title:string;intro:string}>
 export const masterPages = Object.keys(pageData);
 
 
-export function useSiteMotion(){
+export function useSiteMotion(pageKey:string){
   useEffect(()=>{
     const root=document.querySelector<HTMLElement>(".master-site");
     if(!root) return;
@@ -66,15 +66,25 @@ export function useSiteMotion(){
       ".ria-sources",
       ".ria-next",
       ".m-cookie-settings > div",
-      ".cookie-settings-panel article"
+      ".cookie-settings-panel article",
+      ".ap-intro",
+      ".ap-card",
+      ".ap-audience",
+      ".ap-request-panel",
+      ".ap-steps > div",
+      ".ap-note",
+      ".ap-final-inner",
+      ".pab5-team-head",
+      ".pab5-figures",
+      ".pab5-bio"
     ].join(",");
     const targets=Array.from(root.querySelectorAll<HTMLElement>(selector))
-      .filter((el,index,self)=>self.indexOf(el)===index);
-    root.classList.add("site-motion-ready");
+      .filter((el,index,self)=>self.indexOf(el)===index&&!el.matches(".ap-hero,.ap-section,.ap-final,.pab5-team"));
     targets.forEach((el,index)=>{
       el.classList.add("site-reveal");
-      el.style.setProperty("--site-reveal-delay",`${Math.min(index%4,3)*30}ms`);
+      el.style.setProperty("--site-reveal-delay",`${Math.min(index%4,3)*45}ms`);
     });
+    root.classList.add("site-motion-ready");
     if(reduced){
       targets.forEach(el=>el.classList.add("is-visible"));
       return()=>root.classList.remove("site-motion-ready");
@@ -86,13 +96,13 @@ export function useSiteMotion(){
           observer.unobserve(entry.target);
         }
       });
-    },{threshold:.01,rootMargin:"0px 0px -7% 0px"});
+    },{threshold:.05,rootMargin:"0px 0px -4% 0px"});
     targets.forEach(el=>observer.observe(el));
     return()=>{observer.disconnect();root.classList.remove("site-motion-ready")};
-  },[]);
+  },[pageKey]);
 }
 
-export function useParallax(){
+export function useParallax(pageKey:string){
   useEffect(()=>{
     if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const parallaxNodes=Array.from(document.querySelectorAll<HTMLElement>("[data-master-parallax]"));
@@ -122,7 +132,7 @@ export function useParallax(){
     const onScroll=()=>{if(!frame)frame=requestAnimationFrame(update)};
     update(); window.addEventListener("scroll",onScroll,{passive:true}); window.addEventListener("resize",onScroll,{passive:true});
     return()=>{window.removeEventListener("scroll",onScroll);window.removeEventListener("resize",onScroll);if(frame)cancelAnimationFrame(frame)};
-  },[]);
+  },[pageKey]);
 }
 
 export const Eyebrow=({children}:{children:React.ReactNode})=><p className="m-eyebrow">{children}</p>;
