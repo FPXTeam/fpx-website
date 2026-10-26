@@ -1,18 +1,18 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect } from "react";
 
-/** Start internal page transitions at the new page's hero. */
+/** Start fresh page visits and internal transitions at the new page's hero. */
 export function NavigationScrollReset(){
   const pathname=usePathname();
-  const previousPath=useRef(pathname);
-
   useLayoutEffect(()=>{
-    if(previousPath.current!==pathname){
-      previousPath.current=pathname;
-      if(!window.location.hash)window.scrollTo(0,0);
-    }
+    if(window.location.hash)return;
+
+    const toTop=()=>window.scrollTo({top:0,left:0,behavior:"instant"});
+    toTop();
+    const frame=requestAnimationFrame(toTop);
+    return()=>cancelAnimationFrame(frame);
   },[pathname]);
 
   return null;

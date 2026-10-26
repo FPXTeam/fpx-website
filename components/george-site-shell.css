@@ -1,5 +1,6 @@
 /* Match the approved George preview shell without changing its static homepage. */
 body:has(.george-header){overflow-x:clip!important}
+html:has(.george-header){scroll-behavior:auto!important}
 .george-header{
   position:sticky;
   top:0;
