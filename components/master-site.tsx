@@ -9,6 +9,7 @@ import { SawPointPage, ResourcesPage, FAQPage, LegalPage, InsightArticlePage } f
 import { ApprovedSourcing, ApprovedTimber, ApprovedCustomers, ApprovedIntelligence, ApprovedAbout } from "./approved-inner-pages";
 import "./approved-inner-pages.css";
 import "./approved-support-pages.css";
+import "./consistent-hero-height.css";
 
 export function MasterInnerPage({slug}:{slug:string}){
   useParallax();

@@ -1,6 +1,8 @@
 /* Match the approved George preview shell without changing its static homepage. */
+body:has(.george-header){overflow-x:clip!important}
 .george-header{
-  position:relative;
+  position:sticky;
+  top:0;
   z-index:50;
   height:74px;
   background:#fff;
@@ -94,9 +96,10 @@
   .george-footer .footer-saw-point>small{grid-column:1}
 }
 @media(max-width:600px){
-  .george-header{height:65px}
-  .george-wrap{padding:0 18px}
-  .george-brand img{width:96px}
+  .george-header{height:58px}
+  .george-wrap{padding:0 16px}
+  .george-brand img{width:88px}
+  .george-mobile-menu summary{width:38px;height:38px;border-radius:9px}
   .george-footer-grid{grid-template-columns:1fr}
   .george-footer-brand{grid-column:auto}
   .george-footer .footer-saw-point{margin-top:28px!important}

@@ -1,0 +1,13 @@
+/* The George homepage hero has a 620px minimum. Keep primary page heroes in the same frame. */
+.m-inner-site :is(.ap-hero,.pri-hero,.pfq-hero,.pct2-hero,.spx-hero,.pg-hero,.phw-hero){
+  height:620px;
+  min-height:620px!important;
+}
+
+@media(max-width:900px){
+  /* Content may grow beyond the homepage minimum on narrow screens. */
+  .m-inner-site :is(.ap-hero,.pri-hero,.pfq-hero,.pct2-hero,.spx-hero,.pg-hero,.phw-hero){
+    height:auto;
+    min-height:620px!important;
+  }
+}
