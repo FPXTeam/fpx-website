@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>FPX George Preview</title>
+<link rel="preload" as="image" href="/images/fpx-hero-timber-yard.webp" fetchpriority="high">
+<link rel="preload" as="image" href="/images/LaptopPhone2.webp">
 <style>html,body{margin:0;min-height:100%;background:#fff;font-family:Arial,sans-serif}.loading{min-height:100vh;display:grid;place-items:center;color:#24483b;font-weight:700}</style>
 </head>
 <body>
@@ -14,7 +16,13 @@
   let html=await response.text();
 
   html=html.replace('Current stock examples','Available through FPX Stock');
-  html=html.replaceAll('Laptop-phone.png','LaptopPhone2.png');
+  html=html.replaceAll('https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/Laptop-phone.png','/images/LaptopPhone2.webp');
+  html=html.replaceAll('https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/fpx-hero-timber-yard.webp','/images/fpx-hero-timber-yard.webp');
+  html=html.replaceAll('https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/fpx-logo-horizontal-original.png','/images/fpx-logo-horizontal-original.png');
+  html=html.replaceAll('<img ','<img loading="lazy" decoding="async" ');
+  html=html.replace('loading="lazy" decoding="async" class="hero-bg"','loading="eager" decoding="async" fetchpriority="high" class="hero-bg"');
+  html=html.replace('<div class="device"><img loading="lazy"','<div class="device"><img loading="eager"');
+  html=html.replace('<a class="brand" href="/"><img loading="lazy"','<a class="brand" href="/"><img loading="eager"');
 
   // Keep George's approved homepage layout, but connect its site navigation
   // to the exact revised Next.js pages included in this preview branch.
@@ -52,6 +60,7 @@
     <link rel="stylesheet" href="/george-polish.css?v=20261026-refined-motion">
     <link rel="stylesheet" href="/george-mobile-pass.css?v=20261022-mobile1">
     <link rel="stylesheet" href="/george-mobile-nav.css?v=20261022-final2">
+    <link rel="stylesheet" href="/george-mobile-experience.css?v=20261026">
     <style>
       .links{align-items:center}
       .home-resources{position:relative;display:flex;align-items:center}

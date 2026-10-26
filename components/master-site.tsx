@@ -12,6 +12,7 @@ import "./approved-support-pages.css";
 import "./consistent-hero-height.css";
 import "./homepage-font-parity.css";
 import "./smooth-inner-motion.css";
+import "./mobile-experience.css";
 
 export function MasterInnerPage({slug}:{slug:string}){
   useParallax(slug);

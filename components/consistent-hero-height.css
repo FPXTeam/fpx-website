@@ -11,3 +11,8 @@
     min-height:620px!important;
   }
 }
+@media(max-width:700px){
+  .m-inner-site :is(.ap-hero,.pri-hero,.pfq-hero,.pct2-hero,.spx-hero,.pg-hero,.phw-hero){
+    min-height:min(560px,calc(100svh - 58px))!important;
+  }
+}

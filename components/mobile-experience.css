@@ -1,0 +1,53 @@
+/* Adaptive mobile layout and touch behaviour shared by every inner page. */
+@media(max-width:900px){
+  .george-mobile-panel{
+    max-height:calc(100dvh - 74px);
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  .george-mobile-panel nav a{display:flex;align-items:center;min-height:44px}
+  .george-mobile-actions a{min-height:44px}
+}
+@media(max-width:700px){
+  .m-inner-site{overflow-x:clip}
+  .m-inner-site .ap-hero-content{padding-top:54px;padding-bottom:54px}
+  .m-inner-site .ap-hero h1{font-size:clamp(36px,9.4vw,50px);line-height:1.08;overflow-wrap:break-word}
+  .m-inner-site .ap-hero-lead{font-size:15px;line-height:1.6}
+  .m-inner-site .ap-trust{font-size:11px;line-height:1.5}
+  .m-inner-site .ap-button{min-height:46px}
+  .m-inner-site .ap-intro>p:last-child,
+  .m-inner-site .ap-card p:not(.ap-number),
+  .m-inner-site .ap-audience-copy>p:not(.ap-eyebrow){font-size:13px;line-height:1.6}
+  .m-inner-site .ap-stock h3{font-size:16px;line-height:1.2}
+  .m-inner-site .ap-stock p:not(.ap-number){font-size:12px;line-height:1.5}
+  .m-inner-site .ap-audience-image{min-height:clamp(190px,55vw,260px)}
+  .m-inner-site .ap-audience-copy{padding:26px 22px}
+  .m-inner-site .ap-audience-actions{gap:14px}
+  .m-inner-site .ap-request-panel{padding:28px 20px}
+  .m-inner-site .ap-final-inner{gap:24px}
+  .m-inner-site .pri-hero,.m-inner-site .pfq-hero,.m-inner-site .pct2-hero{padding-top:54px;padding-bottom:54px}
+  .m-inner-site .spx-hero-copy{padding-top:54px;padding-bottom:54px}
+  .m-inner-site .pri-hero-copy>p:not(.m-eyebrow),
+  .m-inner-site .pfq-hero>div>p:not(.m-eyebrow),
+  .m-inner-site .pct2-hero-copy>p:not(.m-eyebrow),
+  .m-inner-site .spx-intro{font-size:15px;line-height:1.6}
+  .m-inner-site .pct2-form :is(input,select,textarea),
+  .m-inner-site .pri-search input,
+  .m-inner-site .spx-form input,
+  .george-footer .footer-saw-point input:not(.fpx-honeypot){font-size:16px!important}
+  .m-inner-site .pfq-main>nav{top:58px}
+  .m-inner-site .pfq-topic{scroll-margin-top:126px}
+  .m-inner-site .pab5-team{padding:58px 18px 64px}
+  .m-inner-site .pab5-team-head h2{font-size:clamp(38px,10vw,54px);line-height:1.03}
+  .m-inner-site .pab5-figures{min-height:clamp(310px,81vw,430px)}
+  .m-inner-site .pab5-figure{height:clamp(300px,78vw,410px)}
+  .m-inner-site .ap-hero-content>*{animation-duration:.54s;animation-delay:0s}
+  .m-inner-site .ap-hero-content>*:nth-child(2){animation-delay:.045s}
+  .m-inner-site .ap-hero-content>*:nth-child(3){animation-delay:.09s}
+  .m-inner-site .ap-hero-content>*:nth-child(4){animation-delay:.135s}
+  .m-inner-site .ap-hero-content>*:nth-child(5){animation-delay:.18s}
+  .site-motion-ready .site-reveal{translate:0 6px;transition-duration:.45s;transition-delay:0ms}
+}
+@media(max-width:600px){
+  .george-mobile-panel{max-height:calc(100dvh - 58px)}
+}
