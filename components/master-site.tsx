@@ -8,6 +8,7 @@ import { CustomersPage, AboutPage, ContactPage } from "./master-company";
 import { SawPointPage, ResourcesPage, FAQPage, LegalPage, InsightArticlePage } from "./master-content";
 import { ApprovedSourcing, ApprovedTimber, ApprovedCustomers, ApprovedIntelligence, ApprovedAbout } from "./approved-inner-pages";
 import "./approved-inner-pages.css";
+import "./approved-support-pages.css";
 
 export function MasterInnerPage({slug}:{slug:string}){
   useParallax();
