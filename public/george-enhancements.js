@@ -52,7 +52,7 @@
     const nodes=[...document.querySelectorAll(selectors.join(','))];
     nodes.forEach((el,i)=>{
       el.classList.add('fpx-reveal');
-      el.style.setProperty('--fpx-delay',Math.min((i%6)*55,275)+'ms');
+      el.style.setProperty('--fpx-delay',Math.min((i%4)*30,90)+'ms');
     });
     const io=new IntersectionObserver(entries=>{
       entries.forEach(entry=>{

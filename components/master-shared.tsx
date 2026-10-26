@@ -73,7 +73,7 @@ export function useSiteMotion(){
     root.classList.add("site-motion-ready");
     targets.forEach((el,index)=>{
       el.classList.add("site-reveal");
-      el.style.setProperty("--site-reveal-delay",`${Math.min(index%4,3)*55}ms`);
+      el.style.setProperty("--site-reveal-delay",`${Math.min(index%4,3)*30}ms`);
     });
     if(reduced){
       targets.forEach(el=>el.classList.add("is-visible"));
@@ -95,15 +95,18 @@ export function useSiteMotion(){
 export function useParallax(){
   useEffect(()=>{
     if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const parallaxNodes=Array.from(document.querySelectorAll<HTMLElement>("[data-master-parallax]"));
+    const horizontalTracks=Array.from(document.querySelectorAll<HTMLElement>("[data-horizontal-scroll]"));
+    if(!parallaxNodes.length&&!horizontalTracks.length) return;
     let frame = 0;
     const update=()=>{
-      document.querySelectorAll<HTMLElement>("[data-master-parallax]").forEach(el=>{
+      parallaxNodes.forEach(el=>{
         const r=el.getBoundingClientRect();
         const speed=Number(el.dataset.speed||.08);
         const y=(window.innerHeight/2-(r.top+r.height/2))*speed;
         el.style.setProperty("--parallax-y",`${Math.max(-90,Math.min(90,y))}px`);
       });
-      document.querySelectorAll<HTMLElement>("[data-horizontal-scroll]").forEach(track=>{
+      horizontalTracks.forEach(track=>{
         const section=track.closest<HTMLElement>(".m-category-pocket");
         if(!section) return;
         const windowEl=track.parentElement;

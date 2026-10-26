@@ -1,0 +1,8 @@
+/* Keep large, shadowed artwork still; use short scroll reveals for page content. */
+.m-inner-site .m-cta-x{animation:none!important;transition:none!important}
+.m-inner-site .m-cta-panel:has(.m-btn-primary:hover) .m-cta-x,
+.m-inner-site .m-cta-panel:has(.m-btn-ghost:hover) .m-cta-x{transform:translate3d(0,-50%,0)}
+@media(max-width:700px){
+  .m-inner-site .m-cta-panel:has(.m-btn-primary:hover) .m-cta-x,
+  .m-inner-site .m-cta-panel:has(.m-btn-ghost:hover) .m-cta-x{transform:rotate(2deg)}
+}

@@ -34,12 +34,11 @@ header{position:relative;z-index:50;box-shadow:0 1px 0 rgba(4,14,14,.03)}
 
 .hero{isolation:isolate}
 .hero:before{content:"";position:absolute;z-index:1;width:620px;height:620px;border-radius:50%;right:8%;top:-220px;background:radial-gradient(circle,rgba(83,195,150,.20) 0%,rgba(83,195,150,.08) 35%,transparent 72%);filter:blur(2px);pointer-events:none}
-.hero-bg{transform:scale(1.015);animation:fpxHeroBreath 18s ease-in-out infinite alternate;will-change:transform}
+.hero-bg{transform:scale(1.015);animation:none}
 .hero h1{text-shadow:0 3px 24px rgba(0,0,0,.15)}
 .hero-copy{animation:fpxHeroIn .72s cubic-bezier(.2,.7,.2,1) both}
-.device{animation:fpxDeviceIn .85s .08s cubic-bezier(.2,.7,.2,1) both}
-.device img{animation:fpxDeviceFloat 7s 1.2s ease-in-out infinite;will-change:transform;transition:filter .35s ease}
-.device:hover img{filter:drop-shadow(0 34px 44px rgba(0,0,0,.42))}
+.device{animation:fpxDeviceAppear .45s ease-out both}
+.device img{animation:none;transition:none}
 
 .benefits{background:linear-gradient(180deg,#fff 0%,#fbfcfb 100%)}
 .benefit{transition:background-color .25s ease,transform .25s ease}
@@ -98,30 +97,27 @@ footer:before{content:"";position:absolute;width:420px;height:420px;border-radiu
 .footer-col a:hover{color:#fff;transform:translateX(3px)}
 
 /* Scroll reveal */
-.fpx-reveal{opacity:0;transform:translateY(20px);transition:opacity .65s cubic-bezier(.2,.7,.2,1),transform .65s cubic-bezier(.2,.7,.2,1);transition-delay:var(--fpx-delay,0ms)}
+.fpx-reveal{opacity:0;transform:translateY(8px);transition:opacity .42s ease-out,transform .42s ease-out;transition-delay:var(--fpx-delay,0ms)}
 .fpx-reveal.fpx-visible{opacity:1;transform:translateY(0)}
 
 /* Mobile menu base: hidden on desktop */
 .mobile-menu-toggle,.mobile-menu-panel{display:none}
 
-@keyframes fpxHeroBreath{from{transform:scale(1.015) translate3d(0,0,0)}to{transform:scale(1.045) translate3d(-.35%,.2%,0)}}
 @keyframes fpxHeroIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fpxDeviceIn{from{opacity:0;transform:translateY(-47%) translateX(18px)}to{opacity:1;transform:translateY(-50%) translateX(0)}}
-@keyframes fpxDeviceFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes fpxDeviceAppear{from{opacity:0}to{opacity:1}}
 
 @media(max-width:1050px) and (min-width:901px){.device{width:58%!important;right:-3%!important}}
 
 @media(max-width:900px){
   .source-card:hover,.product:hover,.cust:hover,.intelshots figure:hover,.intelshots figure:nth-child(2):hover{transform:none}
   .hero:before{width:420px;height:420px;right:-120px;top:-150px}
-  .device{animation:fpxDeviceMobileIn .72s .05s cubic-bezier(.2,.7,.2,1) both}
-  @keyframes fpxDeviceMobileIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .device{animation:fpxDeviceAppear .45s ease-out both}
 }
 @media(max-width:600px){
   .source-card:nth-child(2) .source-copy{background:var(--app)!important}
   .hero .btn-primary,.hero .btn-outline{width:100%!important}
   .hero-bg,.device img{animation:none!important}
-  .fpx-reveal{transform:translateY(12px)}
+  .fpx-reveal{transform:translateY(8px)}
 }
 @media(prefers-reduced-motion:reduce){
   *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
