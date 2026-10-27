@@ -13,12 +13,12 @@ const categories=[
   {
     title:"Building and Construction",
     href:"/building-construction",
-    images:["Building%20%26%20Construction1.png","Building%20%26%20Construction2.png","Building%20%26%20Construction3.png","Building%20%26%20Construction4.png"]
+    images:["Building%20%26%20Construction1.png","Building%20%26%20Construction2.png","Building%20%26%20Construction3.png"]
   },
   {
     title:"Outdoor and Landscaping",
     href:"/outdoor-landscaping",
-    images:["Outdoor%20and%20landscaping1.png","Outdoor%20and%20landscaping2.png","Outdoor%20and%20landscaping3.png","Outdoor%20and%20landscaping4.png"]
+    images:["Outdoor%20and%20landscaping1.png","Outdoor%20and%20landscaping2.png","Outdoor%20and%20landscaping3.png"]
   },
   {
     title:"Dunnage",
