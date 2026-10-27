@@ -134,3 +134,16 @@ footer:before{content:"";position:absolute;width:420px;height:420px;border-radiu
   .fpx-reveal{opacity:1!important;translate:none!important}
   .device,.hero-copy>*{animation:none!important;opacity:1!important;translate:none!important}
 }
+
+/* Laptop5.0 hero composition */
+.device{width:57%!important;right:-1.5%!important;top:51%!important}
+.device img{max-height:560px;object-fit:contain!important;object-position:center center!important;filter:drop-shadow(0 28px 34px rgba(0,0,0,.30))}
+@media(max-width:1050px) and (min-width:901px){.device{width:55%!important;right:-3%!important;top:52%!important}}
+@media(max-width:900px){
+  .device{position:relative!important;right:auto!important;top:auto!important;width:104%!important;margin:8px 0 -10px -2%!important;transform:none!important}
+  .device img{max-height:none!important;width:100%!important;filter:drop-shadow(0 18px 26px rgba(0,0,0,.26))}
+}
+@media(max-width:600px){
+  .device{width:112%!important;margin:10px 0 -2px -6%!important}
+  .device img{width:100%!important;height:auto!important;object-fit:contain!important}
+}
