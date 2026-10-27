@@ -8,6 +8,15 @@
     document.head.appendChild(link);
   }
 
+  /* Latest approved hero artwork lives on main while this preview remains on its WIP branch. */
+  const heroDevice=document.querySelector('.device img');
+  if(heroDevice){
+    heroDevice.src='https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/Laptop5.0.png';
+    heroDevice.alt='FPX shown on laptop and mobile';
+    heroDevice.loading='eager';
+    heroDevice.fetchPriority='high';
+  }
+
   /* George review: remove duplicate fourth images from these two category carousels. */
   document.querySelectorAll('.category-card:nth-child(2) .category-carousel img:nth-of-type(4), .category-card:nth-child(3) .category-carousel img:nth-of-type(4)').forEach(img=>img.remove());
 
