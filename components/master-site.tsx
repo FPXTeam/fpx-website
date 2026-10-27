@@ -2,12 +2,13 @@
 import { Shell } from "./site-shell";
 import { useParallax, useSiteMotion } from "./master-shared";
 export { MasterHome } from "./master-home";
-import { SourceTimberPage, HowPage } from "./master-sourcing";
+import { HowPage } from "./master-sourcing";
 import { ProductGroupPage, hasProductGroup } from "./master-products";
 import { CustomersPage, AboutPage, ContactPage } from "./master-company";
 import { SawPointPage, ResourcesPage, FAQPage, LegalPage, InsightArticlePage } from "./master-content";
-import { ApprovedSourcing, ApprovedCustomers, ApprovedIntelligence, ApprovedAbout } from "./approved-inner-pages";
+import { ApprovedCustomers, ApprovedIntelligence, ApprovedAbout } from "./approved-inner-pages";
 import { GeorgeTimberPage } from "./george-timber-page";
+import { GeorgeSourcingPage } from "./george-sourcing-page";
 import "./approved-inner-pages.css";
 import "./approved-support-pages.css";
 import "./consistent-hero-height.css";
@@ -15,6 +16,7 @@ import "./homepage-font-parity.css";
 import "./smooth-inner-motion.css";
 import "./mobile-experience.css";
 import "./george-timber-page.css";
+import "./george-sourcing-page.css";
 
 export function MasterInnerPage({slug}:{slug:string}){
   useParallax(slug);
@@ -22,7 +24,7 @@ export function MasterInnerPage({slug}:{slug:string}){
   let body:React.ReactNode;
   if(slug==="products")body=<GeorgeTimberPage/>;
   else if(hasProductGroup(slug))body=<ProductGroupPage slug={slug}/>;
-  else if(slug==="source-timber")body=<ApprovedSourcing/>;
+  else if(slug==="source-timber")body=<GeorgeSourcingPage/>;
   else if(slug==="how-fpx-works")body=<HowPage/>;
   else if(slug==="our-customers")body=<ApprovedCustomers/>;
   else if(slug==="fpx-intelligence")body=<ApprovedIntelligence/>;
