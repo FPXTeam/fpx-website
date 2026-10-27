@@ -87,10 +87,30 @@
   line-height:1.68!important;
 }
 
-#sourcing .source-copy a{
-  margin-top:auto;
-  padding-top:8px;
+/* Solid sourcing CTAs */
+#sourcing .source-copy>a{
+  align-self:flex-start;
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  gap:8px!important;
+  min-height:46px;
+  margin-top:auto!important;
+  padding:0 18px!important;
+  border-radius:9px;
+  background:#2c725a!important;
+  color:#fff!important;
   font-size:13px!important;
+  font-weight:800!important;
+  text-decoration:none!important;
+  box-shadow:0 8px 20px rgba(44,114,90,.16);
+  transition:transform .2s ease,box-shadow .2s ease,background-color .2s ease!important;
+}
+
+#sourcing .source-copy>a:hover{
+  transform:translateY(-2px);
+  background:#225d49!important;
+  box-shadow:0 12px 26px rgba(44,114,90,.22);
 }
 
 #sourcing .source-kicker{
@@ -113,9 +133,19 @@
 
 #sourcing .source-card:nth-child(2) .source-copy h3,
 #sourcing .source-card:nth-child(2) .source-copy p,
-#sourcing .source-card:nth-child(2) .source-copy a,
 #sourcing .source-card:nth-child(2) .source-kicker{
   color:#fff!important;
+}
+
+#sourcing .source-card:nth-child(2) .source-copy>a{
+  background:#fff!important;
+  color:#173e31!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.14);
+}
+
+#sourcing .source-card:nth-child(2) .source-copy>a:hover{
+  background:#f1f6f3!important;
+  color:#173e31!important;
 }
 
 #sourcing .source-card:nth-child(2) .source-num{
@@ -160,8 +190,8 @@
   #sourcing .source-copy h3{
     font-size:30px!important;
   }
-  #sourcing .source-copy a{
-    margin-top:4px;
+  #sourcing .source-copy>a{
+    margin-top:4px!important;
   }
 }
 
@@ -169,4 +199,5 @@
   #sourcing .source-shot{min-height:205px}
   #sourcing .source-card:first-child .source-shot img{object-position:center 34%!important}
   #sourcing .source-card:nth-child(2) .source-shot img{object-position:center 10%!important}
+  #sourcing .source-copy>a{width:100%;}
 }
