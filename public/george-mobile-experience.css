@@ -8,8 +8,12 @@
   }
   .mobile-menu-links a{display:flex;align-items:center;min-height:44px}
   .mobile-menu-actions a{min-height:44px}
+  .category-grid{gap:14px!important}
+  .category-copy a{display:inline-flex;align-items:center;min-height:44px}
+  .footer-form input,.footer-form button{font-size:16px!important}
 }
 @media(max-width:600px){
+  html,body{max-width:100%;overflow-x:clip}
   .mobile-menu-panel{max-height:calc(100dvh - 58px)}
   .benefit{padding:13px 9px!important}
   .benefit b{font-size:12px!important}
@@ -21,8 +25,23 @@
   .source-copy h3{font-size:20px!important}
   .source-copy p{font-size:12.2px!important;line-height:1.5!important}
   .source-copy a{font-size:12px!important}
+
+  .category-grid{grid-template-columns:1fr!important;gap:12px!important}
+  .category-card{border-radius:15px!important}
+  .category-media{height:205px!important}
+  .category-copy{padding:15px 16px 16px!important;gap:8px!important}
+  .category-copy h3{font-size:18px!important;line-height:1.15!important}
+  .category-copy a{width:100%;justify-content:flex-start;font-size:12px!important}
+  .category-count{top:11px!important;left:11px!important;width:32px!important;height:32px!important}
+
+  .request-panel{padding-left:16px!important;padding-right:16px!important}
+  .capabilities{grid-template-columns:1fr 1fr!important}
+  .capability{min-width:0!important}
+
   .footer-col a{font-size:11.5px!important;min-height:24px}
   .footer-bottom,.legal a{font-size:10.5px!important}
+  .footer-form{grid-template-columns:1fr!important}
+  .footer-form input,.footer-form button{width:100%!important;min-height:44px!important}
   .hero-copy>*,.device{animation-duration:.55s!important;animation-delay:0s!important}
   .hero-copy>h1{animation-delay:.045s!important}
   .hero-copy>p:not(.ey){animation-delay:.09s!important}
@@ -30,6 +49,10 @@
   .hero-copy>.trust{animation-delay:.18s!important}
   .device{animation-delay:.12s!important}
   .fpx-reveal{translate:0 6px;transition-duration:.45s!important;transition-delay:0ms!important}
+}
+@media(max-width:390px){
+  .category-media{height:190px!important}
+  .capabilities{grid-template-columns:1fr!important}
 }
 @media(prefers-reduced-motion:reduce){
   .hero-copy>*,.device{animation:none!important;opacity:1!important;translate:none!important}
