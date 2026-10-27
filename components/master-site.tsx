@@ -17,7 +17,6 @@ import "./smooth-inner-motion.css";
 import "./mobile-experience.css";
 import "./george-timber-page.css";
 import "./george-sourcing-page.css";
-import "./about-team-fix.css";
 
 export function MasterInnerPage({slug}:{slug:string}){
   useParallax(slug);
