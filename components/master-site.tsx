@@ -19,6 +19,7 @@ import "./george-timber-page.css";
 import "./george-sourcing-page.css";
 import "./about-team-spacing.css";
 import "./mobile-final-pass.css";
+import "./product-group-hero-fix.css";
 
 export function MasterInnerPage({slug}:{slug:string}){
   useParallax(slug);
