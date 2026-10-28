@@ -13,12 +13,12 @@ const categories=[
   {
     title:"Building and Construction",
     href:"/building-construction",
-    images:["Building%20%26%20Construction1.png","Building%20%26%20Construction2.png","Building%20%26%20Construction3.png"]
+    images:["Construction1.png","Construction2.png","Construction3.png","Construction4.png","Construction5.png","Construction6.png"]
   },
   {
     title:"Outdoor and Landscaping",
     href:"/outdoor-landscaping",
-    images:["Outdoor%20and%20landscaping1.png","Outdoor%20and%20landscaping2.png","Outdoor%20and%20landscaping3.png"]
+    images:["Outdoor1.png","Outdoor2.png","Outdoor3.png","Outdoor4.png"]
   },
   {
     title:"Dunnage",
@@ -53,7 +53,7 @@ export function GeorgeTimberPage(){
         </div>
         <div className="gtr-grid">
           {categories.map((category,index)=><article className="gtr-card" key={category.title}>
-            <a className={`gtr-media ${category.images.length>1?"gtr-carousel":""}`} href={category.href} aria-label={`Explore ${category.title}`}>
+            <a className={`gtr-media ${category.images.length>1?`gtr-carousel gtr-count-${category.images.length}`:""}`} href={category.href} aria-label={`Explore ${category.title}`}>
               {category.images.map((image,imageIndex)=><img key={image} className={imageIndex===0?"gtr-active":""} src={`${raw}/${image}`} alt={`${category.title} timber`} loading={index===0&&imageIndex===0?"eager":"lazy"}/>) }
               <span className="gtr-number">{String(index+1).padStart(2,"0")}</span>
             </a>
