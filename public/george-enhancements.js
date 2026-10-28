@@ -11,10 +11,16 @@
   /* Latest approved hero artwork lives on main while this preview remains on its WIP branch. */
   const heroDevice=document.querySelector('.device img');
   if(heroDevice){
-    heroDevice.src='https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/Laptop5.0.png';
+    heroDevice.src='https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/Laptop4.png';
     heroDevice.alt='FPX shown on laptop and mobile';
     heroDevice.loading='eager';
     heroDevice.fetchPriority='high';
+  }
+
+  /* Use the latest approved Browse Stock screenshot. */
+  const browseStockShot=document.querySelector('.source-card:first-child .source-shot img');
+  if(browseStockShot){
+    browseStockShot.src='https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/BrowseStock2.png';
   }
 
   /* George review: remove duplicate fourth images from these two category carousels. */
