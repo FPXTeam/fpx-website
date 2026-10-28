@@ -23,8 +23,29 @@
     browseStockShot.src='https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/BrowseStock2.png';
   }
 
-  /* George review: remove duplicate fourth images from these two category carousels. */
-  document.querySelectorAll('.category-card:nth-child(2) .category-carousel img:nth-of-type(4), .category-card:nth-child(3) .category-carousel img:nth-of-type(4)').forEach(img=>img.remove());
+  /* Keep homepage Timber Range imagery in sync with the product-group hero carousels. */
+  const raw='https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/';
+  const categoryImages=[
+    ['Manufacturing1.png','Manufacturing2.png','Manufacturing3.png','Manufacturing4.png'],
+    ['Construction1.png','Construction2.png','Construction3.png','Construction4.png','Construction5.png','Construction6.png'],
+    ['Outdoor1.png','Outdoor2.png','Outdoor3.png','Outdoor4.png']
+  ];
+  const categoryAlts=['Manufacturing timber','Building and Construction timber','Outdoor and Landscaping timber'];
+  categoryImages.forEach((images,cardIndex)=>{
+    const media=document.querySelector(`.category-card:nth-child(${cardIndex+1}) .category-media`);
+    if(!media)return;
+    media.querySelectorAll('img').forEach(img=>img.remove());
+    const count=media.querySelector('.category-count');
+    images.forEach((file,index)=>{
+      const img=document.createElement('img');
+      img.src=raw+file;
+      img.alt=categoryAlts[cardIndex];
+      img.loading='lazy';
+      img.decoding='async';
+      if(index===0)img.classList.add('is-active');
+      media.insertBefore(img,count||null);
+    });
+  });
 
   const nav=document.querySelector('.nav');
   const header=document.querySelector('header');
