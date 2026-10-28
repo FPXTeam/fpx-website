@@ -1,22 +1,145 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { productGroups, Eyebrow, Arrow, AppButtons } from "./master-shared";
+
+const rawMain="https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images";
+
+function resolveImage(image:string){
+  return image.startsWith("http")?image:`/images/${image}`;
+}
 
 function productImageAlt(groupTitle:string,image:string){
   const subject=(image.split("/").pop()||"timber")
     .replace(/\.(png|jpe?g|webp|avif)$/i,"")
-    .replace(/^(manufacturing|building|outdoor|dunnage)-/,"")
-    .replace(/-/g," ");
+    .replace(/^(manufacturing|building|outdoor|dunnage)-/i,"")
+    .replace(/[-_]/g," ");
   return `${groupTitle} timber: ${subject}`;
 }
-import { productGroups, Eyebrow, Arrow, AppButtons } from "./master-shared";
 
-export const productGroupDetails: Record<string,{title:string;description:string;hero:string;gallery:string[];categories:string[];examples?:string[];note:string;}> = {
-  "manufacturing": {title:"Manufacturing",description:"Timber feedstock for New Zealand wood processors and timber manufacturers to remanufacture into finished products.",hero:"product-groups/manufacturing/manufacturing-warehouse-bundles.png",gallery:["product-groups/manufacturing/manufacturing-rollers.png","product-groups/manufacturing/manufacturing-hero-pine-stack.png","category-manufacturing-grades.webp"],categories:["Manufacturing Timber"],examples:["Clear 1","Clear 2","Mixed Clears","Dressing","Premium","Cuttings 1","Cuttings 2","Cuttings 3","COL","Merch","Industrial"],note:"The manufacturing timber range spans multiple grades and feedstock options. Individual grades, sizes and current specifications remain in FPX."},
-  "building-construction": {title:"Building & Construction",description:"Structural, building, finishing and specialist construction timber for commercial projects across New Zealand.",hero:"product-groups/building-construction/building-roof-framing.png",gallery:["product-groups/building-construction/building-symmetrical-framing.png","product-groups/building-construction/building-house-piles.png","product-groups/building-construction/building-battens-stack.png"],categories:["Structural Timber","Weatherboards","House Piles","Ceiling Battens","Tile Battens","Mouldings","Fascia","Scaffold Planks","Soleboards","Kickboards","Stair Treads"],note:"A broad construction timber range covering structural requirements, finishing timber and specialist site applications."},
-  "outdoor-landscaping": {title:"Outdoor & Landscaping",description:"Treated and purpose-made timber for fencing, retaining, landscaping and outdoor construction across New Zealand.",hero:"product-groups/outdoor-landscaping/outdoor-slat-fence.png",gallery:["product-groups/outdoor-landscaping/outdoor-cedar-fence.png","product-groups/outdoor-landscaping/outdoor-boardwalk.png","product-groups/outdoor-landscaping/outdoor-steps.png"],categories:["Outdoor","Posts","Rails","Palings","Decking","Retaining Boards","Sleepers, Squares & Beams","Screening","Pickets","Capping","Fence Battens","Trellis Battens","Roundwood","Pegs"],note:"The outdoor and landscaping timber range supports fencing, decking, retaining structures and larger outdoor works."},
-  "dunnage": {title:"Dunnage",description:"Timber dunnage for freight, shipping, load support, storage and industrial transport applications across New Zealand.",hero:"product-groups/dunnage/dunnage-stamped-stack.png",gallery:["product-groups/dunnage/dunnage-flatbed-support.png","product-groups/dunnage/dunnage-industrial-crate.png"],categories:["Dunnage"],examples:["Freight support","Shipping and container loading","Industrial transport","Load separation","Storage and handling"],note:"Dunnage timber is supplied for practical load support and protection across freight, shipping, storage and industrial transport environments."}
+type ProductGroupDetail={
+  title:string;
+  description:string;
+  hero:string;
+  heroImages?:string[];
+  applications?:string[];
+  gallery:string[];
+  categories:string[];
+  examples?:string[];
+  note:string;
 };
+
+export const productGroupDetails:Record<string,ProductGroupDetail>={
+  "manufacturing":{
+    title:"Manufacturing",
+    description:"Timber feedstock for New Zealand wood processors and timber manufacturers to remanufacture into finished products.",
+    hero:`${rawMain}/Manufacturing1.png`,
+    heroImages:[
+      `${rawMain}/Manufacturing1.png`,
+      `${rawMain}/Manufacturing2.png`,
+      `${rawMain}/Manufacturing3.png`,
+      `${rawMain}/Manufacturing4.png`
+    ],
+    applications:[
+      "category-manufacturing-grades.webp",
+      `${rawMain}/app-manufacturing1.png`,
+      `${rawMain}/app-manufacturing2.png`,
+      `${rawMain}/app-manufacturing3.png`
+    ],
+    gallery:[],
+    categories:["Manufacturing Grades"],
+    examples:["Clear 1","Clear 2","Mixed Clears","Dressing","Premium","Cuttings 1","Cuttings 2","Cuttings 3","COL","Merch","Industrial"],
+    note:"The manufacturing timber range spans multiple grades and feedstock options. Individual grades, sizes and current specifications remain in FPX."
+  },
+  "building-construction":{
+    title:"Building & Construction",
+    description:"Structural, building, finishing and specialist construction timber for commercial projects across New Zealand.",
+    hero:`${rawMain}/Construction1.png`,
+    heroImages:[
+      `${rawMain}/Construction1.png`,
+      `${rawMain}/Construction2.png`,
+      `${rawMain}/Construction3.png`,
+      `${rawMain}/Construction4.png`,
+      `${rawMain}/Construction5.png`,
+      `${rawMain}/Construction6.png`
+    ],
+    applications:[
+      "product-groups/building-construction/building-roof-framing.png",
+      "product-groups/building-construction/building-symmetrical-framing.png",
+      "product-groups/building-construction/building-house-piles.png",
+      `${rawMain}/ConstructionUse1.png`,
+      `${rawMain}/ConstructionUse2.png`,
+      `${rawMain}/ConstructionUse3.png`
+    ],
+    gallery:[],
+    categories:["Structural (Stress Graded)","Weatherboard","House Piles","Mouldings","Balustrades","Ceiling Batten","Fascia","Kickboards"],
+    note:"A broad construction timber range covering structural requirements, finishing timber and specialist site applications."
+  },
+  "outdoor-landscaping":{
+    title:"Outdoor & Landscaping",
+    description:"Treated and purpose-made timber for fencing, retaining, landscaping and outdoor construction across New Zealand.",
+    hero:`${rawMain}/Outdoor1.png`,
+    heroImages:[
+      `${rawMain}/Outdoor1.png`,
+      `${rawMain}/Outdoor2.png`,
+      `${rawMain}/Outdoor3.png`,
+      `${rawMain}/Outdoor4.png`
+    ],
+    applications:[
+      "product-groups/outdoor-landscaping/outdoor-slat-fence.png",
+      "product-groups/outdoor-landscaping/outdoor-cedar-fence.png",
+      "product-groups/outdoor-landscaping/outdoor-boardwalk.png",
+      "product-groups/outdoor-landscaping/outdoor-steps.png",
+      `${rawMain}/OutdoorUse1.png`
+    ],
+    gallery:[],
+    categories:["Decking","Fencing","Retaining","Posts","Palings","Pegs","Rails","Roundwood","Screening","Sleepers, Squares and Beams","Trellis Batten"],
+    note:"The outdoor and landscaping timber range supports fencing, decking, retaining structures and larger outdoor works."
+  },
+  "dunnage":{
+    title:"Dunnage",
+    description:"Timber dunnage for freight, shipping, load support, storage and industrial transport applications across New Zealand.",
+    hero:"product-groups/dunnage/dunnage-stamped-stack.png",
+    gallery:["product-groups/dunnage/dunnage-flatbed-support.png","product-groups/dunnage/dunnage-industrial-crate.png"],
+    categories:["Dunnage"],
+    examples:["Freight support","Shipping and container loading","Industrial transport","Load separation","Storage and handling"],
+    note:"Dunnage timber is supplied for practical load support and protection across freight, shipping, storage and industrial transport environments."
+  }
+};
+
+function ProductHeroMedia({group}:{group:ProductGroupDetail}){
+  const images=group.heroImages?.length?group.heroImages:[group.hero];
+  const [active,setActive]=useState(0);
+
+  useEffect(()=>{
+    setActive(0);
+    if(images.length<2)return;
+    const timer=window.setInterval(()=>setActive(current=>(current+1)%images.length),4500);
+    return()=>window.clearInterval(timer);
+  },[group.title,images.length]);
+
+  if(images.length===1){
+    return <div className="pg-hero-image"><Image src={resolveImage(images[0])} alt={`${group.title} timber`} width={1800} height={1200} sizes="(max-width: 900px) 100vw, 50vw" priority/></div>;
+  }
+
+  return <div className="pg-hero-image pg-hero-carousel">
+    {images.map((image,index)=><img key={image} src={resolveImage(image)} alt={`${group.title} timber product ${index+1}`} className={index===active?"is-active":""} loading={index===0?"eager":"lazy"} decoding="async"/>)}
+    <div className="pg-hero-carousel-dots" aria-label={`${group.title} product images`}>
+      {images.map((_,index)=><button key={index} type="button" className={index===active?"is-active":""} onClick={()=>setActive(index)} aria-label={`Show product image ${index+1}`} aria-current={index===active?"true":undefined}/>)}
+    </div>
+  </div>;
+}
+
+function CommonApplications({group}:{group:ProductGroupDetail}){
+  if(!group.applications?.length)return null;
+  return <section className="pg-applications">
+    <header className="pg-applications-head"><Eyebrow>COMMON APPLICATIONS</Eyebrow><h2>Where this timber is used.</h2></header>
+    <div className="pg-application-grid">
+      {group.applications.map((image,index)=><figure key={image}><img src={resolveImage(image)} alt={`${group.title} application ${index+1}`} loading="lazy" decoding="async"/></figure>)}
+    </div>
+  </section>;
+}
 
 const endUses=[
   ["Fencing","Palings · Posts · Rails · Fence Capping · Pegs","product-groups/outdoor-landscaping/outdoor-townhouse-fence.png","https://app.fpx.nz/explore-fpx-sourcing?search=Fencing"],
@@ -92,7 +215,7 @@ export function ProductGroupPage({slug}:{slug:string}){
   const group=productGroupDetails[slug];
   const audience=slug==="manufacturing"?"wood processors and timber manufacturers":slug==="building-construction"?"builders, contractors and commercial project teams":slug==="outdoor-landscaping"?"fencing, landscaping, retaining and outdoor construction buyers":"freight, shipping and industrial transport teams";
   const number=String(["manufacturing","building-construction","outdoor-landscaping","dunnage"].indexOf(slug)+1).padStart(2,"0");
-  const relatedGuidance:Record<string,[string,string,string][]> = {
+  const relatedGuidance:Record<string,[string,string,string][]>={
     "manufacturing":[
       ["RADIATA PINE","How growth and environment shape Radiata Pine","/timber-growth-rings"],
       ["KILN DRYING","Moisture content and kiln-drying methods","/the-science-of-kiln-drying"],
@@ -114,10 +237,11 @@ export function ProductGroupPage({slug}:{slug:string}){
       ["TIMBER RANGE","Explore all FPX timber product groups","/timber"]
     ]
   };
+
   return <>
     <section className="pg-hero">
       <div className="pg-hero-copy"><span className="pg-number">{number}</span><Eyebrow>TIMBER RANGE</Eyebrow><h1>{group.title}</h1><p>{group.description}</p><div className="m-actions"><a href="https://app.fpx.nz/explore-fpx-sourcing" className="m-btn m-btn-primary">Browse Timber <Arrow/></a><a href="https://app.fpx.nz/explore-fpx-sourcing?request=1" className="m-btn m-btn-ghost">Submit a Timber Request <Arrow/></a></div></div>
-      <div className="pg-hero-image"><Image src={`/images/${group.hero}`} alt={`${group.title} timber`} width={1800} height={1200} sizes="(max-width: 900px) 100vw, 50vw" priority/></div>
+      <ProductHeroMedia group={group}/>
     </section>
 
     <section className="pg-summary">
@@ -126,9 +250,7 @@ export function ProductGroupPage({slug}:{slug:string}){
       <article><small>HOW TO SOURCE IT</small><p>Browse current stock or submit a request with the grade, dimensions, treatment, quantity and timing you know. If the exact timber is not shown, FPX can source suitable options beyond listed stock.</p></article>
     </section>
 
-    <section className={`pg-gallery ${group.gallery.length===2?"is-two":""}`}>
-      {group.gallery.map((image,i)=><figure key={image}><Image src={`/images/${image}`} alt={productImageAlt(group.title,image)} width={1400} height={1000} sizes="(max-width: 800px) 100vw, 33vw"/></figure>)}
-    </section>
+    {group.applications?.length?<CommonApplications group={group}/>:<section className={`pg-gallery ${group.gallery.length===2?"is-two":""}`}>{group.gallery.map(image=><figure key={image}><Image src={`/images/${image}`} alt={productImageAlt(group.title,image)} width={1400} height={1000} sizes="(max-width: 800px) 100vw, 33vw"/></figure>)}</section>}
 
     <section className="pg-catalogue">
       <div><Eyebrow>WHAT WE SUPPLY</Eyebrow><h2>{group.categories.length===1?"Timber for this application.":"Explore the range."}</h2><p>{group.note}</p></div>
