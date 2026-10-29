@@ -92,7 +92,7 @@ const faqGroups=[
     ["Can I reorder timber I have bought before?","Previously ordered products can be used as a starting point for repeat requirements, reducing the need to rebuild the same request from scratch."],
     ["How much does FPX cost for buyers?","FPX is free for buyers to use."]
   ]},
-  {title:"Support",items:[["Can international buyers submit a timber requirement?","Yes. Include the product specification, quantity and destination country in your request. FPX can investigate export suitability and shipping arrangements for the particular order; availability depends on the product and requirement."],["Who can I contact if I need help?","Contact FPX at support@fpx.nz or use the Contact page for timber sourcing questions, platform support or general enquiries."]]}
+  {title:"Support",items:[["Can international buyers submit a timber requirement?","Yes. Include the product specification, quantity and destination country in your request. FPX will review export suitability and shipping arrangements for that order. Availability depends on the product and requirement."],["Who can I contact if I need help?","Contact FPX at support@fpx.nz or use the Contact page for timber sourcing questions, platform support or general enquiries."]]}
 ];
 
 const faqAnswerLinks:Record<string,{label:string;href:string;external?:boolean}[]>={
