@@ -11,12 +11,12 @@ const categories=[
     images:["Manufacturing1.png","Manufacturing2.png","Manufacturing3.png","Manufacturing4.png"]
   },
   {
-    title:"Building and Construction",
+    title:"Building & Construction",
     href:"/building-construction",
     images:["Construction1.png","Construction2.png","Construction3.png","Construction4.png","Construction5.png","Construction6.png"]
   },
   {
-    title:"Outdoor and Landscaping",
+    title:"Outdoor & Landscaping",
     href:"/outdoor-landscaping",
     images:["Outdoor1.png","Outdoor2.png","Outdoor3.png","Outdoor4.png"]
   },
