@@ -1,1 +1,14 @@
-.gsp-hero>.ap-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.gsp-screen{height:360px;overflow:hidden;background:#e8eeeb;border-bottom:1px solid #dce5e0}.gsp-screen img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}.ap-card:hover .gsp-screen img{transform:scale(1.01)}@media(max-width:900px){.gsp-screen{height:310px}}@media(max-width:600px){.gsp-screen{height:235px}}
+.gsp-hero>.ap-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.gsp-option{min-width:0}
+.gsp-screen{display:block;overflow:hidden;border:1px solid #dce5e0;border-radius:16px;background:#fff;box-shadow:0 10px 28px rgba(4,14,14,.06)}
+.gsp-screen img{display:block;width:100%;height:auto;object-fit:contain}
+.gsp-screen:focus-visible{outline:3px solid #2c725a;outline-offset:4px}
+.gsp-copy{padding:24px 5px 0}
+.gsp-copy h3{margin:0 0 9px;font-size:25px;line-height:1.1}
+.gsp-copy>p:not(.ap-number){margin:0 0 18px;color:#586b61;font-size:14px;line-height:1.65}
+@media(max-width:650px){
+  .gsp-option+.gsp-option{margin-top:15px}
+  .gsp-copy{padding:18px 2px 0}
+  .gsp-copy h3{font-size:23px}
+  .gsp-copy .ap-button{width:100%;min-height:48px;justify-content:center}
+}

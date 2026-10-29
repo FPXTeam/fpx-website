@@ -18,8 +18,6 @@
 
   .m-inner-site .ap-intel-grid figcaption{flex-direction:column!important;align-items:flex-start!important;gap:4px!important;padding:14px 16px!important;line-height:1.45}
 
-  .m-inner-site .gsp-screen{height:220px!important}
-  .m-inner-site .gsp-screen img{object-position:center top!important}
   .m-inner-site .gtr-card{border-radius:16px!important}
   .m-inner-site .gtr-media{height:215px!important}
   .m-inner-site .gtr-copy>a{display:inline-flex!important;align-items:center!important;min-height:44px!important}
@@ -56,7 +54,6 @@
   .m-inner-site .ap-intro h2{font-size:32px!important;line-height:1.05!important}
   .m-inner-site .ap-stock-grid{grid-template-columns:1fr!important}
   .m-inner-site .ap-stock img{height:180px!important}
-  .m-inner-site .gsp-screen{height:205px!important}
   .m-inner-site .gtr-media{height:200px!important}
   .m-inner-site .pab5-figures{min-height:300px!important}
   .m-inner-site .pab5-figure{height:290px!important;max-width:52vw!important}
