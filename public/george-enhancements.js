@@ -95,6 +95,36 @@
     window.addEventListener('resize',()=>{if(window.innerWidth>900)setOpen(false)});
   }
 
+  const footerForm=document.querySelector('.footer-form');
+  if(footerForm){
+    footerForm.addEventListener('submit',async event=>{
+      event.preventDefault();
+      const button=footerForm.querySelector('button[type="submit"]');
+      const status=document.querySelector('.footer-status');
+      if(!button||!status)return;
+      button.disabled=true;
+      button.textContent='Subscribing…';
+      status.textContent='';
+      try{
+        const response=await fetch('/api/saw-point-subscribe',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(Object.fromEntries(new FormData(footerForm).entries()))
+        });
+        const data=await response.json().catch(()=>({}));
+        if(!response.ok)throw new Error(data.error||'Unable to subscribe right now.');
+        footerForm.reset();
+        status.textContent="You're on the Saw Point list.";
+        window.dataLayer?.push({event:'saw_point_subscribe',event_source:'footer'});
+      }catch(error){
+        status.textContent=error instanceof Error?error.message:'Unable to subscribe right now.';
+      }finally{
+        button.disabled=false;
+        button.textContent='Subscribe';
+      }
+    });
+  }
+
   if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
     const selectors=['.benefit','.source-head','.source-card','.range-head','.product','.request-panel','#customers>.wrap>.ey','#customers>.wrap>h2','.cust','.intel-in','.final-in'];
     const nodes=[...document.querySelectorAll(selectors.join(','))];

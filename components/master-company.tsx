@@ -308,7 +308,7 @@ export function ContactPage(){
     <div className="pct2-hero-copy">
       <Eyebrow>CONTACT FPX</Eyebrow>
       <h1>Tell us what timber<br/><span className="headline-accent">you need.</span></h1>
-      <p>Share the requirement you already have, ask a sourcing question or get help choosing the right way to start.</p>
+      <p>Share the requirement you already have, including your delivery destination. We welcome enquiries from New Zealand and international buyers.</p>
       <div className="pct2-direct">
         <a href="mailto:support@fpx.nz"><Mail/><span><small>EMAIL FPX</small><b>support@fpx.nz</b></span></a>
         <a href="tel:+642108473262"><Phone/><span><small>CALL FPX</small><b>+64 210 847 3262</b></span></a>
@@ -322,8 +322,8 @@ export function ContactPage(){
       <h2>Already know the requirement?</h2>
       <p>If you know the product, dimensions, grade, treatment or quantity, use the route that best matches what you have. If you are not sure, contact FPX and we can help you choose a starting point.</p>
       <div className="pct2-team-note">
-        <span><MapPin/>NEW ZEALAND</span>
-        <p>FPX supports commercial timber buyers across New Zealand.</p>
+        <span><MapPin/>NEW ZEALAND &amp; INTERNATIONAL</span>
+        <p>Delivery options across New Zealand and export shipping arrangements can be discussed for international orders, depending on the product and requirement.</p>
       </div>
     </div>
 
@@ -353,8 +353,9 @@ export function ContactPage(){
       <div className="pct-fields">
         <label>Full name<input name="name" autoComplete="name" placeholder="Your name" required/></label>
         <label>Company<input name="company" autoComplete="organization" placeholder="Company name"/></label>
-        <label>Email<input name="email" type="email" autoComplete="email" placeholder="you@company.co.nz" required/></label>
+        <label>Email<input name="email" type="email" autoComplete="email" placeholder="you@company.com" required/></label>
         <label>Phone<input name="phone" autoComplete="tel" placeholder="Your phone number"/></label>
+        <label className="wide">Delivery location / country (if known)<input name="deliveryLocation" autoComplete="shipping country-name" placeholder="City and country"/></label>
         <label className="wide">What can we help with?
           <select name="topic" defaultValue="Timber sourcing requirement">
             <option>Timber sourcing requirement</option>
@@ -362,7 +363,7 @@ export function ContactPage(){
             <option>General enquiry</option>
           </select>
         </label>
-        <label className="wide">Message<textarea name="message" placeholder="Tell us what timber you need, including dimensions, grade, treatment and quantity if known." required/></label>
+        <label className="wide">Message<textarea name="message" placeholder="Tell us the timber specification, quantity and delivery requirements you know." required/></label>
       </div>
       <div className="pct2-form-foot">
         <button className="m-btn m-btn-primary" type="submit" disabled={status==="sending"}>

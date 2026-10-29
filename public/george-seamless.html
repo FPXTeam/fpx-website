@@ -15,7 +15,6 @@
   const response=await fetch('/george-mockup.html?v=20261022-final-pass',{cache:'no-store'});
   let html=await response.text();
 
-  html=html.replace('Current stock examples','Available through FPX Stock');
   html=html.replaceAll('https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/Laptop-phone.png','/images/LaptopPhone2.webp');
   html=html.replaceAll('https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/fpx-hero-timber-yard.webp','/images/fpx-hero-timber-yard.webp');
   html=html.replaceAll('https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/fpx-logo-horizontal-original.png','/images/fpx-logo-horizontal-original.png');
@@ -29,7 +28,7 @@
 
   // George review: keep only the four confirmed parent categories and use the supplied imagery.
   const rangeSection=`<section id="range" class="section alt"><div class="wrap">
-    <div class="range-head"><div><p class="ey">Timber Range</p><h2>Timber for the requirement at hand.</h2><p class="sub">Explore the four main FPX timber categories, then browse current stock or send us the requirement you need sourced.</p></div></div>
+    <div class="range-head"><div><p class="ey">Timber Range</p><h2>Explore our timber range</h2><p class="sub">Browse timber by category, or submit a request for products you can't find.</p></div></div>
     <div class="category-grid">
       <article class="category-card">
         <a class="category-media category-carousel" href="/manufacturing" aria-label="Explore Manufacturing timber">
@@ -67,9 +66,7 @@
         <div class="category-copy"><h3>Dunnage</h3><a href="/dunnage">Explore category →</a></div>
       </article>
     </div>
-    <div class="request-panel"><p class="ey">Broader sourcing</p><h3>Need something outside current stock?</h3><p>FPX can source wider New Zealand pine requirements through Sutcliffe Trading's supplier relationships.</p><div class="capabilities">
-      <div class="capability">Sawn timber</div><div class="capability">Structural &amp; treated timber</div><div class="capability">Mouldings &amp; remanufactured products</div><div class="capability">Plywood</div><div class="capability">Engineered timber</div><div class="capability">Roundwood</div>
-    </div><p class="network-line">From New Zealand Radiata pine to a wide range of finished products.</p></div>
+    <div class="request-panel"><p class="ey">Broader sourcing</p><h3>Can't find the timber you need?</h3><p>Whether you need a specific grade, custom dimensions or ongoing supply, send us your requirements and we'll work with our suppliers to find suitable solutions.</p><a class="btn request-cta" href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Submit a Timber Request →</a></div>
   </div></section>`;
   html=html.replace(/<section id="range"[\s\S]*?<\/section>/,rangeSection);
 
@@ -106,11 +103,9 @@
   </nav>`;
   html=html.replace(oldDesktopNav,completeDesktopNav);
 
-  html=html.replace('<form class="footer-form" onsubmit="event.preventDefault()"><input placeholder="Name" aria-label="Name"><input type="email" placeholder="Email" aria-label="Email"><button type="submit">Subscribe</button></form>',
-    '<form class="footer-form" data-sawpoint-subscribe><input class="fpx-honeypot" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><input type="hidden" name="source" value="FPX website footer"><input name="name" autocomplete="name" placeholder="Name" aria-label="Name" required><input name="email" type="email" autocomplete="email" placeholder="Email" aria-label="Email" required><button type="submit">Subscribe</button><small class="footer-form-status" aria-live="polite">Unsubscribe any time.</small></form>');
 
   const headAdditions=`
-    <link rel="stylesheet" href="/george-polish.css?v=20261026-refined-motion">
+    <link rel="stylesheet" href="/george-polish.css?v=20261029-benefits">
     <link rel="stylesheet" href="/george-mobile-pass.css?v=20261022-mobile1">
     <link rel="stylesheet" href="/george-mobile-nav.css?v=20261022-final2">
     <link rel="stylesheet" href="/george-mobile-experience.css?v=20261026">
@@ -151,7 +146,7 @@
       @media(max-width:650px){.source-shot{height:245px!important}.category-grid{grid-template-columns:1fr}.category-media{height:220px}.category-copy{align-items:flex-start;flex-direction:column;gap:8px}}
     </style>
     <link rel="stylesheet" href="/george-header-sticky.css?v=20261026">`;
-  const bodyAdditions=`<script src="/george-enhancements.js?v=20261027-mobile-final"><\/script>
+  const bodyAdditions=`<script src="/george-enhancements.js?v=20261029-benefits"><\/script>
   <script>
   (()=>{
     document.querySelectorAll('.category-carousel').forEach((carousel,cardIndex)=>{
@@ -159,39 +154,13 @@
       if(images.length<2)return;
       let active=0;
       images.forEach((img,index)=>img.classList.toggle('is-active',index===0));
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
       window.setInterval(()=>{
         images[active].classList.remove('is-active');
         active=(active+1)%images.length;
         images[active].classList.add('is-active');
       },4200+(cardIndex*260));
     });
-
-    const form=document.querySelector('[data-sawpoint-subscribe]');
-    if(form){
-      const button=form.querySelector('button[type="submit"]');
-      const status=form.querySelector('.footer-form-status');
-      form.addEventListener('submit',async(event)=>{
-        event.preventDefault();
-        button.disabled=true;
-        const oldLabel=button.textContent;
-        button.textContent='Subscribing…';
-        if(status)status.textContent='';
-        try{
-          const payload=Object.fromEntries(new FormData(form).entries());
-          const response=await fetch('/api/saw-point-subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-          const data=await response.json().catch(()=>({}));
-          if(!response.ok)throw new Error(data?.error||'Unable to subscribe right now.');
-          form.reset();
-          if(status)status.textContent="You're on the Saw Point list.";
-          if(window.dataLayer)window.dataLayer.push({event:'saw_point_subscribe',event_source:'footer'});
-        }catch(error){
-          if(status)status.textContent=error instanceof Error?error.message:'Unable to subscribe right now.';
-        }finally{
-          button.disabled=false;
-          button.textContent=oldLabel;
-        }
-      });
-    }
   })();
   <\/script>`;
 

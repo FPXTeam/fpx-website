@@ -41,6 +41,7 @@ export async function POST(request: Request) {
         "Company: " + String(body.company || "—"),
         "Email: " + email,
         "Phone: " + String(body.phone || "—"),
+        "Delivery location / country: " + String(body.deliveryLocation || "—"),
         "Topic: " + String(body.topic || "General enquiry"),
         "",
         message

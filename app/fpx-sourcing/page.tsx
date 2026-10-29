@@ -41,7 +41,6 @@ const serviceSchema = {
   description,
   url:`${siteUrl}/fpx-sourcing`,
   provider:{"@id":`${siteUrl}/#organization`},
-  areaServed:{"@type":"Country","name":"New Zealand"},
   audience:{"@type":"BusinessAudience","audienceType":"Commercial timber buyers"},
   serviceType:"Digital timber sourcing",
   isPartOf:{"@id":`${siteUrl}/#website`},

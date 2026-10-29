@@ -27,7 +27,6 @@ const categories=[
   }
 ] as const;
 
-const broaderRange=["Sawn timber","Structural & treated timber","Mouldings & remanufactured products","Plywood","Engineered timber","Roundwood"];
 
 export function GeorgeTimberPage(){
   return <>
@@ -36,7 +35,7 @@ export function GeorgeTimberPage(){
       <div className="ap-container ap-hero-content">
         <p className="ap-eyebrow">TIMBER RANGE</p>
         <h1>New Zealand timber for the requirement at hand.</h1>
-        <p className="ap-hero-lead">Start with one of the four main FPX timber categories, then browse current stock or send us the requirement you need sourced.</p>
+        <p className="ap-hero-lead">Explore product categories, check current listings, or request a specific grade or specification.</p>
         <div className="ap-actions">
           <a className="ap-button ap-button-light" href={browse}>Browse Timber <span aria-hidden="true">→</span></a>
           <a className="ap-button ap-button-outline" href={request}>Submit a Timber Request <span aria-hidden="true">→</span></a>
@@ -48,8 +47,8 @@ export function GeorgeTimberPage(){
       <div className="ap-container">
         <div className="gtr-head">
           <p className="ap-eyebrow">TIMBER PRODUCT GROUPS</p>
-          <h2>Four main ways into the range.</h2>
-          <p>Choose the parent category that best matches the requirement. Individual products, specifications and current availability remain in FPX.</p>
+          <h2>Explore our timber range</h2>
+          <p>Browse timber by category, or submit a request for products you can’t find.</p>
         </div>
         <div className="gtr-grid">
           {categories.map((category,index)=><article className="gtr-card" key={category.title}>
@@ -66,10 +65,8 @@ export function GeorgeTimberPage(){
     <section className="ap-section">
       <div className="ap-container ap-request-panel">
         <p className="ap-eyebrow">BROADER SOURCING</p>
-        <h2>Need something outside current stock?</h2>
-        <p>FPX can source wider New Zealand pine requirements through Sutcliffe Trading&apos;s supplier relationships.</p>
-        <div className="ap-range-list">{broaderRange.map(item=><span key={item}>{item}</span>)}</div>
-        <p className="ap-range-close">From New Zealand Radiata pine to a wide range of finished products.</p>
+        <h2>Can&apos;t find the timber you need?</h2>
+        <p>Whether you need a specific grade, custom dimensions or ongoing supply, send us your requirements and we&apos;ll work with our suppliers to find suitable solutions.</p>
         <a className="ap-button ap-button-green" href={request}>Submit a Timber Request →</a>
       </div>
     </section>

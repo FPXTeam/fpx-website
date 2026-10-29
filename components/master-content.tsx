@@ -34,7 +34,7 @@ export function ResourcesPage(){
         <span>EXPLORE THE LIBRARY</span>
         <div className="pri-search">
           <Search aria-hidden="true"/>
-          <label className="sr-only" htmlFor="insight-search">Search Industry Insights</label>
+          <label className="sr-only" htmlFor="insight-search">Search FPX Insights</label>
           <input id="insight-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search timber topics"/>
         </div>
         <small>{shown.length} {shown.length===1?"article":"articles"} available</small>
@@ -72,16 +72,16 @@ export function ResourcesPage(){
         </div>
       }
 
-      {shown.length===0&&<div className="m-no-results pri-empty"><h2>No matching Industry Insights.</h2><p>Try a broader timber topic.</p></div>}
+      {shown.length===0&&<div className="m-no-results pri-empty"><h2>No matching FPX Insights.</h2><p>Try a broader timber topic.</p></div>}
     </section>
   </>;
 }
 
 const faqGroups=[
   {title:"Getting started",items:[
-    ["What is FPX Sourcing?","FPX Sourcing helps commercial timber buyers in New Zealand browse current stock or submit a timber request. Sutcliffe Trading sources, sells and invoices the timber through FPX."],
+    ["What is FPX Sourcing?","FPX Sourcing helps commercial timber buyers browse current stock or submit a timber request. Sutcliffe Trading sources, sells and invoices the timber through FPX."],
     ["Do I need an FPX account to explore timber?","No. You can browse current stock and submit a timber request before creating an account. Quotations and orders are handled through the customer account experience."],
-    ["Who is FPX for?","FPX is built for commercial timber buyers including contractors, builders, procurement teams, timber merchants and wood processors across New Zealand."],
+    ["Who is FPX for?","FPX is built for commercial timber buyers including contractors, builders, procurement teams, timber merchants and wood processors. International buyers can also submit requirements for review."],
     ["How do I start sourcing timber through FPX?","Browse current stock or submit a timber request. You can then request full FPX access when you need the customer account experience."]
   ]},
   {title:"Stock and requests",items:[["What if I cannot find the timber I need?","Submit a request with the dimensions, grade, treatment, quantity and other requirements you know. You can send the requirement through FPX without creating an account."],["What information should I include in a timber request?","Include the product or application, dimensions, grade, treatment, quantity and required timing where known. Clear specifications help FPX identify suitable options."],["Where can I find specials and volume pricing?","Where available, specials and volume pricing appear within current FPX Stock listings. Browse the stock to check current product details and pricing."]]},
@@ -92,7 +92,7 @@ const faqGroups=[
     ["Can I reorder timber I have bought before?","Previously ordered products can be used as a starting point for repeat requirements, reducing the need to rebuild the same request from scratch."],
     ["How much does FPX cost for buyers?","FPX is free for buyers to use."]
   ]},
-  {title:"Support",items:[["Who can I contact if I need help?","Contact FPX at support@fpx.nz or use the Contact page for timber sourcing questions, platform support or general enquiries."]]}
+  {title:"Support",items:[["Can international buyers submit a timber requirement?","Yes. Include the product specification, quantity and destination country in your request. FPX can investigate export suitability and shipping arrangements for the particular order; availability depends on the product and requirement."],["Who can I contact if I need help?","Contact FPX at support@fpx.nz or use the Contact page for timber sourcing questions, platform support or general enquiries."]]}
 ];
 
 const faqAnswerLinks:Record<string,{label:string;href:string;external?:boolean}[]>={
@@ -135,6 +135,10 @@ const faqAnswerLinks:Record<string,{label:string;href:string;external?:boolean}[
     {label:"Login to FPX",href:"https://app.fpx.nz",external:true}
   ],
   "Who can I contact if I need help?":[
+    {label:"Contact FPX",href:"/contact-us"}
+  ],
+  "Can international buyers submit a timber requirement?":[
+    {label:"Submit a Timber Request",href:"https://app.fpx.nz/explore-fpx-sourcing?request=1",external:true},
     {label:"Contact FPX",href:"/contact-us"}
   ]
 };

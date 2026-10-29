@@ -72,6 +72,9 @@ body:has(.m-inner-site) footer{background:#040e0e}
 .ap-group .ap-card-body{padding:18px}
 .ap-group h3{font-size:20px}
 .ap-group p:not(.ap-number){min-height:65px}
+@media(max-width:850px){.ap-group-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.ap-group-grid{gap:9px}.ap-group img{height:130px}.ap-group .ap-card-body{padding:14px}.ap-group h3{font-size:17px}.ap-group p:not(.ap-number){min-height:0;font-size:12px}}
+@media(max-width:380px){.ap-group-grid{grid-template-columns:1fr}.ap-group img{height:165px}}
 .ap-request-panel{background:#eaf2eb;color:#040e0e;border:1px solid #d2e2d6;border-radius:22px;padding:40px}
 .master-site .ap-request-panel h2{color:#040e0e!important}
 .ap-request-panel p:not(.ap-eyebrow){max-width:900px;color:#3e594a;line-height:1.7}
