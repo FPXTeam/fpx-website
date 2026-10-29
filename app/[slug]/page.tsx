@@ -59,7 +59,7 @@ const articleCitations:Record<string,string[]> = {
 };
 
 const pageMeta: Record<MasterPage, PageMeta> = {
-  timber: { title: "New Zealand Radiata Pine Timber Range", description: "Browse timber categories and check current listings, or submit a specific grade or product requirement for FPX to investigate." },
+  timber: { title: "New Zealand Radiata Pine Timber Range", description: "Browse timber categories and check current listings, or submit a specific grade or product requirement for FPX to source." },
   products: { title: "Timber Range for New Zealand Commercial Buyers", description: "Explore FPX timber product groups for manufacturing, building and construction, outdoor and landscaping, and dunnage applications across New Zealand.", canonical: "/timber" },
   manufacturing: { title: "Manufacturing Timber for NZ Wood Processors", description: "Explore manufacturing timber feedstock through FPX for New Zealand wood processors and timber manufacturers, including multiple grades and remanufacturing applications.", image: "/images/social/manufacturing-social-share.jpg" },
   "building-construction": { title: "Building & Construction Timber NZ", description: "Explore structural, building, finishing and specialist construction timber through FPX for commercial projects across New Zealand.", image: "/images/social/building-construction-social-share.jpg" },
@@ -80,7 +80,7 @@ const pageMeta: Record<MasterPage, PageMeta> = {
   "terms-and-conditions": { title: "Terms and Conditions | Forest Products Exchange Ltd", description: "Terms and Conditions for Forest Products Exchange Limited and use of the FPX website and platform." },
   "privacy-policy": { title: "Privacy Policy | Forest Products Exchange Ltd", description: "How Forest Products Exchange Limited collects, uses, stores, protects and discloses personal information under New Zealand privacy law." },
   "cookie-policy": { title: "Cookie Policy | Forest Products Exchange Ltd", description: "How the FPX website uses cookies, browser storage and optional Google Analytics 4, including necessary, preference and analytics technologies." },
-  "cookie-settings": { title: "Cookie Settings | FPX", description: "Review and update optional browser storage and analytics preferences for the FPX website." },
+  "cookie-settings": { title: "Cookie Settings", description: "Review and update optional browser storage and analytics preferences for the FPX website." },
   "timber-growth-rings": { title: "Radiata Pine Characteristics | Growth & Environment", description: "FPX Insight on how growth and environment shape Radiata pine timber characteristics in New Zealand.", image: "/images/radiata-pine-growth-rings-hero.png", type: "article", publishedAt: "2026-03-13", modifiedAt: "2026-09-21", articleSection: "Timber Characteristics" },
   "the-science-of-kiln-drying": { title: "The Science of Kiln Drying Radiata Pine", description: "FPX Insight covering conventional and continuous kilns, moisture content and why kiln drying matters for Radiata pine.", image: "/images/kiln-drying-cover.png", type: "article", publishedAt: "2026-09-16", modifiedAt: "2026-09-21", articleSection: "Timber Processing" },
 };

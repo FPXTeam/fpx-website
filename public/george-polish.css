@@ -12,6 +12,7 @@
 .source-card:nth-child(2) .source-copy{background:var(--app)!important;color:#fff!important}
 .source-card:nth-child(2) .source-kicker,.source-card:nth-child(2) .source-copy p,.source-card:nth-child(2) .source-copy a{color:#fff!important}
 .source-card:nth-child(2) .source-num{background:rgba(255,255,255,.18)!important;color:#fff!important}
+.source-copy .source-access{display:block;margin-top:7px;font-size:11px;line-height:1.45}
 .stock-note{background:#fff!important;border:1px solid var(--app-line)!important;color:var(--app-dark)!important}
 .product{border-color:#D9E0DB!important}
 .final-actions .btn:first-child{background:#fff!important;color:var(--app-dark)!important;border:1px solid var(--app-line)!important}
