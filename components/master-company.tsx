@@ -355,7 +355,7 @@ export function ContactPage(){
         <label>Company<input name="company" autoComplete="organization" placeholder="Company name"/></label>
         <label>Email<input name="email" type="email" autoComplete="email" placeholder="you@company.com" required/></label>
         <label>Phone<input name="phone" autoComplete="tel" placeholder="Your phone number"/></label>
-        <label className="wide">Delivery location / country (if known)<input name="deliveryLocation" autoComplete="shipping country-name" placeholder="City and country"/></label>
+        <label className="wide">Delivery location (include country if outside New Zealand)<input name="deliveryLocation" autoComplete="shipping country-name" placeholder="City or region; country for international enquiries"/></label>
         <label className="wide">What can we help with?
           <select name="topic" defaultValue="Timber sourcing requirement">
             <option>Timber sourcing requirement</option>
