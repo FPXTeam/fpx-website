@@ -12,7 +12,7 @@
 <div class="loading">Loading FPX preview…</div>
 <script>
 (async()=>{
-  const response=await fetch('/george-mockup.html?v=20261022-final-pass',{cache:'no-store'});
+  const response=await fetch('/george-mockup.html?v=20261029-retained-copy',{cache:'no-store'});
   let html=await response.text();
 
   html=html.replaceAll('https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/Laptop-phone.png','/images/LaptopPhone2.webp');
@@ -22,9 +22,6 @@
   // George review: use the new high-resolution FPX screenshots.
   html=html.replaceAll('https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/fpx-browse-stock-homepage.png','https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/BrowseStock.png');
   html=html.replaceAll('https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/fpx-submit-request-homepage.png','https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/RequestList.png');
-
-  // George review: do not narrow the supply message with an artificial product ceiling.
-  html=html.replace('<b>Wide product range</b><span>Sawn, structural, treated and specialised timber.</span>','<b>Treated and Untreated timber</b><span>Tell us what you need.</span>');
 
   // George review: keep only the four confirmed parent categories and use the supplied imagery.
   const rangeSection=`<section id="range" class="section alt"><div class="wrap">
