@@ -64,7 +64,7 @@ export function ApprovedTimber(){
 const audiences=[
   ["WOOD PROCESSORS & MANUFACTURERS","Help keep production moving.","Plan repeat supply around your production schedule. Send the grade, dimensions and volume you need so FPX can work with suppliers on suitable timber and timing.","segment-wood-processors.webp",request,"Submit a Timber Request"],
   ["TIMBER MERCHANTS","Fill supply gaps and find opportunities.","Check current listings, specials and volume-based pricing where available for competitive buying opportunities. Send us the products or volumes you need for your customers.","segment-timber-merchants.webp",browse,"Browse Timber"],
-  ["COMMERCIAL END USERS","Keep project purchasing straightforward.","Review listed timber and pricing, or send your project specification for suitable supply options. With full customer access, keep quotations and orders together in FPX. We can discuss delivery arrangements, including export where applicable.","segment-commercial-end-users.webp",request,"Submit a Timber Request"]
+  ["COMMERCIAL END USERS","Keep project purchasing straightforward.","Review listed timber and pricing, or send your project specification to ask about competitive supply options. With full customer access, keep quotations and orders together in FPX. We can discuss delivery arrangements, including export where applicable.","segment-commercial-end-users.webp",request,"Submit a Timber Request"]
 ];
 export function ApprovedCustomers(){
   return <>
