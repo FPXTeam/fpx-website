@@ -62,9 +62,9 @@ export function ApprovedTimber(){
 }
 
 const audiences=[
-  ["WOOD PROCESSORS & MANUFACTURERS","Help keep production moving.","Send the grade, dimensions and volume your production needs, including repeat supply requirements. We'll work with our suppliers to source suitable timber and discuss timing.","segment-wood-processors.webp",request,"Submit a Timber Request"],
-  ["TIMBER MERCHANTS","Fill supply gaps and find opportunities.","Check current listings and specials where available to find buying opportunities. Send us the products or volumes you need for your customers.","segment-timber-merchants.webp",browse,"Browse Timber"],
-  ["COMMERCIAL END USERS","Keep project purchasing straightforward.","Check listed timber or send your project specification, quantity and delivery location through FPX. We can discuss suitable delivery arrangements, including export shipping where applicable.","segment-commercial-end-users.webp",request,"Submit a Timber Request"]
+  ["WOOD PROCESSORS & MANUFACTURERS","Help keep production moving.","Plan repeat supply around your production schedule. Send the grade, dimensions and volume you need so FPX can work with suppliers on suitable timber and timing.","segment-wood-processors.webp",request,"Submit a Timber Request"],
+  ["TIMBER MERCHANTS","Fill supply gaps and find opportunities.","Check current listings, specials and volume-based pricing where available for competitive buying opportunities. Send us the products or volumes you need for your customers.","segment-timber-merchants.webp",browse,"Browse Timber"],
+  ["COMMERCIAL END USERS","Keep project purchasing straightforward.","Review listed timber and pricing, or send your project specification for suitable supply options. With full customer access, keep quotations and orders together in FPX. We can discuss delivery arrangements, including export where applicable.","segment-commercial-end-users.webp",request,"Submit a Timber Request"]
 ];
 export function ApprovedCustomers(){
   return <>
