@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      { source: "/george-seamless.html", destination: "/", permanent: true },
       { source: "/faq", destination: "/frequently-asked-questions", permanent: true },
       { source: "/homepage-copy", destination: "/", permanent: true },
       { source: "/procurement-and-sales-team", destination: "/our-customers", permanent: true },
