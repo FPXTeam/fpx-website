@@ -1,0 +1,62 @@
+/* Motion stays on opacity and compositor translations. Large artwork never loops. */
+.m-inner-site{--motion-ease:cubic-bezier(.22,1,.36,1)}
+
+/* A short reading sequence in the approved dark hero, without moving the image. */
+.m-inner-site .ap-hero-content>*{animation:fpxInnerHero .72s var(--motion-ease) both}
+.m-inner-site .ap-hero-content>*:nth-child(2){animation-delay:.07s}
+.m-inner-site .ap-hero-content>*:nth-child(3){animation-delay:.14s}
+.m-inner-site .ap-hero-content>*:nth-child(4){animation-delay:.21s}
+.m-inner-site .ap-hero-content>*:nth-child(5){animation-delay:.28s}
+@keyframes fpxInnerHero{from{opacity:0;translate:0 12px}to{opacity:1;translate:0 0}}
+
+/* Cards respond once to deliberate input; the photos and text keep their geometry. */
+.m-inner-site .ap-card,
+.m-inner-site .pri-card,
+.m-inner-site .pct2-routes>a,
+.m-inner-site .spx-archive-list>a{
+  transition:transform .42s var(--motion-ease),border-color .3s ease,box-shadow .42s var(--motion-ease);
+}
+.m-inner-site .ap-stock img,
+.m-inner-site .ap-audience-image img,
+.m-inner-site .pri-card-image img{
+  transition:transform .65s var(--motion-ease);
+}
+.m-inner-site .ap-button{transition:transform .3s var(--motion-ease),background-color .25s ease,box-shadow .3s ease}
+.m-inner-site .ap-button span{display:inline-block;transition:translate .3s var(--motion-ease)}
+.m-inner-site .pct2-form :is(input,select,textarea),
+.m-inner-site .pri-search input{transition:border-color .25s ease,box-shadow .25s ease}
+.m-inner-site .pct2-form :is(input,select,textarea):focus-visible,
+.m-inner-site .pri-search input:focus-visible{border-color:#53c396;box-shadow:0 0 0 3px rgba(83,195,150,.18);outline:none}
+.m-inner-site .pfq-topic details[open] .pfq-answer{animation:fpxAnswerIn .32s var(--motion-ease) both}
+@keyframes fpxAnswerIn{from{opacity:0;translate:0 -5px}to{opacity:1;translate:0 0}}
+
+/* The CTA mark rests between interactions instead of bobbing forever. */
+.m-inner-site .m-cta-x{animation:none!important;transition:transform .6s var(--motion-ease)!important}
+
+@media(hover:hover) and (pointer:fine){
+  .m-inner-site .ap-card:hover,
+  .m-inner-site .pri-card:hover,
+  .m-inner-site .pct2-routes>a:hover,
+  .m-inner-site .spx-archive-list>a:hover{transform:translateY(-3px);box-shadow:0 15px 32px rgba(4,14,14,.085)}
+  .m-inner-site .ap-stock:hover img,
+  .m-inner-site .ap-audience:hover .ap-audience-image img,
+  .m-inner-site .pri-card:hover .pri-card-image img{transform:scale(1.025)}
+  .m-inner-site .ap-button:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(4,14,14,.12)}
+  .m-inner-site .ap-button:hover span{translate:3px 0}
+  .m-inner-site .m-cta-panel:has(.m-btn-primary:hover) .m-cta-x{transform:translate3d(-7px,-50%,0) rotate(-1deg)}
+  .m-inner-site .m-cta-panel:has(.m-btn-ghost:hover) .m-cta-x{transform:translate3d(7px,-50%,0) rotate(2deg)}
+}
+@media(max-width:700px){
+  .m-inner-site .m-cta-panel:has(.m-btn-primary:hover) .m-cta-x,
+  .m-inner-site .m-cta-panel:has(.m-btn-ghost:hover) .m-cta-x{transform:rotate(2deg)}
+}
+@media(hover:none){
+  .m-inner-site .pri-card:hover .pri-card-image img,
+  .m-inner-site .ap-stock:hover img,
+  .m-inner-site .ap-audience:hover .ap-audience-image img{transform:none}
+  .m-inner-site .pct2-routes>a:hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .m-inner-site .ap-hero-content>*,.m-inner-site .pfq-topic details[open] .pfq-answer{animation:none!important;opacity:1!important;translate:none!important}
+  .m-inner-site :is(.ap-card,.ap-button,.ap-button span,.ap-stock img,.ap-audience-image img,.pri-card,.pri-card-image img,.pct2-routes>a,.spx-archive-list>a,.m-cta-x){transition:none!important}
+}

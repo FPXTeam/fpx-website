@@ -1,0 +1,16 @@
+/* About Us: preserve the original People Behind FPX layout, only add breathing room below the intro so the team cutouts do not overlap the copy. */
+.m-inner-site .pab5-team-head{
+  margin-bottom:120px!important;
+}
+
+@media(max-width:900px){
+  .m-inner-site .pab5-team-head{
+    margin-bottom:88px!important;
+  }
+}
+
+@media(max-width:600px){
+  .m-inner-site .pab5-team-head{
+    margin-bottom:58px!important;
+  }
+}

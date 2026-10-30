@@ -1,0 +1,4 @@
+/* Keep the approved homepage header visible during the same page-to-page journey. */
+header{position:sticky!important;top:0;height:74px!important}
+body{overflow-x:clip!important}
+@media(max-width:600px){header{height:58px!important}}

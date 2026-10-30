@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { GoogleAnalyticsConsent } from "../components/google-analytics-consent";
+import { NavigationScrollReset } from "../components/navigation-scroll-reset";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import "../components/brand-system-2026.css";
@@ -9,6 +10,7 @@ import "../components/site-motion.css";
 import "../components/hero-image-quality.css";
 import "../components/app-visuals-hidden.css";
 import "../components/saw-point-hero-fix.css";
+import "../components/strict-brand-kit.css";
 
 const cormorant = Cormorant_Garamond({
   subsets:["latin"],
@@ -47,10 +49,12 @@ const websiteSchema = {
   inLanguage:"en-NZ",
 };
 
+const platformDescription = "FPX is a New Zealand digital platform where customers can browse available timber and pricing, submit timber requirements, review quotations and manage orders.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: "FPX | New Zealand Timber Sourcing", template: "%s | FPX" },
-  description: "FPX helps commercial timber buyers across New Zealand explore current timber supply, review offers and submit timber requirements before creating an account.",
+  title: { default: "FPX | Browse Timber, Pricing & Submit Requests", template: "%s | FPX" },
+  description: platformDescription,
   applicationName: "FPX",
   alternates: { canonical: "/" },
   robots: isProduction
@@ -68,17 +72,17 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
   openGraph: {
     type: "website", locale: "en_NZ", url: siteUrl, siteName: "FPX | Forest Products Exchange",
-    title: "FPX | New Zealand Timber Sourcing",
-    description: "FPX helps commercial timber buyers across New Zealand explore current timber supply, review offers and submit timber requirements before creating an account.",
-    images: [{ url: socialImage, width: 1200, height: 630, alt: "FPX Forest Products Exchange, New Zealand timber sourcing" }],
+    title: "FPX | Browse Timber, Pricing & Submit Requests",
+    description: platformDescription,
+    images: [{ url: socialImage, width: 1200, height: 630, alt: "FPX Forest Products Exchange digital timber platform" }],
   },
   twitter: {
-    card: "summary_large_image", title: "FPX | New Zealand Timber Sourcing",
-    description: "FPX helps commercial timber buyers across New Zealand explore current timber supply, review offers and submit timber requirements before creating an account.",
+    card: "summary_large_image", title: "FPX | Browse Timber, Pricing & Submit Requests",
+    description: platformDescription,
     images: [socialImage],
   },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en-NZ"><body className={`${cormorant.variable} antialiased`}><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify([organizationSchema,websiteSchema])}}/><Script id="fpx-google-consent-default" strategy="beforeInteractive" dangerouslySetInnerHTML={{__html:`window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};window.gtag("consent","default",{analytics_storage:"denied",ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});`}}/>{children}<GoogleAnalyticsConsent/></body></html>;
+  return <html lang="en-NZ"><body className={`${cormorant.variable} antialiased`}><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify([organizationSchema,websiteSchema])}}/><Script id="fpx-google-consent-default" strategy="beforeInteractive" dangerouslySetInnerHTML={{__html:`window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};window.gtag("consent","default",{analytics_storage:"denied",ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});`}}/><NavigationScrollReset/>{children}<GoogleAnalyticsConsent/></body></html>;
 }

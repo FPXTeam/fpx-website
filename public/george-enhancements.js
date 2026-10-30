@@ -1,0 +1,142 @@
+(()=>{
+  /* Load the latest sourcing-card polish after the base preview styles. */
+  if(!document.querySelector('link[data-source-flow-fix]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='/source-flow-fix.css?v=20261027-horizontal-flow';
+    link.setAttribute('data-source-flow-fix','');
+    document.head.appendChild(link);
+  }
+
+  /* Latest approved hero artwork lives on main while this preview remains on its WIP branch. */
+  const heroDevice=document.querySelector('.device img');
+  if(heroDevice){
+    heroDevice.src='https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/Laptop4.png';
+    heroDevice.alt='FPX shown on laptop and mobile';
+    heroDevice.loading='eager';
+    heroDevice.fetchPriority='high';
+  }
+
+  /* Use the latest approved Browse Stock screenshot. */
+  const browseStockShot=document.querySelector('.source-card:first-child .source-shot img');
+  if(browseStockShot){
+    browseStockShot.src='https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/BrowseStock2.png';
+  }
+
+  /* Keep homepage Timber Range imagery in sync with the product-group hero carousels. */
+  const raw='https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/';
+  const categoryImages=[
+    ['Manufacturing1.png','Manufacturing2.png','Manufacturing3.png','Manufacturing4.png'],
+    ['Construction1.png','Construction2.png','Construction3.png','Construction4.png','Construction5.png','Construction6.png'],
+    ['Outdoor1.png','Outdoor2.png','Outdoor3.png','Outdoor4.png']
+  ];
+  const categoryAlts=['Manufacturing timber','Building and Construction timber','Outdoor and Landscaping timber'];
+  categoryImages.forEach((images,cardIndex)=>{
+    const media=document.querySelector(`.category-card:nth-child(${cardIndex+1}) .category-media`);
+    if(!media)return;
+    media.querySelectorAll('img').forEach(img=>img.remove());
+    const count=media.querySelector('.category-count');
+    images.forEach((file,index)=>{
+      const img=document.createElement('img');
+      img.src=raw+file;
+      img.alt=categoryAlts[cardIndex];
+      img.loading='lazy';
+      img.decoding='async';
+      if(index===0)img.classList.add('is-active');
+      media.insertBefore(img,count||null);
+    });
+  });
+
+  const nav=document.querySelector('.nav');
+  const header=document.querySelector('header');
+
+  if(nav&&header&&!document.querySelector('.mobile-menu-toggle')){
+    const toggle=document.createElement('button');
+    toggle.className='mobile-menu-toggle';
+    toggle.type='button';
+    toggle.setAttribute('aria-label','Open menu');
+    toggle.setAttribute('aria-expanded','false');
+    toggle.innerHTML='<span></span><span></span><span></span>';
+
+    const panel=document.createElement('div');
+    panel.className='mobile-menu-panel';
+    panel.setAttribute('aria-hidden','true');
+    panel.innerHTML=`
+      <nav class="mobile-menu-links" aria-label="Mobile navigation">
+        <a href="/fpx-sourcing">FPX Sourcing</a>
+        <a href="/timber">Timber Range</a>
+        <a href="/our-customers">Our Customers</a>
+        <a href="/fpx-intelligence">FPX Intelligence</a>
+        <a href="/saw-point">Saw Point</a>
+        <a href="/industry-insights">FPX Insights</a>
+        <a href="/frequently-asked-questions">FAQ</a>
+        <a href="/about-us">About Us</a>
+        <a href="/contact-us">Contact</a>
+      </nav>
+      <div class="mobile-menu-actions">
+        <a class="mobile-login" href="https://app.fpx.nz/">Login</a>
+        <a class="mobile-access" href="https://app.fpx.nz/sourcing-sign-up">Get FPX Access</a>
+      </div>`;
+
+    nav.appendChild(toggle);
+    header.appendChild(panel);
+
+    const setOpen=(open)=>{
+      header.classList.toggle('mobile-menu-open',open);
+      toggle.setAttribute('aria-expanded',String(open));
+      toggle.setAttribute('aria-label',open?'Close menu':'Open menu');
+      panel.setAttribute('aria-hidden',String(!open));
+      document.body.classList.toggle('mobile-menu-lock',open&&window.innerWidth<=900);
+    };
+
+    toggle.addEventListener('click',()=>setOpen(!header.classList.contains('mobile-menu-open')));
+    panel.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setOpen(false)));
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')setOpen(false)});
+    window.addEventListener('resize',()=>{if(window.innerWidth>900)setOpen(false)});
+  }
+
+  const footerForm=document.querySelector('.footer-form');
+  if(footerForm){
+    footerForm.addEventListener('submit',async event=>{
+      event.preventDefault();
+      const button=footerForm.querySelector('button[type="submit"]');
+      const status=document.querySelector('.footer-status');
+      if(!button||!status)return;
+      button.disabled=true;
+      button.textContent='Subscribing…';
+      status.textContent='';
+      try{
+        const response=await fetch('/api/saw-point-subscribe',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(Object.fromEntries(new FormData(footerForm).entries()))
+        });
+        const data=await response.json().catch(()=>({}));
+        if(!response.ok)throw new Error(data.error||'Unable to subscribe right now.');
+        footerForm.reset();
+        status.textContent="You're on the Saw Point list.";
+        window.dataLayer?.push({event:'saw_point_subscribe',event_source:'footer'});
+      }catch(error){
+        status.textContent=error instanceof Error?error.message:'Unable to subscribe right now.';
+      }finally{
+        button.disabled=false;
+        button.textContent='Subscribe';
+      }
+    });
+  }
+
+  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const selectors=['.benefit','.source-head','.source-card','.range-head','.product','.request-panel','#customers>.wrap>.ey','#customers>.wrap>h2','.cust','.intel-in','.final-in'];
+    const nodes=[...document.querySelectorAll(selectors.join(','))];
+    nodes.forEach((el,i)=>{
+      el.classList.add('fpx-reveal');
+      el.style.setProperty('--fpx-delay',Math.min((i%4)*45,135)+'ms');
+    });
+    const io=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){entry.target.classList.add('fpx-visible');io.unobserve(entry.target)}
+      });
+    },{threshold:.05,rootMargin:'0px 0px -4% 0px'});
+    nodes.forEach(el=>io.observe(el));
+  }
+})();

@@ -1,0 +1,68 @@
+/* Hero device visual override — use the approved transparent laptop + phone asset. */
+body .premium-home .ph-hero-product{
+  position:relative!important;
+}
+
+body .premium-home .ph-hero-product .ph-hero-devices{
+  position:absolute!important;
+  z-index:3!important;
+  right:-4vw!important;
+  top:51%!important;
+  transform:translateY(-49%)!important;
+  width:min(66vw,1260px)!important;
+  height:min(88vh,825px)!important;
+  display:block!important;
+  pointer-events:none!important;
+  background:transparent!important;
+  overflow:visible!important;
+}
+
+body .premium-home .ph-hero-product .ph-device-composite{
+  display:none!important;
+}
+
+body .premium-home .ph-hero-product .ph-hero-devices::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  display:block;
+  background-image:url("https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/Laptop-phone.png");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+  filter:drop-shadow(0 28px 34px rgba(0,0,0,.28));
+}
+
+body .premium-home .ph-hero-product .ph-hero-copy{
+  max-width:min(45vw,730px)!important;
+}
+
+@media(max-width:1100px){
+  body .premium-home .ph-hero-product .ph-hero-devices{
+    right:-5vw!important;
+    width:64vw!important;
+    height:72vh!important;
+  }
+  body .premium-home .ph-hero-product .ph-hero-copy{
+    max-width:49vw!important;
+  }
+}
+
+@media(max-width:760px){
+  body .premium-home .ph-hero-product{
+    min-height:94svh!important;
+    padding-bottom:350px!important;
+  }
+  body .premium-home .ph-hero-product .ph-hero-copy{
+    max-width:none!important;
+  }
+  body .premium-home .ph-hero-product .ph-hero-devices{
+    top:auto!important;
+    bottom:4px!important;
+    left:-4vw!important;
+    right:-4vw!important;
+    width:108vw!important;
+    height:335px!important;
+    transform:none!important;
+  }
+}

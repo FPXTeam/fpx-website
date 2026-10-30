@@ -1,0 +1,62 @@
+/* Final mobile QA pass. Mobile-only safeguards and spacing; desktop remains unchanged. */
+@media(max-width:700px){
+  html,body,.master-site,.m-inner-site{max-width:100%;overflow-x:clip}
+  .m-inner-site img{max-width:100%}
+  .m-inner-site :is(h1,h2,h3,h4,p,a,span){overflow-wrap:break-word}
+
+  .m-inner-site .ap-container{padding-left:18px!important;padding-right:18px!important}
+  .m-inner-site .ap-actions{display:grid!important;grid-template-columns:1fr!important;width:100%!important;gap:9px!important}
+  .m-inner-site .ap-actions .ap-button{width:100%!important;min-height:48px!important;padding:12px 16px!important;text-align:center}
+  .m-inner-site .ap-card-body{padding:20px!important}
+  .m-inner-site .ap-note{padding:24px 20px!important}
+  .m-inner-site .ap-steps>div{align-items:flex-start!important;gap:14px!important;padding:18px 4px!important;line-height:1.45}
+  .m-inner-site .ap-steps b{flex:0 0 28px}
+
+  .m-inner-site .ap-audience-actions{display:grid!important;grid-template-columns:1fr!important;width:100%!important;gap:8px!important}
+  .m-inner-site .ap-audience-actions .ap-button{width:100%!important;min-height:48px!important}
+  .m-inner-site .ap-audience-actions .ap-text-link{display:flex!important;align-items:center!important;min-height:44px!important}
+
+  .m-inner-site .ap-intel-grid figcaption{flex-direction:column!important;align-items:flex-start!important;gap:4px!important;padding:14px 16px!important;line-height:1.45}
+
+  .m-inner-site .gtr-card{border-radius:16px!important}
+  .m-inner-site .gtr-media{height:215px!important}
+  .m-inner-site .gtr-copy>a{display:inline-flex!important;align-items:center!important;min-height:44px!important}
+
+  .m-inner-site .pct2-direct{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;width:100%!important}
+  .m-inner-site .pct2-direct a{width:100%!important;min-width:0!important;min-height:52px!important}
+  .m-inner-site .pct2-routes>a{min-height:0!important;padding:20px!important}
+  .m-inner-site .pct2-form{padding:22px 18px!important}
+  .m-inner-site .pct-fields{grid-template-columns:1fr!important;gap:14px!important}
+  .m-inner-site .pct-fields .wide{grid-column:1!important}
+  .m-inner-site .pct2-form-foot{align-items:stretch!important;gap:12px!important}
+  .m-inner-site .pct2-form button[type="submit"]{width:100%!important;min-height:48px!important}
+
+  .m-inner-site .spx-form{min-width:0!important}
+  .m-inner-site .spx-form input,.m-inner-site .spx-form button{width:100%!important;min-height:48px!important}
+  .m-inner-site .spx-archive-tools{gap:10px!important}
+
+  .m-inner-site .pab5-team{overflow:hidden!important}
+  .m-inner-site .pab5-team-head{padding-left:18px!important;padding-right:18px!important}
+  .m-inner-site .pab5-team-head>p{font-size:14px!important;line-height:1.6!important}
+  .m-inner-site .pab5-bio{min-width:0!important}
+  .m-inner-site .pab5-bio h3{font-size:clamp(27px,8vw,34px)!important;line-height:1.05!important}
+  .m-inner-site .pab5-bio p{font-size:13px!important;line-height:1.6!important}
+
+  .m-inner-site .pri-search-wrap,.m-inner-site .pfq-hero aside{width:100%!important;min-width:0!important}
+  .m-inner-site .pfq-topic details p,.m-inner-site .pfq-answer nav{padding-left:18px!important;padding-right:18px!important}
+
+  .m-inner-site .ap-final-inner{align-items:stretch!important}
+  .m-inner-site .ap-final .ap-actions{width:100%!important}
+}
+
+@media(max-width:480px){
+  .m-inner-site .ap-hero h1{font-size:clamp(34px,10.5vw,44px)!important;line-height:1.04!important}
+  .m-inner-site .ap-intro h2{font-size:32px!important;line-height:1.05!important}
+  .m-inner-site .ap-stock-grid{grid-template-columns:1fr!important}
+  .m-inner-site .ap-stock img{height:180px!important}
+  .m-inner-site .gtr-media{height:200px!important}
+  .m-inner-site .pab5-figures{min-height:300px!important}
+  .m-inner-site .pab5-figure{height:290px!important;max-width:52vw!important}
+  .m-inner-site .pct2-form{padding:18px 15px!important}
+  .m-inner-site .pct2-routes>a{padding:17px!important}
+}
