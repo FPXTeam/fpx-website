@@ -11,7 +11,7 @@ const siteUrl = "https://www.fpx.nz";
 const description = "Browse current FPX Stock listings and specials or submit a specific timber requirement. FPX works with suppliers to source suitable options.";
 
 export const metadata: Metadata = {
-  title: "FPX Sourcing | Browse Stock or Submit a Timber Request",
+  title: { absolute: "FPX Sourcing | Browse Stock or Submit a Timber Request" },
   description,
   alternates: { canonical: "/fpx-sourcing" },
   robots: process.env.VERCEL_ENV === "production"
