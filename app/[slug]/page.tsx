@@ -93,21 +93,22 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!masterPages.includes(slug as MasterPage)) return {};
   const data = pageMeta[slug as MasterPage];
   const image = data.image ?? defaultImage;
+  const fullTitle = /\bFPX\b/.test(data.title) ? data.title : `${data.title} | FPX`;
   const path = data.canonical ?? `/${slug}`;
   const isProduction = process.env.VERCEL_ENV === "production";
   const shouldIndex = isProduction && slug !== "faq" && slug !== "cookie-settings";
   const robots = { index: shouldIndex, follow: true, googleBot: { index: shouldIndex, follow: true, "max-image-preview": "large" as const, "max-snippet": -1, "max-video-preview": -1 } };
   const socialImages = [{ url: image, width: data.imageWidth ?? 1200, height: data.imageHeight ?? 630, alt: `${data.title} | FPX` }];
   const openGraph = data.type === "article"
-    ? { type: "article" as const, locale: "en_NZ", url: path, siteName: "FPX | Forest Products Exchange", title: `${data.title} | FPX`, description: data.description, images: socialImages, publishedTime: data.publishedAt, modifiedTime: data.modifiedAt, section: data.articleSection, authors: [`${siteUrl}/about-us`] }
-    : { type: "website" as const, locale: "en_NZ", url: path, siteName: "FPX | Forest Products Exchange", title: `${data.title} | FPX`, description: data.description, images: socialImages };
+    ? { type: "article" as const, locale: "en_NZ", url: path, siteName: "FPX | Forest Products Exchange", title: fullTitle, description: data.description, images: socialImages, publishedTime: data.publishedAt, modifiedTime: data.modifiedAt, section: data.articleSection, authors: [`${siteUrl}/about-us`] }
+    : { type: "website" as const, locale: "en_NZ", url: path, siteName: "FPX | Forest Products Exchange", title: fullTitle, description: data.description, images: socialImages };
   return {
-    title: data.title,
+    title: { absolute: fullTitle },
     description: data.description,
     alternates: { canonical: path },
     robots,
     openGraph,
-    twitter: { card: "summary_large_image", title: `${data.title} | FPX`, description: data.description, images: [image] },
+    twitter: { card: "summary_large_image", title: fullTitle, description: data.description, images: [image] },
   };
 }
 
