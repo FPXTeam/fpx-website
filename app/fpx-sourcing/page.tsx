@@ -8,7 +8,7 @@ import "../../components/source-timber-redesign.css";
 import "../../components/premium-inner-pages.css";
 
 const siteUrl = "https://www.fpx.nz";
-const description = "Browse available timber, specifications, pricing, specials and tier-volume pricing through FPX, or submit a timber requirement without registering first.";
+const description = "Browse current FPX Stock listings and specials or submit a specific timber requirement. FPX works with suppliers to source suitable options.";
 
 export const metadata: Metadata = {
   title: "FPX Sourcing | Browse Stock or Submit a Timber Request",
