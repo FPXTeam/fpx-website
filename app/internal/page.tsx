@@ -14,11 +14,6 @@ export const metadata: Metadata = {
 
 const tools = [
   {
-    href: "/internal/lead-journey-lab",
-    title: "Lead Journey Lab",
-    description: "Map, review and export FPX lead and customer journeys.",
-  },
-  {
     href: "/saw-point-admin",
     title: "Saw Point Admin",
     description: "Manage and publish Saw Point content.",
