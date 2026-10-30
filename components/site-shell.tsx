@@ -13,9 +13,9 @@ const resourceLinks = [
 export function Header(){
   return <header className="george-header">
     <div className="george-wrap george-nav">
-      <Link className="george-brand" href="/george-seamless.html" aria-label="FPX home">
+      <a className="george-brand" href="/" aria-label="FPX home">
         <Image src="/images/fpx-logo-horizontal-original.png" alt="FPX" width={160} height={72} sizes="(max-width: 600px) 96px, 109px"/>
-      </Link>
+      </a>
       <nav className="george-links" aria-label="Primary navigation">
         <Link href="/fpx-sourcing">FPX Sourcing</Link>
         <Link href="/timber">Timber Range</Link>
