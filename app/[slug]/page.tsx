@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { MasterInnerPage } from "@/components/master-site";
 import sawPointIssues from "../../data/saw-point-issues.json";
+import { faqGroups } from "@/components/faq-data";
 import "../../components/master-site.css";
 import "../../components/premium-clean-sitewide.css";
 import "../../components/revised-pages.css";
@@ -39,7 +40,7 @@ const masterPages = [
 ] as const;
 
 type MasterPage = (typeof masterPages)[number];
-type PageMeta = { title: string; description: string; image?: string; canonical?: string; type?: "article" | "website"; publishedAt?: string; modifiedAt?: string; articleSection?: string };
+type PageMeta = { title: string; description: string; image?: string; imageWidth?: number; imageHeight?: number; canonical?: string; type?: "article" | "website"; publishedAt?: string; modifiedAt?: string; articleSection?: string };
 const defaultImage = "/images/social/fpx-social-share.jpg";
 
 const articleCitations:Record<string,string[]> = {
@@ -61,19 +62,19 @@ const articleCitations:Record<string,string[]> = {
 const pageMeta: Record<MasterPage, PageMeta> = {
   timber: { title: "New Zealand Radiata Pine Timber Range", description: "Browse timber categories and check current listings, or submit a specific grade or product requirement for FPX to source." },
   products: { title: "Timber Range for New Zealand Commercial Buyers", description: "Explore FPX timber product groups for manufacturing, building and construction, outdoor and landscaping, and dunnage applications across New Zealand.", canonical: "/timber" },
-  manufacturing: { title: "Manufacturing Timber for NZ Wood Processors", description: "Explore manufacturing timber feedstock through FPX for New Zealand wood processors and timber manufacturers, including multiple grades and remanufacturing applications.", image: "/images/social/manufacturing-social-share.jpg" },
-  "building-construction": { title: "Building & Construction Timber NZ", description: "Explore structural, building, finishing and specialist construction timber through FPX for commercial projects across New Zealand.", image: "/images/social/building-construction-social-share.jpg" },
-  "outdoor-landscaping": { title: "Outdoor & Landscaping Timber NZ", description: "Explore treated and purpose-made timber for fencing, decking, retaining, landscaping and outdoor construction through FPX.", image: "/images/social/outdoor-landscaping-social-share.jpg" },
-  dunnage: { title: "Dunnage Timber for Freight & Shipping NZ", description: "Explore timber dunnage through FPX for freight, shipping, load support, storage and industrial transport applications across New Zealand.", image: "/images/social/dunnage-social-share.jpg" },
-  "fpx-sourcing": { title: "FPX Sourcing | Browse Stock or Request Timber", description: "Browse timber available through FPX Stock or submit a specific timber requirement for sourcing and quoting through FPX Sourcing by Sutcliffe Trading." },
+  manufacturing: { title: "Manufacturing Timber for Wood Processors", description: "Browse manufacturing timber categories and send FPX your grade, dimensions and volume requirements to help plan production supply.", image: "/images/social/manufacturing-social-share.jpg" },
+  "building-construction": { title: "Building & Construction Timber NZ", description: "Explore structural, building and finishing timber categories. Browse FPX Stock or request products for your next project.", image: "/images/social/building-construction-social-share.jpg" },
+  "outdoor-landscaping": { title: "Outdoor & Landscaping Timber NZ", description: "Find timber categories for fencing, decking, retaining and landscaping. Browse available products or send FPX your specification.", image: "/images/social/outdoor-landscaping-social-share.jpg" },
+  dunnage: { title: "Dunnage Timber for Freight & Shipping", description: "Explore dunnage timber for load support, freight and transport. Send FPX your dimensions, quantity and destination requirements.", image: "/images/social/dunnage-social-share.jpg" },
+  "fpx-sourcing": { title: "FPX Sourcing | Browse Stock or Submit a Timber Request", description: "Browse current FPX Stock listings and specials or submit a specific timber requirement. FPX works with suppliers to source suitable options." },
   "source-timber": { title: "FPX Sourcing | Explore Timber Before You Sign Up", description: "Explore current timber supply, review offers and submit a commercial timber requirement through FPX Sourcing before creating an account.", canonical: "/fpx-sourcing" },
-  "how-fpx-works": { title: "How FPX Timber Sourcing Works", description: "See how buyers can explore timber, offers and requests without an account, then move into the full FPX customer experience." },
+  "how-fpx-works": { title: "How FPX Timber Sourcing Works", description: "Browse current timber listings or send FPX a request without an account. Approved customers can use the platform for quotes and orders." },
   "our-customers": { title: "Who Uses FPX | Commercial Timber Buyers", description: "See how FPX helps wood processors plan supply, timber merchants fill gaps and commercial buyers source timber for projects." },
   "fpx-intelligence": { title: "FPX Intelligence | New Zealand Timber Industry Data", description: "Explore FPX Intelligence and selected New Zealand industry indicators, including Building Consents and the Diesel Price Index." },
-  "saw-point": { title: "Saw Point | New Zealand Timber Industry Insights", description: "Read Saw Point by George Harman for selected New Zealand timber industry news, market developments and issues worth paying attention to." },
+  "saw-point": { title: "Saw Point | New Zealand Timber Updates", description: "Read Saw Point by George Harman for selected timber industry developments and subscribe for updates from FPX." },
   "industry-insights": { title: "FPX Insights | New Zealand Timber Guides", description: "Read FPX Insights for practical explanations of Radiata pine, kiln drying, timber characteristics, specifications and sourcing topics in New Zealand." },
   "industry-resources": { title: "FPX Insights | New Zealand Timber Guides", description: "Read FPX Insights for practical explanations of Radiata pine, kiln drying, timber characteristics, specifications and sourcing topics in New Zealand.", canonical: "/industry-insights" },
-  "frequently-asked-questions": { title: "FPX Sourcing FAQ | Explore, Access & Account Questions", description: "Get direct answers about exploring FPX without an account, current offers, product requests, full customer access, orders and support." },
+  "frequently-asked-questions": { title: "FPX FAQ | Timber Requests, Orders & Access", description: "Find answers about browsing timber, submitting requests, customer access, orders and international timber enquiries." },
   faq: { title: "FPX Sourcing FAQ | Explore, Access & Account Questions", description: "Get direct answers about exploring FPX without an account, current offers, product requests, full customer access, orders and support.", canonical: "/frequently-asked-questions" },
   "about-us": { title: "About FPX | Digital Timber Platform", description: "Meet George Harman and Gabriela Molloy and learn how FPX combines a digital platform with Sutcliffe Trading's timber sourcing experience." },
   "contact-us": { title: "Contact FPX | Timber Sourcing Enquiries", description: "Contact FPX about commercial timber requirements, including New Zealand delivery and international shipping enquiries, or ask for platform support." },
@@ -81,8 +82,8 @@ const pageMeta: Record<MasterPage, PageMeta> = {
   "privacy-policy": { title: "Privacy Policy | Forest Products Exchange Ltd", description: "How Forest Products Exchange Limited collects, uses, stores, protects and discloses personal information under New Zealand privacy law." },
   "cookie-policy": { title: "Cookie Policy | Forest Products Exchange Ltd", description: "How the FPX website uses cookies, browser storage and optional Google Analytics 4, including necessary, preference and analytics technologies." },
   "cookie-settings": { title: "Cookie Settings", description: "Review and update optional browser storage and analytics preferences for the FPX website." },
-  "timber-growth-rings": { title: "Radiata Pine Characteristics | Growth & Environment", description: "FPX Insight on how growth and environment shape Radiata pine timber characteristics in New Zealand.", image: "/images/radiata-pine-growth-rings-hero.png", type: "article", publishedAt: "2026-03-13", modifiedAt: "2026-09-21", articleSection: "Timber Characteristics" },
-  "the-science-of-kiln-drying": { title: "The Science of Kiln Drying Radiata Pine", description: "FPX Insight covering conventional and continuous kilns, moisture content and why kiln drying matters for Radiata pine.", image: "/images/kiln-drying-cover.png", type: "article", publishedAt: "2026-09-16", modifiedAt: "2026-09-21", articleSection: "Timber Processing" },
+  "timber-growth-rings": { title: "Radiata Pine Characteristics | Growth & Environment", description: "An FPX guide to how growing conditions and environment influence Radiata pine timber characteristics in New Zealand.", image: "/images/radiata-pine-growth-rings-hero.png", imageWidth: 1800, imageHeight: 506, type: "article", publishedAt: "2026-03-13", modifiedAt: "2026-09-21", articleSection: "Timber Characteristics" },
+  "the-science-of-kiln-drying": { title: "The Science of Kiln Drying Radiata Pine", description: "Learn how conventional and continuous kilns manage moisture content and why drying matters when specifying Radiata pine timber.", image: "/images/kiln-drying-cover.png", imageWidth: 1536, imageHeight: 1024, type: "article", publishedAt: "2026-09-16", modifiedAt: "2026-09-21", articleSection: "Timber Processing" },
 };
 
 export function generateStaticParams() { return masterPages.map((slug) => ({ slug })); }
@@ -96,9 +97,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const isProduction = process.env.VERCEL_ENV === "production";
   const shouldIndex = isProduction && slug !== "faq" && slug !== "cookie-settings";
   const robots = { index: shouldIndex, follow: true, googleBot: { index: shouldIndex, follow: true, "max-image-preview": "large" as const, "max-snippet": -1, "max-video-preview": -1 } };
+  const socialImages = [{ url: image, width: data.imageWidth ?? 1200, height: data.imageHeight ?? 630, alt: `${data.title} | FPX` }];
   const openGraph = data.type === "article"
-    ? { type: "article" as const, locale: "en_NZ", url: path, siteName: "FPX | Forest Products Exchange", title: `${data.title} | FPX`, description: data.description, images: [{ url: image, width: 1200, height: 630, alt: `${data.title} | FPX` }], publishedTime: data.publishedAt, modifiedTime: data.modifiedAt, section: data.articleSection, authors: [`${siteUrl}/about-us`] }
-    : { type: "website" as const, locale: "en_NZ", url: path, siteName: "FPX | Forest Products Exchange", title: `${data.title} | FPX`, description: data.description, images: [{ url: image, width: 1200, height: 630, alt: `${data.title} | FPX` }] };
+    ? { type: "article" as const, locale: "en_NZ", url: path, siteName: "FPX | Forest Products Exchange", title: `${data.title} | FPX`, description: data.description, images: socialImages, publishedTime: data.publishedAt, modifiedTime: data.modifiedAt, section: data.articleSection, authors: [`${siteUrl}/about-us`] }
+    : { type: "website" as const, locale: "en_NZ", url: path, siteName: "FPX | Forest Products Exchange", title: `${data.title} | FPX`, description: data.description, images: socialImages };
   return {
     title: data.title,
     description: data.description,
@@ -110,22 +112,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 
-const faqSchemaItems = [
-  ["What is FPX Sourcing?","FPX Sourcing helps commercial timber buyers explore supply and submit requirements. Explore FPX Sourcing lets visitors browse current timber supply, search the wider catalogue, review offers and submit a timber request before creating an account."],
-  ["Do I need an FPX account to explore timber?","No. You can use Explore FPX Sourcing to browse current timber supply, search the wider product catalogue, view current offers, inspect product information and submit a timber request without an account."],
-  ["Who is FPX for?","FPX is built for commercial timber buyers including contractors, builders, procurement teams, timber merchants and wood processors. International buyers can also submit requirements for review."],
-  ["How do I start sourcing timber through FPX?","Start with Explore FPX Sourcing. Browse timber, review current offers or build a request, then sign in or request FPX access when you need the full customer experience."],
-  ["What if I cannot find the timber I need?","Create a request with the dimensions, grade, treatment, quantity and other requirements you know. You can submit the requirement through Explore FPX Sourcing without creating an account."],
-  ["What information should I include in a timber request?","Include the product or application, dimensions, grade, treatment, quantity and required timing where known. Clear specifications help FPX identify suitable options."],
-  ["What are FPX Offers?","Offers are current timber opportunities that buyers can review and enquire about. Explore FPX Sourcing lets visitors view current offers before they have an FPX account."],
-  ["What is the difference between Explore FPX Sourcing and full FPX access?","Explore FPX Sourcing is the public experience. It lets visitors explore supply, search the catalogue, review offers and submit requirements. Full FPX access is for approved customers and includes customer-specific pricing, commercial quantities, orders and account tools."],
-  ["What does Get FPX Access do?","Get FPX Access starts the sign-up process for the full FPX customer experience. Existing FPX customers can use Login to return directly to their account."],
-  ["Can I manage orders through FPX?","Yes. Approved FPX customers can manage order information, deliveries and previously ordered products through their buyer account."],
-  ["Can I reorder timber I have bought before?","Previously ordered products can be used as a starting point for repeat requirements, reducing the need to rebuild the same request from scratch."],
-  ["How much does FPX cost for buyers?","FPX is free for buyers to use."],
-  ["Who can I contact if I need help?","Contact FPX at support@fpx.nz or use the Contact page for timber sourcing questions, platform support or general enquiries."],
-] as const;
-
 const sawPointMonthOrder=["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
 function sawPointIssueDateValue(value:string){
   const upper=value.toUpperCase();
@@ -136,10 +122,10 @@ function sawPointIssueDateValue(value:string){
 const sawPointSchemaIssues=[...sawPointIssues].sort((a,b)=>sawPointIssueDateValue(b.date)-sawPointIssueDateValue(a.date)||Number(b.issue)-Number(a.issue));
 
 const howToSteps = [
-  ["Start where you are","Explore current timber supply, review offers or submit a specific request without creating an account. Start with the route that best matches what you know."],
-  ["Share the detail","Add the dimensions, grade, treatment and quantity that matter to the job. Clear inputs make the next step easier."],
-  ["Choose what fits","Review the timber options and the information around them, then choose the route that works for your team."],
-  ["Keep it moving","FPX keeps the order and delivery path connected so your team can follow the handover through to site."],
+  ["Browse or submit","Browse available Stock or submit a specific timber requirement without creating an account."],
+  ["Share the detail","Add the specification, quantity and delivery information that matters to the requirement."],
+  ["Review the quotation","Review the product, pricing and relevant supply information provided."],
+  ["Manage the order","Confirmed customers can continue through their FPX account for order information and account tools."],
 ] as const;
 
 function breadcrumbSchema(slug: string) {
@@ -198,7 +184,7 @@ function pageSchema(slug: string) {
       name:data.title,
       description:data.description,
       url,
-      mainEntity:faqSchemaItems.map(([question,answer])=>({"@type":"Question",name:question,acceptedAnswer:{"@type":"Answer",text:answer}})),
+      mainEntity:faqGroups.flatMap(group=>group.items.map(([question,answer])=>({"@type":"Question",name:question,acceptedAnswer:{"@type":"Answer",text:answer}}))),
       isPartOf:{"@id":`${siteUrl}/#website`},
       inLanguage:"en-NZ"
     };
