@@ -47,7 +47,7 @@ export default function CustomerSectionMockup(){
               <div className="customer-copy">
                 <p>{customer.label}</p>
                 <h2>{customer.title}</h2>
-                <span>{customer.cta} <b aria-hidden="true">→</b></span>
+                <span>{customer.cta}</span>
               </div>
             </article>
           ))}

@@ -22,7 +22,7 @@ export function Header(){
         <Link href="/our-customers">Our Customers</Link>
         <Link href="/fpx-intelligence">FPX Intelligence</Link>
         <div className="george-resources">
-          <button type="button" aria-haspopup="true">Resources <span aria-hidden="true">⌄</span></button>
+          <button type="button" aria-haspopup="true">Resources</button>
           <div className="george-resources-menu">
             {resourceLinks.map(item=><Link href={item.href} key={item.href}><b>{item.label}</b><small>{item.description}</small></Link>)}
           </div>

@@ -7,10 +7,6 @@ import "./george-home-media.css";
 const browseUrl = "https://app.fpx.nz/explore-fpx-sourcing";
 const requestUrl = "https://app.fpx.nz/explore-fpx-sourcing?request=1";
 
-function Arrow(){
-  return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>;
-}
-
 function Icon({type}:{type:"range"|"price"|"delivery"|"insights"|"stock"|"request"|"quote"|"orders"}){
   const common = {width:28,height:28,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:1.8,strokeLinecap:"round" as const,strokeLinejoin:"round" as const,"aria-hidden":true};
   if(type==="range") return <svg {...common}><path d="M4 7h16M4 12h16M4 17h16"/><path d="M7 4v16"/></svg>;
@@ -69,8 +65,8 @@ export function GeorgeHome(){
             <h1>Browse timber.<br/><span>Submit what you need.</span></h1>
             <p className="gh-lead">FPX gives commercial timber buyers one place to browse available timber and pricing, submit timber requirements, review quotations and manage orders.</p>
             <div className="gh-actions">
-              <a className="gh-btn gh-btn-light" href={browseUrl}>Browse Timber <Arrow/></a>
-              <a className="gh-btn gh-btn-outline" href={requestUrl}>Submit a Timber Request <Arrow/></a>
+              <a className="gh-btn gh-btn-light" href={browseUrl}>Browse Timber</a>
+              <a className="gh-btn gh-btn-outline" href={requestUrl}>Submit a Timber Request</a>
             </div>
             <p className="gh-trust">FPX Sourcing is operated commercially by <strong>Sutcliffe Trading</strong>, a New Zealand timber trading business established in 1988.</p>
           </div>
@@ -102,13 +98,13 @@ export function GeorgeHome(){
             <div className="gh-source-image gh-source-ui-image">
               <img src="https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/fpx-browse-stock-homepage.png" alt="FPX browse available stock screen"/>
             </div>
-            <div className="gh-source-body"><div className="gh-card-icon"><Icon type="stock"/></div><h3>Browse available stock</h3><p>See available timber, specifications, pricing, specials and tier-volume pricing.</p><a href={browseUrl}>Browse Timber <Arrow/></a></div>
+            <div className="gh-source-body"><div className="gh-card-icon"><Icon type="stock"/></div><h3>Browse available stock</h3><p>See available timber, specifications, pricing, specials and tier-volume pricing.</p><a href={browseUrl}>Browse Timber</a></div>
           </article>
           <article className="gh-source-card">
             <div className="gh-source-image gh-source-request-image gh-source-ui-image">
               <img src="https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images/fpx-submit-request-homepage.png" alt="FPX submit timber request screen"/>
             </div>
-            <div className="gh-source-body"><div className="gh-card-icon"><Icon type="request"/></div><h3>Submit a timber request</h3><p>Send the specification, quantity and delivery requirements for timber you need sourced and quoted.</p><a href={requestUrl}>Submit a Request <Arrow/></a></div>
+            <div className="gh-source-body"><div className="gh-card-icon"><Icon type="request"/></div><h3>Submit a timber request</h3><p>Send the specification, quantity and delivery requirements for timber you need sourced and quoted.</p><a href={requestUrl}>Submit a Request</a></div>
           </article>
         </div>
         <div className="gh-account-row">
@@ -121,12 +117,12 @@ export function GeorgeHome(){
       <section className="gh-section gh-range">
         <div className="gh-heading gh-heading-row">
           <div><p className="gh-eyebrow gh-eyebrow-dark">TIMBER RANGE</p><h2>Explore the timber range.</h2><p>Start with the product group, then continue into FPX to browse availability or submit a requirement.</p></div>
-          <Link href="/timber" className="gh-text-link">View timber range <Arrow/></Link>
+          <Link href="/timber" className="gh-text-link">View timber range</Link>
         </div>
         <div className="gh-range-grid">
           {productGroups.map((group)=><Link href="/timber" className="gh-range-card" key={group.title}>
             <div className="gh-range-image"><Image src={group.image} alt="" fill sizes="(max-width: 700px) 100vw, 25vw"/></div>
-            <div className="gh-range-copy"><h3>{group.title}</h3><p>{group.text}</p><span>Explore range <Arrow/></span></div>
+            <div className="gh-range-copy"><h3>{group.title}</h3><p>{group.text}</p><span>Explore range</span></div>
           </Link>)}
         </div>
       </section>
@@ -146,7 +142,7 @@ export function GeorgeHome(){
             <div className="gh-customer-panel-copy">
               <p>{customer.eyebrow}</p>
               <h3>{customer.title}</h3>
-              <span>{customer.cta} <Arrow/></span>
+              <span>{customer.cta}</span>
             </div>
           </a>)}
         </div>
@@ -177,12 +173,12 @@ export function GeorgeHome(){
             alt="Sutcliffe Trading"
           />
         </div>
-        <div className="gh-sutcliffe-copy"><p className="gh-eyebrow gh-eyebrow-dark">THE TIMBER BUSINESS BEHIND FPX SOURCING</p><h2>Digital access. Commercial timber experience.</h2><p>FPX is the customer-facing digital platform. FPX Sourcing is operated commercially by Sutcliffe Trading, which sources, sells and invoices timber supplied through the platform.</p><Link href="/about-us" className="gh-text-link">About FPX <Arrow/></Link></div>
+        <div className="gh-sutcliffe-copy"><p className="gh-eyebrow gh-eyebrow-dark">THE TIMBER BUSINESS BEHIND FPX SOURCING</p><h2>Digital access. Commercial timber experience.</h2><p>FPX is the customer-facing digital platform. FPX Sourcing is operated commercially by Sutcliffe Trading, which sources, sells and invoices timber supplied through the platform.</p><Link href="/about-us" className="gh-text-link">About FPX</Link></div>
       </section>
 
       <section className="gh-final">
         <div><p className="gh-eyebrow">START WITH FPX</p><h2>Browse timber or submit what you need.</h2></div>
-        <div className="gh-actions"><a className="gh-btn gh-btn-green" href={browseUrl}>Browse Timber <Arrow/></a><a className="gh-btn gh-btn-outline" href={requestUrl}>Submit a Timber Request <Arrow/></a></div>
+        <div className="gh-actions"><a className="gh-btn gh-btn-green" href={browseUrl}>Browse Timber</a><a className="gh-btn gh-btn-outline" href={requestUrl}>Submit a Timber Request</a></div>
       </section>
     </main>
   </Shell>;

@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, Mail, ArrowRight, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Mail, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Eyebrow } from "./master-shared";
 import sawPointIssues from "../data/saw-point-issues.json";
@@ -89,12 +89,11 @@ export function SawPointPage(){
           <small>ISSUE {latest.issue}</small>
           <h2>The latest<br/>Saw Point.</h2>
           <p>{latest.excerpt}</p>
-          <span className="spx-read">{latest.body?"Read issue on FPX":"Read issue on LinkedIn"} <ExternalLink size={16}/></span>
+          <span className="spx-read">{latest.body?"Read issue on FPX":"Read issue on LinkedIn"}</span>
         </div>
         <div className="spx-feature-side">
           <span>MONTHLY INDUSTRY READ</span>
           <p>Selected developments. Clear context. Written for people working in and around New Zealand timber.</p>
-          <ArrowRight aria-hidden="true"/>
         </div>
       </a>
     </section>
@@ -149,16 +148,16 @@ export function SawPointPage(){
               <h3>{item.title}</h3>
               <p>{item.excerpt}</p>
             </div>
-            <span className="spx-archive-link">Read issue <ExternalLink size={14}/></span>
+            <span className="spx-archive-link">Read issue</span>
           </a>
         )}
         {visibleArchive.length===0&&<div className="spx-archive-empty"><strong>No matching issues.</strong><span>Try another search term or year.</span></div>}
       </div>
 
       <div className="spx-pagination" aria-label="Saw Point archive pagination">
-        <button type="button" onClick={()=>setArchivePage(Math.max(1,safeArchivePage-1))} disabled={safeArchivePage<=1}><ChevronLeft size={16}/> Previous</button>
+        <button type="button" onClick={()=>setArchivePage(Math.max(1,safeArchivePage-1))} disabled={safeArchivePage<=1}>Previous</button>
         <span>Page <b>{safeArchivePage}</b> of <b>{totalArchivePages}</b></span>
-        <button type="button" onClick={()=>setArchivePage(Math.min(totalArchivePages,safeArchivePage+1))} disabled={safeArchivePage>=totalArchivePages}>Next <ChevronRight size={16}/></button>
+        <button type="button" onClick={()=>setArchivePage(Math.min(totalArchivePages,safeArchivePage+1))} disabled={safeArchivePage>=totalArchivePages}>Next</button>
       </div>
     </section>
 
@@ -181,7 +180,7 @@ export function SawPointPage(){
         <h3>Join the Saw Point list</h3>
         <label><span>Name</span><input name="name" autoComplete="name" placeholder="Your name" required/></label>
         <label><span>Email</span><input name="email" type="email" autoComplete="email" placeholder="you@company.co.nz" required/></label>
-        <button type="submit" disabled={subscribeStatus==="sending"}>{subscribeStatus==="sending"?"Subscribing…":"Subscribe"} <ArrowRight size={17}/></button>
+        <button type="submit" disabled={subscribeStatus==="sending"}>{subscribeStatus==="sending"?"Subscribing…":"Subscribe"}</button>
         <small aria-live="polite">{subscribeMessage||<>Monthly Saw Point updates. Unsubscribe any time. See our <a href="/privacy-policy">Privacy Policy</a>.</>}</small>
       </form>
     </section>

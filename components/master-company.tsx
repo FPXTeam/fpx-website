@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Phone, MapPin, MessageSquareText } from "lucide-react";
-import { Eyebrow, Arrow, Breadcrumbs, PageCTA } from "./master-shared";
+import { Eyebrow, Breadcrumbs, PageCTA } from "./master-shared";
 import { trackFpxEvent } from "./analytics-events";
 
 const customerGroups=[
@@ -119,8 +119,8 @@ export function CustomersPage(){
           </div>
 
           <div className="poc4-nav">
-            <button type="button" onClick={()=>setActive((active-1+customerProfiles.length)%customerProfiles.length)} aria-label="Previous customer">←</button>
-            <button type="button" onClick={()=>setActive((active+1)%customerProfiles.length)} aria-label="Next customer">→</button>
+            <button type="button" onClick={()=>setActive((active-1+customerProfiles.length)%customerProfiles.length)} aria-label="Previous customer">Previous</button>
+            <button type="button" onClick={()=>setActive((active+1)%customerProfiles.length)} aria-label="Next customer">Next</button>
           </div>
         </div>
 
@@ -151,8 +151,8 @@ export function CustomersPage(){
           </div>
 
           <div className="poc4-actions">
-            <a href="https://app.fpx.nz/explore-fpx-sourcing">Browse timber <Arrow/></a>
-            <a href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Create a request <Arrow/></a>
+            <a href="https://app.fpx.nz/explore-fpx-sourcing">Browse timber</a>
+            <a href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Create a request</a>
           </div>
         </div>
       </div>
@@ -160,7 +160,7 @@ export function CustomersPage(){
 
     <section className="poc2-close">
       <div><Eyebrow>START SOURCING</Eyebrow><h2>Start with the requirement you have.</h2><p>Browse available timber or send FPX the detail you already know.</p></div>
-      <div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/explore-fpx-sourcing">Browse timber <Arrow/></a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Create a request <Arrow/></a></div>
+      <div className="m-actions"><a className="m-btn m-btn-primary" href="https://app.fpx.nz/explore-fpx-sourcing">Browse timber</a><a className="m-btn m-btn-ghost" href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Create a request</a></div>
     </section>
   </>;
 }
@@ -266,8 +266,8 @@ export function AboutPage(){
         <p>Browse current timber or send FPX the detail you already know.</p>
       </div>
       <div className="m-actions">
-        <a className="m-btn m-btn-primary" href="https://app.fpx.nz/explore-fpx-sourcing">Browse timber <Arrow/></a>
-        <a className="m-btn m-btn-ghost" href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Create a request <Arrow/></a>
+        <a className="m-btn m-btn-primary" href="https://app.fpx.nz/explore-fpx-sourcing">Browse timber</a>
+        <a className="m-btn m-btn-ghost" href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Create a request</a>
       </div>
     </section>
   </>;
@@ -331,12 +331,10 @@ export function ContactPage(){
       <a href="https://app.fpx.nz/explore-fpx-sourcing">
         <span>01</span>
         <div><small>AVAILABLE TIMBER</small><h3>Browse current timber.</h3><p>Start with products that are already available through FPX.</p></div>
-        <Arrow/>
       </a>
       <a href="https://app.fpx.nz/explore-fpx-sourcing?request=1">
         <span>02</span>
         <div><small>SPECIFIC REQUIREMENT</small><h3>Create a timber request.</h3><p>Send the specification and quantity when you already know what the job needs.</p></div>
-        <Arrow/>
       </a>
     </nav>
   </section>
@@ -367,7 +365,7 @@ export function ContactPage(){
       </div>
       <div className="pct2-form-foot">
         <button className="m-btn m-btn-primary" type="submit" disabled={status==="sending"}>
-          {status==="sending"?"Sending…":"Send message"} <Arrow/>
+          {status==="sending"?"Sending…":"Send message"}
         </button>
         <small aria-live="polite">{message||"Your message will be sent directly to the FPX team."}</small><p className="pct2-privacy">By sending this form, you provide the information above to FPX so we can respond to your enquiry. See our <Link href="/privacy-policy">Privacy Policy</Link>.</p>
       </div>

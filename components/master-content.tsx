@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { ChevronDown, Search } from "lucide-react";
-import { Eyebrow, Arrow, Breadcrumbs, PageCTA } from "./master-shared";
+import { Eyebrow, Breadcrumbs, PageCTA } from "./master-shared";
 import { privacyPolicy } from "./legal-privacy";
 import { termsAndConditions } from "./legal-terms";
 import { cookiePolicy } from "./legal-cookies";
@@ -52,7 +52,7 @@ export function ResourcesPage(){
             <h2>{featured.title}</h2>
             <h3>{featured.subtitle}</h3>
             <p>{featured.copy}</p>
-            <b>Read FPX Insight <Arrow/></b>
+            <b>Read FPX Insight</b>
           </div>
         </Link>
       </>}
@@ -67,7 +67,7 @@ export function ResourcesPage(){
               <h2>{item.title}</h2>
               <h3>{item.subtitle}</h3>
               <p>{item.copy}</p>
-              <b>Read FPX Insight <Arrow/></b>
+              <b>Read FPX Insight</b>
             </Link>)}
           </div>
         </div>
@@ -135,14 +135,14 @@ export function FAQPage(){
     requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"}));
   }
   return <>
-    <section className="pfq-hero"><div><Eyebrow>FREQUENTLY ASKED QUESTIONS</Eyebrow><h1>Straight answers.<br/><span className="headline-accent">No clutter.</span></h1><p>Everything you need to know about exploring FPX, submitting requests, getting full customer access, orders and support.</p></div><aside><small>CAN&apos;T FIND IT?</small><h2>Ask the FPX team.</h2><p>Send us your requirement and we will point you in the right direction.</p><Link href="/contact-us">Contact FPX <Arrow/></Link></aside></section>
+    <section className="pfq-hero"><div><Eyebrow>FREQUENTLY ASKED QUESTIONS</Eyebrow><h1>Straight answers.<br/><span className="headline-accent">No clutter.</span></h1><p>Everything you need to know about exploring FPX, submitting requests, getting full customer access, orders and support.</p></div><aside><small>CAN&apos;T FIND IT?</small><h2>Ask the FPX team.</h2><p>Send us your requirement and we will point you in the right direction.</p><Link href="/contact-us">Contact FPX</Link></aside></section>
     <section className="pfq-main pfq-main-all">
       <nav aria-label="FAQ topics">{faqGroups.map((group,i)=><button key={group.title} type="button" className={active===group.title?"active":""} onClick={()=>goTo(group.title)}><span>0{i+1}</span>{group.title}</button>)}</nav>
       <div className="pfq-all-topics">{faqGroups.map(group=>{
         const id="faq-"+group.title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
         return <section className="pfq-topic" id={id} key={group.title}><small>FAQ TOPIC</small><h2>{group.title}</h2>{group.items.map(([question,answer],i)=>{
           const links=faqAnswerLinks[question]||[];
-          return <details key={question} open={group.title==="Getting started"&&i===0}><summary><span>{String(i+1).padStart(2,"0")}</span><b>{question}</b><ChevronDown/></summary><div className="pfq-answer"><p>{answer}</p>{links.length>0&&<nav aria-label={`Related links for ${question}`}>{links.map(link=>link.external?<a key={link.label} href={link.href}>{link.label} <Arrow/></a>:<Link key={link.label} href={link.href}>{link.label} <Arrow/></Link>)}</nav>}</div></details>
+          return <details key={question} open={group.title==="Getting started"&&i===0}><summary><span>{String(i+1).padStart(2,"0")}</span><b>{question}</b><ChevronDown/></summary><div className="pfq-answer"><p>{answer}</p>{links.length>0&&<nav aria-label={`Related links for ${question}`}>{links.map(link=>link.external?<a key={link.label} href={link.href}>{link.label}</a>:<Link key={link.label} href={link.href}>{link.label}</Link>)}</nav>}</div></details>
         })}</section>
       })}</div>
     </section>
@@ -150,7 +150,7 @@ export function FAQPage(){
 }
 
 export function LegalPage({slug}:{slug:string}){
-  if(slug==="cookie-settings")return <><Breadcrumbs items={[["Home","/"],["Cookie Settings","/cookie-settings"]]}/><section className="m-legal-hero m-animate-in"><Eyebrow>FPX PRIVACY</Eyebrow><h1>Cookie Settings</h1><p>Review optional browser storage and analytics preferences for the FPX website.</p></section><section className="m-cookie-settings"><div><Eyebrow>YOUR CHOICES</Eyebrow><h2>Choose what FPX can use.</h2><p>Strictly necessary storage remains active because it is required for core website functionality and to remember your privacy choice. Optional preferences and analytics can be changed below at any time.</p><p>Google Analytics 4 is used only when Analytics is enabled. Marketing trackers are not currently enabled through FPX public website code.</p><div className="m-cookie-links"><Link href="/cookie-policy">Read Cookie Policy <Arrow/></Link><Link href="/privacy-policy">Read Privacy Policy <Arrow/></Link></div></div><CookieSettingsPanel/></section></>;
+  if(slug==="cookie-settings")return <><Breadcrumbs items={[["Home","/"],["Cookie Settings","/cookie-settings"]]}/><section className="m-legal-hero m-animate-in"><Eyebrow>FPX PRIVACY</Eyebrow><h1>Cookie Settings</h1><p>Review optional browser storage and analytics preferences for the FPX website.</p></section><section className="m-cookie-settings"><div><Eyebrow>YOUR CHOICES</Eyebrow><h2>Choose what FPX can use.</h2><p>Strictly necessary storage remains active because it is required for core website functionality and to remember your privacy choice. Optional preferences and analytics can be changed below at any time.</p><p>Google Analytics 4 is used only when Analytics is enabled. Marketing trackers are not currently enabled through FPX public website code.</p><div className="m-cookie-links"><Link href="/cookie-policy">Read Cookie Policy</Link><Link href="/privacy-policy">Read Privacy Policy</Link></div></div><CookieSettingsPanel/></section></>;
   const doc=slug==="privacy-policy"?privacyPolicy:slug==="cookie-policy"?cookiePolicy:termsAndConditions;
   return <><Breadcrumbs items={[["Home","/"],[doc.title,`/${slug}`]]}/><section className="m-legal-hero m-animate-in"><Eyebrow>FPX LEGAL</Eyebrow><h1>{doc.title}</h1><p>Forest Products Exchange Limited</p>{doc.lastUpdated&&<small>Last updated: {doc.lastUpdated}</small>}</section><section className="m-legal m-legal-full"><aside><span>FOREST PRODUCTS EXCHANGE LIMITED</span><p>Official FPX legal document.</p><nav aria-label={`${doc.title} sections`}>{doc.toc.map(([num,title])=><a key={num} href={`#legal-${num}`}><b>{String(num).padStart(2,"0")}</b>{title}</a>)}</nav></aside><article className="m-legal-document" dangerouslySetInnerHTML={{__html:doc.html}}/></section></>;
 }
@@ -309,7 +309,7 @@ function RadiataPineArticle(){
         <span>06 · SOURCING</span>
         <h2>Sourcing Radiata Pine<br/><em>in a Digital Market</em></h2>
       </div>
-      <div className="ria-sourcing-copy">{sourcing.map(p=><p key={p}>{p}</p>)}<Link href="/fpx-sourcing">Explore FPX Sourcing <Arrow/></Link></div>
+      <div className="ria-sourcing-copy">{sourcing.map(p=><p key={p}>{p}</p>)}<Link href="/fpx-sourcing">Explore FPX Sourcing</Link></div>
     </section>
 
     <section id="radiata-conclusion" className="ria-conclusion">
@@ -326,7 +326,7 @@ function RadiataPineArticle(){
 
     <section className="ria-next">
       <div><Eyebrow>NEXT IN INDUSTRY INSIGHTS</Eyebrow><h2>The Science of Kiln Drying</h2><p>Conventional and continuous kilns, moisture content, and why it matters for Radiata Pine.</p><nav className="ria-related" aria-label="Related FPX timber pages"><Link href="/timber">Explore timber range</Link><Link href="/manufacturing">Manufacturing timber</Link><Link href="/fpx-sourcing">FPX Sourcing</Link></nav></div>
-      <Link href="/the-science-of-kiln-drying">Read next <Arrow/></Link>
+      <Link href="/the-science-of-kiln-drying">Read next</Link>
     </section>
   </article>;
 }

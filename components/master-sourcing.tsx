@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { Eyebrow, Arrow, AppButtons } from "./master-shared";
+import { Eyebrow, AppButtons } from "./master-shared";
 
 const requestSteps=[
   ["01","Submit request","Add the product, specification, quantity and delivery requirements you know."],
@@ -37,7 +37,7 @@ export function SourceTimberPage(){return <>
       <span className="pst-access-kicker">EXPLORE BEFORE YOU SIGN UP</span>
       <h3>No account needed to start.</h3>
       <p>Browse available timber or submit a timber requirement first. Full FPX access adds the customer account experience for quotations, orders and account tools.</p>
-      <a className="pst-access-primary" href="https://app.fpx.nz/explore-fpx-sourcing">Explore FPX Sourcing <Arrow/></a>
+      <a className="pst-access-primary" href="https://app.fpx.nz/explore-fpx-sourcing">Explore FPX Sourcing</a>
     </aside>
   </section>
 
@@ -67,7 +67,7 @@ export function SourceTimberPage(){return <>
         <summary><span>STOCK PATH</span><small>3 steps</small><b aria-hidden="true">+</b></summary>
         <div>{shopSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></div>)}</div>
       </details>
-      <a className="pst-route-cta" href="https://app.fpx.nz/explore-fpx-sourcing">Browse timber <Arrow/></a>
+      <a className="pst-route-cta" href="https://app.fpx.nz/explore-fpx-sourcing">Browse timber</a>
     </article>
 
     <article id="source-request" className="pst-route is-reverse">
@@ -85,7 +85,7 @@ export function SourceTimberPage(){return <>
         <summary><span>REQUEST PATH</span><small>4 steps</small><b aria-hidden="true">+</b></summary>
         <div>{requestSteps.map(([num,title,copy])=><div key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></div>)}</div>
       </details>
-      <a className="pst-route-cta" href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Submit a timber request <Arrow/></a>
+      <a className="pst-route-cta" href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Submit a timber request</a>
     </article>
   </section>
 
@@ -97,7 +97,7 @@ export function SourceTimberPage(){return <>
 
 export function HowPage(){const steps=[["01","Browse or submit","Browse available Stock or submit a specific timber requirement without creating an account."],["02","Share the detail","Add the specification, quantity and delivery information that matters to the requirement."],["03","Review the quotation","Review the product, pricing and relevant supply information provided."],["04","Manage the order","Confirmed customers can continue through their FPX account for order information and account tools."]];return <>
 <section className="phw-hero phw-hero-no-app"><div><Eyebrow>HOW FPX WORKS</Eyebrow><h1>From requirement<br/><span className="headline-accent">to order.</span></h1><p>Start by browsing available timber or submitting a Request. FPX keeps the customer journey connected through quotation and order management.</p><div className="phw-route-tags" aria-label="Ways to start with FPX"><span>Browse Stock</span><span>Submit a Request</span></div></div></section>
-<section className="ap-section ap-warm"><div className="ap-container"><div className="ap-intro"><p className="ap-eyebrow">TWO WAYS TO START</p><h2>See stock. Send a requirement.</h2><p>These are the FPX screens buyers use to begin. You can explore before requesting full account access.</p></div><div className="ap-two"><article className="ap-card"><div className="ap-screen"><Image src="/images/fpx-browse-stock-homepage.png" alt="FPX current stock browsing screen" width={1300} height={780}/></div><div className="ap-card-body"><h3>Browse Timber</h3><p>See current listings, specifications and pricing.</p><a className="ap-text-link" href="https://app.fpx.nz/explore-fpx-sourcing">Browse Timber →</a></div></article><article className="ap-card"><div className="ap-screen"><Image src="/images/fpx-submit-request-homepage.png" alt="FPX timber request screen" width={1300} height={780}/></div><div className="ap-card-body"><h3>Submit a Timber Request</h3><p>Send the product, specification, quantity and delivery details you know.</p><a className="ap-text-link" href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Submit a Timber Request →</a></div></article></div></div></section>
+<section className="ap-section ap-warm"><div className="ap-container"><div className="ap-intro"><p className="ap-eyebrow">TWO WAYS TO START</p><h2>See stock. Send a requirement.</h2><p>These are the FPX screens buyers use to begin. You can explore before requesting full account access.</p></div><div className="ap-two"><article className="ap-card"><div className="ap-screen"><Image src="/images/fpx-browse-stock-homepage.png" alt="FPX current stock browsing screen" width={1300} height={780}/></div><div className="ap-card-body"><h3>Browse Timber</h3><p>See current listings, specifications and pricing.</p><a className="ap-text-link" href="https://app.fpx.nz/explore-fpx-sourcing">Browse Timber</a></div></article><article className="ap-card"><div className="ap-screen"><Image src="/images/fpx-submit-request-homepage.png" alt="FPX timber request screen" width={1300} height={780}/></div><div className="ap-card-body"><h3>Submit a Timber Request</h3><p>Send the product, specification, quantity and delivery details you know.</p><a className="ap-text-link" href="https://app.fpx.nz/explore-fpx-sourcing?request=1">Submit a Timber Request</a></div></article></div></div></section>
 <section className="phw-flow"><header><Eyebrow>THE PROCESS</Eyebrow><h2>Four clear stages.</h2><p>The detail changes by requirement. The overall customer journey stays straightforward.</p></header><div>{steps.map(([num,title,copy])=><article key={num}><span>{num}</span><h3>{title}</h3><p>{copy}</p></article>)}</div></section>
 <section className="phw-close"><div><Eyebrow>START WHERE IT MAKES SENSE</Eyebrow><h2>Browse or submit a requirement.</h2><p>Choose the route that best matches what you need today.</p><nav className="phw-related" aria-label="Related FPX sourcing information"><Link href="/fpx-sourcing">FPX Sourcing</Link><Link href="/timber">Timber Range</Link><Link href="/frequently-asked-questions">Sourcing FAQ</Link></nav></div><AppButtons/></section>
 </>}

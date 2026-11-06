@@ -2717,14 +2717,15 @@
   gap:18px;
 }
 .poc4-nav button{
-  width:44px;
+  min-width:76px;
   height:44px;
-  border-radius:50%;
+  padding:0 12px;
+  border-radius:22px;
   border:1px solid var(--pi-line);
   background:#fff;
   color:var(--pi-ink);
   cursor:pointer;
-  font-size:18px;
+  font-size:12px;
 }
 .poc4-nav span{
   min-width:58px;

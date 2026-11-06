@@ -4,10 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-function ArrowIcon(){
-  return <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>;
-}
-
 export function HomeMotion(){
   useEffect(()=>{
     const root=document.querySelector<HTMLElement>(".premium-home");
@@ -47,7 +43,7 @@ export function BuyerStory(){
     ["Wood Processors","Timber sourcing aligned with production specifications and required volumes.","fpx-customer-processor.png"]
   ];
   return <section className="m-customers ph-customers-returned">
-    <div className="m-customers-title"><p className="m-eyebrow">OUR CUSTOMERS</p><h2>Built for businesses<br/><span className="headline-accent">that buy timber.</span></h2><Link href="/our-customers">Meet our customers <ArrowIcon/></Link></div>
+    <div className="m-customers-title"><p className="m-eyebrow">OUR CUSTOMERS</p><h2>Built for businesses<br/><span className="headline-accent">that buy timber.</span></h2><Link href="/our-customers">Meet our customers</Link></div>
     <div className={`m-customer-stage active-${active+1}`} aria-label="Four New Zealand professionals who buy commercial timber">
       <div className="m-customer-people">{groups.map((g,i)=><button type="button" key={g[0]} className={`m-person-button ${i===active?"active":""}`} onMouseEnter={()=>setActive(i)} onFocus={()=>setActive(i)} onClick={()=>setActive(i)} aria-label={`Show information for ${g[0]}`} aria-pressed={active===i}>
         <Image className="m-person" src={`/images/${g[2]}`} alt={`${g[0]} using FPX for commercial timber sourcing`} width={700} height={1000} sizes="(max-width: 700px) 42vw, 22vw" quality={75}/>

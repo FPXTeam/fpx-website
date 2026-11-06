@@ -37,8 +37,8 @@ export function GeorgeTimberPage(){
         <h1>New Zealand timber for the requirement at hand.</h1>
         <p className="ap-hero-lead">Explore product categories, check current listings, or request a specific grade or specification.</p>
         <div className="ap-actions">
-          <a className="ap-button ap-button-light" href={browse}>Browse Timber <span aria-hidden="true">→</span></a>
-          <a className="ap-button ap-button-outline" href={request}>Submit a Timber Request <span aria-hidden="true">→</span></a>
+          <a className="ap-button ap-button-light" href={browse}>Browse Timber</a>
+          <a className="ap-button ap-button-outline" href={request}>Submit a Timber Request</a>
         </div>
       </div>
     </section>
@@ -56,7 +56,7 @@ export function GeorgeTimberPage(){
               {category.images.map((image,imageIndex)=><img key={image} className={imageIndex===0?"gtr-active":""} src={`${raw}/${image}`} alt={`${category.title} timber`} loading={index===0&&imageIndex===0?"eager":"lazy"}/>) }
               <span className="gtr-number">{String(index+1).padStart(2,"0")}</span>
             </a>
-            <div className="gtr-copy"><h3>{category.title}</h3><a href={category.href}>Explore category <span aria-hidden="true">→</span></a></div>
+            <div className="gtr-copy"><h3>{category.title}</h3><a href={category.href}>Explore category</a></div>
           </article>)}
         </div>
       </div>
@@ -67,10 +67,10 @@ export function GeorgeTimberPage(){
         <p className="ap-eyebrow">BROADER SOURCING</p>
         <h2>Can&apos;t find the timber you need?</h2>
         <p>Whether you need a specific grade, custom dimensions or ongoing supply, send us your requirements and we&apos;ll work with our suppliers to find suitable solutions.</p>
-        <a className="ap-button ap-button-green" href={request}>Submit a Timber Request →</a>
+        <a className="ap-button ap-button-green" href={request}>Submit a Timber Request</a>
       </div>
     </section>
 
-    <section className="ap-final"><div className="ap-container ap-final-inner"><div><p className="ap-eyebrow">START WITH FPX</p><h2>Browse timber or tell us what you need.</h2></div><div className="ap-actions"><a className="ap-button ap-button-light" href={browse}>Browse Timber <span aria-hidden="true">→</span></a><a className="ap-button ap-button-outline" href={request}>Submit a Timber Request <span aria-hidden="true">→</span></a></div></div></section>
+    <section className="ap-final"><div className="ap-container ap-final-inner"><div><p className="ap-eyebrow">START WITH FPX</p><h2>Browse timber or tell us what you need.</h2></div><div className="ap-actions"><a className="ap-button ap-button-light" href={browse}>Browse Timber</a><a className="ap-button ap-button-outline" href={request}>Submit a Timber Request</a></div></div></section>
   </>;
 }
