@@ -109,6 +109,15 @@ export function useParallax(pageKey:string){
     const horizontalTracks=Array.from(document.querySelectorAll<HTMLElement>("[data-horizontal-scroll]"));
     if(!parallaxNodes.length&&!horizontalTracks.length) return;
     let frame = 0;
+    const measureTracks=()=>{
+      horizontalTracks.forEach(track=>{
+        const section=track.closest<HTMLElement>(".m-category-pocket");
+        if(!section) return;
+        const max=Math.max(0,track.scrollWidth-(track.parentElement?.clientWidth||0)+80);
+        const height=window.innerWidth>700?`${window.innerHeight+max+80}px`:"auto";
+        if(section.style.height!==height)section.style.height=height;
+      });
+    };
     const update=()=>{
       parallaxNodes.forEach(el=>{
         const r=el.getBoundingClientRect();
@@ -121,7 +130,6 @@ export function useParallax(pageKey:string){
         if(!section) return;
         const windowEl=track.parentElement;
         const max=Math.max(0,track.scrollWidth-(windowEl?.clientWidth||0)+80);
-        if(window.innerWidth>700){section.style.height=`${window.innerHeight+max+80}px`;}else{section.style.height="auto";}
         const r=section.getBoundingClientRect();
         const travel=Math.max(1,r.height-window.innerHeight);
         const progress=Math.max(0,Math.min(1,-r.top/travel));
@@ -130,8 +138,9 @@ export function useParallax(pageKey:string){
       frame=0;
     };
     const onScroll=()=>{if(!frame)frame=requestAnimationFrame(update)};
-    update(); window.addEventListener("scroll",onScroll,{passive:true}); window.addEventListener("resize",onScroll,{passive:true});
-    return()=>{window.removeEventListener("scroll",onScroll);window.removeEventListener("resize",onScroll);if(frame)cancelAnimationFrame(frame)};
+    const onResize=()=>{measureTracks();onScroll()};
+    measureTracks();update(); window.addEventListener("scroll",onScroll,{passive:true}); window.addEventListener("resize",onResize,{passive:true});
+    return()=>{window.removeEventListener("scroll",onScroll);window.removeEventListener("resize",onResize);if(frame)cancelAnimationFrame(frame)};
   },[pageKey]);
 }
 
