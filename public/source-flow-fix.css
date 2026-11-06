@@ -112,6 +112,7 @@
   background:#225d49!important;
   box-shadow:0 12px 26px rgba(44,114,90,.22);
 }
+#sourcing .source-copy>a:active{transform:scale(.98)}
 
 #sourcing .source-kicker{
   margin-bottom:0!important;
@@ -124,12 +125,29 @@
   background:linear-gradient(145deg,#e5ece8 0%,#dbe6e0 100%)!important;
 }
 
+/* Let the portrait Request List use its real proportions and balance the copy beside it. */
+#sourcing .source-card:nth-child(2){
+  grid-template-columns:minmax(0,1.18fr) minmax(340px,.82fr)!important;
+}
+#sourcing .source-card:nth-child(2) .source-shot{
+  min-height:0;
+  aspect-ratio:1022/1526;
+}
+#sourcing .source-card:nth-child(2) .source-shot img{
+  display:block;
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:1022/1526;
+  object-fit:contain!important;
+}
+
 #sourcing .source-card:nth-child(2) .source-copy{
   grid-column:1;
   grid-row:1;
   background:linear-gradient(145deg,#173e31 0%,#205b46 100%)!important;
   color:#fff!important;
 }
+#sourcing .source-card:nth-child(2) .source-copy>a{margin-top:0!important}
 
 #sourcing .source-card:nth-child(2) .source-copy h3,
 #sourcing .source-card:nth-child(2) .source-copy p,
@@ -158,6 +176,7 @@
   #sourcing .source-card{
     grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr)!important;
   }
+  #sourcing .source-card:nth-child(2){grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr)!important}
   #sourcing .source-copy{padding:36px 30px!important}
   #sourcing .source-shot{min-height:320px}
 }
@@ -170,6 +189,7 @@
     min-height:0;
     border-radius:18px!important;
   }
+  #sourcing .source-card:nth-child(2){grid-template-columns:none!important}
   #sourcing .source-card:nth-child(2) .source-visual,
   #sourcing .source-card:nth-child(2) .source-copy{
     grid-column:auto;

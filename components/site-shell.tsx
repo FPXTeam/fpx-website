@@ -31,7 +31,7 @@ export function Header(){
         <Link href="/contact-us">Contact</Link>
       </nav>
       <div className="george-nav-actions">
-        <a className="george-login" href="https://app.fpx.nz/">Login ↗</a>
+        <a className="george-login" href="https://app.fpx.nz/">Login</a>
         <a className="george-access" href="https://app.fpx.nz/sourcing-sign-up">Get FPX Access</a>
       </div>
       <details className="george-mobile-menu">
