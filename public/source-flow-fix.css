@@ -125,20 +125,24 @@
   background:linear-gradient(145deg,#e5ece8 0%,#dbe6e0 100%)!important;
 }
 
-/* Let the portrait Request List use its real proportions and balance the copy beside it. */
+/* Make the Request List readable at a glance without letting its portrait shape
+   create a tall, empty green panel. The full image remains on FPX Sourcing. */
 #sourcing .source-card:nth-child(2){
-  grid-template-columns:minmax(0,1.18fr) minmax(340px,.82fr)!important;
+  grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)!important;
+  aspect-ratio:1180/733;
 }
 #sourcing .source-card:nth-child(2) .source-shot{
   min-height:0;
-  aspect-ratio:1022/1526;
+  height:100%!important;
+  aspect-ratio:auto;
 }
 #sourcing .source-card:nth-child(2) .source-shot img{
   display:block;
   width:100%!important;
-  height:auto!important;
-  aspect-ratio:1022/1526;
-  object-fit:contain!important;
+  height:100%!important;
+  aspect-ratio:auto;
+  object-fit:cover!important;
+  object-position:center top!important;
 }
 
 #sourcing .source-card:nth-child(2) .source-copy{
@@ -177,7 +181,7 @@
   #sourcing .source-card{
     grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr)!important;
   }
-  #sourcing .source-card:nth-child(2){grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr)!important}
+  #sourcing .source-card:nth-child(2){grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)!important}
   #sourcing .source-copy{padding:36px 30px!important}
   #sourcing .source-shot{min-height:320px}
 }
@@ -190,7 +194,7 @@
     min-height:0;
     border-radius:18px!important;
   }
-  #sourcing .source-card:nth-child(2){grid-template-columns:none!important}
+  #sourcing .source-card:nth-child(2){grid-template-columns:none!important;aspect-ratio:auto}
   #sourcing .source-card:nth-child(2) .source-visual,
   #sourcing .source-card:nth-child(2) .source-copy{
     grid-column:auto;
@@ -207,6 +211,15 @@
   #sourcing .source-shot{
     min-height:245px;
     border-radius:12px!important;
+  }
+  #sourcing .source-card:nth-child(2) .source-shot{
+    height:auto!important;
+    aspect-ratio:1022/1526;
+  }
+  #sourcing .source-card:nth-child(2) .source-shot img{
+    height:auto!important;
+    aspect-ratio:1022/1526;
+    object-fit:contain!important;
   }
   #sourcing .source-copy h3{
     font-size:30px!important;
