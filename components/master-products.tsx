@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { productGroups, Eyebrow, Arrow, AppButtons } from "./master-shared";
+import { productGroups, Eyebrow, AppButtons } from "./master-shared";
 
 const rawMain="https://raw.githubusercontent.com/FPXTeam/fpx-website/main/public/images";
 
@@ -176,7 +176,7 @@ export function ProductsPage(){
           <Eyebrow>PRODUCT GROUP {String(i+1).padStart(2,"0")}</Eyebrow>
           <h2>{group[0]}</h2>
           <p>{group[1]}</p>
-          <Link href={`/${group[3]}`}>Explore {group[0]} <Arrow/></Link>
+          <Link href={`/${group[3]}`}>Explore {group[0]}</Link>
         </div>
       </article>)}
     </section>
@@ -197,7 +197,7 @@ export function ProductsPage(){
           <p>{use[1]}</p>
         </article>)}
       </div>
-      <a className="ppr-view-all" href="https://app.fpx.nz/explore-fpx-sourcing">Browse current Stock <Arrow/></a>
+      <a className="ppr-view-all" href="https://app.fpx.nz/explore-fpx-sourcing">Browse current Stock</a>
     </section>
 
     <section className="ppr-close">
@@ -240,7 +240,7 @@ export function ProductGroupPage({slug}:{slug:string}){
 
   return <>
     <section className="pg-hero">
-      <div className="pg-hero-copy"><span className="pg-number">{number}</span><Eyebrow>TIMBER RANGE</Eyebrow><h1>{group.title}</h1><p>{group.description}</p><div className="m-actions"><a href="https://app.fpx.nz/explore-fpx-sourcing" className="m-btn m-btn-primary">Browse Timber <Arrow/></a><a href="https://app.fpx.nz/explore-fpx-sourcing?request=1" className="m-btn m-btn-ghost">Submit a Timber Request <Arrow/></a></div></div>
+      <div className="pg-hero-copy"><span className="pg-number">{number}</span><Eyebrow>TIMBER RANGE</Eyebrow><h1>{group.title}</h1><p>{group.description}</p><div className="m-actions"><a href="https://app.fpx.nz/explore-fpx-sourcing" className="m-btn m-btn-primary">Browse Timber</a><a href="https://app.fpx.nz/explore-fpx-sourcing?request=1" className="m-btn m-btn-ghost">Submit a Timber Request</a></div></div>
       <ProductHeroMedia group={group}/>
     </section>
 
@@ -260,7 +260,7 @@ export function ProductGroupPage({slug}:{slug:string}){
     {group.examples&&<section className="pg-examples"><div><Eyebrow>{slug==="manufacturing"?"EXAMPLES ACROSS THE RANGE":"TYPICAL APPLICATIONS"}</Eyebrow><h2>{slug==="manufacturing"?"Breadth without the specification overload.":"Built around practical transport needs."}</h2></div><div>{group.examples.map(item=><span key={item}>{item}</span>)}</div></section>}
 
     <section className="pg-summary pg-related-links" aria-label="Related timber guidance">
-      {relatedGuidance[slug].map(([label,title,href])=><article key={href}><small>{label}</small><p><Link href={href}>{title} <Arrow/></Link></p></article>)}
+      {relatedGuidance[slug].map(([label,title,href])=><article key={href}><small>{label}</small><p><Link href={href}>{title}</Link></p></article>)}
     </section>
 
     <section className="pg-close"><div><Eyebrow>EXPLORE IN FPX</Eyebrow><h2>Need the grade, size or specification?</h2><p>Browse current stock or submit a timber request in FPX. The range shown here introduces possible applications; individual listings and availability are shown in FPX.</p></div><AppButtons/></section>

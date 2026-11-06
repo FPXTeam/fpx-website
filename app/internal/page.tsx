@@ -103,7 +103,7 @@ export default function InternalToolsPage() {
                 {tool.title}
               </div>
               <div style={{ color: "#B8C7C1", fontSize: 14, lineHeight: 1.55 }}>{tool.description}</div>
-              <div style={{ marginTop: 18, color: "#53C396", fontSize: 13, fontWeight: 800 }}>Open tool →</div>
+              <div style={{ marginTop: 18, color: "#53C396", fontSize: 13, fontWeight: 800 }}>Open tool</div>
             </Link>
           ))}
         </section>

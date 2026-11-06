@@ -3,7 +3,6 @@ import "../../../components/master-site.css";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ExternalLink, ArrowLeft } from "lucide-react";
 import issues from "../../../data/saw-point-issues.json";
 
 const siteUrl = "https://www.fpx.nz";
@@ -62,7 +61,7 @@ export default async function SawPointIssuePage({params}:{params:Promise<{slug:s
 
   return <><script type="application/ld+json">{JSON.stringify(articleSchema)}</script><main className="spi-page">
     <header className="spi-hero">
-      <Link href="/saw-point"><ArrowLeft size={15}/> Back to Saw Point</Link>
+      <Link href="/saw-point">Back to Saw Point</Link>
       <span>ISSUE {issue.issue} · {issue.date}</span>
       <h1>{issue.title}</h1>
       <p>{issue.excerpt}</p>
@@ -70,7 +69,7 @@ export default async function SawPointIssuePage({params}:{params:Promise<{slug:s
     </header>
     <article className="spi-article">
       {paragraphs.map((paragraph,index)=><p key={index}>{paragraph}</p>)}
-      <a href={issue.linkedinUrl} target="_blank" rel="noreferrer">View this issue on LinkedIn <ExternalLink size={15}/></a>
+      <a href={issue.linkedinUrl} target="_blank" rel="noreferrer">View this issue on LinkedIn</a>
     </article>
   </main></>;
 }
