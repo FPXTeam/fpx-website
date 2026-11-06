@@ -144,10 +144,11 @@
 #sourcing .source-card:nth-child(2) .source-copy{
   grid-column:1;
   grid-row:1;
+  justify-content:flex-start;
   background:linear-gradient(145deg,#173e31 0%,#205b46 100%)!important;
   color:#fff!important;
 }
-#sourcing .source-card:nth-child(2) .source-copy>a{margin-top:0!important}
+#sourcing .source-card:nth-child(2) .source-copy>a{margin-top:auto!important}
 
 #sourcing .source-card:nth-child(2) .source-copy h3,
 #sourcing .source-card:nth-child(2) .source-copy p,
@@ -211,6 +212,9 @@
     font-size:30px!important;
   }
   #sourcing .source-copy>a{
+    margin-top:4px!important;
+  }
+  #sourcing .source-card:nth-child(2) .source-copy>a{
     margin-top:4px!important;
   }
 }
