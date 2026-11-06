@@ -129,7 +129,12 @@
    create a tall, empty green panel. The full image remains on FPX Sourcing. */
 #sourcing .source-card:nth-child(2){
   grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)!important;
+  grid-template-rows:minmax(0,1fr);
   aspect-ratio:1180/733;
+}
+#sourcing .source-card:nth-child(2) .source-visual{
+  min-height:0;
+  overflow:hidden;
 }
 #sourcing .source-card:nth-child(2) .source-shot{
   min-height:0;
