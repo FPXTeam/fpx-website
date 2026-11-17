@@ -69,7 +69,7 @@ export function Footer(){
         <div className="george-footer-col"><h2>COMPANY</h2><Link href="/about-us">About Us</Link><Link href="/contact-us">Contact</Link><a href="https://app.fpx.nz/sourcing-sign-up">Get FPX Access</a><a href="https://app.fpx.nz/">Login</a></div>
       </div>
       <FooterSubscribe/>
-      <div className="george-footer-bottom"><span>© 2026 Forest Products Exchange Limited</span><nav aria-label="Legal links"><Link href="/terms-and-conditions">Terms &amp; Conditions</Link><Link href="/privacy-policy">Privacy Policy</Link><Link href="/cookie-policy">Cookie Policy</Link><Link href="/cookie-settings">Cookie Settings</Link></nav></div>
+      <div className="george-footer-bottom" data-nosnippet><span>© 2026 Forest Products Exchange Limited</span><nav aria-label="Legal links"><Link href="/terms-and-conditions">Terms &amp; Conditions</Link><Link href="/privacy-policy">Privacy Policy</Link><Link href="/cookie-policy">Cookie Policy</Link><Link href="/cookie-settings">Cookie Settings</Link></nav></div>
     </div>
   </footer>;
 }
