@@ -19,7 +19,7 @@ export async function generateMetadata({params}:{params:Promise<{slug:string}>})
   if(!issue)return {};
   const path=`/saw-point/${issue.slug}`;
   return {
-    title:issue.title,
+    title:{absolute:`${issue.title} | FPX`},
     description:issue.excerpt,
     alternates:{canonical:path},
     openGraph:{

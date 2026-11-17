@@ -49,7 +49,7 @@ const websiteSchema = {
   inLanguage:"en-NZ",
 };
 
-const platformDescription = "Browse New Zealand timber and current stock, submit a specific requirement, and use FPX customer tools for quotations and orders when you have full access.";
+const platformDescription = "Browse New Zealand Radiata pine timber, check current stock and specials where available, or send FPX a specific timber requirement for sourcing.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

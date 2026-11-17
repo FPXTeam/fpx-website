@@ -30,8 +30,8 @@ export function FooterSubscribe(){
       setMessage(error instanceof Error?error.message:"Unable to subscribe right now.");
     }
   }
-  return <div className="footer-saw-point">
-    <div className="footer-saw-copy"><span>SAW POINT</span><b>Monthly NZ timber updates.</b></div>
+  return <div className="footer-saw-point" data-nosnippet>
+    <div className="footer-saw-copy"><span>SAW POINT</span>{" "}<b>Monthly NZ timber updates.</b></div>
     <form onSubmit={subscribe} aria-label="Subscribe to Saw Point">
       <input className="fpx-honeypot" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true"/>
       <input type="hidden" name="source" value="FPX website footer"/>
