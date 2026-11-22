@@ -5,7 +5,7 @@ import { FooterSubscribe } from "./footer-subscribe";
 import "./george-site-shell.css";
 
 const resourceLinks = [
-  { href: "/industry-insights", label: "FPX Insights", description: "Timber guides and product information." },
+  { href: "/industry-insights", label: "FPX Insights", description: "Timber news, market updates and guides." },
   { href: "/saw-point", label: "Saw Point", description: "New Zealand timber industry updates." },
   { href: "/frequently-asked-questions", label: "FAQ", description: "Answers about using FPX." },
 ];
