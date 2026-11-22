@@ -108,6 +108,7 @@ export default async function InsightNewsArticle({ params }: { params: Promise<{
           </aside>
           <article className="spn-article" aria-label={`Saw Point issue ${issue.issue} in full`}>
             <div className="spn-original">
+              <p className="spn-issue-name">Saw Point | Issue {issue.issue} | {issue.month} {issue.year}</p>
               <p className="spn-introduction">{issue.introduction}</p>
               <blockquote>{issue.openingQuote}</blockquote>
               {issue.sections.map((section, index) => <section id={`section-${index + 1}`} className="spn-section" key={section.heading}>
