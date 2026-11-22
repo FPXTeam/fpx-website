@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight, BookOpen, Linkedin, Mail } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, BookOpen, Mail } from "lucide-react";
 import { Shell } from "@/components/site-shell";
 import issues from "@/data/industry-news.json";
 import "@/components/master-site.css";
@@ -142,7 +142,7 @@ export default async function InsightNewsArticle({ params }: { params: Promise<{
           <span className="spn-connect-kicker">STAY CONNECTED</span><h2>Keep up with New Zealand&apos;s timber industry.</h2>
           <p>Get Saw Point&apos;s monthly updates from George Harman. Follow FPX on LinkedIn or have the next issue delivered to your inbox.</p>
           <div className="spn-connect-buttons">
-            <a href="https://nz.linkedin.com/company/forest-products-exchange" target="_blank" rel="noopener noreferrer"><Linkedin size={20} aria-hidden="true"/> Follow FPX on LinkedIn <ArrowUpRight size={17} aria-hidden="true"/></a>
+            <a href="https://nz.linkedin.com/company/forest-products-exchange" target="_blank" rel="noopener noreferrer">Follow FPX on LinkedIn <ArrowUpRight size={17} aria-hidden="true"/></a>
             <Link href="/saw-point#saw-point-subscribe"><Mail size={20} aria-hidden="true"/> Join the mailing list <ArrowUpRight size={17} aria-hidden="true"/></Link>
           </div>
         </aside>
