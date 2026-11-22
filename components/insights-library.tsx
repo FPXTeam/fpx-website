@@ -67,7 +67,7 @@ export function InsightsLibrary() {
           {filteredNews.map((issue, index) => <Link className={index === 0 && !term ? "fpi-news-card fpi-lead" : "fpi-news-card"} href={`/industry-insights/${issue.slug}`} key={issue.issue}>
             <div className="fpi-card-top"><span>SAW POINT · ISSUE {issue.issue}</span><span>{issue.month.toUpperCase()} {issue.year}</span></div>
             <div className="fpi-news-card-body">
-              <h3>{issue.headline}</h3>
+              <h3>{issue.headline}<span className="fpi-news-headline-suffix"> | Saw Point {issue.month} {issue.year}</span></h3>
               <p>{issue.summary}</p>
             </div>
             <div className="fpi-card-bottom"><span>By George Harman</span><strong>Read the full issue <ArrowUpRight size={17} aria-hidden="true"/></strong></div>
