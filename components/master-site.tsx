@@ -9,6 +9,7 @@ import { SawPointPage, ResourcesPage, FAQPage, LegalPage, InsightArticlePage } f
 import { ApprovedCustomers, ApprovedIntelligence, ApprovedAbout } from "./approved-inner-pages";
 import { GeorgeTimberPage } from "./george-timber-page";
 import { GeorgeSourcingPage } from "./george-sourcing-page";
+import { InsightsLibrary } from "./insights-library";
 import "./approved-inner-pages.css";
 import "./approved-support-pages.css";
 import "./consistent-hero-height.css";
@@ -32,7 +33,7 @@ export function MasterInnerPage({slug}:{slug:string}){
   else if(slug==="our-customers")body=<ApprovedCustomers/>;
   else if(slug==="fpx-intelligence")body=<ApprovedIntelligence/>;
   else if(slug==="saw-point")body=<SawPointPage/>;
-  else if(slug==="industry-resources")body=<ResourcesPage/>;
+  else if(slug==="industry-resources")body=<InsightsLibrary/>;
   else if(slug==="faq"||slug==="frequently-asked-questions")body=<FAQPage/>;
   else if(slug==="about-us")body=<ApprovedAbout/>;
   else if(slug==="contact-us")body=<ContactPage/>;
