@@ -10,6 +10,7 @@ import "../../components/inner-refresh.css";
 import "../../components/source-timber-redesign.css";
 import "../../components/premium-inner-pages.css";
 import "../../components/kiln-drying-article.css";
+import "../../components/industry-news.css";
 
 const siteUrl = "https://www.fpx.nz";
 const masterPages = [
@@ -72,8 +73,8 @@ const pageMeta: Record<MasterPage, PageMeta> = {
   "our-customers": { title: "Who Uses FPX | Commercial Timber Buyers", description: "See how FPX helps wood processors plan supply, timber merchants fill gaps and commercial buyers source timber for projects." },
   "fpx-intelligence": { title: "FPX Intelligence | New Zealand Timber Industry Data", description: "Explore FPX Intelligence and selected New Zealand industry indicators, including Building Consents and the Diesel Price Index." },
   "saw-point": { title: "Saw Point | New Zealand Timber Updates", description: "Read Saw Point by George Harman for selected timber industry developments and subscribe for updates from FPX." },
-  "industry-insights": { title: "FPX Insights | New Zealand Timber Guides", description: "Read FPX Insights for practical explanations of Radiata pine, kiln drying, timber characteristics, specifications and sourcing topics in New Zealand." },
-  "industry-resources": { title: "FPX Insights | New Zealand Timber Guides", description: "Read FPX Insights for practical explanations of Radiata pine, kiln drying, timber characteristics, specifications and sourcing topics in New Zealand.", canonical: "/industry-insights" },
+  "industry-insights": { title: "FPX Insights | NZ Timber News and Timber Guides", description: "Explore New Zealand timber news, Saw Point market updates, Radiata pine characteristics, kiln drying and practical timber guides from Forest Products Exchange." },
+  "industry-resources": { title: "FPX Insights | NZ Timber News and Timber Guides", description: "Explore New Zealand timber news, Saw Point market updates, Radiata pine characteristics, kiln drying and practical timber guides from Forest Products Exchange.", canonical: "/industry-insights" },
   "frequently-asked-questions": { title: "FPX FAQ | Timber Requests, Orders & Access", description: "Find answers about browsing timber, submitting requests, customer access, orders and international timber enquiries." },
   faq: { title: "FPX Sourcing FAQ | Explore, Access & Account Questions", description: "Get direct answers about exploring FPX without an account, current offers, product requests, full customer access, orders and support.", canonical: "/frequently-asked-questions" },
   "about-us": { title: "About FPX | Digital Timber Platform", description: "Meet George Harman and Gabriela Molloy and learn how FPX combines a digital platform with Sutcliffe Trading's timber sourcing experience." },
@@ -227,8 +228,10 @@ function pageSchema(slug: string) {
       description:data.description,
       url,
       mainEntity:{"@type":"ItemList","itemListElement":[
-        {"@type":"ListItem","position":1,"name":"The Science of Kiln Drying","url":`${siteUrl}/the-science-of-kiln-drying`},
-        {"@type":"ListItem","position":2,"name":"Radiata Pine Characteristics","url":`${siteUrl}/timber-growth-rings`}
+        {"@type":"ListItem","position":1,"name":"Domestic Demand Hits Its Best Level in Years | Saw Point September 2026","url":`${siteUrl}/industry-insights/nz-domestic-timber-demand-saw-point-september-2026`},
+        {"@type":"ListItem","position":2,"name":"Red Stag Moves Modular Timber Onto the Factory Floor | Saw Point August 2026","url":`${siteUrl}/industry-insights/red-stag-modular-timber-saw-point-august-2026`},
+        {"@type":"ListItem","position":3,"name":"The Science of Kiln Drying","url":`${siteUrl}/the-science-of-kiln-drying`},
+        {"@type":"ListItem","position":4,"name":"Radiata Pine Characteristics","url":`${siteUrl}/timber-growth-rings`}
       ]},
       isPartOf:{"@id":`${siteUrl}/#website`},
       inLanguage:"en-NZ"
