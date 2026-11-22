@@ -5,7 +5,7 @@ export { MasterHome } from "./master-home";
 import { HowPage } from "./master-sourcing";
 import { ProductGroupPage, hasProductGroup } from "./master-products";
 import { CustomersPage, AboutPage, ContactPage } from "./master-company";
-import { SawPointPage, ResourcesPage, FAQPage, LegalPage, InsightArticlePage } from "./master-content";
+import { SawPointPage, FAQPage, LegalPage, InsightArticlePage } from "./master-content";
 import { ApprovedCustomers, ApprovedIntelligence, ApprovedAbout } from "./approved-inner-pages";
 import { GeorgeTimberPage } from "./george-timber-page";
 import { GeorgeSourcingPage } from "./george-sourcing-page";
