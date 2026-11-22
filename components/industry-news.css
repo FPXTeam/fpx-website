@@ -63,6 +63,7 @@
 .spn-article{min-width:0}
 .spn-original{font-size:17px;color:#27392e;line-height:1.88}
 .spn-original p{font-size:inherit;line-height:inherit;color:inherit;margin:0 0 19px}
+.spn-issue-name{font-size:13px!important;font-weight:800;letter-spacing:.04em;color:#478154!important;margin:0 0 21px!important}
 .spn-original .spn-introduction{font-size:21px;font-weight:600;line-height:1.62;color:#173d2a;margin:0 0 25px}
 .spn-original blockquote{background:#eef4ed;border-left:3px solid #489e58;margin:0 0 50px;padding:23px 26px;font-size:17px;line-height:1.8;color:#334d3d;border-radius:0 12px 12px 0}
 .spn-section{padding:39px 0 36px;border-top:1px solid #dbe4da;scroll-margin-top:100px}
