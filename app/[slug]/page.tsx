@@ -224,6 +224,7 @@ function pageSchema(slug: string) {
     return {
       "@context":"https://schema.org",
       "@type":"CollectionPage",
+      "@id":`${url}#collection`,
       name:data.title,
       description:data.description,
       url,
