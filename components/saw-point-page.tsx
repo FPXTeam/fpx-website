@@ -161,7 +161,7 @@ export function SawPointPage(){
       </div>
     </section>
 
-    <section className="spx-subscribe">
+    <section className="spx-subscribe" id="saw-point-subscribe">
       <div className="spx-subscribe-copy">
         <Eyebrow>GET THE NEXT ISSUE</Eyebrow>
         <h2>Saw Point,<br/>straight to your inbox.</h2>
