@@ -64,7 +64,7 @@ export function InsightsLibrary() {
           <Link href="/saw-point" className="fpi-text-link">About Saw Point <ArrowUpRight aria-hidden="true" size={17}/></Link>
         </div>
         <div className="fpi-news-grid">
-          {filteredNews.map((issue, index) => <Link className={index === 0 && !term ? "fpi-news-card fpi-lead" : "fpi-news-card"} href={`/industry-insights/${issue.slug}`} key={issue.issue}>
+          {filteredNews.map(issue => <Link className="fpi-news-card" href={`/industry-insights/${issue.slug}`} key={issue.issue}>
             <div className="fpi-card-top"><span>SAW POINT · ISSUE {issue.issue}</span><span>{issue.month.toUpperCase()} {issue.year}</span></div>
             <div className="fpi-news-card-body">
               <h3>{issue.headline}<span className="fpi-news-headline-suffix"> | Saw Point {issue.month} {issue.year}</span></h3>
