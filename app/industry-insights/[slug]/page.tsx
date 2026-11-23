@@ -51,7 +51,7 @@ export default async function InsightNewsArticle({ params }: { params: Promise<{
   const citations = Array.from(new Set([
     ...issue.sections.flatMap(section => section.sources.map(source => source.href)),
     ...issue.worthReading.map(source => source.href)
-  ]));
+  ].filter(Boolean)));
   const breadcrumbSchema = {
     "@context": "https://schema.org", "@type": "BreadcrumbList",
     itemListElement: [
@@ -74,6 +74,12 @@ export default async function InsightNewsArticle({ params }: { params: Promise<{
     about: issue.keywords.map(name => ({ "@type": "Thing", name })),
     inLanguage: "en-NZ"
   };
+  const linkedClosing = (line:string) => line.split(/(fpx\.nz\/saw-point|Browse available stock|submit a sourcing request)/gi).map((piece,i) => {
+    if (/^fpx\.nz\/saw-point$/i.test(piece)) return <Link key={i} href="/saw-point#saw-point-subscribe">{piece}</Link>;
+    if (/^Browse available stock$/i.test(piece)) return <Link key={i} href="/timber">{piece}</Link>;
+    if (/^submit a sourcing request$/i.test(piece)) return <Link key={i} href="/fpx-sourcing">{piece}</Link>;
+    return piece;
+  });
   const related = issue.issue === "001"
     ? [{ href: "/manufacturing", title: "Manufacturing timber" }, { href: "/timber-growth-rings", title: "Radiata Pine characteristics" }, { href: "/the-science-of-kiln-drying", title: "The science of kiln drying" }, { href: "/fpx-sourcing", title: "FPX timber sourcing" }]
     : [{ href: "/timber", title: "Explore the FPX timber range" }, { href: "/manufacturing", title: "Manufacturing timber" }, { href: "/fpx-intelligence", title: "FPX industry indicators" }, { href: "/the-science-of-kiln-drying", title: "Timber kiln drying guide" }];
@@ -127,7 +133,7 @@ export default async function InsightNewsArticle({ params }: { params: Promise<{
                 {issue.worthReading.map((item,index) => <p key={index}><strong>{item.title}</strong> {item.description} {item.href && <a href={item.href} target="_blank" rel="noopener noreferrer">{item.action||"Read source"}<ArrowUpRight aria-hidden="true" size={15}/></a>}</p>)}
               </section>}
               <div className="spn-signoff">
-                {issue.closing.map(line => <p key={line}>{line}</p>)}
+                {issue.closing.map((line,index) => <p key={index}>{linkedClosing(line)}</p>)}
                 {!issue.closing.some(line=>/^Subscribe at\b/i.test(line)) && <p>Subscribe at <Link href="/saw-point#saw-point-subscribe">fpx.nz/saw-point</Link></p>}
               </div>
             </div>
