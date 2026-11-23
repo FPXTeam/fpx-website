@@ -80,8 +80,18 @@ function inlineHtml(raw:string):string{
     value=>'<a href="https://www.fpx.nz/saw-point">'+value+"</a>"
   );
 }
+/**
+ * Preserve actual blank lines when pasting into LinkedIn's long-form article
+ * editor. Margins between HTML paragraphs are often discarded on paste.
+ * A non-empty spacer paragraph survives editor sanitisation more reliably
+ * than CSS margin or a plain newline between tags.
+ *
+ * Keep heading tags, paragraph tags and source styling from the approved copy.
+ * Only add visual separation; no body wording is rewritten.
+ */
 export function formatLinkedInHtml(raw:string,title:string=""):string{
-  return linkedInArticleBlocks(raw,title).map(block=>{
+  const blocks=linkedInArticleBlocks(raw,title);
+  const rendered=blocks.map(block=>{
     const text=inlineHtml(block.text);
     if(block.kind==="heading")return "<h2><strong>"+text+"</strong></h2>";
     if(block.kind==="reading-title")return "<p><strong>"+text+"</strong></p>";
@@ -91,7 +101,12 @@ export function formatLinkedInHtml(raw:string,title:string=""):string{
     }
     if(block.kind==="divider")return "<hr />";
     return "<p>"+text+"</p>";
-  }).join("\n");
+  });
+  // Use an actual non-empty paragraph between content blocks, rather than
+  // relying on HTML tag boundaries or CSS margins which LinkedIn may collapse.
+  // The zero-width character does not change the readable article wording.
+  const spacer="<p>\u200B<br></p>";
+  return rendered.join(spacer);
 }
 
 function parseSourceLine(block:string):{sourceLabel:string;sources:SourceLink[]}{
