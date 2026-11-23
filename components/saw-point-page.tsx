@@ -13,9 +13,10 @@ function issueDateValue(value:string){
   const month=monthOrder.findIndex(name=>upper.includes(name));
   return year*12+(month>=0?month:0);
 }
-const issues=[...sawPointIssues].sort((a,b)=>issueDateValue(b.date)-issueDateValue(a.date)||Number(b.issue)-Number(a.issue));
-function sawPointHref(item:(typeof issues)[number]){return item.body?`/saw-point/${item.slug}`:item.linkedinUrl}
-function sawPointExternal(item:(typeof issues)[number]){return item.body?{}:{target:"_blank",rel:"noreferrer"}}
+type ArchiveIssue=(typeof sawPointIssues)[number] & {articleSlug?:string;coverImage?:string};
+const issues=([...sawPointIssues] as ArchiveIssue[]).sort((a,b)=>issueDateValue(b.date)-issueDateValue(a.date)||Number(b.issue)-Number(a.issue));
+function sawPointHref(item:ArchiveIssue){return item.articleSlug?`/industry-insights/${item.articleSlug}`:item.body?`/saw-point/${item.slug}`:item.linkedinUrl}
+function sawPointExternal(item:ArchiveIssue){return item.articleSlug||item.body?{}:{target:"_blank",rel:"noreferrer"}}
 
 export function SawPointPage(){
   const latest = issues[0];
@@ -89,9 +90,10 @@ export function SawPointPage(){
           <small>ISSUE {latest.issue}</small>
           <h2>The latest<br/>Saw Point.</h2>
           <p>{latest.excerpt}</p>
-          <span className="spx-read">{latest.body?"Read issue on FPX":"Read issue on LinkedIn"}</span>
+          <span className="spx-read">{latest.articleSlug||latest.body?"Read full issue on FPX":"Read issue on LinkedIn"}</span>
         </div>
         <div className="spx-feature-side">
+          {latest.coverImage && <img className="spx-feature-side-cover" src={latest.coverImage} alt={`Saw Point Issue ${latest.issue} ${latest.date} cover`} loading="lazy"/>}
           <span>MONTHLY INDUSTRY READ</span>
           <p>Selected developments. Clear context. Written for people working in and around New Zealand timber.</p>
         </div>
@@ -284,6 +286,7 @@ export function SawPointPage(){
       .spx-feature-copy p{max-width:580px;margin:0;color:#BAC6C0;line-height:1.7}
       .spx-read{margin-top:40px;display:flex;align-items:center;gap:9px;font:700 12px/1 Lato,Arial,sans-serif;color:#fff}
       .spx-feature-side{padding:55px 44px;border-left:1px solid rgba(255,255,255,.13);display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(180deg,rgba(83,195,150,.04),rgba(83,195,150,.11))}
+      .spx-feature-side-cover{display:block;width:100%;height:auto;object-fit:contain;margin-bottom:24px;border:1px solid rgba(255,255,255,.14);border-radius:4px}
       .spx-feature-side>span{font:700 9px/1 Lato,Arial,sans-serif;letter-spacing:.16em;color:#53C396}
       .spx-feature-side p{margin:18px 0 34px;color:#BAC6C0;line-height:1.65;font-size:14px}
       .spx-feature-side svg{color:#53C396;width:28px;height:28px}

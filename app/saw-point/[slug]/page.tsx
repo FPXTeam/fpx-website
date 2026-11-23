@@ -2,22 +2,22 @@ import "../../../components/premium-clean-sitewide.css";
 import "../../../components/master-site.css";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import issues from "../../../data/saw-point-issues.json";
 
 const siteUrl = "https://www.fpx.nz";
 const socialImage = "/images/social/fpx-social-share.jpg";
-type SawPointIssue = (typeof issues)[number] & { publishedAt?: string };
+type SawPointIssue = (typeof issues)[number] & { publishedAt?: string; articleSlug?: string };
 
 export function generateStaticParams(){
-  return issues.filter(item=>item.body).map(item=>({slug:item.slug}));
+  return (issues as SawPointIssue[]).filter(item=>item.body&&!item.articleSlug).map(item=>({slug:item.slug}));
 }
 
 export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{
   const {slug}=await params;
   const issue=issues.find(item=>item.slug===slug && item.body) as SawPointIssue | undefined;
   if(!issue)return {};
-  const path=`/saw-point/${issue.slug}`;
+  const path=issue.articleSlug?`/industry-insights/${issue.articleSlug}`:`/saw-point/${issue.slug}`;
   return {
     title:{absolute:`${issue.title} | FPX`},
     description:issue.excerpt,
@@ -41,6 +41,7 @@ export default async function SawPointIssuePage({params}:{params:Promise<{slug:s
   const {slug}=await params;
   const issue=issues.find(item=>item.slug===slug && item.body) as SawPointIssue | undefined;
   if(!issue) notFound();
+  if(issue.articleSlug) permanentRedirect(`/industry-insights/${issue.articleSlug}`);
 
   const paragraphs=issue.body.split(/\n{2,}/).map(block=>block.trim()).filter(Boolean);
   const url=`${siteUrl}/saw-point/${issue.slug}`;

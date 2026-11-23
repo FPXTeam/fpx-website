@@ -51,7 +51,7 @@ export default async function InsightNewsArticle({ params }: { params: Promise<{
   const citations = Array.from(new Set([
     ...issue.sections.flatMap(section => section.sources.map(source => source.href)),
     ...issue.worthReading.map(source => source.href)
-  ]));
+  ].filter(Boolean)));
   const breadcrumbSchema = {
     "@context": "https://schema.org", "@type": "BreadcrumbList",
     itemListElement: [
@@ -74,6 +74,12 @@ export default async function InsightNewsArticle({ params }: { params: Promise<{
     about: issue.keywords.map(name => ({ "@type": "Thing", name })),
     inLanguage: "en-NZ"
   };
+  const linkedClosing = (line:string) => line.split(/(fpx\.nz\/saw-point|Browse available stock|submit a sourcing request)/gi).map((piece,i) => {
+    if (/^fpx\.nz\/saw-point$/i.test(piece)) return <Link key={i} href="/saw-point#saw-point-subscribe">{piece}</Link>;
+    if (/^Browse available stock$/i.test(piece)) return <Link key={i} href="/timber">{piece}</Link>;
+    if (/^submit a sourcing request$/i.test(piece)) return <Link key={i} href="/fpx-sourcing">{piece}</Link>;
+    return piece;
+  });
   const related = issue.issue === "001"
     ? [{ href: "/manufacturing", title: "Manufacturing timber" }, { href: "/timber-growth-rings", title: "Radiata Pine characteristics" }, { href: "/the-science-of-kiln-drying", title: "The science of kiln drying" }, { href: "/fpx-sourcing", title: "FPX timber sourcing" }]
     : [{ href: "/timber", title: "Explore the FPX timber range" }, { href: "/manufacturing", title: "Manufacturing timber" }, { href: "/fpx-intelligence", title: "FPX industry indicators" }, { href: "/the-science-of-kiln-drying", title: "Timber kiln drying guide" }];
@@ -103,8 +109,8 @@ export default async function InsightNewsArticle({ params }: { params: Promise<{
             <div className="spn-sticky">
               <p className="spn-aside-label">IN THIS ISSUE</p>
               <nav aria-label="Issue contents">
-                {issue.sections.map((section, index) => <a key={section.heading} href={`#section-${index + 1}`}><span>{String(index + 1).padStart(2, "0")}</span>{section.heading.replace(/^(THE BIG STORY|MARKET UPDATE|EXPORT WATCH|ONE TO WATCH): /, "").replace(/^SAW POINT$/, "Saw Point")}</a>)}
-                <a href="#worth-reading"><span>06</span>Worth reading this month</a>
+                {issue.sections.map((section, index) => <a key={section.heading+index} href={`#section-${index + 1}`}><span>{String(index + 1).padStart(2, "0")}</span>{section.heading.replace(/^(THE BIG STORY|MARKET UPDATE|EXPORT WATCH|DOMESTIC WATCH|INDUSTRY WATCH|ONE TO WATCH): /, "").replace(/^SAW POINT$/, "Saw Point")}</a>)}
+                {issue.worthReading.length>0 && <a href="#worth-reading"><span>{String(issue.sections.length+1).padStart(2,"0")}</span>Worth reading this month</a>}
               </nav>
               <Link className="spn-back" href="/industry-insights"><ArrowLeft aria-hidden="true" size={15}/> All FPX Insights</Link>
             </div>
@@ -112,23 +118,23 @@ export default async function InsightNewsArticle({ params }: { params: Promise<{
           <article className="spn-article" aria-label={`Saw Point issue ${issue.issue} in full`}>
             <div className="spn-original">
               <p className="spn-issue-name">Saw Point | Issue {issue.issue} | {issue.month} {issue.year}</p>
-              <p className="spn-introduction">{issue.introduction}</p>
-              <blockquote>{issue.openingQuote}</blockquote>
+              {issue.introduction && <p className="spn-introduction">{issue.introduction}</p>}
+              {issue.openingQuote && <blockquote>{issue.openingQuote}</blockquote>}
               {issue.sections.map((section, index) => <section id={`section-${index + 1}`} className="spn-section" key={section.heading}>
                 <h2>{section.heading}</h2>
                 {section.paras.map((paragraph, p) => <p key={p}>{paragraph}</p>)}
-                <div className="spn-sources">
+                {section.sources.length > 0 && <div className="spn-sources">
                   <span>{section.sourceLabel}</span>{" "}
-                  {section.sources.map((source, i) => <span key={source.href}><a href={source.href} target="_blank" rel="noopener noreferrer">{source.text}</a>{i < section.sources.length - 1 ? " " : ""}</span>)}
-                </div>
+                  {section.sources.map((source, i) => <span key={source.href + i}>{source.href ? <a href={source.href} target="_blank" rel="noopener noreferrer">{source.text}</a> : source.text}{i < section.sources.length - 1 ? " " : ""}</span>)}
+                </div>}
               </section>)}
-              <section className="spn-section spn-reading" id="worth-reading">
+              {issue.worthReading.length>0 && <section className="spn-section spn-reading" id="worth-reading">
                 <h2>WORTH READING THIS MONTH</h2>
-                {issue.worthReading.map(item => <p key={item.href}><strong>{item.title}</strong> {item.description} <a href={item.href} target="_blank" rel="noopener noreferrer">{item.action}<ArrowUpRight aria-hidden="true" size={15}/></a></p>)}
-              </section>
+                {issue.worthReading.map((item,index) => <p key={index}><strong>{item.title}</strong> {item.description} {item.href && <a href={item.href} target="_blank" rel="noopener noreferrer">{item.action||"Read source"}<ArrowUpRight aria-hidden="true" size={15}/></a>}</p>)}
+              </section>}
               <div className="spn-signoff">
-                {issue.closing.map(line => <p key={line}>{line}</p>)}
-                <p>Subscribe at <Link href="/saw-point#saw-point-subscribe">fpx.nz/saw-point</Link></p>
+                {issue.closing.map((line,index) => <p key={index}>{linkedClosing(line)}</p>)}
+                {!issue.closing.some(line=>/^Subscribe at\b/i.test(line)) && <p>Subscribe at <Link href="/saw-point#saw-point-subscribe">fpx.nz/saw-point</Link></p>}
               </div>
             </div>
             <div className="spn-original-link">
