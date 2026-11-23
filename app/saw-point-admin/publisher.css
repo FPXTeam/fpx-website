@@ -54,3 +54,16 @@
 .spap-plaintext-details p{font-size:12px;line-height:1.65;color:#647669;margin:12px 0}
 .spap-plaintext-details textarea{width:100%;margin-top:8px}
 @media(max-width:730px){.spap-linkedin-preview{padding:20px;max-height:520px}.spap-linkedin-preview h2{font-size:16px}.spap-linkedin-preview p{font-size:13px}}
+
+/* Brevo subject and preheader are campaign fields, separate from HTML body. */
+.spap-email-settings{border:1px solid #d9e6db;border-radius:7px;background:#fdfefd;padding:21px 23px;margin:20px 0 24px}
+.spap-email-settings .spap-inline{margin:0 0 10px}
+.spap-email-settings .spap-inline:not(:first-child){margin-top:23px}
+.spap-email-settings label{margin:0 0 17px}
+.spap-email-settings .spap-readonly{font-size:15px;font-weight:700;background:#fff}
+.spap-inbox-preview{padding:16px 18px;border:1px solid #dfe7df;border-radius:8px;background:#f6f9f6;display:flex;flex-direction:column;gap:7px}
+.spap-inbox-preview>span{font:800 10px/1.4 Arial,sans-serif;letter-spacing:.1em;color:#65906b}
+.spap-inbox-preview strong{font:700 15px/1.4 Arial,sans-serif;color:#132d1d}
+.spap-inbox-preview p{font:400 13px/1.6 Arial,sans-serif;color:#687d6e;margin:0}
+.spap-email-help{font:400 12px/1.7 Arial,sans-serif;color:#58705e;margin:13px 0 0}
+@media(max-width:730px){.spap-email-settings{padding:18px}}
