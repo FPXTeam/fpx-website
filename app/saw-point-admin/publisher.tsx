@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import SawPointCoverUpload from "./cover-upload";
 
 type PublishResult={ok?:boolean;commitSha?:string;error?:string};
 
@@ -92,6 +93,9 @@ export default function SawPointPublisher(){
       </div>
     </div>
 
+    <SawPointCoverUpload/>
+
+    <div className="spa-editor-intro"><span>STEP 02 · EXISTING PUBLISHER</span><h2>Publish the approved issue.</h2><p>Uploading a cover above creates an image link only. Article publishing remains a separate step.</p></div>
     <form className="spa-form" onSubmit={publish}>
       <div className="spa-grid">
         <label><span>Issue number</span><input name="issue" placeholder="003" required/></label>
@@ -128,6 +132,7 @@ export default function SawPointPublisher(){
       .spa-top span{font:700 10px/1 Lato,sans-serif;letter-spacing:.16em;color:#40973C}
       .spa-top h1{margin:10px 0 12px;font-size:clamp(44px,6vw,76px);line-height:.92;letter-spacing:-.05em}
       .spa-top p{max-width:640px;margin:0;color:#64736C;line-height:1.7}
+      .spa-editor-intro{margin:30px 0 18px}.spa-editor-intro span{font:700 10px/1 Lato,Arial,sans-serif;letter-spacing:.14em;color:#40973C}.spa-editor-intro h2{margin:11px 0 6px;font-size:30px;letter-spacing:-.035em}.spa-editor-intro p{color:#64736C;font-size:14px;line-height:1.55;margin:0}
       .spa-form{display:grid;gap:20px;padding:30px;border:1px solid #dfe6e1;background:#fff}
       .spa-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
       label>span{display:block;margin-bottom:8px;font:700 10px/1 Lato,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#758956}
