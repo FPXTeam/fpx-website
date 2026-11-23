@@ -36,9 +36,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url: path, title: issue.pageTitle, description: issue.description,
       publishedTime: issue.publishedAt, modifiedTime: issue.updatedAt,
       authors: [`${base}/about-us#george-harman`], section: "Timber News",
-      images: [{ url: issue.coverImage, width: 1280, height: 720, alt: issue.coverAlt }]
+      images: [{ url: new URL(issue.coverImage,base).toString(), width: 1280, height: 720, alt: issue.coverAlt }]
     },
-    twitter: { card: "summary_large_image", title: issue.pageTitle, description: issue.description, images: [issue.coverImage] }
+    twitter: { card: "summary_large_image", title: issue.pageTitle, description: issue.description, images: [new URL(issue.coverImage,base).toString()] }
   };
 }
 
@@ -48,6 +48,7 @@ export default async function InsightNewsArticle({ params }: { params: Promise<{
   if (!issue) notFound();
   const next = otherIssue(issue);
   const url = `${base}/industry-insights/${issue.slug}`;
+  const absoluteCover = new URL(issue.coverImage,base).toString();
   const citations = Array.from(new Set([
     ...issue.sections.flatMap(section => section.sources.map(source => source.href)),
     ...issue.worthReading.map(source => source.href)
@@ -63,7 +64,7 @@ export default async function InsightNewsArticle({ params }: { params: Promise<{
   const articleSchema = {
     "@context": "https://schema.org", "@type": "BlogPosting", "@id": `${url}#article`,
     headline: issue.pageTitle, alternativeHeadline: `Saw Point | Issue ${issue.issue} | ${issue.month} ${issue.year}`,
-    description: issue.description, image: { "@type": "ImageObject", url: issue.coverImage, width: 1280, height: 720, caption: issue.coverAlt },
+    description: issue.description, image: { "@type": "ImageObject", url: absoluteCover, width: 1280, height: 720, caption: issue.coverAlt },
     url, mainEntityOfPage: { "@type": "WebPage", "@id": url },
     datePublished: issue.publishedAt, dateModified: issue.updatedAt,
     author: { "@type": "Person", "@id": `${base}/about-us#george-harman`, name: "George Harman", url: `${base}/about-us`, worksFor: { "@id": `${base}/#organization` } },

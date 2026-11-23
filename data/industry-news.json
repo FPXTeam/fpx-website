@@ -1,5 +1,219 @@
 [
   {
+    "slug": "claymark-te-kuiti-sawmill-closure-saw-point-november-2026",
+    "issue": "004",
+    "month": "November",
+    "year": 2026,
+    "publishedAt": "2026-11-06",
+    "updatedAt": "2026-11-23",
+    "headline": "Another NZ Sawmill to Close as Claymark Exits Te Kūiti",
+    "pageTitle": "Another NZ Sawmill to Close as Claymark Exits Te Kūiti | Saw Point November 2026",
+    "description": "Saw Point November 2026: Claymark's Te Kūiti sawmill closure, China log demand, India's trade agreement, building consents, Karioi biocoal and forestry diesel costs.",
+    "summary": "November's Saw Point covers the Claymark Te Kūiti sawmill closure, stronger China log demand, improved India trade access, building consents, new processing proposals and rising diesel costs.",
+    "linkedinUrl": "https://www.linkedin.com/pulse/big-story-another-nz-sawmill-close-claymark-exits-q95tc",
+    "coverImage": "/images/NOV2026.png",
+    "coverAlt": "Saw Point Issue 004 November 2026 original cover by Forest Products Exchange",
+    "introduction": "",
+    "openingQuote": "",
+    "sections": [
+      {
+        "heading": "THE BIG STORY: ANOTHER NZ SAWMILL TO CLOSE AS CLAYMARK EXITS TE KŪITI",
+        "paras": [
+          "Claymark has announced the closure of its Te Kūiti sawmill, with 35 positions reportedly affected.",
+          "The mill has been processing approximately eight to ten truckloads of logs each day, with that volume expected to be redirected to Claymark's Rotorua and Katikati operations.",
+          "The closure comes as forests planted across the Waitomo district around 30 years ago are reaching harvest age.",
+          "While some production may be absorbed by Claymark's remaining operations, Te Kūiti will lose an established processing facility, along with the employment and local business activity it supports.",
+          "Logs previously processed locally may also need to travel further, adding transport costs and changing supply arrangements for forest owners.",
+          "Another regional mill closure is a concerning development for New Zealand's wood-processing industry, particularly when there is already pressure to retain processing capability and add more value to our forestry resource."
+        ],
+        "sourceLabel": "Source:",
+        "sources": [
+          {
+            "text": "Stuff / Waikato Times, 30 October 2026",
+            "href": "https://www.stuff.co.nz/nz-news/361053391/gut-wrenching-te-kuiti-mill-close-more-30-jobs-line"
+          }
+        ]
+      },
+      {
+        "heading": "MARKET UPDATE: CHINA LOG DEMAND PICKS UP AFTER GOLDEN WEEK",
+        "paras": [
+          "China's log market strengthened through October.",
+          "Daily softwood log consumption was running above 60,000 m³ following Golden Week. Port inventory increased by approximately 120,000 m³ to 2.5 million m³, largely reflecting reduced consumption during the holiday while shipments continued arriving.",
+          "Laurie Forestry reported a CFR log price of around US$132/m³ in mid-October.",
+          "Chinese domestic selling prices also improved, with Laurie reporting average log trader losses narrowing from around US$6–7/m³ to approximately US$4/m³.",
+          "Consumption has improved, although trading margins remain tight."
+        ],
+        "sourceLabel": "Source:",
+        "sources": [
+          {
+            "text": "Laurie Forestry: Monthly Report, October 2026",
+            "href": "https://www.laurieforestry.co.nz/news/monthly-reports-october-2026-2/"
+          }
+        ]
+      },
+      {
+        "heading": "EXPORT WATCH: INDIA TRADE ACCESS IMPROVES, BUT PRICE STILL MATTERS",
+        "paras": [
+          "The New Zealand–India Free Trade Agreement came into force on 20 October 2026, removing tariffs on more than 95% of current forestry and wood exports to India.",
+          "The agreement improves market access for New Zealand timber exporters, including processed wood products.",
+          "For sawn timber, there's no shortage of enquiry from India. From what we're seeing commercially, price expectations are often below levels that make supply from New Zealand viable, particularly once freight is included.",
+          "Improved market access is welcome, but converting that interest into commercially sustainable orders remains the challenge."
+        ],
+        "sourceLabel": "Sources:",
+        "sources": [
+          {
+            "text": "NZ Government, 20 October 2026",
+            "href": "https://www.beehive.govt.nz/release/new-zealand-and-india-ratify-free-trade-agreement"
+          },
+          {
+            "text": "WPMA",
+            "href": "https://wpma.org.nz/news-and-events"
+          },
+          {
+            "text": "Laurie Forestry",
+            "href": "https://www.laurieforestry.co.nz/news/monthly-reports-october-2026-2/"
+          }
+        ]
+      },
+      {
+        "heading": "DOMESTIC WATCH: BUILDING CONSENTS IMPROVE ANNUALLY, BUT MONTHLY ACTIVITY EASES",
+        "paras": [
+          "Stats NZ reported 41,091 new dwellings consented in the year ended September 2026, up 18% on the previous year.",
+          "However, September's seasonally adjusted monthly figure fell 7.9%, following a 5.3% increase in August.",
+          "Non-residential building consents totalled $8.7 billion over the year, down 3.1%.",
+          "The annual residential figures are encouraging, although the monthly decline shows the recovery is uneven.",
+          "Building consents are a useful forward indicator for timber demand, but construction is only one part of the wider timber market. Consents also take time to translate into actual building activity and timber orders."
+        ],
+        "sourceLabel": "Source:",
+        "sources": [
+          {
+            "text": "Stats NZ: Building Consents Issued, September 2026",
+            "href": "https://www.stats.govt.nz/information-releases/building-consents-issued-september-2026/"
+          }
+        ]
+      },
+      {
+        "heading": "INDUSTRY WATCH: NEW LIFE PROPOSED FOR KARIOI PULP MILL",
+        "paras": [
+          "The former Karioi pulp mill site near Ohakune could return to industrial use under a proposal to manufacture biocoal from forestry material.",
+          "Te Ara Hiko is proposing a facility capable of producing up to 180,000 tonnes of biocoal annually, using an estimated 500,000 tonnes of pulp logs and wood residues.",
+          "The project would reuse existing industrial infrastructure, with consents still under consideration.",
+          "If developed, it could create a substantial domestic market for lower-grade logs and forestry residues in the central North Island."
+        ],
+        "sourceLabel": "Source:",
+        "sources": [
+          {
+            "text": "Wood Central: Biocoal Plant Proposed for Former Karioi Pulp Mill, October 2026",
+            "href": "https://woodcentral.com.au/biocoal-plant-karioi-pulp-mill/"
+          }
+        ]
+      },
+      {
+        "heading": "INDUSTRY WATCH: MODULAR TIMBER MANUFACTURING FACES A TOUGH MARKET",
+        "paras": [
+          "The final liquidation report on Evergreen Modular, released in October, highlights the difficulty of establishing offsite timber construction businesses in New Zealand.",
+          "The company entered administration in 2024 after investing in factory-built timber housing.",
+          "Offsite manufacturing offers opportunities to improve construction productivity, but factories need a consistent flow of projects to cover equipment, facilities and operating costs.",
+          "Investment in technology is important. So is having enough reliable demand and workable margins to keep production running."
+        ],
+        "sourceLabel": "Source:",
+        "sources": [
+          {
+            "text": "Wood Central: Evergreen Modular Liquidation, October 2026",
+            "href": "https://woodcentral.com.au/evergreen-modular-liquidation/"
+          }
+        ]
+      },
+      {
+        "heading": "ONE TO WATCH: DIESEL COSTS ARE EATING INTO FORESTRY RETURNS",
+        "paras": [
+          "Higher diesel costs continue to put pressure on harvesting and log transport.",
+          "Laurie Forestry's October report estimated diesel at approximately $3.16/L for the month to date, compared with $1.81/L in October 2025.",
+          "The report estimates harvesting crews and log transport operators consume more than 300 million litres of diesel annually. At those prices, the additional annual fuel cost could exceed $400 million if sustained.",
+          "FICA's October market update also reported continued pressure on forestry contractors' profitability from rising fuel and freight costs, despite improving export log prices and strong harvesting activity.",
+          "Log prices may be firmer, but higher operating costs are absorbing a significant share of the return."
+        ],
+        "sourceLabel": "Sources:",
+        "sources": [
+          {
+            "text": "Laurie Forestry: Monthly Report, October 2026",
+            "href": "https://www.laurieforestry.co.nz/news/monthly-reports-october-2026-2/"
+          },
+          {
+            "text": "FICA: Market Update, October 2026",
+            "href": "https://www.fica.org.nz/blog/post/171615/market-update--october-2026/"
+          }
+        ]
+      },
+      {
+        "heading": "SAW POINT",
+        "paras": [
+          "Another sawmill closure is concerning, particularly when New Zealand is trying to develop more value-added processing.",
+          "The impact goes beyond the mill itself. Local transport operators, contractors, engineering businesses and other suppliers all depend on these operations.",
+          "The Evergreen Modular liquidation also shows that investing in new manufacturing technology doesn't guarantee a commercially viable business. Processing needs reliable demand, competitive operating costs and enough volume to justify the investment.",
+          "The proposed Karioi biocoal plant offers a different possibility, creating a new market for lower-grade logs and residues while reusing existing industrial infrastructure.",
+          "New Zealand needs more commercially viable processing, whether that's sawn timber, engineered wood products or alternative uses for our forestry resource.",
+          "Once the infrastructure, skills and supporting businesses disappear from a region, rebuilding them isn't easy."
+        ],
+        "sourceLabel": "",
+        "sources": []
+      }
+    ],
+    "worthReading": [
+      {
+        "title": "Stuff / Waikato Times: Claymark to Close Te Kūiti Mill",
+        "description": "The closure and implications for regional processing and log supply.",
+        "action": "Read the article",
+        "href": "https://www.stuff.co.nz/nz-news/361053391/gut-wrenching-te-kuiti-mill-close-more-30-jobs-line"
+      },
+      {
+        "title": "Wood Central: Biocoal Plant Proposed for Former Karioi Pulp Mill",
+        "description": "A proposed new market for lower-grade forestry material.",
+        "action": "Read the article",
+        "href": "https://woodcentral.com.au/biocoal-plant-karioi-pulp-mill/"
+      },
+      {
+        "title": "Wood Central: Evergreen Modular Liquidation",
+        "description": "The commercial difficulties facing offsite timber manufacturing.",
+        "action": "Read the article",
+        "href": "https://woodcentral.com.au/evergreen-modular-liquidation/"
+      },
+      {
+        "title": "Laurie Forestry: Monthly Report, October 2026",
+        "description": "China and India log markets, freight and diesel costs.",
+        "action": "Read the report",
+        "href": "https://www.laurieforestry.co.nz/news/monthly-reports-october-2026-2/"
+      },
+      {
+        "title": "Stats NZ: Building Consents Issued, September 2026",
+        "description": "Residential and non-residential construction indicators.",
+        "action": "Read the report",
+        "href": "https://www.stats.govt.nz/information-releases/building-consents-issued-september-2026/"
+      },
+      {
+        "title": "FICA: Market Update, October 2026",
+        "description": "Forestry contractor costs and export market conditions.",
+        "action": "Read the report",
+        "href": "https://www.fica.org.nz/blog/post/171615/market-update--october-2026/"
+      }
+    ],
+    "closing": [
+      "Saw Point is published monthly by FPX, Forest Products Exchange.",
+      "Written by George Harman | Founder, FPX | Director, Sutcliffe Trading",
+      "Looking for timber? Browse available stock or submit a sourcing request through FPX.",
+      "Subscribe at fpx.nz/saw-point"
+    ],
+    "keywords": [
+      "Claymark Te Kūiti sawmill closure",
+      "New Zealand sawmill closures",
+      "China log demand October 2026",
+      "New Zealand India free trade agreement timber",
+      "Karioi biocoal",
+      "forestry diesel costs",
+      "New Zealand timber industry"
+    ]
+  },
+  {
     "slug": "nz-domestic-timber-demand-saw-point-september-2026",
     "issue": "002",
     "month": "September",
@@ -155,8 +369,8 @@
       "India NZ wood exports",
       "softwood dust WorkSafe"
     ],
-    "coverImage": "https://media.licdn.com/dms/image/v2/D5612AQH2GnFa53WsdA/article-cover_image-shrink_720_1280/B56aBk3e4xK8AQ-/0/1788398665860?e=1796860800&v=beta&t=r-10CInX7M5Rfsn5qarAwe4EAQ5JaLYnAhDaoZJ653Q",
-    "coverAlt": "Saw Point Issue 002, September 2026, original Forest Products Exchange newsletter cover"
+    "coverImage": "/images/SEPT2026.png",
+    "coverAlt": "Saw Point Issue 002 September 2026 original cover by Forest Products Exchange"
   },
   {
     "slug": "red-stag-modular-timber-saw-point-august-2026",
@@ -317,7 +531,7 @@
       "Kaingaroa wood processing",
       "timber exports to India"
     ],
-    "coverImage": "https://media.licdn.com/dms/image/v2/D5612AQFS8TY8gRXV6A/article-cover_image-shrink_720_1280/B56Z_0YxC5KkAQ-/0/1786511567331?e=1796860800&v=beta&t=65rWSw8z5aX0a1_WJ5yl3TpSC-gif-b_O0BsJWjrzXE",
-    "coverAlt": "Saw Point Issue 001, August 2026, original Forest Products Exchange newsletter cover"
+    "coverImage": "/images/AUG2026.png",
+    "coverAlt": "Saw Point Issue 001 August 2026 original cover by Forest Products Exchange"
   }
 ]
