@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { isSawPointAdmin } from "../../../../lib/saw-point-admin-auth";
 
 export const maxDuration=30;
 
@@ -16,8 +15,6 @@ function issueDateValue(value:string){
 }
 
 export async function POST(request:Request){
-  if(!(await isSawPointAdmin())) return NextResponse.json({error:"Unauthorized"},{status:401});
-
   const body=await request.json();
   const issue=String(body.issue||"").trim().padStart(3,"0");
   const date=String(body.date||"").trim().toUpperCase();
