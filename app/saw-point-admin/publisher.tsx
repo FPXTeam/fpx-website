@@ -86,11 +86,10 @@ export default function SawPointPublisher(){
   return <div className="spa-wrap">
     <div className="spa-top">
       <div>
-        <span>PRIVATE FPX TOOL</span>
+        <span>FPX CONTENT PUBLISHER</span>
         <h1>Publish Saw Point.</h1>
         <p>Add the issue once. The website archive, featured issue and Production deployment are handled automatically.</p>
       </div>
-      <form method="post" action="/api/saw-point-admin/logout"><button type="submit" className="spa-logout">Log out</button></form>
     </div>
 
     <form className="spa-form" onSubmit={publish}>
@@ -129,7 +128,6 @@ export default function SawPointPublisher(){
       .spa-top span{font:700 10px/1 Lato,sans-serif;letter-spacing:.16em;color:#40973C}
       .spa-top h1{margin:10px 0 12px;font-size:clamp(44px,6vw,76px);line-height:.92;letter-spacing:-.05em}
       .spa-top p{max-width:640px;margin:0;color:#64736C;line-height:1.7}
-      .spa-logout{border:1px solid #d8dfda;background:#fff;padding:11px 15px;font-weight:700;cursor:pointer}
       .spa-form{display:grid;gap:20px;padding:30px;border:1px solid #dfe6e1;background:#fff}
       .spa-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
       label>span{display:block;margin-bottom:8px;font:700 10px/1 Lato,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#758956}
@@ -148,7 +146,7 @@ export default function SawPointPublisher(){
       .spa-delete{height:48px;padding:0 18px;border:1px solid #9a5147;background:#fff;color:#8a3026;font:700 11px/1 Lato,sans-serif;cursor:pointer}
       .spa-delete:hover{background:#fff5f3}.spa-delete:disabled{opacity:.55;cursor:wait}
       .spa-delete-panel>.spa-status{margin-top:14px}
-      @media(max-width:700px){.spa-top{display:block}.spa-logout{margin-top:20px}.spa-grid{grid-template-columns:1fr}.spa-form{padding:22px}.spa-delete-panel{padding:22px}.spa-delete-controls{grid-template-columns:1fr}.spa-delete{width:100%}}
+      @media(max-width:700px){.spa-top{display:block}.spa-grid{grid-template-columns:1fr}.spa-form{padding:22px}.spa-delete-panel{padding:22px}.spa-delete-controls{grid-template-columns:1fr}.spa-delete{width:100%}}
     `}</style>
   </div>;
 }
