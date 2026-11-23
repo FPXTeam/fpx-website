@@ -50,8 +50,11 @@ export async function POST(request: Request) {
   }
 
   const token = process.env.GITHUB_PUBLISH_TOKEN;
-  const repo = process.env.GITHUB_REPO || "FPXTeam/fpx-website";
-  const branch = process.env.SAW_POINT_PUBLISH_BRANCH || "main";
+  // Always write cover assets to the repository and branch deployed at www.fpx.nz.
+  // A different GITHUB_REPO / SAW_POINT_PUBLISH_BRANCH can create a valid GitHub commit
+  // without ever deploying the image at its advertised FPX URL.
+  const repo = "FPXTeam/fpx-website";
+  const branch = "main";
   if (!token) {
     return NextResponse.json({ error: "The website's GitHub publishing connection is not configured." }, { status: 500 });
   }
@@ -95,13 +98,33 @@ export async function POST(request: Request) {
   if (!uploaded.ok) {
     const details = await uploaded.text();
     console.error("Saw Point cover upload failed:", uploaded.status, details.slice(0, 600));
-    return NextResponse.json({ error: "The image could not be saved to FPX's website repository." }, { status: 502 });
+    return NextResponse.json({ error: uploaded.status === 401 || uploaded.status === 403 || uploaded.status === 404
+      ? "The publishing token cannot upload images to FPXTeam/fpx-website on main. Check its GitHub repository access."
+      : "The image could not be saved to the FPX production repository." }, { status: 502 });
   }
 
   const result = await uploaded.json();
   const commitSha = String(result?.commit?.sha || "");
-  if (!commitSha) {
-    return NextResponse.json({ error: "Image saved, but its deployment status could not be tracked." }, { status: 502 });
+  const imageSha = String(result?.content?.sha || "");
+  if (!commitSha || !imageSha) {
+    return NextResponse.json({ error: "The image upload could not be verified in GitHub." }, { status: 502 });
+  }
+
+  // Verify that this exact file exists in the production branch, rather than
+  // trusting the success of a write to a different repository or branch.
+  let verified = false;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const check = await fetch(contentUrl + "?ref=main", { headers, cache: "no-store" }).catch(() => null);
+    if (check?.ok) {
+      const data = await check.json().catch(() => ({}));
+      if (data.sha === imageSha && data.type === "file") {
+        verified = true;
+        break;
+      }
+    }
+  }
+  if (!verified) {
+    return NextResponse.json({ error: "Image was committed but could not be verified on the FPX production branch. Do not use its URL yet." }, { status: 502 });
   }
 
   const deployHook = process.env.VERCEL_SAW_POINT_DEPLOY_HOOK;
