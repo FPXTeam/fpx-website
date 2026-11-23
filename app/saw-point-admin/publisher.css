@@ -1,0 +1,42 @@
+.spap-wrap{max-width:1020px;margin:0 auto;padding:60px 25px 100px;color:#0c2619}
+.spap-top{margin:0 0 35px}
+.spap-top>span,.spap-kicker,.spap-delete>span{font:800 11px/1.2 Lato,Arial,sans-serif;letter-spacing:.16em;color:#398c45}
+.spap-top h1{font-size:clamp(44px,6vw,70px);line-height:1;letter-spacing:-.055em;margin:10px 0 15px;color:#071c12}
+.spap-top p{color:#617368;line-height:1.7;max-width:720px;margin:0}
+.spap-panel{padding:32px;background:white;border:1px solid #dfe6e1;margin-bottom:27px}
+.spap-panel h2,.spap-delete h2{font-size:clamp(27px,3.1vw,35px);line-height:1.15;letter-spacing:-.04em;margin:12px 0 10px}
+.spap-panel>p,.spap-delete>p{font-size:14px;line-height:1.65;color:#607568;margin:0 0 25px}
+.spap-panel label{display:block;margin:0 0 20px}
+.spap-panel label>span{display:block;font:800 10px/1.5 Lato,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#627f68;margin-bottom:8px}
+.spap-panel input:not([type=checkbox]),.spap-panel textarea,.spap-delete input{width:100%;min-width:0;border:1px solid #d6e4da;background:#fbfdfb;padding:13px 14px;color:#0e2d1c;font:400 14px/1.6 Arial,sans-serif;border-radius:5px}
+.spap-panel input:focus,.spap-panel textarea:focus,.spap-delete input:focus{outline:2px solid #8bba92;outline-offset:1px}
+.spap-panel textarea{resize:vertical}
+.spap-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+.spap-primary{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:#329143;color:#fff;border:0;border-radius:5px;font:750 13px Lato,Arial,sans-serif;padding:16px 22px;min-height:49px;cursor:pointer}
+.spap-primary:disabled{opacity:.45;cursor:not-allowed}
+.spap-primary:hover:not(:disabled){background:#1d7030}
+.spap-status{font:400 13px/1.55 Arial,sans-serif;color:#5b6f63;background:#f4f7f4;padding:12px 15px;margin-top:15px}
+.spap-status.ready{background:#e9f6eb;color:#245b34}.spap-status.error{background:#fff1ee;color:#913e33}
+.spap-status.deploying,.spap-status.working{background:#fff9ee;color:#836021}
+.spap-inline{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:22px 0 9px}
+.spap-inline strong{font-size:13px;color:#274332}
+.spap-inline>div{display:flex;flex-wrap:wrap;gap:9px}
+.spap-inline button{border:1px solid #cbdcd0;color:#295c35;background:#f9fcf8;border-radius:5px;font:750 12px Lato,Arial,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 14px;cursor:pointer}
+.spap-inline button:hover{background:#e9f2eb}
+.spap-readonly{border:1px solid #dfebe2;background:#fafdfa;border-radius:5px;padding:13px 16px;font-size:14px;font-weight:700;color:#153a22}
+.spap-copy-area{white-space:pre-wrap}
+.spap-note{background:#f2f6f1;border-left:3px solid #40973c;color:#506b54;font-size:12px;line-height:1.7;padding:15px 17px;margin:17px 0}
+.spap-warning{padding:15px 19px;border:1px solid #f0dcb5;background:#fff9ed;margin-top:16px;color:#7c5a21;font-size:13px;line-height:1.5}
+.spap-warning p{margin:7px 0}.spap-warning ul{margin:7px 0;padding-left:20px}
+.spap-code{font-family:ui-monospace,Consolas,monospace!important;font-size:11px!important;line-height:1.45!important;color:#2e4940!important}
+.spap-panel .spap-checkbox{display:flex;align-items:center;gap:11px;margin:24px 0 18px;font-size:13px;line-height:1.5;font-weight:700;color:#294a36}
+.spap-checkbox input{accent-color:#40973c;flex-shrink:0;width:19px;height:19px}
+.spap-links{display:flex;flex-wrap:wrap;gap:14px;margin-top:22px}
+.spap-links a{display:inline-flex;align-items:center;gap:6px;color:#24703a;font-size:12px;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+.spap-delete{margin:45px 0 0;padding:28px 32px;background:#fff;border:1px solid #e9d3ce}
+.spap-delete>span{color:#a1584e}
+.spap-delete h2{font-size:29px}
+.spap-delete .spap-inline{max-width:560px;justify-content:flex-start}
+.spap-delete .spap-inline input{flex:1}
+.spap-delete .spap-inline button{height:49px;white-space:nowrap;border:1px solid #ac6c63;color:#9b4a3d;background:#fff6f3}
+@media(max-width:730px){.spap-wrap{padding:36px 18px 70px}.spap-panel{padding:23px}.spap-grid{grid-template-columns:1fr;gap:0}.spap-inline{align-items:flex-start;flex-direction:column}.spap-inline>div{width:100%}.spap-delete{padding:22px}.spap-delete .spap-inline{align-items:stretch}.spap-delete .spap-inline button{width:100%}}
