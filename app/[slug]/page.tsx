@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { MasterInnerPage } from "@/components/master-site";
 import sawPointIssues from "../../data/saw-point-issues.json";
+import industryNews from "../../data/industry-news.json";
 import { faqGroups } from "@/components/faq-data";
 import "../../components/master-site.css";
 import "../../components/premium-clean-sitewide.css";
@@ -229,10 +230,9 @@ function pageSchema(slug: string) {
       description:data.description,
       url,
       mainEntity:{"@type":"ItemList","itemListElement":[
-        {"@type":"ListItem","position":1,"name":"Domestic Demand Hits Its Best Level in Years | Saw Point September 2026","url":`${siteUrl}/industry-insights/nz-domestic-timber-demand-saw-point-september-2026`},
-        {"@type":"ListItem","position":2,"name":"Red Stag Moves Modular Timber Onto the Factory Floor | Saw Point August 2026","url":`${siteUrl}/industry-insights/red-stag-modular-timber-saw-point-august-2026`},
-        {"@type":"ListItem","position":3,"name":"The Science of Kiln Drying","url":`${siteUrl}/the-science-of-kiln-drying`},
-        {"@type":"ListItem","position":4,"name":"Radiata Pine Characteristics","url":`${siteUrl}/timber-growth-rings`}
+        ...industryNews.map((story,index)=>({"@type":"ListItem","position":index+1,"name":story.pageTitle,"url":`${siteUrl}/industry-insights/${story.slug}`})),
+        {"@type":"ListItem","position":industryNews.length+1,"name":"The Science of Kiln Drying","url":`${siteUrl}/the-science-of-kiln-drying`},
+        {"@type":"ListItem","position":industryNews.length+2,"name":"Radiata Pine Characteristics","url":`${siteUrl}/timber-growth-rings`}
       ]},
       isPartOf:{"@id":`${siteUrl}/#website`},
       inLanguage:"en-NZ"
@@ -251,7 +251,7 @@ function pageSchema(slug: string) {
     return { "@context":"https://schema.org", "@type":"CollectionPage", name:data.title, description:data.description, url, mainEntity:{"@type":"ItemList","itemListElement":productSchemas[slug].map((name,index)=>({"@type":"ListItem",position:index+1,name}))}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
   }
   if (slug === "saw-point") {
-    return { "@context":"https://schema.org", "@type":"CollectionPage", name:data.title, description:data.description, url, mainEntity:{"@type":"ItemList","itemListElement":sawPointSchemaIssues.map((issue,index)=>({"@type":"ListItem","position":index+1,"name":issue.title||`Saw Point | Issue ${issue.issue}`,"url":issue.body?`${siteUrl}/saw-point/${issue.slug}`:issue.linkedinUrl}))}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
+    return { "@context":"https://schema.org", "@type":"CollectionPage", name:data.title, description:data.description, url, mainEntity:{"@type":"ItemList","itemListElement":sawPointSchemaIssues.map((issue,index)=>({"@type":"ListItem","position":index+1,"name":issue.title||`Saw Point | Issue ${issue.issue}`,"url":(issue as typeof issue & {articleSlug?:string}).articleSlug?`${siteUrl}/industry-insights/${(issue as typeof issue & {articleSlug?:string}).articleSlug}`:issue.body?`${siteUrl}/saw-point/${issue.slug}`:issue.linkedinUrl}))}, isPartOf:{"@id":`${siteUrl}/#website`}, inLanguage:"en-NZ" };
   }
   if (slug === "about-us") {
     return [
