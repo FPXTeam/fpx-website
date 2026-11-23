@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, BookOpen, Mail } from "lucide-react";
@@ -10,7 +11,6 @@ import "@/components/revised-pages.css";
 import "@/components/industry-news.css";
 
 const base = "https://www.fpx.nz";
-const socialImage = "/images/social/fpx-social-share.jpg";
 const isProduction = process.env.VERCEL_ENV === "production";
 type Insight = (typeof issues)[number];
 const findIssue = (slug: string): Insight | undefined => issues.find(issue => issue.slug === slug);
@@ -36,9 +36,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url: path, title: issue.pageTitle, description: issue.description,
       publishedTime: issue.publishedAt, modifiedTime: issue.updatedAt,
       authors: [`${base}/about-us#george-harman`], section: "Timber News",
-      images: [{ url: socialImage, width: 1200, height: 630, alt: "Forest Products Exchange - Saw Point timber industry news" }]
+      images: [{ url: issue.coverImage, width: 1280, height: 720, alt: issue.coverAlt }]
     },
-    twitter: { card: "summary_large_image", title: issue.pageTitle, description: issue.description, images: [socialImage] }
+    twitter: { card: "summary_large_image", title: issue.pageTitle, description: issue.description, images: [issue.coverImage] }
   };
 }
 
@@ -63,7 +63,7 @@ export default async function InsightNewsArticle({ params }: { params: Promise<{
   const articleSchema = {
     "@context": "https://schema.org", "@type": "BlogPosting", "@id": `${url}#article`,
     headline: issue.pageTitle, alternativeHeadline: `Saw Point | Issue ${issue.issue} | ${issue.month} ${issue.year}`,
-    description: issue.description, image: `${base}${socialImage}`,
+    description: issue.description, image: { "@type": "ImageObject", url: issue.coverImage, width: 1280, height: 720, caption: issue.coverAlt },
     url, mainEntityOfPage: { "@type": "WebPage", "@id": url },
     datePublished: issue.publishedAt, dateModified: issue.updatedAt,
     author: { "@type": "Person", "@id": `${base}/about-us#george-harman`, name: "George Harman", url: `${base}/about-us`, worksFor: { "@id": `${base}/#organization` } },
@@ -95,6 +95,9 @@ export default async function InsightNewsArticle({ params }: { params: Promise<{
             <span>Full Saw Point issue</span>
           </div>
         </header>
+        <figure className="spn-cover-figure">
+          <Image src={issue.coverImage} alt={issue.coverAlt} width={1280} height={720} priority sizes="(max-width: 900px) 100vw, 1010px" unoptimized/>
+        </figure>
         <div className="spn-layout">
           <aside className="spn-aside" aria-label="Article navigation">
             <div className="spn-sticky">
