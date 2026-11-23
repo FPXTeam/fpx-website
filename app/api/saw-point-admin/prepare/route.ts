@@ -30,11 +30,13 @@ export async function POST(request:Request){
     "then 'Read the full Issue NNN below.', subscription link https://www.fpx.nz/saw-point,",
     "and hashtags #SawPoint #NZTimber #ForestryNZ #WoodProcessing #FPX.",
     "The short archive summary should mention the main actual news topics and be under 320 characters.",
-    "Email subject/lead text and preheader should accurately reflect the main news without inventing anything.",
+    "The Brevo campaign subject is fixed by the admin as Saw Point | Issue NNN | Month YYYY. Do not generate a different subject.",
+    "Generate a natural one-sentence preview text from actual key stories. Match this style, without copying unrelated facts: Another NZ sawmill closes as China demand improves, India access opens up and rising diesel costs put pressure on forestry returns.",
+    "Only mention news topics truly present in the supplied issue. Avoid generic openings such as This month we cover.",
     "Return JSON ONLY with keys excerpt, caption, emailHeadline, emailIntro, preheader, teaser, storySummaries.",
     "storySummaries must be an array with one short title and short summary per major article section (max 8);",
     "do not include the SAW POINT author commentary or WORTH READING list as a news story.",
-    "Write an email intro of at most 300 characters, a teaser of at most 250, and a preheader of at most 150.",
+    "Write an email intro of at most 300 characters, a teaser of at most 250, and a preview text (preheader) of at most 180 characters.",
     "Do not rewrite the source article; these are metadata and distribution copy only."
   ].join(" ");
   try{
