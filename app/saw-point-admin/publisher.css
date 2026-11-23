@@ -40,3 +40,17 @@
 .spap-delete .spap-inline input{flex:1}
 .spap-delete .spap-inline button{height:49px;white-space:nowrap;border:1px solid #ac6c63;color:#9b4a3d;background:#fff6f3}
 @media(max-width:730px){.spap-wrap{padding:36px 18px 70px}.spap-panel{padding:23px}.spap-grid{grid-template-columns:1fr;gap:0}.spap-inline{align-items:flex-start;flex-direction:column}.spap-inline>div{width:100%}.spap-delete{padding:22px}.spap-delete .spap-inline{align-items:stretch}.spap-delete .spap-inline button{width:100%}}
+
+/* Readable LinkedIn draft, using semantic heading/paragraph HTML from the approved copy. */
+.spap-linkedin-preview{border:1px solid #d7e5da;background:#fff;border-radius:7px;padding:30px 34px;max-height:640px;overflow:auto;color:#182b22;font-family:Arial,sans-serif}
+.spap-linkedin-preview h2{font-family:Arial,sans-serif;font-size:18px;line-height:1.4;letter-spacing:0;text-transform:uppercase;margin:29px 0 14px;font-weight:750;color:#102b1e}
+.spap-linkedin-preview h2:first-child{margin-top:0}
+.spap-linkedin-preview p{font:400 14px/1.75 Arial,sans-serif;margin:0 0 16px;color:#24332b}
+.spap-linkedin-preview p:has(strong){margin:16px 0 10px}
+.spap-linkedin-preview a{color:#1979b7;text-decoration:underline;text-underline-offset:2px}
+.spap-linkedin-preview hr{border:0;border-top:1px solid #d9e4db;margin:24px 0}
+.spap-plaintext-details{margin-top:21px;border:1px solid #dce8df;border-radius:6px;padding:14px 18px}
+.spap-plaintext-details summary{font:750 13px/1.5 Arial,sans-serif;color:#285e3a;cursor:pointer}
+.spap-plaintext-details p{font-size:12px;line-height:1.65;color:#647669;margin:12px 0}
+.spap-plaintext-details textarea{width:100%;margin-top:8px}
+@media(max-width:730px){.spap-linkedin-preview{padding:20px;max-height:520px}.spap-linkedin-preview h2{font-size:16px}.spap-linkedin-preview p{font-size:13px}}
