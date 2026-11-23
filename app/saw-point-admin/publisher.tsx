@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, CheckCircle2, ClipboardCopy, FileText, Mail, Send, Upload, XCircle } from "lucide-react";
 import SawPointCoverUpload from "./cover-upload";
-import { formatLinkedInBody, type PreparedContent } from "../../lib/saw-point-publishing";
+import { formatLinkedInBody, formatLinkedInHtml, type PreparedContent } from "../../lib/saw-point-publishing";
 import { renderSawPointBrevo } from "../../lib/saw-point-brevo";
 import "./publisher.css";
 
@@ -37,6 +37,7 @@ export default function SawPointPublisher(){
   const [deleteIssue,setDeleteIssue]=useState("");
   const [deleteStatus,setDeleteStatus]=useState<Status>("idle");
   const [deleteMessage,setDeleteMessage]=useState("");
+  const [richCopyMessage,setRichCopyMessage]=useState("");
 
   useEffect(()=>{
     try{const stored=localStorage.getItem(STORAGE);if(stored){
@@ -55,8 +56,10 @@ export default function SawPointPublisher(){
     setDraft(prev=>({...prev,[field]:value,linkedinBody:"",prepared:null,excerpt:"",caption:"",approved:false,linkedinUrl:""}));
     setPrepareStatus("idle");setPublishStatus("idle");setPrepareMessage("");setPublishMessage("");
     setMissingSources([]);
+    setRichCopyMessage("");
   }
-  const formattedBody=useMemo(()=>formatLinkedInBody(draft.body),[draft.body]);
+  const formattedBody=useMemo(()=>formatLinkedInBody(draft.body,draft.title),[draft.body,draft.title]);
+  const richBody=useMemo(()=>formatLinkedInHtml(draft.linkedinBody||draft.body,draft.title),[draft.linkedinBody,draft.body,draft.title]);
   const brevoHtml=useMemo(()=>{
     if(!draft.prepared||!draft.linkedinUrl||!draft.coverUrl)return "";
     return renderSawPointBrevo({
@@ -69,6 +72,30 @@ export default function SawPointPublisher(){
     if(!value)return;
     try{await navigator.clipboard.writeText(value);}
     catch{window.alert("Copy is unavailable in this browser. Select the text and copy manually.");}
+  }
+  async function copyLinkedInFormatted(){
+    const plain=draft.linkedinBody||formattedBody;
+    if(!plain)return;
+    // Copy both formats. LinkedIn's editor may preserve heading styles only
+    // when the clipboard includes text/html alongside the plain-text version.
+    try {
+      if(!navigator.clipboard?.write || !window.ClipboardItem)
+        throw new Error("Rich clipboard is unavailable");
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/html":new Blob([richBody],{type:"text/html"}),
+          "text/plain":new Blob([plain],{type:"text/plain"})
+        })
+      ]);
+      setRichCopyMessage("Formatted article copied. Paste into LinkedIn's ARTICLE BODY. Verify the headings and spacing in LinkedIn before publishing.");
+    } catch {
+      try {
+        await navigator.clipboard.writeText(plain);
+        setRichCopyMessage("Plain text copied. Your browser could not copy rich formatting. Use LinkedIn's heading/bold toolbar after pasting.");
+      } catch {
+        setRichCopyMessage("Copy failed. Select the article text below and copy it manually.");
+      }
+    }
   }
   function downloadEmail(){
     if(!brevoHtml)return;
@@ -165,11 +192,20 @@ export default function SawPointPublisher(){
     {draft.prepared&&<section className="spap-panel" aria-labelledby="spap-step3">
       <span className="spap-kicker">STEP 03 · REVIEW &amp; COPY</span>
       <h2 id="spap-step3">Your LinkedIn publishing materials.</h2>
-      <p>Copy the title and approved article into LinkedIn. The archive summary and promotional caption are separate generated drafts and can be edited here.</p>
+      <p>Copy the title into LinkedIn’s Title field, then use <strong>Copy formatted article</strong> for the Article Body. The generated summary and caption are separate, editable drafts.</p>
       <div className="spap-inline"><strong>Article title</strong><button type="button" onClick={()=>copy(draft.title)}><ClipboardCopy size={15}/> Copy title</button></div>
       <div className="spap-readonly">{draft.title}</div>
-      <div className="spap-inline"><strong>LinkedIn article body (spacing editable)</strong><button type="button" onClick={()=>copy(draft.linkedinBody||formattedBody)}><ClipboardCopy size={15}/> Copy full article</button></div>
-      <textarea rows={12} className="spap-copy-area" value={draft.linkedinBody||formattedBody} onChange={e=>setField("linkedinBody",e.target.value)}/>
+      <div className="spap-inline"><strong>LinkedIn article preview</strong><div>
+        <button type="button" onClick={copyLinkedInFormatted}><ClipboardCopy size={15}/> Copy formatted article</button>
+        <button type="button" onClick={()=>{copy(draft.linkedinBody||formattedBody);setRichCopyMessage("Plain text copied. Headings and bold will need to be applied in LinkedIn.");}}>Copy plain text</button>
+      </div></div>
+      <div className="spap-linkedin-preview" aria-label="Preview of formatted LinkedIn article" dangerouslySetInnerHTML={{__html:richBody}}/>
+      <div className="spap-status" role="status" aria-live="polite">{richCopyMessage||"Section headings and Worth Reading titles are formatted in the rich copy. The main story heading is omitted from the body when it matches your separate article title."}</div>
+      <details className="spap-plaintext-details">
+        <summary>Edit article body text and spacing</summary>
+        <p>Each Notion line is treated as a separate paragraph. Edit here if needed; the rich copy and preview update automatically.</p>
+        <textarea rows={16} className="spap-copy-area" value={draft.linkedinBody||formattedBody} onChange={e=>{setField("linkedinBody",e.target.value);setRichCopyMessage("");}}/>
+      </details>
       <label><span>Generated short archive summary (editable)</span><textarea rows={3} value={draft.excerpt} onChange={e=>setField("excerpt",e.target.value)}/></label>
       <div className="spap-inline"><strong>LinkedIn post caption</strong><button type="button" onClick={()=>copy(draft.caption)}><ClipboardCopy size={15}/> Copy caption</button></div>
       <textarea rows={11} value={draft.caption} onChange={e=>setField("caption",e.target.value)}/>
