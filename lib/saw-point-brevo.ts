@@ -7,10 +7,12 @@ export function renderSawPointBrevo(input:{
   const {issue,date,coverUrl,linkedinUrl,prepared}=input;
   // The approved Issue 004 Brevo layout and the native {{ unsubscribe }}
   // and {{ update_profile }} placeholders are deliberately preserved.
-  const stories=prepared.storySummaries.slice(0,8).map(story =>
+  const selected=prepared.storySummaries.slice(0,6);
+  const stories=selected.map((story,index) =>
     BREVO_STORY_TEMPLATE
       .replaceAll("__SP_STORY_TITLE__",escapeHtml(story.title))
       .replaceAll("__SP_STORY_SUMMARY__",escapeHtml(story.summary))
+      .replace(index===selected.length-1?'<div style="margin-bottom:24px;">':"__no_change__",index===selected.length-1?"<div>":"__no_change__")
   ).join("\n\n");
   const tokens:Record<string,string>={
     "__SP_ISSUE_TITLE__":escapeHtml("Saw Point | Issue "+issue+" | "+monthLabel(date)),
