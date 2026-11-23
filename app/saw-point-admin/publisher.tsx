@@ -1,157 +1,216 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowUpRight, CheckCircle2, ClipboardCopy, FileText, Mail, Send, Upload, XCircle } from "lucide-react";
 import SawPointCoverUpload from "./cover-upload";
+import { formatLinkedInBody, type PreparedContent } from "../../lib/saw-point-publishing";
+import { renderSawPointBrevo } from "../../lib/saw-point-brevo";
+import "./publisher.css";
 
-type PublishResult={ok?:boolean;commitSha?:string;error?:string};
-
+type Draft={
+  issue:string;date:string;title:string;body:string;coverUrl:string;linkedinUrl:string;
+  excerpt:string;caption:string;prepared:PreparedContent|null;approved:boolean;
+};
+type Status="idle"|"working"|"deploying"|"ready"|"error";
+const INITIAL:Draft={issue:"",date:"",title:"",body:"",coverUrl:"",linkedinUrl:"",excerpt:"",caption:"",prepared:null,approved:false};
+const STORAGE="fpx-saw-point-multichannel-draft-v1";
+function monthFromPicker(iso:string){
+  const found=/^(\d{4})-(\d{2})$/.exec(iso);
+  if(!found)return "";
+  const d=new Date(Date.UTC(Number(found[1]),Number(found[2])-1,1));
+  return d.toLocaleDateString("en-NZ",{month:"long",year:"numeric",timeZone:"UTC"}).toUpperCase();
+}
+function validLinkedIn(url:string) {
+  try{const u=new URL(url);return u.protocol==="https:"&&["www.linkedin.com","linkedin.com"].includes(u.hostname)&&u.pathname.startsWith("/pulse/");}
+  catch{return false;}
+}
+function looksHosted(url:string){return /^https:\/\/www\.fpx\.nz\/images\/saw-point\/covers\/[^ ]+\.(?:png|jpg|webp)$/i.test(url);}
 export default function SawPointPublisher(){
-  const [status,setStatus]=useState<"idle"|"publishing"|"deploying"|"done"|"error">("idle");
-  const [message,setMessage]=useState("");
+  const [draft,setDraft]=useState<Draft>(INITIAL);
+  const [hydrated,setHydrated]=useState(false);
+  const [prepareStatus,setPrepareStatus]=useState<Status>("idle");
+  const [prepareMessage,setPrepareMessage]=useState("");
+  const [missingSources,setMissingSources]=useState<string[]>([]);
+  const [publishStatus,setPublishStatus]=useState<Status>("idle");
+  const [publishMessage,setPublishMessage]=useState("");
+  const [articleUrl,setArticleUrl]=useState("");
   const [deleteIssue,setDeleteIssue]=useState("");
-  const [deleteStatus,setDeleteStatus]=useState<"idle"|"deleting"|"deploying"|"done"|"error">("idle");
+  const [deleteStatus,setDeleteStatus]=useState<Status>("idle");
   const [deleteMessage,setDeleteMessage]=useState("");
 
-  async function waitForDeployment(commitSha:string,onDone:(message:string)=>void,onError:(message:string)=>void){
-    const started=Date.now();
-    while(Date.now()-started<180000){
+  useEffect(()=>{
+    try{const stored=localStorage.getItem(STORAGE);if(stored){
+      const value=JSON.parse(stored) as Partial<Draft>;
+      setDraft({...INITIAL,...value,approved:false});
+    }}catch{}
+    setHydrated(true);
+  },[]);
+  useEffect(()=>{if(hydrated){try{localStorage.setItem(STORAGE,JSON.stringify(draft));}catch{}}},[draft,hydrated]);
+
+  const setField=(field:keyof Draft,value:string|boolean)=>{
+    setDraft(prev=>({...prev,[field]:value}));
+    setPublishStatus("idle");setPublishMessage("");
+  };
+  function setInput(field:"issue"|"date"|"title"|"body",value:string){
+    setDraft(prev=>({...prev,[field]:value,prepared:null,excerpt:"",caption:"",approved:false,linkedinUrl:""}));
+    setPrepareStatus("idle");setPublishStatus("idle");setPrepareMessage("");setPublishMessage("");
+    setMissingSources([]);
+  }
+  const formattedBody=useMemo(()=>formatLinkedInBody(draft.body),[draft.body]);
+  const brevoHtml=useMemo(()=>{
+    if(!draft.prepared||!draft.linkedinUrl||!draft.coverUrl)return "";
+    return renderSawPointBrevo({
+      issue:draft.issue.padStart(3,"0"),
+      date:draft.date,title:draft.title,coverUrl:draft.coverUrl,
+      linkedinUrl:draft.linkedinUrl,prepared:draft.prepared
+    });
+  },[draft.issue,draft.date,draft.title,draft.coverUrl,draft.linkedinUrl,draft.prepared]);
+  async function copy(value:string){
+    if(!value)return;
+    try{await navigator.clipboard.writeText(value);}
+    catch{window.alert("Copy is unavailable in this browser. Select the text and copy manually.");}
+  }
+  function downloadEmail(){
+    if(!brevoHtml)return;
+    const url=URL.createObjectURL(new Blob([brevoHtml],{type:"text/html;charset=utf-8"}));
+    const link=document.createElement("a");link.href=url;
+    link.download="SawPoint-Issue-"+draft.issue.padStart(3,"0")+"-Brevo.html";
+    link.click();URL.revokeObjectURL(url);
+  }
+  async function prepare(){
+    if(!draft.issue||!draft.date||!draft.title||draft.body.trim().length<120){
+      setPrepareStatus("error");setPrepareMessage("Enter the issue number, month and year, issue title, and George's final approved article.");return;
+    }
+    setPrepareStatus("working");setPrepareMessage("Preparing article summary, LinkedIn caption and Brevo text from the approved copy...");
+    try{
+      const res=await fetch("/api/saw-point-admin/prepare",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({issue:draft.issue.padStart(3,"0"),date:draft.date,title:draft.title,body:draft.body})});
+      const data=await res.json();
+      if(!res.ok||!data?.prepared)throw new Error(data?.error||"Could not generate issue materials.");
+      setDraft(prev=>({...prev,issue:prev.issue.padStart(3,"0"),prepared:data.prepared,excerpt:data.prepared.excerpt,caption:data.prepared.caption,approved:false}));
+      setMissingSources(data.missingSourceUrls||[]);
+      setPrepareStatus("ready");
+      setPrepareMessage(data.note||"Generated from the approved article. Review the summary and caption before posting to LinkedIn.");
+    }catch(error){setPrepareStatus("error");setPrepareMessage(error instanceof Error?error.message:"Preparation failed.");}
+  }
+  async function waitForDeployment(sha:string){
+    for(let count=0;count<36;count++){
       await new Promise(resolve=>setTimeout(resolve,5000));
-      const check=await fetch("/api/saw-point-admin/status?sha="+encodeURIComponent(commitSha),{cache:"no-store"});
-      const state=await check.json();
-      if(state?.status==="ready"){onDone("DONE — GitHub updated and Saw Point is LIVE in Production.");return}
-      if(state?.status==="error"){onError(state?.error||"Deployment failed.");return}
+      try{
+        const check=await fetch("/api/saw-point-admin/status?sha="+encodeURIComponent(sha),{cache:"no-store"});
+        const state=await check.json();
+        if(state?.status==="ready"){setPublishStatus("ready");setPublishMessage("Website deployment confirmed. Saw Point and FPX Insights have both been updated.");return;}
+        if(state?.status==="error"){setPublishStatus("error");setPublishMessage(state.error||"The Vercel deployment failed.");return;}
+      }catch{}
     }
-    onDone("GitHub is updated. Vercel is still deploying or promoting to Production — check the live site shortly.");
+    setPublishStatus("ready");setPublishMessage("Both files were committed to GitHub. Vercel has not yet confirmed production.");
   }
-
-  async function publish(event:React.FormEvent<HTMLFormElement>){
-    event.preventDefault();
-    setStatus("publishing");
-    setMessage("Saving issue to GitHub…");
-    const form=event.currentTarget;
-    const payload=Object.fromEntries(new FormData(form).entries());
-
+  async function publish(){
+    if(!draft.prepared||!draft.excerpt||!draft.caption||!draft.approved||!looksHosted(draft.coverUrl)||!validLinkedIn(draft.linkedinUrl)){
+      setPublishStatus("error");setPublishMessage("Finish all steps first: hosted image, generated summary/caption, published LinkedIn URL and approval checkbox.");return;
+    }
+    if(!window.confirm("Publish Issue "+draft.issue+" to both Saw Point and FPX Insights? This makes the full article public."))return;
+    setPublishStatus("working");setPublishMessage("Publishing the full approved issue and updating both website pages...");
     try{
-      const response=await fetch("/api/saw-point-admin/publish",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify(payload)
-      });
-      const data=(await response.json()) as PublishResult;
-      if(!response.ok || !data.commitSha) throw new Error(data.error||"Unable to publish issue.");
-
-      setStatus("deploying");
-      setMessage("GitHub updated. Deploying to Vercel Production…");
-
-      await waitForDeployment(
-        data.commitSha,
-        value=>{setStatus("done");setMessage(value);form.reset()},
-        value=>{setStatus("error");setMessage(value)}
-      );
-    }catch(error){
-      setStatus("error");
-      setMessage(error instanceof Error?error.message:"Unable to publish issue.");
-    }
+      const res=await fetch("/api/saw-point-admin/publish",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({...draft,issue:draft.issue.padStart(3,"0")})});
+      const data=await res.json();
+      if(!res.ok||!data.commitSha)throw new Error(data.error||"Unable to publish the issue.");
+      setArticleUrl(data.articleUrl||"");
+      setPublishStatus("deploying");setPublishMessage("GitHub updated. Waiting for the Vercel production deployment...");
+      await waitForDeployment(data.commitSha);
+    }catch(error){setPublishStatus("error");setPublishMessage(error instanceof Error?error.message:"Publishing failed.");}
   }
-
-  async function deleteSelectedIssue(){
-    const normalized=deleteIssue.trim().padStart(3,"0");
-    if(!normalized){setDeleteStatus("error");setDeleteMessage("Enter an issue number.");return}
-    const confirmed=window.confirm(`Delete Saw Point Issue ${normalized}? This removes it from the website archive and latest issue data.`);
-    if(!confirmed) return;
-
-    setDeleteStatus("deleting");
-    setDeleteMessage("Removing issue from GitHub…");
+  async function removeIssue(){
+    const issue=deleteIssue.padStart(3,"0");
+    if(!/^\d{3}$/.test(issue)){setDeleteStatus("error");setDeleteMessage("Enter an issue number.");return;}
+    if(!window.confirm("Delete Saw Point Issue "+issue+" from Saw Point and FPX Insights (if it has an Insights article)?"))return;
+    setDeleteStatus("working");setDeleteMessage("Removing the issue...");
     try{
-      const response=await fetch("/api/saw-point-admin/delete",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({issue:normalized})
-      });
-      const data=(await response.json()) as PublishResult;
-      if(!response.ok || !data.commitSha) throw new Error(data.error||"Unable to delete issue.");
-
-      setDeleteStatus("deploying");
-      setDeleteMessage("Issue removed. Deploying update to Vercel Production…");
-      await waitForDeployment(
-        data.commitSha,
-        value=>{setDeleteStatus("done");setDeleteMessage(value);setDeleteIssue("")},
-        value=>{setDeleteStatus("error");setDeleteMessage(value)}
-      );
-    }catch(error){
-      setDeleteStatus("error");
-      setDeleteMessage(error instanceof Error?error.message:"Unable to delete issue.");
-    }
+      const res=await fetch("/api/saw-point-admin/delete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({issue})});
+      const data=await res.json();
+      if(!res.ok||!data.commitSha)throw new Error(data.error||"Unable to remove the issue.");
+      setDeleteStatus("ready");setDeleteMessage("Issue removed from GitHub. Production deployment has started.");
+      setDeleteIssue("");
+    }catch(error){setDeleteStatus("error");setDeleteMessage(error instanceof Error?error.message:"Deletion failed.");}
   }
-
-  return <div className="spa-wrap">
-    <div className="spa-top">
-      <div>
-        <span>FPX CONTENT PUBLISHER</span>
-        <h1>Publish Saw Point.</h1>
-        <p>Add the issue once. The website archive, featured issue and Production deployment are handled automatically.</p>
+  const canPrepare=!!draft.issue&&!!draft.date&&!!draft.title&&draft.body.trim().length>=120;
+  const canPublish=!!draft.prepared&&!!draft.excerpt&&!!draft.caption&&draft.approved&&looksHosted(draft.coverUrl)&&validLinkedIn(draft.linkedinUrl);
+  return <div className="spap-wrap">
+    <header className="spap-top">
+      <span>FPX CONTENT PUBLISHER</span>
+      <h1>Publish Saw Point.</h1>
+      <p>One approved article. One cover image. All publishing materials, prepared in the right order.</p>
+    </header>
+    <SawPointCoverUpload onCoverReady={(url,issue,month)=>{
+      setDraft(prev=>({...prev,coverUrl:url,issue,date:monthFromPicker(month),approved:false}));
+      setPublishStatus("idle");setPublishMessage("");
+    }}/>
+    <section className="spap-panel" aria-labelledby="spap-step2">
+      <span className="spap-kicker">STEP 02 · APPROVED ARTICLE</span>
+      <h2 id="spap-step2">Paste George's final copy.</h2>
+      <p>Use the article approved by George. No LinkedIn URL is needed yet. Headings, paragraphs, figures and sources are kept intact.</p>
+      <div className="spap-grid">
+        <label><span>Issue number</span><input value={draft.issue} onChange={e=>setInput("issue",e.target.value)} placeholder="005" inputMode="numeric" maxLength={3}/></label>
+        <label><span>Issue month and year</span><input value={draft.date} onChange={e=>setInput("date",e.target.value)} placeholder="DECEMBER 2026"/></label>
       </div>
-    </div>
-
-    <SawPointCoverUpload/>
-
-    <div className="spa-editor-intro"><span>STEP 02 · EXISTING PUBLISHER</span><h2>Publish the approved issue.</h2><p>Uploading a cover above creates an image link only. Article publishing remains a separate step.</p></div>
-    <form className="spa-form" onSubmit={publish}>
-      <div className="spa-grid">
-        <label><span>Issue number</span><input name="issue" placeholder="003" required/></label>
-        <label><span>Publication date</span><input name="date" placeholder="OCTOBER 2026" required/></label>
-      </div>
-      <label><span>Title</span><input name="title" placeholder="Saw Point | Issue 003"/></label>
-      <label><span>Short archive summary</span><textarea name="excerpt" rows={3} placeholder="One or two sentences describing this issue." required/></label>
-      <label><span>LinkedIn article link</span><input name="linkedinUrl" type="url" placeholder="https://www.linkedin.com/pulse/..." required/></label>
-      <label><span>Full article</span><textarea name="body" rows={18} placeholder="Paste the full Saw Point article here…" required/></label>
-      <button className="spa-publish" type="submit" disabled={status==="publishing"||status==="deploying"}>
-        {status==="publishing"?"Publishing…":status==="deploying"?"Deploying…":"Publish issue"}
+      <label><span>Issue title</span><input value={draft.title} onChange={e=>setInput("title",e.target.value)} placeholder="THE BIG STORY: ..."/></label>
+      <label><span>Final approved article body</span><textarea rows={18} value={draft.body} onChange={e=>setInput("body",e.target.value)} placeholder="Paste the entire approved newsletter article, including source references and Worth Reading..."/></label>
+      <label><span>Hosted cover image URL from Step 01</span><input value={draft.coverUrl} onChange={e=>setField("coverUrl",e.target.value)} placeholder="https://www.fpx.nz/images/saw-point/covers/..." /></label>
+      <button type="button" className="spap-primary" disabled={!canPrepare||prepareStatus==="working"} onClick={prepare}>
+        <FileText size={17}/>{prepareStatus==="working"?"Generating materials...":"Generate archive summary, caption and email content"}
       </button>
-      <div className={"spa-status "+status} aria-live="polite">{message||"Nothing is published until you click Publish issue."}</div>
-    </form>
-
-    <section className="spa-delete-panel">
-      <div>
-        <span>MANAGE ISSUES</span>
-        <h2>Delete an issue.</h2>
-        <p>Use this if you publish a test issue or need to remove an issue completely from Saw Point.</p>
-      </div>
-      <div className="spa-delete-controls">
-        <label><span>Issue number</span><input value={deleteIssue} onChange={e=>setDeleteIssue(e.target.value)} placeholder="003"/></label>
-        <button type="button" className="spa-delete" onClick={deleteSelectedIssue} disabled={deleteStatus==="deleting"||deleteStatus==="deploying"}>
-          {deleteStatus==="deleting"?"Deleting…":deleteStatus==="deploying"?"Deploying…":"Delete issue"}
-        </button>
-      </div>
-      <div className={"spa-status "+deleteStatus} aria-live="polite">{deleteMessage||"Deletion requires confirmation before anything is changed."}</div>
+      <div className={"spap-status "+prepareStatus} aria-live="polite">{prepareMessage||"Nothing is published by preparing an issue."}</div>
     </section>
-
-    <style jsx>{`
-      .spa-wrap{max-width:980px;margin:0 auto;padding:70px 28px 110px;color:#040E0E}
-      .spa-top{display:flex;justify-content:space-between;gap:30px;align-items:flex-start;margin-bottom:42px}
-      .spa-top span{font:700 10px/1 Lato,sans-serif;letter-spacing:.16em;color:#40973C}
-      .spa-top h1{margin:10px 0 12px;font-size:clamp(44px,6vw,76px);line-height:.92;letter-spacing:-.05em}
-      .spa-top p{max-width:640px;margin:0;color:#64736C;line-height:1.7}
-      .spa-editor-intro{margin:30px 0 18px}.spa-editor-intro span{font:700 10px/1 Lato,Arial,sans-serif;letter-spacing:.14em;color:#40973C}.spa-editor-intro h2{margin:11px 0 6px;font-size:30px;letter-spacing:-.035em}.spa-editor-intro p{color:#64736C;font-size:14px;line-height:1.55;margin:0}
-      .spa-form{display:grid;gap:20px;padding:30px;border:1px solid #dfe6e1;background:#fff}
-      .spa-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-      label>span{display:block;margin-bottom:8px;font:700 10px/1 Lato,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#758956}
-      input,textarea{width:100%;border:1px solid #dfe6e1;background:#fbfcfb;padding:13px 14px;font:400 14px/1.5 Open Sans,sans-serif;color:#040E0E;outline:none}
-      input:focus,textarea:focus{border-color:#40973C}
-      textarea{resize:vertical}
-      .spa-publish{min-height:54px;border:0;background:#40973C;color:#fff;font:700 12px/1 Lato,sans-serif;cursor:pointer}
-      .spa-publish:disabled{opacity:.6;cursor:wait}
-      .spa-status{padding:13px 14px;background:#f4f7f4;color:#64736C;font-size:13px}
-      .spa-status.done{background:#eef6ef;color:#275c25}.spa-status.error{background:#fff1ef;color:#8a3026}
-      .spa-delete-panel{margin-top:26px;padding:26px 30px;border:1px solid #ead9d5;background:#fff}
-      .spa-delete-panel>div:first-child>span{font:700 10px/1 Lato,sans-serif;letter-spacing:.14em;color:#9a5147}
-      .spa-delete-panel h2{margin:8px 0 8px;font-size:30px;letter-spacing:-.03em}
-      .spa-delete-panel p{margin:0 0 20px;color:#64736C;line-height:1.6}
-      .spa-delete-controls{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}
-      .spa-delete{height:48px;padding:0 18px;border:1px solid #9a5147;background:#fff;color:#8a3026;font:700 11px/1 Lato,sans-serif;cursor:pointer}
-      .spa-delete:hover{background:#fff5f3}.spa-delete:disabled{opacity:.55;cursor:wait}
-      .spa-delete-panel>.spa-status{margin-top:14px}
-      @media(max-width:700px){.spa-top{display:block}.spa-grid{grid-template-columns:1fr}.spa-form{padding:22px}.spa-delete-panel{padding:22px}.spa-delete-controls{grid-template-columns:1fr}.spa-delete{width:100%}}
-    `}</style>
+    {draft.prepared&&<section className="spap-panel" aria-labelledby="spap-step3">
+      <span className="spap-kicker">STEP 03 · REVIEW &amp; COPY</span>
+      <h2 id="spap-step3">Your LinkedIn publishing materials.</h2>
+      <p>Copy the title and approved article into LinkedIn. The archive summary and promotional caption are separate generated drafts and can be edited here.</p>
+      <div className="spap-inline"><strong>Article title</strong><button type="button" onClick={()=>copy(draft.title)}><ClipboardCopy size={15}/> Copy title</button></div>
+      <div className="spap-readonly">{draft.title}</div>
+      <div className="spap-inline"><strong>LinkedIn article body</strong><button type="button" onClick={()=>copy(formattedBody)}><ClipboardCopy size={15}/> Copy full article</button></div>
+      <textarea rows={12} className="spap-copy-area" readOnly value={formattedBody}/>
+      <label><span>Generated short archive summary (editable)</span><textarea rows={3} value={draft.excerpt} onChange={e=>setField("excerpt",e.target.value)}/></label>
+      <div className="spap-inline"><strong>LinkedIn post caption</strong><button type="button" onClick={()=>copy(draft.caption)}><ClipboardCopy size={15}/> Copy caption</button></div>
+      <textarea rows={11} value={draft.caption} onChange={e=>setField("caption",e.target.value)}/>
+      <div className="spap-note">Generation mode: {draft.prepared.source==="ai"?"AI-assisted draft":"Structured draft from article text"}. Review all numbers, headlines and wording before posting.</div>
+      {missingSources.length>0&&<div className="spap-warning"><strong>Source references missing clickable URLs</strong><p>These source descriptions will be preserved, but won't be linked automatically. Add verified URLs to the approved article if available.</p><ul>{missingSources.slice(0,10).map((x,i)=><li key={i}>{x}</li>)}</ul></div>}
+    </section>}
+    {draft.prepared&&<section className="spap-panel" aria-labelledby="spap-step4">
+      <span className="spap-kicker">STEP 04 · LINKEDIN PUBLISHED</span>
+      <h2 id="spap-step4">Paste the final LinkedIn link.</h2>
+      <p>Publish the cover, title, complete article and caption manually on LinkedIn. Then return here with the new newsletter URL.</p>
+      <label><span>Published LinkedIn article URL</span><input type="url" value={draft.linkedinUrl} onChange={e=>setField("linkedinUrl",e.target.value)} placeholder="https://www.linkedin.com/pulse/..."/></label>
+      {draft.linkedinUrl&&!validLinkedIn(draft.linkedinUrl)&&<div className="spap-status error">Enter the published LinkedIn article URL, not a profile or feed URL.</div>}
+    </section>}
+    {draft.prepared&&validLinkedIn(draft.linkedinUrl)&&<section className="spap-panel" aria-labelledby="spap-step5">
+      <span className="spap-kicker">STEP 05 · BREVO &amp; FPX WEBSITE</span>
+      <h2 id="spap-step5">Generate the email. Publish the website.</h2>
+      <p>Brevo uses the exact Issue 004 HTML layout. The image comes from FPX and the email CTA links to your published LinkedIn article. You paste and send the email manually.</p>
+      <div className="spap-grid">
+        <label><span>Email headline</span><input value={draft.prepared.emailHeadline} onChange={e=>setDraft(p=>({...p,prepared:p.prepared?{...p.prepared,emailHeadline:e.target.value}:null}))}/></label>
+        <label><span>Email preheader</span><input value={draft.prepared.preheader} onChange={e=>setDraft(p=>({...p,prepared:p.prepared?{...p.prepared,preheader:e.target.value}:null}))}/></label>
+      </div>
+      <label><span>Email introduction</span><textarea rows={3} value={draft.prepared.emailIntro} onChange={e=>setDraft(p=>({...p,prepared:p.prepared?{...p.prepared,emailIntro:e.target.value}:null}))}/></label>
+      <label><span>Saw Point teaser</span><textarea rows={3} value={draft.prepared.teaser} onChange={e=>setDraft(p=>({...p,prepared:p.prepared?{...p.prepared,teaser:e.target.value}:null}))}/></label>
+      <div className="spap-inline"><strong>Brevo HTML</strong><div><button type="button" onClick={()=>copy(brevoHtml)}><ClipboardCopy size={15}/> Copy code</button><button type="button" onClick={downloadEmail}><Mail size={15}/> Download HTML</button></div></div>
+      <textarea className="spap-code" rows={10} readOnly value={brevoHtml}/>
+      <div className="spap-note">The original Brevo template layout is maintained, including native preference and unsubscribe placeholders. No email is sent from FPX Admin.</div>
+      <label className="spap-checkbox"><input type="checkbox" checked={draft.approved} onChange={e=>setField("approved",e.target.checked)}/> I have reviewed the final copy and confirm George's approval for website publication.</label>
+      <button type="button" className="spap-primary" disabled={!canPublish||publishStatus==="working"||publishStatus==="deploying"||publishStatus==="ready"} onClick={publish}>
+        <Upload size={17}/>{publishStatus==="working"?"Publishing...":publishStatus==="deploying"?"Deploying...":"Publish on Saw Point + FPX Insights"}
+      </button>
+      <div className={"spap-status "+publishStatus} aria-live="polite">{publishMessage||"Website publication happens only when you press the button above."}</div>
+      {articleUrl&&<div className="spap-links"><a href={articleUrl} target="_blank" rel="noopener noreferrer">View full FPX article <ArrowUpRight size={15}/></a><a href="/saw-point" target="_blank" rel="noopener noreferrer">View Saw Point archive <ArrowUpRight size={15}/></a><a href="/industry-insights" target="_blank" rel="noopener noreferrer">View Timber News <ArrowUpRight size={15}/></a></div>}
+    </section>}
+    <section className="spap-delete">
+      <span>MANAGE ISSUES</span><h2>Remove a published issue.</h2>
+      <p>Remove an issue from the Saw Point archive and its full Insights article, if one exists.</p>
+      <div className="spap-inline">
+        <input value={deleteIssue} onChange={e=>setDeleteIssue(e.target.value)} placeholder="Issue number, e.g. 005" inputMode="numeric"/>
+        <button type="button" onClick={removeIssue} disabled={deleteStatus==="working"}>Delete issue</button>
+      </div>
+      <div className={"spap-status "+deleteStatus}>{deleteMessage||"Deletion requires confirmation."}</div>
+    </section>
   </div>;
 }
