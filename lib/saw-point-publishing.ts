@@ -13,7 +13,20 @@ export function escapeHtml(raw:string){return raw.replace(/&/g,"&amp;").replace(
 export function toHeadline(heading:string){return heading.replace(/^(THE BIG STORY|MARKET UPDATE|EXPORT WATCH|DOMESTIC WATCH|INDUSTRY WATCH|ONE TO WATCH):\s*/i,"").trim();}
 function shorten(value:string,n=190){const clean=value.replace(/\s+/g," ").trim();if(clean.length<=n)return clean;const sentence=clean.match(/^[^.!?]+[.!?]+/)?.[0];return sentence&&sentence.length<=n?sentence:clean.slice(0,n).replace(/\s+\S*$/,"").trim()+"…";}
 export function formatLinkedInBody(raw:string) {
-  return normalizeBody(raw).split("\n").map(line=>HEAD.test(line)?"\n"+line+"\n":line).join("\n").replace(/\n{3,}/g,"\n\n").trim();
+  const text=normalizeBody(raw)
+    // Recover section breaks in drafts pasted without blank lines.
+    .replace(/([.!?])\s+(?=(?:THE BIG STORY|MARKET UPDATE|EXPORT WATCH|DOMESTIC WATCH|INDUSTRY WATCH|ONE TO WATCH):)/gi,"$1\n\n");
+  const blocks=text.split(/\n\s*\n/).map(block=>{
+    // Very long, unbroken paragraphs are separated into short readable groups.
+    // Sentence wording and punctuation are never changed.
+    if(block.length<440||block.includes("\n")||HEAD.test(block))return block;
+    const sentences=block.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g)||[block];
+    if(sentences.length<4)return block;
+    const groups:string[]=[];
+    for(let i=0;i<sentences.length;i+=2)groups.push(sentences.slice(i,i+2).join("").trim());
+    return groups.join("\n\n");
+  });
+  return blocks.join("\n\n").split("\n").map(line=>HEAD.test(line)?"\n"+line+"\n":line).join("\n").replace(/\n{3,}/g,"\n\n").trim();
 }
 export function parseApprovedArticle(raw:string,title:string){
   const chunks=normalizeBody(raw).split(/\n\s*\n/).flatMap(block=>{
