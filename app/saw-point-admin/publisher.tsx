@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, CheckCircle2, ClipboardCopy, FileText, Mail, Send, Upload, XCircle } from "lucide-react";
 import SawPointCoverUpload from "./cover-upload";
-import { formatLinkedInBody, formatLinkedInHtml, type PreparedContent } from "../../lib/saw-point-publishing";
+import { formatLinkedInBody, formatLinkedInHtml, monthLabel, type PreparedContent } from "../../lib/saw-point-publishing";
+import SawPointWebsitePreview from "./website-preview";
 import { renderSawPointBrevo } from "../../lib/saw-point-brevo";
 import "./publisher.css";
 
@@ -58,6 +59,7 @@ export default function SawPointPublisher(){
     setMissingSources([]);
     setRichCopyMessage("");
   }
+  const emailSubject="Saw Point | Issue "+draft.issue.padStart(3,"0")+" | "+monthLabel(draft.date);
   const formattedBody=useMemo(()=>formatLinkedInBody(draft.body,draft.title),[draft.body,draft.title]);
   const richBody=useMemo(()=>formatLinkedInHtml(draft.linkedinBody||draft.body,draft.title),[draft.linkedinBody,draft.body,draft.title]);
   const brevoHtml=useMemo(()=>{
@@ -212,6 +214,7 @@ export default function SawPointPublisher(){
       <div className="spap-note">Generation mode: {draft.prepared.source==="ai"?"AI-assisted draft":"Structured draft from article text"}. Review all numbers, headlines and wording before posting.</div>
       {missingSources.length>0&&<div className="spap-warning"><strong>Source references missing clickable URLs</strong><p>These source descriptions will be preserved, but won't be linked automatically. Add verified URLs to the approved article if available.</p><ul>{missingSources.slice(0,10).map((x,i)=><li key={i}>{x}</li>)}</ul></div>}
     </section>}
+    {draft.prepared&&<SawPointWebsitePreview draft={{issue:draft.issue,date:draft.date,title:draft.title,body:draft.body,excerpt:draft.excerpt,coverUrl:draft.coverUrl,linkedinUrl:draft.linkedinUrl}}/>}
     {draft.prepared&&<section className="spap-panel" aria-labelledby="spap-step4">
       <span className="spap-kicker">STEP 04 · LINKEDIN PUBLISHED</span>
       <h2 id="spap-step4">Paste the final LinkedIn link.</h2>
@@ -223,10 +226,21 @@ export default function SawPointPublisher(){
       <span className="spap-kicker">STEP 05 · BREVO &amp; FPX WEBSITE</span>
       <h2 id="spap-step5">Generate the email. Publish the website.</h2>
       <p>Brevo uses the exact Issue 004 HTML layout. The image comes from FPX and the email CTA links to your published LinkedIn article. You paste and send the email manually.</p>
-      <div className="spap-grid">
-        <label><span>Email headline</span><input value={draft.prepared.emailHeadline} onChange={e=>setDraft(p=>({...p,prepared:p.prepared?{...p.prepared,emailHeadline:e.target.value}:null}))}/></label>
-        <label><span>Email preheader</span><input value={draft.prepared.preheader} onChange={e=>setDraft(p=>({...p,prepared:p.prepared?{...p.prepared,preheader:e.target.value}:null}))}/></label>
+      <div className="spap-email-settings">
+        <div className="spap-inline"><strong>Brevo campaign subject</strong><button type="button" onClick={()=>copy(emailSubject)}><ClipboardCopy size={15}/> Copy subject</button></div>
+        <div className="spap-readonly">{emailSubject}</div>
+        <div className="spap-inline"><strong>Brevo preview text</strong><button type="button" onClick={()=>copy(draft.prepared?.preheader||"")}><ClipboardCopy size={15}/> Copy preview text</button></div>
+        <label><span>Preview text (editable, also included in the HTML)</span>
+          <textarea rows={2} maxLength={190} value={draft.prepared.preheader} onChange={e=>setDraft(p=>({...p,prepared:p.prepared?{...p.prepared,preheader:e.target.value}:null}))}/>
+        </label>
+        <div className="spap-inbox-preview">
+          <span>INBOX PREVIEW · THIS DOES NOT SEND EMAIL</span>
+          <strong>{emailSubject}</strong>
+          <p>{draft.prepared.preheader}</p>
+        </div>
+        <p className="spap-email-help">Copy the subject and preview text into the corresponding fields in Brevo's campaign setup. The HTML email keeps your approved design.</p>
       </div>
+      <label><span>Email body headline</span><input value={draft.prepared.emailHeadline} onChange={e=>setDraft(p=>({...p,prepared:p.prepared?{...p.prepared,emailHeadline:e.target.value}:null}))}/></label>
       <label><span>Email introduction</span><textarea rows={3} value={draft.prepared.emailIntro} onChange={e=>setDraft(p=>({...p,prepared:p.prepared?{...p.prepared,emailIntro:e.target.value}:null}))}/></label>
       <label><span>Saw Point teaser</span><textarea rows={3} value={draft.prepared.teaser} onChange={e=>setDraft(p=>({...p,prepared:p.prepared?{...p.prepared,teaser:e.target.value}:null}))}/></label>
       <div className="spap-inline"><strong>Brevo HTML</strong><div><button type="button" onClick={()=>copy(brevoHtml)}><ClipboardCopy size={15}/> Copy code</button><button type="button" onClick={downloadEmail}><Mail size={15}/> Download HTML</button></div></div>
