@@ -145,6 +145,7 @@ export function SawPointPage(){
         {visibleArchive.map(item=>
           <a href={sawPointHref(item)} {...sawPointExternal(item)} key={item.issue}>
             <span className="spx-archive-issue">ISSUE {item.issue}</span>
+            {item.coverImage && <img className="spx-archive-thumb" src={item.coverImage} alt={`Saw Point Issue ${item.issue} ${item.date} original cover`} loading="lazy"/>}
             <div className="spx-archive-copy">
               <small>{item.date}</small>
               <h3>{item.title}</h3>
@@ -313,9 +314,10 @@ export function SawPointPage(){
       .spx-archive>header,.spx-archive-tools,.spx-archive-list,.spx-archive-list>a,.spx-archive-copy{min-width:0}
       .spx-archive-tools{max-width:100%}
       .spx-year-filters{min-width:0;max-width:100%}
-      .spx-archive-list>a{min-height:118px;display:grid;grid-template-columns:92px minmax(0,1fr) 96px;gap:22px;align-items:center;padding:20px 4px;border-bottom:1px solid rgba(4,14,14,.16);color:#040E0E;text-decoration:none;transition:padding .2s ease,background .2s ease}
+      .spx-archive-list>a{min-height:118px;display:grid;grid-template-columns:92px 150px minmax(0,1fr) 96px;gap:22px;align-items:center;padding:20px 4px;border-bottom:1px solid rgba(4,14,14,.16);color:#040E0E;text-decoration:none;transition:padding .2s ease,background .2s ease}
       .spx-archive-list>a:hover{padding-left:14px;padding-right:14px;background:rgba(255,255,255,.58)}
       .spx-archive-issue{font:700 10px/1 Lato,Arial,sans-serif;letter-spacing:.12em;color:#40973C}
+      .spx-archive-thumb{display:block;width:150px;max-width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;border:1px solid rgba(4,14,14,.12);border-radius:4px;background:#fff}
       .spx-archive-copy small{display:block;font:700 9px/1 Lato,Arial,sans-serif;letter-spacing:.13em;color:#758956}
       .spx-archive-list h3{margin:7px 0 5px;font-size:clamp(20px,1.8vw,28px);line-height:1.05;letter-spacing:-.025em;overflow-wrap:anywhere}
       .spx-archive-list p{margin:0;max-width:780px;color:#64736C;font-size:12px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -370,7 +372,7 @@ export function SawPointPage(){
         .spx-meta{gap:10px}.spx-meta strong,.spx-meta p,.spx-meta b{font-size:14px}.spx-meta span{height:17px}
         .spx-latest,.spx-archive,.spx-subscribe{padding-left:24px;padding-right:24px}.spx-latest{padding-top:76px;padding-bottom:76px}
         .spx-feature{grid-template-columns:1fr}.spx-feature-number{justify-content:flex-start;border-right:0;border-bottom:1px solid rgba(255,255,255,.13);font-size:100px;padding:32px}.spx-feature-copy{padding:42px 32px}.spx-feature-side{grid-column:auto;padding:34px 32px}
-        .spx-archive{padding-top:76px;padding-bottom:82px}.spx-archive>header{grid-template-columns:1fr;gap:20px}.spx-archive-tools{grid-template-columns:1fr}.spx-year-filters{order:2}.spx-per-page{order:3;width:max-content}.spx-archive-status{justify-content:flex-start}.spx-archive-list>a{grid-template-columns:1fr auto;gap:8px 16px;min-height:102px;padding:18px 0}.spx-archive-issue{grid-column:1}.spx-archive-copy{grid-column:1}.spx-archive-list p{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.spx-archive-link{grid-column:2;grid-row:1/3;align-self:center}.spx-pagination{grid-template-columns:1fr 1fr}.spx-pagination>span{grid-column:1/-1;grid-row:1;text-align:center}.spx-pagination button:first-child{grid-column:1;grid-row:2}.spx-pagination button:last-child{grid-column:2;grid-row:2}
+        .spx-archive{padding-top:76px;padding-bottom:82px}.spx-archive>header{grid-template-columns:1fr;gap:20px}.spx-archive-tools{grid-template-columns:1fr}.spx-year-filters{order:2}.spx-per-page{order:3;width:max-content}.spx-archive-status{justify-content:flex-start}.spx-archive-list>a{grid-template-columns:1fr auto;gap:8px 16px;min-height:102px;padding:18px 0}.spx-archive-issue{grid-column:1}.spx-archive-thumb{grid-column:1;grid-row:2;width:140px}.spx-archive-copy{grid-column:1/-1;grid-row:3}.spx-archive-list p{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.spx-archive-link{grid-column:2;grid-row:1/3;align-self:center}.spx-pagination{grid-template-columns:1fr 1fr}.spx-pagination>span{grid-column:1/-1;grid-row:1;text-align:center}.spx-pagination button:first-child{grid-column:1;grid-row:2}.spx-pagination button:last-child{grid-column:2;grid-row:2}
         .spx-subscribe{padding-top:82px;padding-bottom:82px}.spx-form{padding:28px 22px}
       }
     `}</style>
