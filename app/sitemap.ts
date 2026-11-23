@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import industryNews from "../data/industry-news.json";
 const base = "https://www.fpx.nz";
 
 const pages = [
@@ -16,8 +17,7 @@ const pages = [
   { path:"/contact-us", modified:"2026-10-29", changeFrequency:"monthly" as const, priority:.7 },
   { path:"/saw-point", modified:"2026-10-29", changeFrequency:"monthly" as const, priority:.8 },
   { path:"/industry-insights", modified:"2026-11-23", changeFrequency:"weekly" as const, priority:.8 },
-  { path:"/industry-insights/nz-domestic-timber-demand-saw-point-september-2026", modified:"2026-11-23", changeFrequency:"monthly" as const, priority:.8 },
-  { path:"/industry-insights/red-stag-modular-timber-saw-point-august-2026", modified:"2026-11-23", changeFrequency:"monthly" as const, priority:.8 },
+
   { path:"/timber-growth-rings", modified:"2026-09-21", changeFrequency:"yearly" as const, priority:.7 },
   { path:"/the-science-of-kiln-drying", modified:"2026-09-21", changeFrequency:"yearly" as const, priority:.8 },
   { path:"/frequently-asked-questions", modified:"2026-10-29", changeFrequency:"monthly" as const, priority:.7 },
@@ -27,7 +27,11 @@ const pages = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return pages.map(({path,modified,changeFrequency,priority})=>({
+  const allPages = [
+    ...pages,
+    ...industryNews.map(issue=>({path:"/industry-insights/"+issue.slug,modified:issue.updatedAt||issue.publishedAt,changeFrequency:"monthly" as const,priority:.8}))
+  ];
+  return allPages.map(({path,modified,changeFrequency,priority})=>({
     url:`${base}${path || "/"}`,
     lastModified:new Date(`${modified}T00:00:00+12:00`),
     changeFrequency,
