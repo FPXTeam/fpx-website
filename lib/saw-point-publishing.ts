@@ -83,7 +83,16 @@ export function prepareFromBody(issue:string,date:string,title:string,body:strin
     emailIntro:shorten(first,280),
     preheader:shorten(summary,145),
     teaser:shorten(teaser,240),
-    storySummaries:sections.slice(0,6).map(s=>({title:toHeadline(s.heading),summary:shorten(s.paras[0]||"",190)})),
+    storySummaries:(()=>{
+      const stories=sections.map(s=>({title:toHeadline(s.heading),summary:shorten(s.paras[0]||"",190),group:s.heading.split(":")[0]}));
+      while(stories.length>6){
+        let index=stories.findIndex((s,i)=>i<stories.length-1&&s.group===stories[i+1].group);
+        if(index<0)index=stories.length-2;
+        const first=stories[index],second=stories[index+1];
+        stories.splice(index,2,{title:first.title+" / "+second.title,summary:shorten(first.summary+" "+second.summary,290),group:first.group});
+      }
+      return stories.map(({title,summary})=>({title,summary}));
+    })(),
     source:"structured"
   };
 }
