@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle2, Copy, ExternalLink, ImagePlus, UploadCloud } from "lucide-react";
+import { CheckCircle2, Copy, ExternalLink, ImagePlus, Upload } from "lucide-react";
 
 type CoverUploadResult = {
   ok?: boolean;
@@ -163,7 +163,7 @@ export default function SawPointCoverUpload() {
         <figcaption>Cover preview. The complete image will be kept without cropping.</figcaption>
       </figure>}
       <button className="spcu-upload" type="submit" disabled={status === "uploading" || status === "deploying"}>
-        <UploadCloud size={18} aria-hidden="true"/>
+        <Upload size={18} aria-hidden="true"/>
         {status === "uploading" ? "Uploading cover..." :
          status === "deploying" ? "Publishing image..." : "Upload cover and get link"}
       </button>
