@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
-import { isSawPointAdmin } from "../../../../lib/saw-point-admin-auth";
 
 export async function GET(request:Request){
-  if(!(await isSawPointAdmin())) return NextResponse.json({status:"error",error:"Unauthorized"},{status:401});
-
   const sha=new URL(request.url).searchParams.get("sha")||"";
   if(!sha) return NextResponse.json({status:"error",error:"Missing commit SHA."},{status:400});
 
