@@ -8,12 +8,14 @@ type CoverUploadResult = {
   url?: string;
   commitSha?: string;
   filename?: string;
+  issue?: string;
+  month?: string;
   error?: string;
 };
 
 type UploadStatus = "idle" | "uploading" | "deploying" | "ready" | "pending" | "error";
 
-export default function SawPointCoverUpload() {
+export default function SawPointCoverUpload({onCoverReady}:{onCoverReady?:(url:string,issue:string,month:string)=>void}) {
   const [issue, setIssue] = useState("");
   const [month, setMonth] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -100,6 +102,7 @@ export default function SawPointCoverUpload() {
         throw new Error(data.error || "The cover could not be uploaded.");
       }
       setCoverUrl(data.url);
+      onCoverReady?.(data.url,data.issue||issue,data.month||month);
       setStatus("deploying");
       setMessage("Image saved. Publishing the permanent URL on fpx.nz...");
       await checkDeployment(data.commitSha);
