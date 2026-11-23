@@ -8,7 +8,9 @@
     "excerpt": "November's Saw Point covers the Claymark Te Kūiti sawmill closure, stronger China log demand, improved India trade access, building consents, new processing proposals and rising diesel costs.",
     "linkedinUrl": "https://www.linkedin.com/pulse/big-story-another-nz-sawmill-close-claymark-exits-q95tc",
     "slug": "issue-004-november-2026",
-    "body": ""
+    "body": "",
+    "coverImage": "/images/NOV2026.png",
+    "articleSlug": "claymark-te-kuiti-sawmill-closure-saw-point-november-2026"
   },
   {
     "issue": "003",
@@ -19,7 +21,8 @@
     "excerpt": "October's Saw Point looks at pressure on New Zealand's secondary wood processors, steady China log prices, continued India enquiries and firmer domestic timber pricing.",
     "linkedinUrl": "https://www.linkedin.com/pulse/big-story-fewer-mills-changing-new-zealand-timber-bwrac/",
     "slug": "issue-003-october-2026",
-    "body": ""
+    "body": "",
+    "coverImage": "/images/OCT2026.png"
   },
   {
     "issue": "002",
@@ -29,7 +32,9 @@
     "excerpt": "New Zealand timber market developments and industry news selected by George Harman.",
     "linkedinUrl": "https://www.linkedin.com/pulse/saw-point-issue-002-september-2026-forest-products-exchange-j04nc",
     "slug": "issue-002-september-2026",
-    "body": ""
+    "body": "",
+    "coverImage": "/images/SEPT2026.png",
+    "articleSlug": "nz-domestic-timber-demand-saw-point-september-2026"
   },
   {
     "issue": "001",
@@ -39,6 +44,8 @@
     "excerpt": "The first edition of Saw Point, covering selected developments worth paying attention to across the New Zealand timber industry.",
     "linkedinUrl": "https://www.linkedin.com/pulse/saw-point-issue-001-august-2026-forest-products-exchange-rctec",
     "slug": "issue-001-august-2026",
-    "body": ""
+    "body": "",
+    "coverImage": "/images/AUG2026.png",
+    "articleSlug": "red-stag-modular-timber-saw-point-august-2026"
   }
 ]
