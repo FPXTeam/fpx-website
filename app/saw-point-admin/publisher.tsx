@@ -8,7 +8,7 @@ import { renderSawPointBrevo } from "../../lib/saw-point-brevo";
 import "./publisher.css";
 
 type Draft={
-  issue:string;date:string;title:string;body:string;coverUrl:string;linkedinUrl:string;
+  issue:string;date:string;title:string;body:string;linkedinBody?:string;coverUrl:string;linkedinUrl:string;
   excerpt:string;caption:string;prepared:PreparedContent|null;approved:boolean;
 };
 type Status="idle"|"working"|"deploying"|"ready"|"error";
@@ -52,7 +52,7 @@ export default function SawPointPublisher(){
     setPublishStatus("idle");setPublishMessage("");
   };
   function setInput(field:"issue"|"date"|"title"|"body",value:string){
-    setDraft(prev=>({...prev,[field]:value,prepared:null,excerpt:"",caption:"",approved:false,linkedinUrl:""}));
+    setDraft(prev=>({...prev,[field]:value,linkedinBody:"",prepared:null,excerpt:"",caption:"",approved:false,linkedinUrl:""}));
     setPrepareStatus("idle");setPublishStatus("idle");setPrepareMessage("");setPublishMessage("");
     setMissingSources([]);
   }
@@ -168,8 +168,8 @@ export default function SawPointPublisher(){
       <p>Copy the title and approved article into LinkedIn. The archive summary and promotional caption are separate generated drafts and can be edited here.</p>
       <div className="spap-inline"><strong>Article title</strong><button type="button" onClick={()=>copy(draft.title)}><ClipboardCopy size={15}/> Copy title</button></div>
       <div className="spap-readonly">{draft.title}</div>
-      <div className="spap-inline"><strong>LinkedIn article body</strong><button type="button" onClick={()=>copy(formattedBody)}><ClipboardCopy size={15}/> Copy full article</button></div>
-      <textarea rows={12} className="spap-copy-area" readOnly value={formattedBody}/>
+      <div className="spap-inline"><strong>LinkedIn article body (spacing editable)</strong><button type="button" onClick={()=>copy(draft.linkedinBody||formattedBody)}><ClipboardCopy size={15}/> Copy full article</button></div>
+      <textarea rows={12} className="spap-copy-area" value={draft.linkedinBody||formattedBody} onChange={e=>setField("linkedinBody",e.target.value)}/>
       <label><span>Generated short archive summary (editable)</span><textarea rows={3} value={draft.excerpt} onChange={e=>setField("excerpt",e.target.value)}/></label>
       <div className="spap-inline"><strong>LinkedIn post caption</strong><button type="button" onClick={()=>copy(draft.caption)}><ClipboardCopy size={15}/> Copy caption</button></div>
       <textarea rows={11} value={draft.caption} onChange={e=>setField("caption",e.target.value)}/>
