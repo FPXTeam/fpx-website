@@ -42,9 +42,30 @@ export default function SawPointCoverUpload({onCoverReady}:{onCoverReady?:(url:s
     setCopied(false);
   }
 
-  async function checkDeployment(commitSha: string) {
+  async function isImageLive(url: string): Promise<boolean> {
+    try {
+      // Probe the actual file on the current site's origin, not just the GitHub
+      // commit or a Vercel deployment. A valid URL must serve an actual image.
+      const imagePath = new URL(url).pathname;
+      const response = await fetch(imagePath + "?check=" + Date.now(), {
+        method: "HEAD", cache: "no-store"
+      });
+      return response.ok && (response.headers.get("content-type") || "").startsWith("image/");
+    } catch {
+      return false;
+    }
+  }
+
+  async function checkDeployment(commitSha: string, url: string, issueNumber: string, issueMonth: string) {
     for (let attempt = 0; attempt < 36; attempt++) {
       await new Promise(resolve => setTimeout(resolve, 5000));
+
+      if (await isImageLive(url)) {
+        setStatus("ready");
+        setMessage("Confirmed: the cover image loads on fpx.nz. Copy this permanent link for Brevo and the website.");
+        onCoverReady?.(url,issueNumber,issueMonth);
+        return;
+      }
       try {
         const response = await fetch(
           "/api/saw-point-admin/status?sha=" + encodeURIComponent(commitSha),
@@ -52,22 +73,20 @@ export default function SawPointCoverUpload({onCoverReady}:{onCoverReady?:(url:s
         );
         if (!response.ok) continue;
         const result = await response.json();
-        if (result?.status === "ready") {
-          setStatus("ready");
-          setMessage("Image is live on fpx.nz. Copy this link to reuse in Brevo and your website content.");
-          return;
-        }
         if (result?.status === "error") {
           setStatus("error");
-          setMessage(result?.error || "The website deployment did not succeed. The file was saved to GitHub.");
+          setMessage((result?.error || "Deployment failed.") + " The image URL is not yet live.");
           return;
         }
+        if (result?.status === "ready") {
+          setMessage("Deployment reported ready, but the image is still unavailable. Checking the live image URL...");
+        }
       } catch {
-        // A temporary status-check failure does not invalidate the image upload.
+        // Keep checking the real asset if the deployment status is temporarily unavailable.
       }
     }
     setStatus("pending");
-    setMessage("Image saved. Vercel has not confirmed production yet. The link will work after the deployment finishes.");
+    setMessage("GitHub saved the cover, but fpx.nz did not return the image within the verification window. Do not use this URL until it opens successfully.");
   }
 
   async function upload(event: React.FormEvent<HTMLFormElement>) {
@@ -102,10 +121,9 @@ export default function SawPointCoverUpload({onCoverReady}:{onCoverReady?:(url:s
         throw new Error(data.error || "The cover could not be uploaded.");
       }
       setCoverUrl(data.url);
-      onCoverReady?.(data.url,data.issue||issue,data.month||month);
       setStatus("deploying");
-      setMessage("Image saved. Publishing the permanent URL on fpx.nz...");
-      await checkDeployment(data.commitSha);
+      setMessage("Image saved to the production repository. Checking that the image itself is available on fpx.nz...");
+      await checkDeployment(data.commitSha,data.url,data.issue||issue,data.month||month);
     } catch (error) {
       setStatus("error");
       setMessage(error instanceof Error ? error.message : "The cover could not be uploaded.");
@@ -180,10 +198,10 @@ export default function SawPointCoverUpload({onCoverReady}:{onCoverReady?:(url:s
       <label htmlFor="spcu-image-url">YOUR FPX IMAGE URL</label>
       <div className="spcu-copy-row">
         <input id="spcu-image-url" type="text" value={coverUrl} readOnly onFocus={event => event.currentTarget.select()}/>
-        <button type="button" onClick={copyUrl}><Copy size={16} aria-hidden="true"/>{copied ? "Copied" : "Copy URL"}</button>
+        <button type="button" onClick={copyUrl} disabled={status!=="ready"} title={status==="ready"?"Copy verified image URL":"The image URL is not verified live yet"}><Copy size={16} aria-hidden="true"/>{copied ? "Copied" : status==="ready"?"Copy URL":"Not live yet"}</button>
       </div>
       <div className="spcu-actions">
-        <a href={coverUrl} target="_blank" rel="noopener noreferrer">Open hosted image <ExternalLink size={14} aria-hidden="true"/></a>
+        {status==="ready" && <a href={coverUrl} target="_blank" rel="noopener noreferrer">Open hosted image <ExternalLink size={14} aria-hidden="true"/></a>}
         <span>Use this same URL for the Saw Point archive, Insights article, cover image and Brevo email.</span>
       </div>
     </div>}
@@ -220,6 +238,7 @@ export default function SawPointCoverUpload({onCoverReady}:{onCoverReady?:(url:s
       .spcu-copy-row{display:flex;gap:8px}
       .spcu-copy-row input{flex:1;min-width:0;border:1px solid #d5e1d8;border-radius:5px;background:#f9fbf9;padding:11px 12px;color:#18452a;font:400 13px/1.5 Arial,sans-serif}
       .spcu-copy-row button{flex-shrink:0;display:flex;gap:8px;align-items:center;border:0;background:#163d29;color:white;border-radius:5px;padding:0 16px;font:700 12px/1 Lato,Arial,sans-serif;cursor:pointer}
+      .spcu-copy-row button:disabled{opacity:.45;cursor:not-allowed}
       .spcu-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:13px}
       .spcu-actions a{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#287444;font-weight:700;text-decoration:underline;text-underline-offset:3px}
       .spcu-actions span{font-size:12px;color:#66786b}
